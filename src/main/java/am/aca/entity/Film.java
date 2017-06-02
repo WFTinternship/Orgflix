@@ -16,7 +16,7 @@ public class Film {
     private int rate_3star;
     private int rate_4star;
     private int rate_5star;
-    private String director;
+    private List<Director> directors;
     private List<Genre> geners;
 
     public Film() {
@@ -61,7 +61,6 @@ public class Film {
                 ", rate_3star=" + rate_3star +
                 ", rate_4star=" + rate_4star +
                 ", rate_5star=" + rate_5star +
-                ", director='" + director + '\'' +
                 ", geners=" + geners +
                 '}';
     }
@@ -136,12 +135,16 @@ public class Film {
         this.rate_5star = rate_5star;
     }
 
-    public String getDirector() {
-        return director;
+    public List<Director> getDirectors() {
+        return directors;
     }
 
-    public void setDirector(String director) {
-        this.director = director;
+    public void addDirector(Director director) {
+        this.directors.add(director);
+    }
+
+    public void setDirectors(List<Director> directors) {
+        this.directors = directors;
     }
 
     public List<Genre> getGeners() {

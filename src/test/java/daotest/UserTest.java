@@ -2,6 +2,7 @@ package daotest;
 
 import am.aca.dao.*;
 import am.aca.entity.*;
+import am.aca.util.DbManager;
 import org.junit.*;
 
 import java.sql.Connection;
@@ -17,7 +18,7 @@ public class UserTest {
 
     @Before
     public void setUp() throws SQLException {
-        getConnection();
+        connection = new DbManager().getConnection();
         TestHelper.emptyTable(new String[]{"lists","users"},connection);
     }
 
@@ -200,17 +201,5 @@ public class UserTest {
         int id = userDao.addUser(user,connection);
         user.setPass("");
         Assert.assertFalse( userDao.editUser(user,connection) );
-    }
-
-    private Connection getConnection(){
-        if( connection == null) {
-            try {
-                Class.forName("com.mysql.jdbc.Driver");
-                connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/project", "root", "");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return connection;
     }
 }

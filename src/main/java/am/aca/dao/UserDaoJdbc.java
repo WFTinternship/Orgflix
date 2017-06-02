@@ -1,6 +1,7 @@
 package am.aca.dao;
 
 import am.aca.entity.*;
+import am.aca.util.DbManager;
 
 import java.sql.*;
 
@@ -10,7 +11,8 @@ import java.sql.*;
 public class UserDaoJdbc implements UserDao {
 
     @Override
-    public int addUser(User user, Connection connection) throws SQLException {
+    public int addUser(User user) throws SQLException {
+        Connection connection = new DbManager().getConnection();
         // Assures that no null or empty record will be passed for NOT NULL fields
         if( !user.checkFileds() ) return -1;
         // default return value which means nothing added
@@ -37,7 +39,8 @@ public class UserDaoJdbc implements UserDao {
     }
 
     @Override
-    public User getUser(int id, Connection connection) throws SQLException {
+    public User getUser(int id) throws SQLException {
+        Connection connection = new DbManager().getConnection();
         final String query = "SELECT Nick,User_Name,Email,User_Pass FROM users WHERE ID = ? ";
 
         PreparedStatement statm = connection.prepareStatement(query);
@@ -57,7 +60,8 @@ public class UserDaoJdbc implements UserDao {
     }
 
     @Override
-    public User getUser(String email, Connection connection) throws SQLException {
+    public User getUser(String email) throws SQLException {
+        Connection connection = new DbManager().getConnection();
         final String query = "SELECT ID,Nick,User_Name,User_Pass FROM users WHERE Email = ? ";
 
         PreparedStatement statm = connection.prepareStatement(query);
@@ -77,7 +81,8 @@ public class UserDaoJdbc implements UserDao {
     }
 
     @Override
-    public boolean editUser(User user, Connection connection) throws SQLException {
+    public boolean editUser(User user) throws SQLException {
+        Connection connection =new DbManager().getConnection();
         // Assures that no null or empty record will be passed for NOT NULL fields
         if( !user.checkFileds() ) return false;
 

@@ -1,8 +1,10 @@
 package am.aca.dao;
 
 import am.aca.entity.*;
+import am.aca.util.DbManager;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,9 +13,9 @@ import java.util.List;
 public class FilmDaoJdbc implements FilmDao{
 
     @Override
-    public boolean addFilm(Film film, List<Director> directors, Connection connection)
+    public boolean addFilm(Film film, List<Director> directors)
             throws SQLException {
-
+        Connection connection = new DbManager().getConnection();
         final String query = "INSERT INTO films (Title,Prod_Year,HasOscar,Rate_1star,Rate_2star,Rate_3star,Rate_4star,Rate_5star) " +
                 " VALUES( ? , ? , ?, ?, ?, ?, ?, ? ) ";
 
@@ -51,9 +53,9 @@ public class FilmDaoJdbc implements FilmDao{
     }
 
     @Override
-    public boolean editFilm(Film film, List<Director> directors, Connection connection)
+    public boolean editFilm(Film film)
             throws SQLException {
-
+        Connection connection = new DbManager().getConnection();
         final String query = "UPDATE films SET Title = ?,Prod_Year = ?,HasOscar = ?,Rate_1star = ? " +
                     ",Rate_2star = ?, Rate_3star = ?,Rate_4star = ?,Rate_5star = ? " +
                     " WHERE id = ? ";
@@ -78,19 +80,19 @@ public class FilmDaoJdbc implements FilmDao{
 
             final String nextQuery = "INSERT INTO film_to_director(Director_ID,Film_ID) VALUES (? , ? ) ";
             PreparedStatement insertStatm;
-            for(Director director : directors) {
+            for(Director director : film.getDirectors()) {
                 insertStatm = connection.prepareStatement(nextQuery);
                 insertStatm.setInt(1, director.getId() );
                 insertStatm.setInt(2, film.getId() );
                 insertStatm.executeUpdate();
             }
-
             return true;
         } else return false; // film insert or update statement is not successful
     }
 
     @Override
-    public Film getFilmById(int id, Connection connection) throws SQLException {
+    public Film getFilmById(int id) throws SQLException {
+        Connection connection = new DbManager().getConnection();
         final String getQuery = "SELECT * FROM films WHERE ID = ? ";
         PreparedStatement statm = connection.prepareStatement(getQuery);
         statm.setInt(1, id );
@@ -107,13 +109,32 @@ public class FilmDaoJdbc implements FilmDao{
             film.setRate_4star( resultSet.getInt("Rate_4star") );
             film.setRate_5star( resultSet.getInt("Rate_5star") );
         }
+        film.setId(id);
+
+        final String directorQuery = "select * from film_to_director" +
+                " LEFT JOIN directors on film_to_director.Director_ID = directors.ID\n" +
+                " where Film_ID = ?";
+        PreparedStatement dirStatm = connection.prepareStatement(directorQuery);
+        dirStatm.setInt(1, id );
+        ResultSet directorsSet = dirStatm.executeQuery();
+        List<Director> directorList = new ArrayList<>();
+        while( directorsSet.next() ){
+            Director director = new Director();
+            director.setId( directorsSet.getInt("Director_ID") );
+            director.setName( directorsSet.getString("Director_Name") );
+            director.setHasOscar( directorsSet.getBoolean("HasOscar") );
+            directorList.add(director);
+        }
+        film.setDirectors(directorList);
+
         return film;
     }
 
 
     @Override
-    public boolean rateFilm(int filmId, int starType, Connection connection)
+    public boolean rateFilm(int filmId, int starType)
             throws SQLException {
+        Connection connection = new DbManager().getConnection();
         final String query = "UPDATE films set Rate_" + starType + "star = Rate_" +starType + "_star + 1 WHERE ID = ?";
         PreparedStatement statm = connection.prepareStatement(query);
         statm.setInt(1, filmId);
@@ -121,8 +142,9 @@ public class FilmDaoJdbc implements FilmDao{
     }
 
     @Override
-    public boolean addGenreToFilm(Genre genre, Film film, Connection connection)
+    public boolean addGenreToFilm(Genre genre, Film film)
             throws SQLException {
+        Connection connection = new DbManager().getConnection();
         return false;
     }
 }

@@ -89,11 +89,35 @@ public class FilmDaoJdbc implements FilmDao{
         } else return false; // film insert or update statement is not successful
     }
 
+    @Override
+    public Film getFilmById(int id, Connection connection) throws SQLException {
+        final String getQuery = "SELECT * FROM films WHERE ID = ? ";
+        PreparedStatement statm = connection.prepareStatement(getQuery);
+        statm.setInt(1, id );
+        ResultSet resultSet = statm.executeQuery();
+        Film film = new Film();;
+        while( resultSet.next() ){
+            film.setId(id);
+            film.setTitle( resultSet.getString("Title") );
+            film.setHasOscar( resultSet.getBoolean("HasOscar") );
+            film.setProdYear( resultSet.getInt("Prod_Year") );
+            film.setRate_1star( resultSet.getInt("Rate_1star") );
+            film.setRate_2star( resultSet.getInt("Rate_2star") );
+            film.setRate_3star( resultSet.getInt("Rate_3star") );
+            film.setRate_4star( resultSet.getInt("Rate_4star") );
+            film.setRate_5star( resultSet.getInt("Rate_5star") );
+        }
+        return film;
+    }
+
 
     @Override
-    public int rateFilm(Film film, int starType, boolean isAdd, Connection connection)
+    public boolean rateFilm(int filmId, int starType, Connection connection)
             throws SQLException {
-        return 0;
+        final String query = "UPDATE films set Rate_" + starType + "star = Rate_" +starType + "_star + 1 WHERE ID = ?";
+        PreparedStatement statm = connection.prepareStatement(query);
+        statm.setInt(1, filmId);
+        return statm.execute();
     }
 
     @Override

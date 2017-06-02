@@ -12,6 +12,7 @@ import java.util.List;
 public interface FilmDao {
     boolean addFilm(Film film, List<Director> directors, Connection connection) throws SQLException;
     boolean editFilm(Film film, List<Director> directors, Connection connection) throws SQLException;
-    int rateFilm(Film film, int starType, boolean isAdd, Connection connection) throws SQLException;
+    Film getFilmById(int id, Connection connection) throws SQLException;
+    boolean rateFilm(int filmId, int starType, Connection connection) throws SQLException;
     boolean addGenreToFilm(Genre genre, Film film, Connection connection) throws SQLException;
 }

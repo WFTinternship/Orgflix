@@ -12,7 +12,7 @@ public class UserDaoJdbc implements UserDao {
 
     @Override
     public int addUser(User user) throws SQLException {
-        Connection connection = new DbManager().getConnection();
+        Connection connection = DbManager.getConnection();
         // Assures that no null or empty record will be passed for NOT NULL fields
         if( !user.checkFileds() ) return -1;
         // default return value which means nothing added
@@ -34,13 +34,13 @@ public class UserDaoJdbc implements UserDao {
             if( resultSet.next() ) id = resultSet.getInt("last_id");
         }
         user.setId(id);
-
+        connection.close();
         return id;
     }
 
     @Override
     public User getUser(int id) throws SQLException {
-        Connection connection = new DbManager().getConnection();
+        Connection connection = DbManager.getConnection();
         final String query = "SELECT Nick,User_Name,Email,User_Pass FROM users WHERE ID = ? ";
 
         PreparedStatement statm = connection.prepareStatement(query);
@@ -56,12 +56,13 @@ public class UserDaoJdbc implements UserDao {
             user.setEmail( result.getString("Email") );
             user.setPass( result.getString("User_Pass") );
         }
+        connection.close();
         return user;
     }
 
     @Override
     public User getUser(String email) throws SQLException {
-        Connection connection = new DbManager().getConnection();
+        Connection connection = DbManager.getConnection();
         final String query = "SELECT ID,Nick,User_Name,User_Pass FROM users WHERE Email = ? ";
 
         PreparedStatement statm = connection.prepareStatement(query);
@@ -77,12 +78,13 @@ public class UserDaoJdbc implements UserDao {
             user.setEmail( email );
             user.setPass( result.getString("User_Pass") );
         }
+        connection.close();
         return user;
     }
 
     @Override
     public boolean editUser(User user) throws SQLException {
-        Connection connection =new DbManager().getConnection();
+        Connection connection = DbManager.getConnection();
         // Assures that no null or empty record will be passed for NOT NULL fields
         if( !user.checkFileds() ) return false;
 
@@ -96,7 +98,9 @@ public class UserDaoJdbc implements UserDao {
         statm.setString(4, user.getPass() );
         statm.setInt(5, user.getId() );
 
-        return statm.executeUpdate() == 1;
+        boolean state = statm.execute();
+        connection.close();
+        return state;
     }
 /*
     @Override

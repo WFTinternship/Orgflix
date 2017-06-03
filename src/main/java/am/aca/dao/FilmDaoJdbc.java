@@ -15,7 +15,8 @@ public class FilmDaoJdbc implements FilmDao{
     @Override
     public boolean addFilm(Film film, List<Director> directors)
             throws SQLException {
-        Connection connection = new DbManager().getConnection();
+        boolean state = false;
+        Connection connection = DbManager.getConnection();
         final String query = "INSERT INTO films (Title,Prod_Year,HasOscar,Rate_1star,Rate_2star,Rate_3star,Rate_4star,Rate_5star) " +
                 " VALUES( ? , ? , ?, ?, ?, ?, ?, ? ) ";
 
@@ -48,14 +49,17 @@ public class FilmDaoJdbc implements FilmDao{
             }
             film.setId( filmID );
 
-            return true;
-        } else return false; // film insert or update statement is not successful
+            state = true; // film insert statement is successful
+        }
+        connection.close();
+        return state;
     }
 
     @Override
     public boolean editFilm(Film film)
             throws SQLException {
-        Connection connection = new DbManager().getConnection();
+        boolean state = false;
+        Connection connection = DbManager.getConnection();
         final String query = "UPDATE films SET Title = ?,Prod_Year = ?,HasOscar = ?,Rate_1star = ? " +
                     ",Rate_2star = ?, Rate_3star = ?,Rate_4star = ?,Rate_5star = ? " +
                     " WHERE id = ? ";
@@ -86,13 +90,15 @@ public class FilmDaoJdbc implements FilmDao{
                 insertStatm.setInt(2, film.getId() );
                 insertStatm.executeUpdate();
             }
-            return true;
-        } else return false; // film insert or update statement is not successful
+            state = true; // film update statement is successful
+        }
+        connection.close();
+        return state;
     }
 
     @Override
     public Film getFilmById(int id) throws SQLException {
-        Connection connection = new DbManager().getConnection();
+        Connection connection = DbManager.getConnection();
         final String getQuery = "SELECT * FROM films WHERE ID = ? ";
         PreparedStatement statm = connection.prepareStatement(getQuery);
         statm.setInt(1, id );
@@ -126,7 +132,7 @@ public class FilmDaoJdbc implements FilmDao{
             directorList.add(director);
         }
         film.setDirectors(directorList);
-
+        connection.close();
         return film;
     }
 
@@ -134,17 +140,21 @@ public class FilmDaoJdbc implements FilmDao{
     @Override
     public boolean rateFilm(int filmId, int starType)
             throws SQLException {
-        Connection connection = new DbManager().getConnection();
+        Connection connection = DbManager.getConnection();
         final String query = "UPDATE films set Rate_" + starType + "star = Rate_" +starType + "_star + 1 WHERE ID = ?";
         PreparedStatement statm = connection.prepareStatement(query);
         statm.setInt(1, filmId);
-        return statm.execute();
+
+        boolean state = statm.execute();
+        connection.close();
+        return state;
     }
 
     @Override
     public boolean addGenreToFilm(Genre genre, Film film)
             throws SQLException {
-        Connection connection = new DbManager().getConnection();
+        Connection connection = DbManager.getConnection();
+        connection.close();
         return false;
     }
 }

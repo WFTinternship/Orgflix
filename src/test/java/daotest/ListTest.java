@@ -34,11 +34,11 @@ public class ListTest {
 //        director.setName("Brian De Palma");
 
         ArrayList<Director> dirs = new ArrayList<>();
-        dirs.add(new DirectorDaoJdbc().addDirector("Brian De Palma", false));
+        dirs.add(new DirectorDaoJdbc().addDirector("Brian De Palma11", false));
 
         //setup Film and Film DAO
         film = new Film();
-        film.setTitle("Scarface");
+        film.setTitle("Scarface11");
         film.addGeners(Genre.ACTION);
         film.setProdYear(1983);
 //        film.setHasOscar(false);
@@ -51,7 +51,7 @@ public class ListTest {
 
         FilmDao filmDao = new FilmDaoJdbc();
 
-        filmDao.addFilm(film, dirs);
+        filmDao.addFilm(film);
 
         //setup User and User DAO
         user = new User("gago","Gagik Petrosyan","gagik@gmail.com","pass");

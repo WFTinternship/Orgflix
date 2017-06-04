@@ -19,7 +19,10 @@ public class DirectorDaoJdbc implements DirectorDao {
         PreparedStatement statm = connection.prepareStatement(query);
         statm.setString(1, name );
         statm.setBoolean(2, hasOscar );
+        statm.executeUpdate();
 
+//        ResultSet generatedKeys = statm.getGeneratedKeys();
+//        int id = generatedKeys.getInt(1);
         int id = -1;
         if( statm.executeUpdate() == 1 ){
             String selQuery = "SELECT ID FROM directors ORDER BY ID DESC LIMIT 1;";

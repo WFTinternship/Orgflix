@@ -8,16 +8,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by David on 5/28/2017.
+ * Created by David on 5/28/2017
  */
 public class FilmDaoJdbc implements FilmDao{
 
     @Override
-    public boolean addFilm(Film film, List<Director> directors)
+    public boolean addFilm(Film film)
             throws SQLException {
         boolean state = false;
         Connection connection = DbManager.getConnection();
-        final String query = "INSERT INTO films (Title,Prod_Year,HasOscar,Rate_1star,Rate_2star,Rate_3star,Rate_4star,Rate_5star) " +
+        final String query = "INSERT INTO films (Title, Prod_Year, HasOscar, Rate_1star, Rate_2star, Rate_3star, Rate_4star, Rate_5star) " +
                 " VALUES( ? , ? , ?, ?, ?, ?, ?, ? ) ";
 
         PreparedStatement statm = connection.prepareStatement(query);
@@ -37,11 +37,12 @@ public class FilmDaoJdbc implements FilmDao{
             Statement selStatm = connection.createStatement();
             ResultSet resultSet = selStatm.executeQuery(selQuery);
             if ( resultSet.next() ) filmID = resultSet.getInt("last_id");
+//            filmID = resultSet.getInt(1);
                 else return false;
 
             final String nextQuery = "INSERT INTO film_to_director(Director_ID,Film_ID) VALUES (? , ? ) ";
             PreparedStatement nextStatm;
-            for(Director director : directors) {
+            for(Director director : film.getDirectors()) {
                 nextStatm = connection.prepareStatement(nextQuery);
                 nextStatm.setInt(1, director.getId() );
                 nextStatm.setInt(2, filmID );
@@ -75,7 +76,6 @@ public class FilmDaoJdbc implements FilmDao{
         statm.setInt(8, film.getRate_5star() );
         statm.setInt(9, film.getId() );
 
-        int filmID;
         if( statm.executeUpdate() == 1 ){
             final String deleteQuery = "DELETE FROM film_to_director WHERE  Film_ID = ? ";
             PreparedStatement nextStatm = connection.prepareStatement(deleteQuery);
@@ -103,7 +103,7 @@ public class FilmDaoJdbc implements FilmDao{
         PreparedStatement statm = connection.prepareStatement(getQuery);
         statm.setInt(1, id );
         ResultSet resultSet = statm.executeQuery();
-        Film film = new Film();;
+        Film film = new Film();
         while( resultSet.next() ){
             film.setId(id);
             film.setTitle( resultSet.getString("Title") );

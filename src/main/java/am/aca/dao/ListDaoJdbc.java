@@ -18,13 +18,17 @@ public class ListDaoJdbc implements ListDao {
         boolean result;
         Connection connection = DbManager.getConnection();
 
-        final String checkQuery = "SELECT * FROM Lists where User_ID = ? AND Film_ID = ?";
+        final String checkQuery = "SELECT COUNT(*) FROM lists WHERE User_ID = ? AND Film_ID = ?";
 
         PreparedStatement statement = connection.prepareStatement(checkQuery);
 
         statement.setInt(1, User_ID);
         statement.setInt(2, film.getId());
-        int resultSetLength = statement.executeUpdate();
+        ResultSet rs = statement.executeQuery();
+
+        rs.next();
+        int resultSetLength = rs.getInt(1);
+//        int resultSetLength = 1;
 
         //check whether or not the given film is in the wishlist
 
@@ -58,13 +62,17 @@ public class ListDaoJdbc implements ListDao {
         boolean result;
         Connection connection = DbManager.getConnection();
 
-        final String checkQuery = "SELECT * FROM Lists where User_ID = ? AND Film_ID = ?";
+        final String checkQuery = "SELECT COUNT(*) FROM lists WHERE User_ID = ? AND Film_ID = ?";
 
         PreparedStatement statement = connection.prepareStatement(checkQuery);
 
         statement.setInt(1, User_ID);
         statement.setInt(2, film.getId());
-        int resultSetLength = statement.executeUpdate();
+        ResultSet rs = statement.executeQuery();
+
+        rs.next();
+        int resultSetLength = rs.getInt(1);
+//        int resultSetLength = 1;
 
         //check whether or not the given film is in the watchlist
 
@@ -106,7 +114,15 @@ public class ListDaoJdbc implements ListDao {
         preparedStatement.setInt(1, film.getId());
         preparedStatement.setInt(2, User_ID);
 
-        if(preparedStatement.executeUpdate() == 0)
+        ResultSet rs = preparedStatement.executeQuery();
+
+        if (!rs.next()) {
+            return false;
+        }
+
+        int resultSetLength = rs.getInt(1);
+
+        if(resultSetLength == 0)
             return false;
 
         final String checkQuery = "SELECT * FROM Lists WHERE User_ID = ? AND Film_ID = ? AND Is_watched = TRUE ";
@@ -116,13 +132,14 @@ public class ListDaoJdbc implements ListDao {
         statement.setInt(1, User_ID);
         statement.setInt(2, film.getId());
         ResultSet resultSet = statement.executeQuery();
-        String is_wished = resultSet.getString("Is_wished");
+        resultSet.next();
+        boolean is_wished = resultSet.getBoolean("Is_wished");
 
 
         //check whether or not the given film is in the wishlist
 
         //case: in the wishlist
-        if (is_wished.equalsIgnoreCase("true")) {
+        if (is_wished) {
             final String updateQuery = "UPDATE lists SET Is_watched = FALSE WHERE User_ID = ? AND Film_ID = ?";
             PreparedStatement statement1 = connection.prepareStatement(updateQuery);
             statement1.setInt(1, User_ID);
@@ -156,9 +173,17 @@ public class ListDaoJdbc implements ListDao {
 
         preparedStatement.setInt(1, film.getId());
         preparedStatement.setInt(2, User_ID);
+        ResultSet rs = preparedStatement.executeQuery();
 
-        if(preparedStatement.executeUpdate() == 0)
+//        rs.next();
+        if (!rs.next()) {
             return false;
+        }
+//        System.out.println(rs.next());//////////////////////CHANGED
+         int resultSetLength = rs.getInt(1);
+
+//        if(resultSetLength == 0)
+//            return false;
 
         final String checkQuery = "SELECT * FROM Lists WHERE User_ID = ? AND Film_ID = ? AND Is_wished = TRUE ";
 
@@ -167,13 +192,14 @@ public class ListDaoJdbc implements ListDao {
         statement.setInt(1, User_ID);
         statement.setInt(2, film.getId());
         ResultSet resultSet = statement.executeQuery();
-        String is_wished = resultSet.getString("Is_wished");
+        resultSet.next();
+        boolean is_wished = resultSet.getBoolean("Is_wished");
 
 
         //check whether or not the given film is in the watchlist
 
         //case: in the watchlist
-        if (is_wished.equalsIgnoreCase("true")) {
+        if (is_wished) {
             final String updateQuery = "UPDATE lists SET Is_wished = FALSE WHERE User_ID = ? AND Film_ID = ?";
             PreparedStatement statement1 = connection.prepareStatement(updateQuery);
             statement1.setInt(1, User_ID);

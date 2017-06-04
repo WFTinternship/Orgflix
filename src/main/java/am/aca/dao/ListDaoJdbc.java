@@ -15,7 +15,8 @@ import java.util.ArrayList;
 public class ListDaoJdbc implements ListDao {
     @Override
     public boolean addToWatched(Film film, boolean isPublic, int User_ID) throws SQLException {
-        Connection connection = new DbManager().getConnection();
+        boolean result;
+        Connection connection = DbManager.getConnection();
 
         final String checkQuery = "SELECT * FROM Lists where User_ID = ? AND Film_ID = ?";
 
@@ -34,7 +35,9 @@ public class ListDaoJdbc implements ListDao {
             PreparedStatement statement1 = connection.prepareStatement(finalCheckQuery);
             statement1.setInt(1, User_ID);
             statement1.setInt(2, film.getId());
-            return statement1.execute();
+            result = statement1.execute();
+            connection.close();
+            return result;
         }
 
         //case: not in the wishlist
@@ -44,13 +47,16 @@ public class ListDaoJdbc implements ListDao {
             statement1.setInt(1, User_ID);
             statement1.setInt(2, film.getId());
             statement1.setBoolean(3, isPublic);
-            return statement1.execute();
+            result = statement1.execute();
+            connection.close();
+            return result;
         }
     }
 
     @Override
     public boolean addToWished(Film film, boolean isPublic, int User_ID) throws SQLException {
-        Connection connection = new DbManager().getConnection();
+        boolean result;
+        Connection connection = DbManager.getConnection();
 
         final String checkQuery = "SELECT * FROM Lists where User_ID = ? AND Film_ID = ?";
 
@@ -69,7 +75,9 @@ public class ListDaoJdbc implements ListDao {
             PreparedStatement statement1 = connection.prepareStatement(finalCheckQuery);
             statement1.setInt(1, User_ID);
             statement1.setInt(2, film.getId());
-            return statement1.execute();
+            result = statement1.execute();
+            connection.close();
+            return result;
         }
 
         //case: not in the watchlist
@@ -79,13 +87,27 @@ public class ListDaoJdbc implements ListDao {
             statement1.setInt(1, User_ID);
             statement1.setInt(2, film.getId());
             statement1.setBoolean(3, isPublic);
-            return statement1.execute();
+            result = statement1.execute();
+            connection.close();
+            return result;
         }
     }
 
     @Override
     public boolean removeFromWatched(Film film, int User_ID) throws SQLException {
-        Connection connection = new DbManager().getConnection();
+        boolean result;
+        Connection connection = DbManager.getConnection();
+
+        //check if the film is marked as watched
+
+        final String query = "SELECT * FROM lists WHERE Film_ID = ? AND User_ID = ? AND Is_watched = TRUE";
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+        preparedStatement.setInt(1, film.getId());
+        preparedStatement.setInt(2, User_ID);
+
+        if(preparedStatement.executeUpdate() == 0)
+            return false;
 
         final String checkQuery = "SELECT * FROM Lists WHERE User_ID = ? AND Film_ID = ? AND Is_watched = TRUE ";
 
@@ -105,7 +127,9 @@ public class ListDaoJdbc implements ListDao {
             PreparedStatement statement1 = connection.prepareStatement(updateQuery);
             statement1.setInt(1, User_ID);
             statement1.setInt(2, film.getId());
-            return statement1.execute();
+            result = statement1.execute();
+            connection.close();
+            return result;
         }
 
         //case: not in the wishlist
@@ -114,13 +138,27 @@ public class ListDaoJdbc implements ListDao {
             PreparedStatement statement1 = connection.prepareStatement(deleteQuery);
             statement1.setInt(1, User_ID);
             statement1.setInt(2, film.getId());
-            return statement1.execute();
+            result = statement1.execute();
+            connection.close();
+            return result;
         }
     }
 
     @Override
     public boolean removeFromWished(Film film, int User_ID) throws SQLException {
-        Connection connection = new DbManager().getConnection();
+        boolean result;
+        Connection connection = DbManager.getConnection();
+
+        //check if the film is marked as wished
+
+        final String query = "SELECT * FROM lists WHERE Film_ID = ? AND User_ID = ? AND Is_wished = TRUE";
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+        preparedStatement.setInt(1, film.getId());
+        preparedStatement.setInt(2, User_ID);
+
+        if(preparedStatement.executeUpdate() == 0)
+            return false;
 
         final String checkQuery = "SELECT * FROM Lists WHERE User_ID = ? AND Film_ID = ? AND Is_wished = TRUE ";
 
@@ -140,7 +178,9 @@ public class ListDaoJdbc implements ListDao {
             PreparedStatement statement1 = connection.prepareStatement(updateQuery);
             statement1.setInt(1, User_ID);
             statement1.setInt(2, film.getId());
-            return statement1.execute();
+            result = statement1.execute();
+            connection.close();
+            return result;
         }
 
         //case: not in the watchlist
@@ -149,13 +189,15 @@ public class ListDaoJdbc implements ListDao {
             PreparedStatement statement1 = connection.prepareStatement(deleteQuery);
             statement1.setInt(1, User_ID);
             statement1.setInt(2, film.getId());
-            return statement1.execute();
+            result = statement1.execute();
+            connection.close();
+            return result;
         }
     }
 
     @Override
     public ArrayList<Film> showWatched(int User_ID) throws SQLException {
-        Connection connection = new DbManager().getConnection();
+        Connection connection = DbManager.getConnection();
 
         ArrayList<Film> watched = new ArrayList<>();
         final String query = "SELECT lists.Film_ID FROM lists INNER JOIN films on lists.Film_ID = films.ID WHERE lists.User_ID = ? AND Is_watched = TRUE ";
@@ -165,12 +207,13 @@ public class ListDaoJdbc implements ListDao {
         while (resultSet.next()){
             watched.add(new Film());
         }
+        connection.close();
         return watched;
     }
 
     @Override
     public ArrayList<Film> showWished(int User_ID) throws SQLException {
-        Connection connection = new DbManager().getConnection();
+        Connection connection = DbManager.getConnection();
 
         ArrayList<Film> wished = new ArrayList<>();
         final String query = "SELECT lists.Film_ID FROM lists INNER JOIN films on lists.Film_ID = films.ID WHERE lists.User_ID = ? AND Is_wished = TRUE ";
@@ -180,6 +223,7 @@ public class ListDaoJdbc implements ListDao {
         while (resultSet.next()){
             wished.add(new Film());
         }
+        connection.close();
         return wished;
     }
 }

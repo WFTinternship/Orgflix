@@ -175,15 +175,9 @@ public class ListDaoJdbc implements ListDao {
         preparedStatement.setInt(2, User_ID);
         ResultSet rs = preparedStatement.executeQuery();
 
-//        rs.next();
         if (!rs.next()) {
             return false;
         }
-//        System.out.println(rs.next());//////////////////////CHANGED
-         int resultSetLength = rs.getInt(1);
-
-//        if(resultSetLength == 0)
-//            return false;
 
         final String checkQuery = "SELECT * FROM Lists WHERE User_ID = ? AND Film_ID = ? AND Is_wished = TRUE ";
 
@@ -222,7 +216,7 @@ public class ListDaoJdbc implements ListDao {
     }
 
     @Override
-    public ArrayList<Film> showWatched(int User_ID) throws SQLException {
+    public ArrayList<Film> showOwnWatched(int User_ID) throws SQLException {
         Connection connection = DbManager.getConnection();
 
         ArrayList<Film> watched = new ArrayList<>();
@@ -238,11 +232,43 @@ public class ListDaoJdbc implements ListDao {
     }
 
     @Override
-    public ArrayList<Film> showWished(int User_ID) throws SQLException {
+    public ArrayList<Film> showOwnWished(int User_ID) throws SQLException {
         Connection connection = DbManager.getConnection();
 
         ArrayList<Film> wished = new ArrayList<>();
         final String query = "SELECT lists.Film_ID FROM lists INNER JOIN films on lists.Film_ID = films.ID WHERE lists.User_ID = ? AND Is_wished = TRUE ";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setInt(1, User_ID);
+        ResultSet resultSet = statement.executeQuery();
+        while (resultSet.next()){
+            wished.add(new Film());
+        }
+        connection.close();
+        return wished;
+    }
+
+    @Override
+    public ArrayList<Film> showOthersWatched(int User_ID) throws SQLException {
+        Connection connection = DbManager.getConnection();
+
+        ArrayList<Film> watched = new ArrayList<>();
+        final String query = "SELECT lists.Film_ID FROM lists INNER JOIN films on lists.Film_ID = films.ID WHERE lists.User_ID = ? AND Is_watched = TRUE AND Is_public = TRUE ";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setInt(1, User_ID);
+        ResultSet resultSet = statement.executeQuery();
+        while (resultSet.next()){
+            watched.add(new Film());
+        }
+        connection.close();
+        return watched;
+    }
+
+    @Override
+    public ArrayList<Film> showOthersWished(int User_ID) throws SQLException {
+        Connection connection = DbManager.getConnection();
+
+        ArrayList<Film> wished = new ArrayList<>();
+        final String query = "SELECT lists.Film_ID FROM lists INNER JOIN films on lists.Film_ID = films.ID WHERE lists.User_ID = ? AND Is_wished = TRUE AND Is_public = TRUE ";
         PreparedStatement statement = connection.prepareStatement(query);
         statement.setInt(1, User_ID);
         ResultSet resultSet = statement.executeQuery();

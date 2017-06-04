@@ -14,6 +14,8 @@ public interface ListDao {
     boolean addToWished(Film film, boolean isPublic, int User_ID) throws SQLException;
     boolean removeFromWatched(Film film, int User_ID) throws SQLException;
     boolean removeFromWished(Film film, int User_ID) throws SQLException;
-    ArrayList<Film> showWatched(int User_ID) throws SQLException;
-    ArrayList<Film> showWished(int User_ID) throws SQLException;
+    ArrayList<Film> showOwnWatched(int User_ID) throws SQLException;
+    ArrayList<Film> showOwnWished(int User_ID) throws SQLException;
+    ArrayList<Film> showOthersWatched(int User_ID) throws SQLException;
+    ArrayList<Film> showOthersWished(int User_ID) throws SQLException;
 }

@@ -1,6 +1,7 @@
 package am.aca.dao;
 
 import am.aca.entity.Film;
+import am.aca.util.DAOException;
 import am.aca.util.DbManager;
 
 import java.sql.Connection;
@@ -8,6 +9,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by karin on 6/3/2017
@@ -17,7 +20,11 @@ public class ListDaoJdbc implements ListDao {
     public boolean addToWatched(Film film, boolean isPublic, int User_ID) throws SQLException {
         boolean result;
         Connection connection = DbManager.getConnection();
+//        DAOException.log(Level.INFO, "test");
 
+
+        Logger logger = Logger.getLogger("DAOException");   ///////////CHECK THIS
+        logger.log(Level.INFO, "test");                 ///////////AND THIS
         final String checkQuery = "SELECT COUNT(*) FROM lists WHERE User_ID = ? AND Film_ID = ?";
 
         PreparedStatement statement = connection.prepareStatement(checkQuery);

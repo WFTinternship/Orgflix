@@ -1,11 +1,11 @@
-package am.aca.dao;
+package am.aca.service;
 
-import am.aca.entity.*;
+import am.aca.entity.User;
 
 /**
  * Created by David on 5/27/2017
  */
-public interface UserDao {
+public interface UserService {
 
     int addUser(User user);
 

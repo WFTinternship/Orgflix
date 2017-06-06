@@ -1,14 +1,15 @@
-package am.aca.dao;
+package am.aca.service;
 
-import am.aca.entity.*;
+import am.aca.entity.Director;
+import am.aca.entity.Film;
+import am.aca.entity.Genre;
 
-import java.sql.SQLException;
 import java.util.List;
 
 /**
  * Created by David on 5/28/2017
  */
-public interface FilmDao {
+public interface FilmService {
     boolean addFilm(Film film);
     boolean editFilm(Film film);
     Film getFilmById(int id);

@@ -1,6 +1,7 @@
 package daotest;
 
 import am.aca.dao.*;
+import am.aca.dao.impljdbc.*;
 import am.aca.entity.Director;
 import am.aca.entity.Film;
 import am.aca.entity.Genre;

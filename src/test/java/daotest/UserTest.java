@@ -1,6 +1,7 @@
 package daotest;
 
 import am.aca.dao.*;
+import am.aca.dao.impljdbc.UserDaoJdbc;
 import am.aca.entity.*;
 import org.junit.*;
 import org.junit.Test;
@@ -10,19 +11,17 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 /**
- * Created by David on 5/29/2017.
+ * Created by David on 5/29/2017
  */
 public class UserTest {
     private UserDao userDao = new UserDaoJdbc();
     private User user;
 
     @Before
-    public void setUp() throws PropertyVetoException, SQLException, IOException {
-        TestHelper.emptyTable(new String[]{"lists","users"});
-    }
+    public void setUp(){}
 
     @After
-    public void end() throws SQLException, IOException, PropertyVetoException {
+    public void end(){
         TestHelper.emptyTable(new String[]{"lists","users"});
         user = null;
     }

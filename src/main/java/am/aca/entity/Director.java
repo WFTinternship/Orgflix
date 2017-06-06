@@ -1,10 +1,7 @@
 package am.aca.entity;
 
-import am.aca.dao.DirectorDao;
-import am.aca.dao.DirectorDaoJdbc;
-
 /**
- * Created by David on 5/31/2017.
+ * Created by David on 5/31/2017
  */
 public class Director {
     private int id;
@@ -38,13 +35,5 @@ public class Director {
 
     public void setHasOscar(boolean hasOscar) {
         this.hasOscar = hasOscar;
-    }
-
-    public static void main(String[] args) {
-        Director director = new Director();
-        director.setName("Tarantino");
-
-        DirectorDao directorDao = new DirectorDaoJdbc();
-
     }
 }

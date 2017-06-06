@@ -1,8 +1,8 @@
 package daotest;
 
-import am.aca.dao.DirectorDaoJdbc;
+import am.aca.dao.impljdbc.DirectorDaoJdbc;
 import am.aca.dao.FilmDao;
-import am.aca.dao.FilmDaoJdbc;
+import am.aca.dao.impljdbc.FilmDaoJdbc;
 import am.aca.entity.Director;
 import am.aca.entity.Film;
 import org.junit.After;

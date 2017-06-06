@@ -1,12 +1,12 @@
 package am.aca.entity;
 
-import am.aca.dao.UserDaoJdbc;
+import am.aca.dao.impljdbc.UserDaoJdbc;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 
 /**
- * Created by David on 5/26/2017.
+ * Created by David on 5/26/2017
  */
 public class User {
     private int id = -1;
@@ -36,7 +36,6 @@ public class User {
 
         User user = (User) o;
 
-        // if (getId() != user.getId()) return false;
         if (!getNick().equals(user.getNick())) return false;
         return getEmail().equals(user.getEmail());
     }
@@ -93,17 +92,5 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public static void main(String[] args) {
-        User user = new User("davo","Davit Abovyan","davit.abovyan@gmail.com","pass");
-        Connection connection;
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/project", "root", "");
-            int id = new UserDaoJdbc().addUser(user);
-        } catch (Exception e) {}
-
-
     }
 }

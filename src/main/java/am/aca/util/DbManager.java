@@ -1,22 +1,17 @@
 package am.aca.util;
 
-import am.aca.dao.UserDao;
-import org.apache.commons.dbcp2.BasicDataSource;
+import am.aca.dao.DaoException;
 import com.mchange.v2.c3p0.*;
 import org.apache.log4j.Logger;
 
-import java.beans.PropertyVetoException;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.Properties;
+
+import java.sql.*;
 
 /**
- * Created by David on 6/2/2017.
+ * Created by David on 6/2/2017
  */
 public class DbManager {
-    private static final Logger LOGGER = Logger.getLogger( UserDao.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( DbManager.class );
 
     private static DbManager datasource;
     private ComboPooledDataSource cpds;
@@ -36,7 +31,7 @@ public class DbManager {
             cpds.setMaxPoolSize(Integer.valueOf(propManager.getProperties().getProperty("MaxPoolSize")));
             cpds.setMaxStatements(Integer.valueOf(propManager.getProperties().getProperty("MaxStatements")));
         }catch(Exception e){
-            LOGGER.warn(e.getMessage());
+            LOGGER.warn(e.toString());
         }
     }
 
@@ -58,38 +53,51 @@ public class DbManager {
     }
 
     public Connection getConnection(ConnectionType type) throws SQLException {
-        if(type==ConnectionType.POOL)
+        if(type==ConnectionType.POOL) {
+            LOGGER.info("connection oppened");
             return this.cpds.getConnection();
-        else {
+        } else {
             Connection connection = null;
            try {
                 Class.forName(propManager.getProperties().getProperty("DriverClass"));
                 connection = DriverManager.getConnection(propManager.getProperties().getProperty("JdbcUrl"));
+                LOGGER.info("connection oppened");
            } catch (Exception e) {
-               LOGGER.warn(e.getMessage());
+               LOGGER.warn(e.toString());
            }
            return connection;
         }
     }
-/*
-    private static final BasicDataSource dataSource = new BasicDataSource();
 
-    static {
-        dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/project");
-        dataSource.setUsername("root");
-        dataSource.setPassword("");
-        dataSource.setInitialSize(50);
-        dataSource.setTestWhileIdle(true);
-
+    public static void closeConnections(Object[] resources){
+        try {
+            for (Object resource : resources) {
+                if (resource instanceof PreparedStatement) {
+                    PreparedStatement statement = (PreparedStatement) resource;
+                    if (statement != null) {
+                        statement.close();
+                    }
+                } else if(resource instanceof Statement){
+                    Statement statement = (Statement) resource;
+                    if (statement != null) {
+                        statement.close();
+                    }
+                } else if(resource instanceof ResultSet) {
+                    ResultSet resultSet = (ResultSet) resource;
+                    if (resultSet != null) {
+                        resultSet.close();
+                    }
+                } else if(resource instanceof Connection) {
+                    Connection connection = (Connection) resource;
+                    if (connection != null) {
+                        connection.close();
+                        LOGGER.info("Connection closed");
+                    }
+                }
+            }
+        }catch (SQLException e){
+            LOGGER.warn(e.toString());
+            throw new DaoException(e.toString());
+        }
     }
-
-    private DbManager() {
-        //
-    }
-
-    public static Connection getConnection() throws SQLException {
-        return dataSource.getConnection();
-    }
-   */
 }

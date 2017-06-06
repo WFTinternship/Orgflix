@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by David on 5/26/2017.
+ * Created by David on 5/26/2017
  */
 public class Film {
     private int id;
@@ -27,6 +27,12 @@ public class Film {
         rate_4star = 0;
         rate_5star = 0;
         geners = new ArrayList<>();
+        directors = new ArrayList<>();
+    }
+    public Film(String title, int prodYear){
+        this();
+        this.title = title;
+        this.prodYear = prodYear;
     }
 
     @Override

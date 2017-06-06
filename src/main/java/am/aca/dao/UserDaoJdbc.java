@@ -26,7 +26,7 @@ public class UserDaoJdbc implements UserDao {
         Statement selStatm = null;
         Connection connection = null;
         try {
-            connection = DbManager.getInstance().getConnection();
+            connection = DbManager.getInstance().getConnection(DbManager.ConnectionType.POOL);
             final String query = "INSERT INTO users (Nick,User_Name,Email,User_Pass) " +
                     " VALUES( ? , ? , ? , ? ) ";
 
@@ -42,7 +42,7 @@ public class UserDaoJdbc implements UserDao {
                 resultSet = selStatm.executeQuery(selQuery);
                 if (resultSet.next()) id = resultSet.getInt("last_id");
             }
-        }catch(SQLException | PropertyVetoException |IOException e){
+        }catch(SQLException e){
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         } finally {
@@ -71,7 +71,7 @@ public class UserDaoJdbc implements UserDao {
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         try {
-            connection = DbManager.getInstance().getConnection();
+            connection = DbManager.getInstance().getConnection(DbManager.ConnectionType.POOL);
             final String query = "SELECT Nick,User_Name,Email,User_Pass FROM users WHERE ID = ? ";
 
             statement = connection.prepareStatement(query);
@@ -86,7 +86,7 @@ public class UserDaoJdbc implements UserDao {
                 user.setEmail(resultSet.getString("Email"));
                 user.setPass(resultSet.getString("User_Pass"));
             }
-        }catch(SQLException | PropertyVetoException |IOException e){
+        }catch(SQLException e){
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         } finally {
@@ -112,7 +112,7 @@ public class UserDaoJdbc implements UserDao {
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         try {
-            connection = DbManager.getInstance().getConnection();
+            connection = DbManager.getInstance().getConnection(DbManager.ConnectionType.POOL);
             final String query = "SELECT ID,Nick,User_Name,User_Pass FROM users WHERE Email = ? ";
 
             statement = connection.prepareStatement(query);
@@ -127,7 +127,7 @@ public class UserDaoJdbc implements UserDao {
                 user.setEmail(email);
                 user.setPass(resultSet.getString("User_Pass"));
             }
-        }catch(SQLException | PropertyVetoException |IOException e){
+        }catch(SQLException e){
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         } finally{
@@ -156,7 +156,7 @@ public class UserDaoJdbc implements UserDao {
         PreparedStatement statement = null;
 
         try {
-            connection = DbManager.getInstance().getConnection();
+            connection = DbManager.getInstance().getConnection(DbManager.ConnectionType.POOL);
 
             final String query = "UPDATE users SET Nick = ?,User_Name = ?,Email = ?, User_Pass = ? " +
                     " WHERE ID = ? ";
@@ -169,7 +169,7 @@ public class UserDaoJdbc implements UserDao {
             statement.setInt(5, user.getId());
 
             state = statement.execute();
-        }catch(SQLException | PropertyVetoException |IOException e){
+        }catch(SQLException e){
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         } finally {

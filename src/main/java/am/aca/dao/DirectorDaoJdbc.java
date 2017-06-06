@@ -40,7 +40,7 @@ public class DirectorDaoJdbc implements DirectorDao {
                 if (resultSet.next()) id = resultSet.getInt("ID");
             }
 
-        } catch(SQLException | PropertyVetoException |IOException e){
+        } catch(SQLException e){
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         } finally {
@@ -86,7 +86,7 @@ public class DirectorDaoJdbc implements DirectorDao {
                 director.setHasOscar(resultSet.getBoolean("HasOscar"));
                 listDirector.add(director);
             }
-        } catch(SQLException | PropertyVetoException |IOException e){
+        } catch(SQLException e){
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         } finally {
@@ -130,7 +130,7 @@ public class DirectorDaoJdbc implements DirectorDao {
                 filmsByDirector[i] = resultSet.getInt("Film");
                 ++i;
             }
-        } catch(SQLException | PropertyVetoException |IOException e){
+        } catch(SQLException e){
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         } finally {
@@ -163,7 +163,7 @@ public class DirectorDaoJdbc implements DirectorDao {
             statement.setBoolean(2,director.isHasOscar());
             statement.setInt(3,director.getId());
             state = (statement.executeUpdate() == 1);
-        } catch(SQLException | PropertyVetoException |IOException e){
+        } catch(SQLException e){
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         } finally {

@@ -15,6 +15,8 @@ public class FilmDaoJdbc implements FilmDao{
     @Override
     public boolean addFilm(Film film)
             throws SQLException {
+        if (film.getTitle() == null)
+            return false;
         boolean state = false;
         Connection connection = DbManager.getConnection();
         final String query = "INSERT INTO films (Title, Prod_Year, HasOscar, Rate_1star, Rate_2star, Rate_3star, Rate_4star, Rate_5star) " +
@@ -29,6 +31,7 @@ public class FilmDaoJdbc implements FilmDao{
         statm.setInt(6, film.getRate_3star() );
         statm.setInt(7, film.getRate_4star() );
         statm.setInt(8, film.getRate_5star() );
+
 
         int filmID;
         if( statm.executeUpdate() == 1 ){

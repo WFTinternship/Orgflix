@@ -1,6 +1,7 @@
 package am.aca.dao;
 
 import am.aca.entity.Film;
+import am.aca.util.DAOException;
 import am.aca.util.DbManager;
 
 import java.sql.Connection;
@@ -8,6 +9,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by karin on 6/3/2017
@@ -17,14 +20,22 @@ public class ListDaoJdbc implements ListDao {
     public boolean addToWatched(Film film, boolean isPublic, int User_ID) throws SQLException {
         boolean result;
         Connection connection = DbManager.getConnection();
+//        DAOException.log(Level.INFO, "test");
 
-        final String checkQuery = "SELECT * FROM Lists where User_ID = ? AND Film_ID = ?";
+
+        Logger logger = Logger.getLogger("DAOException");   ///////////CHECK THIS
+        logger.log(Level.INFO, "test");                 ///////////AND THIS
+        final String checkQuery = "SELECT COUNT(*) FROM lists WHERE User_ID = ? AND Film_ID = ?";
 
         PreparedStatement statement = connection.prepareStatement(checkQuery);
 
         statement.setInt(1, User_ID);
         statement.setInt(2, film.getId());
-        int resultSetLength = statement.executeUpdate();
+        ResultSet rs = statement.executeQuery();
+
+        rs.next();
+        int resultSetLength = rs.getInt(1);
+//        int resultSetLength = 1;
 
         //check whether or not the given film is in the wishlist
 
@@ -58,13 +69,17 @@ public class ListDaoJdbc implements ListDao {
         boolean result;
         Connection connection = DbManager.getConnection();
 
-        final String checkQuery = "SELECT * FROM Lists where User_ID = ? AND Film_ID = ?";
+        final String checkQuery = "SELECT COUNT(*) FROM lists WHERE User_ID = ? AND Film_ID = ?";
 
         PreparedStatement statement = connection.prepareStatement(checkQuery);
 
         statement.setInt(1, User_ID);
         statement.setInt(2, film.getId());
-        int resultSetLength = statement.executeUpdate();
+        ResultSet rs = statement.executeQuery();
+
+        rs.next();
+        int resultSetLength = rs.getInt(1);
+//        int resultSetLength = 1;
 
         //check whether or not the given film is in the watchlist
 
@@ -106,7 +121,15 @@ public class ListDaoJdbc implements ListDao {
         preparedStatement.setInt(1, film.getId());
         preparedStatement.setInt(2, User_ID);
 
-        if(preparedStatement.executeUpdate() == 0)
+        ResultSet rs = preparedStatement.executeQuery();
+
+        if (!rs.next()) {
+            return false;
+        }
+
+        int resultSetLength = rs.getInt(1);
+
+        if(resultSetLength == 0)
             return false;
 
         final String checkQuery = "SELECT * FROM Lists WHERE User_ID = ? AND Film_ID = ? AND Is_watched = TRUE ";
@@ -116,13 +139,14 @@ public class ListDaoJdbc implements ListDao {
         statement.setInt(1, User_ID);
         statement.setInt(2, film.getId());
         ResultSet resultSet = statement.executeQuery();
-        String is_wished = resultSet.getString("Is_wished");
+        resultSet.next();
+        boolean is_wished = resultSet.getBoolean("Is_wished");
 
 
         //check whether or not the given film is in the wishlist
 
         //case: in the wishlist
-        if (is_wished.equalsIgnoreCase("true")) {
+        if (is_wished) {
             final String updateQuery = "UPDATE lists SET Is_watched = FALSE WHERE User_ID = ? AND Film_ID = ?";
             PreparedStatement statement1 = connection.prepareStatement(updateQuery);
             statement1.setInt(1, User_ID);
@@ -156,9 +180,11 @@ public class ListDaoJdbc implements ListDao {
 
         preparedStatement.setInt(1, film.getId());
         preparedStatement.setInt(2, User_ID);
+        ResultSet rs = preparedStatement.executeQuery();
 
-        if(preparedStatement.executeUpdate() == 0)
+        if (!rs.next()) {
             return false;
+        }
 
         final String checkQuery = "SELECT * FROM Lists WHERE User_ID = ? AND Film_ID = ? AND Is_wished = TRUE ";
 
@@ -167,13 +193,14 @@ public class ListDaoJdbc implements ListDao {
         statement.setInt(1, User_ID);
         statement.setInt(2, film.getId());
         ResultSet resultSet = statement.executeQuery();
-        String is_wished = resultSet.getString("Is_wished");
+        resultSet.next();
+        boolean is_wished = resultSet.getBoolean("Is_wished");
 
 
         //check whether or not the given film is in the watchlist
 
         //case: in the watchlist
-        if (is_wished.equalsIgnoreCase("true")) {
+        if (is_wished) {
             final String updateQuery = "UPDATE lists SET Is_wished = FALSE WHERE User_ID = ? AND Film_ID = ?";
             PreparedStatement statement1 = connection.prepareStatement(updateQuery);
             statement1.setInt(1, User_ID);
@@ -196,7 +223,7 @@ public class ListDaoJdbc implements ListDao {
     }
 
     @Override
-    public ArrayList<Film> showWatched(int User_ID) throws SQLException {
+    public ArrayList<Film> showOwnWatched(int User_ID) throws SQLException {
         Connection connection = DbManager.getConnection();
 
         ArrayList<Film> watched = new ArrayList<>();
@@ -212,11 +239,43 @@ public class ListDaoJdbc implements ListDao {
     }
 
     @Override
-    public ArrayList<Film> showWished(int User_ID) throws SQLException {
+    public ArrayList<Film> showOwnWished(int User_ID) throws SQLException {
         Connection connection = DbManager.getConnection();
 
         ArrayList<Film> wished = new ArrayList<>();
         final String query = "SELECT lists.Film_ID FROM lists INNER JOIN films on lists.Film_ID = films.ID WHERE lists.User_ID = ? AND Is_wished = TRUE ";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setInt(1, User_ID);
+        ResultSet resultSet = statement.executeQuery();
+        while (resultSet.next()){
+            wished.add(new Film());
+        }
+        connection.close();
+        return wished;
+    }
+
+    @Override
+    public ArrayList<Film> showOthersWatched(int User_ID) throws SQLException {
+        Connection connection = DbManager.getConnection();
+
+        ArrayList<Film> watched = new ArrayList<>();
+        final String query = "SELECT lists.Film_ID FROM lists INNER JOIN films on lists.Film_ID = films.ID WHERE lists.User_ID = ? AND Is_watched = TRUE AND Is_public = TRUE ";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setInt(1, User_ID);
+        ResultSet resultSet = statement.executeQuery();
+        while (resultSet.next()){
+            watched.add(new Film());
+        }
+        connection.close();
+        return watched;
+    }
+
+    @Override
+    public ArrayList<Film> showOthersWished(int User_ID) throws SQLException {
+        Connection connection = DbManager.getConnection();
+
+        ArrayList<Film> wished = new ArrayList<>();
+        final String query = "SELECT lists.Film_ID FROM lists INNER JOIN films on lists.Film_ID = films.ID WHERE lists.User_ID = ? AND Is_wished = TRUE AND Is_public = TRUE ";
         PreparedStatement statement = connection.prepareStatement(query);
         statement.setInt(1, User_ID);
         ResultSet resultSet = statement.executeQuery();

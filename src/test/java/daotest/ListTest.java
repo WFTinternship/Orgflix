@@ -34,11 +34,11 @@ public class ListTest {
 //        director.setName("Brian De Palma");
 
         ArrayList<Director> dirs = new ArrayList<>();
-        dirs.add(new DirectorDaoJdbc().addDirector("Brian De Palma11", false));
+        dirs.add(new DirectorDaoJdbc().addDirector("Brian De Palma", false));
 
         //setup Film and Film DAO
         film = new Film();
-        film.setTitle("Scarface11");
+        film.setTitle("Scarface");
         film.addGeners(Genre.ACTION);
         film.setProdYear(1983);
 //        film.setHasOscar(false);
@@ -46,7 +46,7 @@ public class ListTest {
 //        film.setRate_2star(0);
 //        film.setRate_3star(0);
 //        film.setRate_4star(0);
-//        film.setRate_5star(1);
+        film.setRate_5star(1);
         film.setDirectors(dirs);
 
         FilmDao filmDao = new FilmDaoJdbc();
@@ -65,13 +65,13 @@ public class ListTest {
 
     @After
     public void revert() throws SQLException {
-        TestHelper.emptyTable(new String[]{"genre_to_film", "film_to_director", "directors", "films", "users", "lists"});
+        TestHelper.emptyTable(new String[]{"genre_to_film", "film_to_director", "lists", "directors", "films", "users"});
     }
 
     @Test
     public void addNotWishedToWatchedSucceeded() throws SQLException {
         listDao.addToWatched(film, true, user.getId());
-        Assert.assertEquals(1, listDao.showWatched(user.getId()).size());
+        Assert.assertEquals(1, listDao.showOwnWatched(user.getId()).size());
     }
 
     @Test
@@ -80,13 +80,13 @@ public class ListTest {
         listDao.addToWished(film, true, user.getId());
 
         listDao.addToWatched(film, true, user.getId());
-        Assert.assertEquals(1, listDao.showWatched(user.getId()).size());
+        Assert.assertEquals(1, listDao.showOwnWatched(user.getId()).size());
     }
 
     @Test
     public void addNotWatchedToWishedSucceeded() throws SQLException {
         listDao.addToWished(film, true, user.getId());
-        Assert.assertEquals(1, listDao.showWatched(user.getId()).size());
+        Assert.assertEquals(1, listDao.showOwnWished(user.getId()).size());
     }
 
     @Test
@@ -95,7 +95,7 @@ public class ListTest {
         listDao.addToWatched(film, true, user.getId());
 
         listDao.addToWished(film, true, user.getId());
-        Assert.assertEquals(1, listDao.showWatched(user.getId()).size());
+        Assert.assertEquals(1, listDao.showOwnWatched(user.getId()).size());
     }
 
     @Test
@@ -104,7 +104,7 @@ public class ListTest {
         listDao.addToWished(film, true, user.getId());
 
         listDao.removeFromWished(film, user.getId());
-        Assert.assertEquals(listDao.showWished(user.getId()), 0);
+        Assert.assertEquals(listDao.showOwnWished(user.getId()).size(), 0);
     }
 
     @Test
@@ -114,7 +114,7 @@ public class ListTest {
         listDao.addToWatched(film, true, user.getId());
 
         listDao.removeFromWished(film, user.getId());
-        Assert.assertEquals(listDao.showWished(user.getId()), 1);
+        Assert.assertEquals(1, listDao.showOwnWatched(user.getId()).size());
     }
 
     @Test
@@ -123,7 +123,7 @@ public class ListTest {
         listDao.addToWatched(film, true, user.getId());
 
         listDao.removeFromWatched(film, user.getId());
-        Assert.assertEquals(listDao.showWished(user.getId()), 0);
+        Assert.assertEquals(listDao.showOwnWished(user.getId()).size(), 0);
     }
 
     @Test
@@ -133,7 +133,7 @@ public class ListTest {
         listDao.addToWatched(film, true, user.getId());
 
         listDao.removeFromWatched(film, user.getId());
-        Assert.assertEquals(listDao.showWished(user.getId()), 1);
+        Assert.assertEquals(listDao.showOwnWished(user.getId()).size(), 1);
     }
 
     @Test
@@ -164,5 +164,21 @@ public class ListTest {
         listDao.addToWished(film, true, user.getId());
 
         Assert.assertFalse(listDao.removeFromWatched(film, user.getId()));
+    }
+
+    @Test
+    public void showOthersWatchedFailed() throws SQLException {
+        //setup List
+        listDao.addToWished(film, false, user.getId());
+
+        Assert.assertEquals(0, listDao.showOthersWished(user.getId()).size());
+    }
+
+    @Test
+    public void showOthersWishedFailed() throws SQLException {
+        //setup List
+        listDao.addToWatched(film, false, user.getId());
+
+        Assert.assertEquals(0, listDao.showOthersWatched(user.getId()).size());
     }
 }

@@ -18,7 +18,7 @@ public class FilmDaoJdbc implements FilmDao{
         if (film.getTitle() == null)
             return false;
         boolean state = false;
-        Connection connection = DbManager.getInstance().getConnection(DbManager.ConnectionType.POOL);
+        Connection connection = DbManager.getInstance().getConnection();
         final String query = "INSERT INTO films (Title, Prod_Year, HasOscar, Rate_1star, Rate_2star, Rate_3star, Rate_4star, Rate_5star) " +
                 " VALUES( ? , ? , ?, ?, ?, ?, ?, ? ) ";
 
@@ -63,7 +63,7 @@ public class FilmDaoJdbc implements FilmDao{
     public boolean editFilm(Film film)
             throws SQLException {
         boolean state = false;
-        Connection connection = DbManager.getInstance().getConnection(DbManager.ConnectionType.POOL);
+        Connection connection = DbManager.getInstance().getConnection();
         final String query = "UPDATE films SET Title = ?,Prod_Year = ?,HasOscar = ?,Rate_1star = ? " +
                     ",Rate_2star = ?, Rate_3star = ?,Rate_4star = ?,Rate_5star = ? " +
                     " WHERE id = ? ";
@@ -101,7 +101,7 @@ public class FilmDaoJdbc implements FilmDao{
 
     @Override
     public Film getFilmById(int id) throws SQLException {
-        Connection connection = DbManager.getInstance().getConnection(DbManager.ConnectionType.POOL);
+        Connection connection = DbManager.getInstance().getConnection();
         final String getQuery = "SELECT * FROM films WHERE ID = ? ";
         PreparedStatement statm = connection.prepareStatement(getQuery);
         statm.setInt(1, id );
@@ -143,7 +143,7 @@ public class FilmDaoJdbc implements FilmDao{
     @Override
     public boolean rateFilm(int filmId, int starType)
             throws SQLException {
-        Connection connection = DbManager.getInstance().getConnection(DbManager.ConnectionType.POOL);
+        Connection connection = DbManager.getInstance().getConnection();
         final String query = "UPDATE films set Rate_" + starType + "star = Rate_" +starType + "_star + 1 WHERE ID = ?";
         PreparedStatement statm = connection.prepareStatement(query);
         statm.setInt(1, filmId);
@@ -156,7 +156,7 @@ public class FilmDaoJdbc implements FilmDao{
     @Override
     public boolean addGenreToFilm(Genre genre, Film film)
             throws SQLException {
-        Connection connection = DbManager.getInstance().getConnection(DbManager.ConnectionType.POOL);
+        Connection connection = DbManager.getInstance().getConnection();
         connection.close();
         return false;
     }

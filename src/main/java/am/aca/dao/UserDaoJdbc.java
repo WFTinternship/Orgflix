@@ -26,7 +26,7 @@ public class UserDaoJdbc implements UserDao {
         Statement selStatm = null;
         Connection connection = null;
         try {
-            connection = DbManager.getInstance().getConnection(DbManager.ConnectionType.POOL);
+            connection = DbManager.getInstance().getConnection();
             final String query = "INSERT INTO users (Nick,User_Name,Email,User_Pass) " +
                     " VALUES( ? , ? , ? , ? ) ";
 
@@ -71,7 +71,7 @@ public class UserDaoJdbc implements UserDao {
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         try {
-            connection = DbManager.getInstance().getConnection(DbManager.ConnectionType.POOL);
+            connection = DbManager.getInstance().getConnection();
             final String query = "SELECT Nick,User_Name,Email,User_Pass FROM users WHERE ID = ? ";
 
             statement = connection.prepareStatement(query);
@@ -112,7 +112,7 @@ public class UserDaoJdbc implements UserDao {
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         try {
-            connection = DbManager.getInstance().getConnection(DbManager.ConnectionType.POOL);
+            connection = DbManager.getInstance().getConnection();
             final String query = "SELECT ID,Nick,User_Name,User_Pass FROM users WHERE Email = ? ";
 
             statement = connection.prepareStatement(query);
@@ -156,7 +156,7 @@ public class UserDaoJdbc implements UserDao {
         PreparedStatement statement = null;
 
         try {
-            connection = DbManager.getInstance().getConnection(DbManager.ConnectionType.POOL);
+            connection = DbManager.getInstance().getConnection();
 
             final String query = "UPDATE users SET Nick = ?,User_Name = ?,Email = ?, User_Pass = ? " +
                     " WHERE ID = ? ";

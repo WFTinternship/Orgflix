@@ -27,7 +27,7 @@ public class DbManager {
             cpds = new ComboPooledDataSource();
             cpds.setDriverClass(propManager.getProperties().getProperty("DriverClass")); //loads the jdbc driver
             cpds.setJdbcUrl(propManager.getProperties().getProperty("JdbcUrl"));
-            cpds.setUser(propManager.getProperties().getProperty("uers"));
+            cpds.setUser(propManager.getProperties().getProperty("user"));
             cpds.setPassword(propManager.getProperties().getProperty("password"));
 
             cpds.setInitialPoolSize(Integer.valueOf(propManager.getProperties().getProperty("InitialPoolSize")));

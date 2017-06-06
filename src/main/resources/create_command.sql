@@ -5,11 +5,12 @@ drop table if exists directors;
 drop table if exists genre_to_film;
 drop table if exists films;
 drop table if exists users;
-drop database if exists project;
+drop database if exists orgflix;
 
 # create database
-create database project;
-use project;
+create database orgflix;
+
+use orgflix;
 
 # create tables
 create table users (

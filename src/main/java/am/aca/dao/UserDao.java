@@ -10,13 +10,13 @@ import java.sql.SQLException;
  */
 public interface UserDao {
 
-    int addUser(User user) throws SQLException;
+    int addUser(User user);
 
-    User getUser(int id) throws SQLException;
+    User getUser(int id);
 
-    User getUser(String email) throws SQLException;
+    User getUser(String email);
 
-    boolean editUser(User user) throws SQLException;
+    boolean editUser(User user);
 
     // User authenticate(String email, String pass) throws SQLException;
 

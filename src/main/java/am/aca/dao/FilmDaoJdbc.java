@@ -144,7 +144,7 @@ public class FilmDaoJdbc implements FilmDao{
     public boolean rateFilm(int filmId, int starType)
             throws SQLException {
         Connection connection = DbManager.getInstance().getConnection();
-        final String query = "UPDATE films set Rate_" + starType + "star = Rate_" +starType + "_star + 1 WHERE ID = ?";
+        final String query = "UPDATE films set Rate_" + starType + "star = Rate_" +starType + "star + 1 WHERE ID = ?";
         PreparedStatement statm = connection.prepareStatement(query);
         statm.setInt(1, filmId);
 

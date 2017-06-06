@@ -6,6 +6,7 @@ import am.aca.dao.impljdbc.FilmDaoJdbc;
 import am.aca.entity.Director;
 import am.aca.entity.Film;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,12 +18,13 @@ import static org.junit.Assert.*;
 
 /**
  * Created by Vardan on 04.06.2017.
+ *
  */
 public class FilmDaoTest {
-    FilmDao filmDao = new FilmDaoJdbc();
-    Film film;
-    Director director;
-    List<Director> directorList;
+    private FilmDao filmDao = new FilmDaoJdbc();
+    private Film film;
+    private Director director;
+    private List<Director> directorList;
 
     @Before
     public void setUp() throws Exception {
@@ -119,7 +121,17 @@ public class FilmDaoTest {
     }
 
     @Test
-    public void rateFilm() throws Exception {
+    public void rateFilm_Succeeded() throws Exception {
+        film = new Film();
+        director= new DirectorDaoJdbc().addDirector("Matt Ross",false);
+        directorList= new ArrayList<>();
+        film.setTitle("Captain Fantastic");
+        directorList.add(director);
+        film.setDirectors(directorList);
+        filmDao.addFilm(film);
+
+            Assert.assertTrue(filmDao.rateFilm(film.getId(), 5));
+
     }
 
     @Test

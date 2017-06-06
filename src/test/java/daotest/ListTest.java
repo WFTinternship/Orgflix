@@ -11,6 +11,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.beans.PropertyVetoException;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -22,19 +24,12 @@ public class ListTest {
     private ListDao listDao;
     private Film film;
     private User user;
-//    Director director;
-//    private DirectorDao directorDao;
+    private ArrayList<Director> dirs = new ArrayList<>();
 
     @Before
     public void setUp() throws SQLException {
 
         //setup Director
-//        directorDao
-//        director = new Director();
-//        director.setHasOscar(false);
-//        director.setName("Brian De Palma");
-
-        ArrayList<Director> dirs = new ArrayList<>();
         dirs.add(new DirectorDaoJdbc().addDirector("Brian De Palma", false));
 
         //setup Film and Film DAO
@@ -42,20 +37,19 @@ public class ListTest {
         film.setTitle("Scarface");
         film.addGeners(Genre.ACTION);
         film.setProdYear(1983);
-//        film.setHasOscar(false);
-//        film.setRate_1star(0);
-//        film.setRate_2star(0);
-//        film.setRate_3star(0);
-//        film.setRate_4star(0);
         film.setRate_5star(1);
         film.setDirectors(dirs);
 
         FilmDao filmDao = new FilmDaoJdbc();
 
-        filmDao.addFilm(film);
+        try {
+            filmDao.addFilm(film);
+        } catch (IOException | PropertyVetoException e) {
+            e.printStackTrace();
+        }
 
         //setup User and User DAO
-        user = new User("gago","Gagik Petrosyan","gagik@gmail.com","pass");
+        user = new User("MrSmith","John Smith","JhonSmith@gmail.com","pass");
 
         UserDao userDao =  new UserDaoJdbc();
         userDao.addUser(user);
@@ -65,18 +59,18 @@ public class ListTest {
     }
 
     @After
-    public void revert() throws SQLException {
+    public void revert() throws SQLException, IOException, PropertyVetoException {
         TestHelper.emptyTable(new String[]{"genre_to_film", "film_to_director", "lists", "directors", "films", "users"});
     }
 
     @Test
-    public void addNotWishedToWatchedSucceeded() throws SQLException {
+    public void addNotWishedToWatchedSucceeded() throws SQLException, IOException, PropertyVetoException {
         listDao.addToWatched(film, true, user.getId());
         Assert.assertEquals(1, listDao.showOwnWatched(user.getId()).size());
     }
 
     @Test
-    public void AddWishedToWatchedSucceeded() throws SQLException {
+    public void AddWishedToWatchedSucceeded() throws SQLException, IOException, PropertyVetoException {
         //setup List
         listDao.addToWished(film, true, user.getId());
 
@@ -85,13 +79,13 @@ public class ListTest {
     }
 
     @Test
-    public void addNotWatchedToWishedSucceeded() throws SQLException {
+    public void addNotWatchedToWishedSucceeded() throws SQLException, IOException, PropertyVetoException {
         listDao.addToWished(film, true, user.getId());
         Assert.assertEquals(1, listDao.showOwnWished(user.getId()).size());
     }
 
     @Test
-    public void addWatchedToWishedSucceeded() throws SQLException {
+    public void addWatchedToWishedSucceeded() throws SQLException, IOException, PropertyVetoException {
         //setup List
         listDao.addToWatched(film, true, user.getId());
 
@@ -100,7 +94,7 @@ public class ListTest {
     }
 
     @Test
-    public void removeNotWatchedFromWishedSucceeded() throws SQLException {
+    public void removeNotWatchedFromWishedSucceeded() throws SQLException, IOException, PropertyVetoException {
         //setup List
         listDao.addToWished(film, true, user.getId());
 
@@ -109,7 +103,7 @@ public class ListTest {
     }
 
     @Test
-    public void removeWatchedFromWishedSucceeded() throws SQLException {
+    public void removeWatchedFromWishedSucceeded() throws SQLException, IOException, PropertyVetoException {
         //setup List
         listDao.addToWished(film, true, user.getId());
         listDao.addToWatched(film, true, user.getId());
@@ -119,7 +113,7 @@ public class ListTest {
     }
 
     @Test
-    public void removeNotWishedFromWatchedSucceeded() throws SQLException {
+    public void removeNotWishedFromWatchedSucceeded() throws SQLException, IOException, PropertyVetoException {
         //setup List
         listDao.addToWatched(film, true, user.getId());
 
@@ -128,7 +122,7 @@ public class ListTest {
     }
 
     @Test
-    public void removeWishedFromWatchedSucceeded() throws SQLException {
+    public void removeWishedFromWatchedSucceeded() throws SQLException, IOException, PropertyVetoException {
         //setup List
         listDao.addToWished(film, true, user.getId());
         listDao.addToWatched(film, true, user.getId());
@@ -138,14 +132,14 @@ public class ListTest {
     }
 
     @Test
-    public void removeNotWatchedFromWishedFailed() throws SQLException {
+    public void removeNotWatchedFromWishedFailed() throws SQLException, IOException, PropertyVetoException {
         //List setup, empty list
 
         Assert.assertFalse(listDao.removeFromWished(film, user.getId()));
     }
 
     @Test
-    public void removeWatchedFromWishedFailed() throws SQLException {
+    public void removeWatchedFromWishedFailed() throws SQLException, IOException, PropertyVetoException {
         //setup List
         listDao.addToWatched(film, true, user.getId());
 
@@ -153,14 +147,14 @@ public class ListTest {
     }
 
     @Test
-    public void removeNotWishedFromWatchedFailed() throws SQLException {
+    public void removeNotWishedFromWatchedFailed() throws SQLException, IOException, PropertyVetoException {
         //List setup, empty list
 
         Assert.assertFalse(listDao.removeFromWatched(film, user.getId()));
     }
 
     @Test
-    public void removeWishedFromWatchedFailed() throws SQLException {
+    public void removeWishedFromWatchedFailed() throws SQLException, IOException, PropertyVetoException {
         //setup List
         listDao.addToWished(film, true, user.getId());
 
@@ -168,7 +162,7 @@ public class ListTest {
     }
 
     @Test
-    public void showOthersWatchedFailed() throws SQLException {
+    public void showOthersWatchedFailed() throws SQLException, IOException, PropertyVetoException {
         //setup List
         listDao.addToWished(film, false, user.getId());
 
@@ -176,7 +170,7 @@ public class ListTest {
     }
 
     @Test
-    public void showOthersWishedFailed() throws SQLException {
+    public void showOthersWishedFailed() throws SQLException, IOException, PropertyVetoException {
         //setup List
         listDao.addToWatched(film, false, user.getId());
 

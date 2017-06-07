@@ -70,8 +70,9 @@ public class FilmDaoJdbc implements FilmDao {
         PreparedStatement statement = null;
         try {
             connection = DbManager.getInstance().getConnection();
-            statement = connection.prepareStatement(query);
+            connection.setAutoCommit(false);
 
+            statement = connection.prepareStatement(query);
             statement.setString(1, film.getTitle());
             statement.setInt(2, film.getProdYear());
             statement.setBoolean(3, film.isHasOscar());
@@ -95,10 +96,12 @@ public class FilmDaoJdbc implements FilmDao {
                     statement.setInt(2, film.getId());
                     statement.executeUpdate();
                 }
+                connection.commit();
                 state = true; // film update statement is successful
             }
         } catch (SQLException e) {
             LOGGER.warn(e.toString());
+            DbManager.connectionRollback(connection);
             throw new DaoException(e.toString());
         } finally {
             DbManager.closeConnections(new Object[]{statement, connection});
@@ -197,7 +200,7 @@ public class FilmDaoJdbc implements FilmDao {
             resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
-                films.add( getFilmById(resultSet.getInt("ID")) );
+                films.add(getFilmById(resultSet.getInt("ID")));
             }
         } catch (SQLException e) {
             LOGGER.warn(e.toString());
@@ -240,25 +243,25 @@ public class FilmDaoJdbc implements FilmDao {
     }
 
     @Override
-    public boolean addGenreToFilm(Genre genre, int filmId){
+    public boolean addGenreToFilm(Genre genre, int filmId) {
         boolean state = false;
 
         final String query = "INSERT INTO genre_to_film(Genre_ID,Film_ID) VALUES (? , ? ) ";
 
         Connection connection = null;
         PreparedStatement statement = null;
-        try{
+        try {
             connection = DbManager.getInstance().getConnection();
             statement = connection.prepareStatement(query);
             statement.setInt(1, genre.ordinal());
             statement.setInt(2, filmId);
 
             state = statement.execute();
-        } catch(SQLException e){
+        } catch (SQLException e) {
             LOGGER.warn(e.toString());
             throw new DaoException(e.toString());
         } finally {
-            DbManager.closeConnections(new Object[]{statement,connection});
+            DbManager.closeConnections(new Object[]{statement, connection});
         }
         return state;
     }

@@ -14,9 +14,9 @@ import java.util.List;
  * Created by David on 5/28/2017
  */
 public class DirectorDaoJdbc implements DirectorDao {
-    private static final Logger LOGGER = Logger.getLogger( DirectorDao.class );
+    private static final Logger LOGGER = Logger.getLogger(DirectorDao.class);
 
-    public Director addDirector(String name, boolean hasOscar){
+    public Director addDirector(String name, boolean hasOscar) {
 
         final String query = "INSERT INTO directors (Director_Name,HasOscar) VALUES( ?, ? ) ";
         Connection connection = null;
@@ -25,7 +25,7 @@ public class DirectorDaoJdbc implements DirectorDao {
         int id = -1;
         try {
             connection = DbManager.getInstance().getConnection();
-            statement = connection.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
+            statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, name);
             statement.setBoolean(2, hasOscar);
 
@@ -33,11 +33,11 @@ public class DirectorDaoJdbc implements DirectorDao {
                 resultSet = statement.getGeneratedKeys();
                 if (resultSet.next()) id = resultSet.getInt(1);
             }
-        } catch(SQLException e){
+        } catch (SQLException e) {
             LOGGER.warn(e.toString());
             throw new DaoException(e.toString());
         } finally {
-            DbManager.closeConnections(new Object[]{resultSet,statement,connection});
+            DbManager.closeConnections(new Object[]{resultSet, statement, connection});
         }
 
         Director director = new Director();
@@ -64,29 +64,29 @@ public class DirectorDaoJdbc implements DirectorDao {
         boolean state = false;
         Connection connection = null;
         PreparedStatement statement = null;
-        try{
+        try {
             connection = DbManager.getInstance().getConnection();
             statement = connection.prepareStatement(query);
             statement.setInt(1, directorId);
             statement.setInt(2, filmId);
             state = statement.execute();
-        } catch(SQLException e){
+        } catch (SQLException e) {
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         } finally {
-            DbManager.closeConnections(new Object[]{statement,connection});
+            DbManager.closeConnections(new Object[]{statement, connection});
         }
         return state;
     }
 
     @Override
-    public List<Director> listDirectors(){
+    public List<Director> listDirectors() {
         List<Director> listDirector = new ArrayList<>();
         Connection connection = null;
         ResultSet resultSet = null;
         try {
             connection = DbManager.getInstance().getConnection();
-            resultSet = connection.createStatement().executeQuery("SELECT * from directors");
+            resultSet = connection.createStatement().executeQuery("SELECT * FROM directors");
 
             while (resultSet.next()) {
                 Director director = new Director();
@@ -95,17 +95,17 @@ public class DirectorDaoJdbc implements DirectorDao {
                 director.setHasOscar(resultSet.getBoolean("HasOscar"));
                 listDirector.add(director);
             }
-        } catch(SQLException e){
+        } catch (SQLException e) {
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         } finally {
-            DbManager.closeConnections(new Object[]{resultSet,connection});
+            DbManager.closeConnections(new Object[]{resultSet, connection});
         }
         return listDirector;
     }
 
     @Override
-    public List<Integer> listFilmsIdByDirector(int directorId){
+    public List<Integer> listFilmsIdByDirector(int directorId) {
 
         List<Integer> filmsByDirector = new ArrayList<>();
 
@@ -126,13 +126,13 @@ public class DirectorDaoJdbc implements DirectorDao {
             resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
-                filmsByDirector.add( resultSet.getInt("Film") );
+                filmsByDirector.add(resultSet.getInt("Film"));
             }
-        } catch(SQLException e){
+        } catch (SQLException e) {
             LOGGER.warn(e.toString());
             throw new DaoException(e.toString());
         } finally {
-            DbManager.closeConnections(new Object[]{resultSet,statement,connection});
+            DbManager.closeConnections(new Object[]{resultSet, statement, connection});
         }
         return filmsByDirector;
     }
@@ -146,15 +146,15 @@ public class DirectorDaoJdbc implements DirectorDao {
         try {
             connection = DbManager.getInstance().getConnection();
             statement = connection.prepareStatement(query);
-            statement.setString(1,director.getName());
-            statement.setBoolean(2,director.isHasOscar());
-            statement.setInt(3,director.getId());
-            state = statement.executeUpdate()==1;
-        } catch(SQLException e){
+            statement.setString(1, director.getName());
+            statement.setBoolean(2, director.isHasOscar());
+            statement.setInt(3, director.getId());
+            state = statement.executeUpdate() == 1;
+        } catch (SQLException e) {
             LOGGER.warn(e.toString());
             throw new DaoException(e.toString());
         } finally {
-            DbManager.closeConnections(new Object[]{statement,connection});
+            DbManager.closeConnections(new Object[]{statement, connection});
         }
         return state;
     }

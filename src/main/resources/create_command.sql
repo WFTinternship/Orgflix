@@ -96,10 +96,16 @@ insert into film_to_director(Director_ID,Film_ID) values(2,1);
 insert into film_to_director(Director_ID,Film_ID) values(2,2);
 
 # 3 genre
-insert into genre(ID,genre) values(1,'Crime');
-insert into genre(ID,genre) values(2,'Comedy');
-insert into genre(ID,genre) values(3,'Action');
-
+insert into genre(ID,genre) values(0,'CRIME');
+insert into genre(ID,genre) values(1,'COMEDY');
+insert into genre(ID,genre) values(2,'ACTION');
+insert into genre(ID,genre) values(3,'ADVENTURE');
+insert into genre(ID,genre) values(4,'DRAMA');
+insert into genre(ID,genre) values(5,'HISTORICAL');
+insert into genre(ID,genre) values(6,'FANTASY');
+insert into genre(ID,genre) values(7,'HORROR');
+insert into genre(ID,genre) values(8,'THRILLER');
+insert into genre(ID,genre) values(9,'MYSTERY');
 
 # 2 genre to 2 films
 insert into genre_to_film(Genre_ID,Film_ID) values(1,1);

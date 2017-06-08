@@ -222,7 +222,7 @@ public class FilmDaoJdbc implements FilmDao {
         boolean state = false;
 
         final String query = "UPDATE films set Rate_" + starType + "star = Rate_" + starType +
-                "_star + 1 WHERE ID = ? ";
+                "star + 1 WHERE ID = ? ";
 
         Connection connection = null;
         PreparedStatement statement = null;
@@ -231,7 +231,7 @@ public class FilmDaoJdbc implements FilmDao {
             statement = connection.prepareStatement(query);
             statement.setInt(1, filmId);
 
-            state = statement.execute();
+            state = (statement.executeUpdate()==1);
 
         } catch (SQLException e) {
             LOGGER.warn(e.toString());
@@ -256,7 +256,7 @@ public class FilmDaoJdbc implements FilmDao {
             statement.setInt(1, genre.ordinal());
             statement.setInt(2, filmId);
 
-            state = statement.execute();
+            state = ( statement.executeUpdate()==1 );
         } catch (SQLException e) {
             LOGGER.warn(e.toString());
             throw new DaoException(e.toString());

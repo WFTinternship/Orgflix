@@ -42,11 +42,7 @@ public class ListTest {
 
         FilmDao filmDao = new FilmDaoJdbc();
 
-        try {
-            filmDao.addFilm(film);
-        } catch (IOException | PropertyVetoException e) {
-            e.printStackTrace();
-        }
+        filmDao.addFilm(film);
 
         //setup User and User DAO
         user = new User("MrSmith","John Smith","JhonSmith@gmail.com","pass");

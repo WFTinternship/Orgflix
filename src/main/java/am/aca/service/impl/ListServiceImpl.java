@@ -1,12 +1,13 @@
 package am.aca.service.impl;
 
+import am.aca.dao.FilmDao;
 import am.aca.dao.ListDao;
+import am.aca.dao.impljdbc.FilmDaoJdbc;
 import am.aca.dao.impljdbc.ListDaoJdbc;
 import am.aca.entity.Film;
 import am.aca.service.ListService;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,11 +22,27 @@ public class ListServiceImpl implements ListService {
 
     @Override
     public boolean addToWatched(Film film, boolean isPublic, int user_ID) throws SQLException {
+        FilmDao filmDao = new FilmDaoJdbc();
+
+        //case: the film does not exist
+        if (filmDao.getFilmById(film.getId()) == null){
+            filmDao.addFilm(film);
+        }
+
+        //case: any
         return listDao.addToWatched(film,isPublic,user_ID);
     }
 
     @Override
     public boolean addToWished(Film film, boolean isPublic, int user_ID) throws SQLException {
+        FilmDao filmDao = new FilmDaoJdbc();
+
+        //case: the film does not exist
+        if (filmDao.getFilmById(film.getId()) == null){
+            filmDao.addFilm(film);
+        }
+
+        //case: any
         return listDao.addToWished(film,isPublic,user_ID);
     }
 

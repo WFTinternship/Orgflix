@@ -23,8 +23,7 @@ public class HomeServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         response.setContentType("text/html");
-
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/home.jsp");
-        dispatcher.forward(request, response);
+        request.setAttribute("message", "0");
+        request.getRequestDispatcher("/home.jsp").forward(request, response);
     }
 }

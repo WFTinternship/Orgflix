@@ -45,6 +45,11 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
+    public List<Film> getFilmsList(int startIndex) {
+        return filmDao.getFilmsList(startIndex);
+    }
+
+    @Override
     public boolean rateFilm(int filmId, int starType) {
         return filmDao.rateFilm(filmId,starType);
     }

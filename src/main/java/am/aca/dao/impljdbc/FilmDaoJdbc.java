@@ -133,6 +133,7 @@ public class FilmDaoJdbc implements FilmDao {
                 film.setTitle(resultSet.getString("Title"));
                 film.setHasOscar(resultSet.getBoolean("HasOscar"));
                 film.setProdYear(resultSet.getInt("Prod_Year"));
+                film.setImage(resultSet.getString("image_ref"));
                 film.setRate_1star(resultSet.getInt("Rate_1star"));
                 film.setRate_2star(resultSet.getInt("Rate_2star"));
                 film.setRate_3star(resultSet.getInt("Rate_3star"));
@@ -183,7 +184,7 @@ public class FilmDaoJdbc implements FilmDao {
 
     @Override
     public List<Film> getFilmsByDirector(int directorId) {
-        List<Film> films = null;
+        List<Film> films = new ArrayList<>();
 
         final String filmQuery = "SELECT * FROM film_to_director" +
                 " LEFT JOIN directors ON film_to_director.Director_ID = directors.ID " +
@@ -196,6 +197,35 @@ public class FilmDaoJdbc implements FilmDao {
             connection = DbManager.getInstance().getConnection();
             statement = connection.prepareStatement(filmQuery);
             statement.setInt(1, directorId);
+
+            resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                films.add(getFilmById(resultSet.getInt("ID")));
+            }
+        } catch (SQLException e) {
+            LOGGER.warn(e.toString());
+            throw new DaoException(e.toString());
+        } finally {
+            DbManager.closeConnections(new Object[]{resultSet, statement, connection});
+        }
+
+        return films;
+    }
+
+    @Override
+    public List<Film> getFilmsList(int startIndex) {
+        List<Film> films = new ArrayList<>();
+
+        final String filmQuery = "SELECT * FROM films LIMIT ? , 12 ";
+
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = DbManager.getInstance().getConnection();
+            statement = connection.prepareStatement(filmQuery);
+            statement.setInt(1, startIndex);
 
             resultSet = statement.executeQuery();
 

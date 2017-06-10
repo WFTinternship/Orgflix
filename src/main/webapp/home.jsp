@@ -1,4 +1,7 @@
-<%--
+<%@ page import="am.aca.service.impl.FilmServiceImpl" %>
+<%@ page import="am.aca.entity.Film" %>
+<%@ page import="java.util.List" %>
+<%@ page import="am.aca.service.FilmService" %><%--
   Created by IntelliJ IDEA.
   User: Vardan
   Date: 09.06.2017
@@ -6,6 +9,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%! FilmService filmService = new FilmServiceImpl(); %>
 <!DOCTYPE HTML>
 <!--
 Phantom by HTML5 UP
@@ -14,7 +18,7 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
 -->
 <html>
 <head>
-    <title>Phantom by HTML5 UP</title>
+    <title>Orgflix 1.0</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
@@ -50,10 +54,9 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
         <h2>Menu</h2>
         <ul>
             <li><a href="home">Home</a></li>
-            <li><a href="generic">Ipsum veroeros</a></li>
-            <li><a href="generic">Tempus etiam</a></li>
-            <li><a href="generic">Consequat dolor</a></li>
-            <li><a href="elements.html">Elements</a></li>
+            <li><a href="watch_list">Watch list</a></li>
+            <li><a href="wish_list">Wish List</a></li>
+            <li><a href="loging">Logout</a></li>
         </ul>
     </nav>
 
@@ -61,143 +64,15 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
     <div id="main">
         <div class="inner">
             <header>
-                <h1>This is Phantom, a free, fully responsive site<br />
-                    template designed by <a href="http://html5up.net">HTML5 UP</a>.</h1>
-                <p>Etiam quis viverra lorem, in semper lorem. Sed nisl arcu euismod sit amet nisi euismod sed cursus arcu elementum ipsum arcu vivamus quis venenatis orci lorem ipsum et magna feugiat veroeros aliquam. Lorem ipsum dolor sit amet nullam dolore.</p>
+                <h1>This is OrgFlix, a free film list organizer</h1>
             </header>
             <section class="tiles">
-                <article class="style1">
-									<span class="image">
-										<img src="images/pic01.jpg" alt="" />
-									</span>
-                    <a href="generic">
-                        <h2>Magna</h2>
-                        <div class="content">
-                            <p>Sed nisl arcu euismod sit amet nisi lorem etiam dolor veroeros et feugiat.</p>
-                        </div>
-                    </a>
-                </article>
-                <article class="style2">
-									<span class="image">
-										<img src="images/pic02.jpg" alt="" />
-									</span>
-                    <a href="generic">
-                        <h2>Lorem</h2>
-                        <div class="content">
-                            <p>Sed nisl arcu euismod sit amet nisi lorem etiam dolor veroeros et feugiat.</p>
-                        </div>
-                    </a>
-                </article>
-                <article class="style3">
-									<span class="image">
-										<img src="images/pic03.jpg" alt="" />
-									</span>
-                    <a href="generic">
-                        <h2>Feugiat</h2>
-                        <div class="content">
-                            <p>Sed nisl arcu euismod sit amet nisi lorem etiam dolor veroeros et feugiat.</p>
-                        </div>
-                    </a>
-                </article>
-                <article class="style4">
-									<span class="image">
-										<img src="images/pic04.jpg" alt="" />
-									</span>
-                    <a href="generic">
-                        <h2>Tempus</h2>
-                        <div class="content">
-                            <p>Sed nisl arcu euismod sit amet nisi lorem etiam dolor veroeros et feugiat.</p>
-                        </div>
-                    </a>
-                </article>
-                <article class="style5">
-									<span class="image">
-										<img src="images/pic05.jpg" alt="" />
-									</span>
-                    <a href="generic">
-                        <h2>Aliquam</h2>
-                        <div class="content">
-                            <p>Sed nisl arcu euismod sit amet nisi lorem etiam dolor veroeros et feugiat.</p>
-                        </div>
-                    </a>
-                </article>
-                <article class="style6">
-									<span class="image">
-										<img src="images/pic06.jpg" alt="" />
-									</span>
-                    <a href="generic">
-                        <h2>Veroeros</h2>
-                        <div class="content">
-                            <p>Sed nisl arcu euismod sit amet nisi lorem etiam dolor veroeros et feugiat.</p>
-                        </div>
-                    </a>
-                </article>
-                <article class="style2">
-									<span class="image">
-										<img src="images/pic07.jpg" alt="" />
-									</span>
-                    <a href="generic">
-                        <h2>Ipsum</h2>
-                        <div class="content">
-                            <p>Sed nisl arcu euismod sit amet nisi lorem etiam dolor veroeros et feugiat.</p>
-                        </div>
-                    </a>
-                </article>
-                <article class="style3">
-									<span class="image">
-										<img src="images/pic08.jpg" alt="" />
-									</span>
-                    <a href="generic">
-                        <h2>Dolor</h2>
-                        <div class="content">
-                            <p>Sed nisl arcu euismod sit amet nisi lorem etiam dolor veroeros et feugiat.</p>
-                        </div>
-                    </a>
-                </article>
-                <article class="style1">
-									<span class="image">
-										<img src="images/pic09.jpg" alt="" />
-									</span>
-                    <a href="generic">
-                        <h2>Nullam</h2>
-                        <div class="content">
-                            <p>Sed nisl arcu euismod sit amet nisi lorem etiam dolor veroeros et feugiat.</p>
-                        </div>
-                    </a>
-                </article>
-                <article class="style5">
-									<span class="image">
-										<img src="images/pic10.jpg" alt="" />
-									</span>
-                    <a href="generic">
-                        <h2>Ultricies</h2>
-                        <div class="content">
-                            <p>Sed nisl arcu euismod sit amet nisi lorem etiam dolor veroeros et feugiat.</p>
-                        </div>
-                    </a>
-                </article>
-                <article class="style6">
-									<span class="image">
-										<img src="images/pic11.jpg" alt="" />
-									</span>
-                    <a href="generic">
-                        <h2>Dictum</h2>
-                        <div class="content">
-                            <p>Sed nisl arcu euismod sit amet nisi lorem etiam dolor veroeros et feugiat.</p>
-                        </div>
-                    </a>
-                </article>
-                <article class="style4">
-									<span class="image">
-										<img src="images/pic12.jpg" alt="" />
-									</span>
-                    <a href="generic">
-                        <h2>Pretium</h2>
-                        <div class="content">
-                            <p>Sed nisl arcu euismod sit amet nisi lorem etiam dolor veroeros et feugiat.</p>
-                        </div>
-                    </a>
-                </article>
+<% List<Film> films = filmService.getFilmsList(Integer.valueOf(request.getAttribute("message").toString()));
+    for (Film film: films ) {
+    out.print("<article class='style1'><span class='image'><img src='images/"+film.getImage()+".jpg'/></span>");
+    out.print("<a href='generic'><h2>"+film.getTitle()+"</h2>");
+    out.print("<div class='content'><p>Somthing</p></div></a></article>");
+} %>
             </section>
         </div>
     </div>

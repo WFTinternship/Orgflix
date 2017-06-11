@@ -95,7 +95,7 @@ public class ListTest {
         listDao.addToWished(film, true, user.getId());
 
         listDao.removeFromWished(film, user.getId());
-        Assert.assertEquals(listDao.showOwnWished(user.getId()).size(), 0);
+        Assert.assertEquals(0,listDao.showOwnWished(user.getId()).size());
     }
 
     @Test
@@ -114,7 +114,7 @@ public class ListTest {
         listDao.addToWatched(film, true, user.getId());
 
         listDao.removeFromWatched(film, user.getId());
-        Assert.assertEquals(listDao.showOwnWished(user.getId()).size(), 0);
+        Assert.assertEquals(listDao.showOwnWatched(user.getId()).size(), 0);
     }
 
     @Test

@@ -29,50 +29,50 @@ public class ListDaoJdbc implements ListDao {
             throw new DaoException(e.getMessage());
         }
 
-
+        //check if given film and user are related
         final String checkQuery = "SELECT COUNT(*) FROM lists WHERE User_ID = ? AND Film_ID = ?";
 
-        PreparedStatement statement;
+        PreparedStatement checkStatement;
         try {
-            statement = connection.prepareStatement(checkQuery);
+            checkStatement = connection.prepareStatement(checkQuery);
         } catch (SQLException e) {
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
 
-        set(User_ID, film, statement);
+        set(User_ID, film, checkStatement);
         ResultSet rs;
         try {
-            rs = statement.executeQuery();
+            rs = checkStatement.executeQuery();
         } catch (SQLException e) {
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
 
-        int resultSetLength = hasNext(rs);
+        int checkSetLength = hasNext(rs);
 
-        //check whether or not the given film is in the wishlist
+        //check whether or not the given film is marked as planned
 
-        //case: in the wishlist
-        if (resultSetLength == 1) {
-            final String finalCheckQuery = "UPDATE lists SET Is_watched = TRUE " +
+        //case: planned => UPDATE
+        if (checkSetLength == 1) {
+            final String updateQuery = "UPDATE lists SET Is_watched = TRUE " +
                     "WHERE User_ID = ? AND Film_ID = ?";
-            PreparedStatement statement1;
+            PreparedStatement updateStatement;
             try {
-                statement1 = connection.prepareStatement(finalCheckQuery);
+                updateStatement = connection.prepareStatement(updateQuery);
             } catch (SQLException e) {
                 LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
             }
-            set(User_ID, film, statement1);
+            set(User_ID, film, updateStatement);
             try {
-                result = statement1.execute();
+                result = updateStatement.execute();
             } catch (SQLException e) {
                 LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
             }
             try {
-                closeAll(connection, statement, statement1);
+                closeAll(connection, checkStatement, updateStatement);
             } catch (SQLException e) {
                 LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
@@ -80,32 +80,32 @@ public class ListDaoJdbc implements ListDao {
             return result;
         }
 
-        //case: not in the wishlist
+        //case: not planned to watch => INSERT
         else{
-            final String finalCheckQuery = "INSERT INTO Lists(User_ID, Film_ID, Is_watched, Is_public) VALUES (?, ?, TRUE, ?)";
-            PreparedStatement statement1;
+            final String insertQuery = "INSERT INTO Lists(User_ID, Film_ID, Is_watched, Is_public) VALUES (?, ?, TRUE, ?)";
+            PreparedStatement insertStatement;
             try {
-                statement1 = connection.prepareStatement(finalCheckQuery);
+                insertStatement = connection.prepareStatement(insertQuery);
             } catch (SQLException e) {
                 LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
             }
 
             try {
-                set(User_ID, film, statement1);
-                statement1.setBoolean(3, isPublic);
+                set(User_ID, film, insertStatement);
+                insertStatement.setBoolean(3, isPublic);
             } catch (SQLException e) {
                 LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
             }
             try {
-                result = statement1.execute();
+                result = insertStatement.execute();
             } catch (SQLException e) {
                 LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
             }
             try {
-                closeAll(connection, statement, statement1);
+                closeAll(connection, checkStatement, insertStatement);
             } catch (SQLException e) {
                 LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
@@ -125,20 +125,21 @@ public class ListDaoJdbc implements ListDao {
             throw new DaoException(e.getMessage());
         }
 
+        //check if given film and user are related
         final String checkQuery = "SELECT COUNT(*) FROM lists WHERE User_ID = ? AND Film_ID = ?";
 
-        PreparedStatement statement;
+        PreparedStatement checkStatement;
         try {
-            statement = connection.prepareStatement(checkQuery);
+            checkStatement = connection.prepareStatement(checkQuery);
         } catch (SQLException e) {
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
 
-        set(User_ID, film, statement);
+        set(User_ID, film, checkStatement);
         ResultSet rs;
         try {
-            rs = statement.executeQuery();
+            rs = checkStatement.executeQuery();
         } catch (SQLException e) {
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
@@ -154,30 +155,30 @@ public class ListDaoJdbc implements ListDao {
             throw new DaoException(e.getMessage());
         }
 
-        //check whether or not the given film is in the watchlist
+        //check if the film is watched
 
-        //case: in the watchlist
+        //case: film marked as watched
         if (resultSetLength == 1) {
-            final String finalCheckQuery = "UPDATE lists SET Is_wished = TRUE " +
+            final String updateQuery = "UPDATE lists SET Is_wished = TRUE " +
                     "WHERE User_ID = ? AND Film_ID = ?";
-            PreparedStatement statement1;
+            PreparedStatement updateStatement;
             try {
-                statement1 = connection.prepareStatement(finalCheckQuery);
+                updateStatement = connection.prepareStatement(updateQuery);
             } catch (SQLException e) {
                 LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
             }
 
-            set(User_ID, film, statement1);
+            set(User_ID, film, updateStatement);
 
             try {
-                result = statement1.execute();
+                result = updateStatement.execute();
             } catch (SQLException e) {
                 LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
             }
             try {
-                closeAll(connection, statement, statement1);
+                closeAll(connection, checkStatement, updateStatement);
             } catch (SQLException e) {
                 LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
@@ -185,31 +186,31 @@ public class ListDaoJdbc implements ListDao {
             return result;
         }
 
-        //case: not in the watchlist
+        //case: not marked as watched
         else{
-            final String finalCheckQuery = "INSERT INTO Lists(User_ID, Film_ID, Is_wished, Is_public) VALUES (?, ?, TRUE, ?)";
-            PreparedStatement statement1;
+            final String insertQuery = "INSERT INTO Lists(User_ID, Film_ID, Is_wished, Is_public) VALUES (?, ?, TRUE, ?)";
+            PreparedStatement insertStatement;
             try {
-                statement1 = connection.prepareStatement(finalCheckQuery);
+                insertStatement = connection.prepareStatement(insertQuery);
             } catch (SQLException e) {
                 LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
             }
-            set(User_ID, film, statement1);
+            set(User_ID, film, insertStatement);
             try {
-                statement1.setBoolean(3, isPublic);
-            } catch (SQLException e) {
-                LOGGER.warn(e.getMessage());
-                throw new DaoException(e.getMessage());
-            }
-            try {
-                result = statement1.execute();
+                insertStatement.setBoolean(3, isPublic);
             } catch (SQLException e) {
                 LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
             }
             try {
-                closeAll(connection, statement, statement1);
+                result = insertStatement.execute();
+            } catch (SQLException e) {
+                LOGGER.warn(e.getMessage());
+                throw new DaoException(e.getMessage());
+            }
+            try {
+                closeAll(connection, checkStatement, insertStatement);
             } catch (SQLException e) {
                 LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
@@ -231,96 +232,83 @@ public class ListDaoJdbc implements ListDao {
 
         //check if the film is marked as watched
 
-        final String query = "SELECT * FROM lists WHERE Film_ID = ? AND User_ID = ? AND Is_watched = TRUE";
-        PreparedStatement preparedStatement;
+        final String watchedCheckQuery = "SELECT * FROM lists WHERE User_ID = ? AND Film_ID = ? AND Is_watched = TRUE";
+        PreparedStatement watchedCheckStatement;
         try {
-            preparedStatement = connection.prepareStatement(query);
+            watchedCheckStatement = connection.prepareStatement(watchedCheckQuery);
         } catch (SQLException e) {
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
 
-        set(User_ID, film, preparedStatement);
+        set(User_ID, film, watchedCheckStatement);
 
-        ResultSet rs;
+        ResultSet watchedSet;
         try {
-            rs = preparedStatement.executeQuery();
+            watchedSet = watchedCheckStatement.executeQuery();
         } catch (SQLException e) {
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
 
-        int resultSetLength;
-        try {
-            if (!rs.next()) {
-                closeAll(connection, preparedStatement);
-                return false;
-            }
-            resultSetLength = rs.getInt(1);
-        } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
-            throw new DaoException(e.getMessage());
-        }
+//        int watchedSetSize;
 
-        if(resultSetLength == 0){
-            try {
-                closeAll(connection, preparedStatement);
-            } catch (SQLException e) {
-                LOGGER.warn(e.getMessage());
-                throw new DaoException(e.getMessage());
-            }
+        if(!checkForResultSet(watchedSet, connection, watchedCheckStatement)){
             return false;
         }
 
-        final String checkQuery = "SELECT * FROM Lists WHERE User_ID = ? AND Film_ID = ? AND Is_watched = TRUE ";
+        //case: marked as watched
 
-        PreparedStatement statement;
+        //check if film is marked as planned
+        final String plannedCheckQuery = "SELECT * FROM Lists WHERE User_ID = ? AND Film_ID = ? AND Is_wished = TRUE ";
+
+        PreparedStatement plannedCheckStatement;
         try {
-            statement = connection.prepareStatement(checkQuery);
+            plannedCheckStatement = connection.prepareStatement(plannedCheckQuery);
         } catch (SQLException e) {
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
 
-        set(User_ID, film, statement);
-        ResultSet resultSet;
+        set(User_ID, film, plannedCheckStatement);
+        ResultSet plannedSet;
         try {
-            resultSet = statement.executeQuery();
+            plannedSet = plannedCheckStatement.executeQuery();
         } catch (SQLException e) {
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
-        boolean is_wished;
+        boolean planned = false;
         try {
-            resultSet.next();
-            is_wished = resultSet.getBoolean("Is_wished");
+            if (plannedSet.next()) {
+                planned = plannedSet.getBoolean("Is_wished");
+            }
         } catch (SQLException e) {
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
 
 
-        //check whether or not the given film is in the wishlist
 
-        //case: in the wishlist
-        if (is_wished) {
+        //case: film marked as planned => UPDATE
+        if (planned) {
             final String updateQuery = "UPDATE lists SET Is_watched = FALSE WHERE User_ID = ? AND Film_ID = ?";
-            PreparedStatement statement1;
+            PreparedStatement updateStatement;
             try {
-                statement1 = connection.prepareStatement(updateQuery);
+                updateStatement = connection.prepareStatement(updateQuery);
             } catch (SQLException e) {
                 LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
             }
-            set(User_ID, film, statement1);
+            set(User_ID, film, updateStatement);
             try {
-                result = statement1.execute();
+                result = updateStatement.execute();
             } catch (SQLException e) {
                 LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
             }
             try {
-                closeAll(connection, resultSet, statement, statement1);
+                closeAll(connection, plannedSet, plannedCheckStatement, updateStatement);
             } catch (SQLException e) {
                 LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
@@ -328,7 +316,7 @@ public class ListDaoJdbc implements ListDao {
             return result;
         }
 
-        //case: not in the wishlist
+        //case: not marked as planned
         else {
             try {
                 return delete(connection, User_ID, film);
@@ -337,6 +325,23 @@ public class ListDaoJdbc implements ListDao {
                 throw new DaoException(e.getMessage());
             }
         }
+    }
+
+    private boolean checkForResultSet(ResultSet resultSet, Connection connection, PreparedStatement watchedCheckStatement) {
+
+        try {
+            //case: marked as watched => terminated
+            if (!resultSet.next()) {
+                closeAll(connection, watchedCheckStatement);
+                return false;
+            }
+//            watchedSetSize = watchedSet.getInt(1);
+        } catch (SQLException e) {
+            LOGGER.warn(e.getMessage());
+            throw new DaoException(e.getMessage());
+        }
+
+        return true;
     }
 
     @Override
@@ -350,61 +355,60 @@ public class ListDaoJdbc implements ListDao {
             throw new DaoException(e.getMessage());
         }
 
-        //check if the film is marked as wished
+        //check if the film is marked as planned
 
-        final String query = "SELECT * FROM lists WHERE Film_ID = ? AND User_ID = ? AND Is_wished = TRUE";
-        PreparedStatement preparedStatement;
+        final String plannedCheckQuery = "SELECT * FROM lists WHERE User_ID = ? AND Film_ID = ? AND Is_wished = TRUE";
+        PreparedStatement plannedCheckStatement;
         try {
-            preparedStatement = connection.prepareStatement(query);
+            plannedCheckStatement = connection.prepareStatement(plannedCheckQuery);
         } catch (SQLException e) {
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
 
-        set(User_ID, film, preparedStatement);
-        ResultSet rs;
+        set(User_ID, film, plannedCheckStatement);
+
+        ResultSet plannedSet;
         try {
-            rs = preparedStatement.executeQuery();
+            plannedSet = plannedCheckStatement.executeQuery();
         } catch (SQLException e) {
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
 
+        if(!checkForResultSet(plannedSet, connection, plannedCheckStatement)){
+            return false;
+        }
+
+        //case: marked as planned
+
+        //check if film is marked as watched
+
+        final String checkQuery = "SELECT * FROM Lists WHERE User_ID = ? AND Film_ID = ? AND Is_watched = TRUE ";
+
+        PreparedStatement watchedCheckStatement;
         try {
-            if (!rs.next()) {
-                closeAll(connection, preparedStatement);
-                return false;
-            }
+            watchedCheckStatement = connection.prepareStatement(checkQuery);
         } catch (SQLException e) {
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
 
-        final String checkQuery = "SELECT * FROM Lists WHERE User_ID = ? AND Film_ID = ? AND Is_wished = TRUE ";
 
-        PreparedStatement statement;
+        set(User_ID, film, watchedCheckStatement);
+        ResultSet watchedSet;
         try {
-            statement = connection.prepareStatement(checkQuery);
+            watchedSet = watchedCheckStatement.executeQuery();
         } catch (SQLException e) {
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
 
-
-        set(User_ID, film, statement);
-        ResultSet resultSet;
-        try {
-            resultSet = statement.executeQuery();
-        } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
-            throw new DaoException(e.getMessage());
-        }
-
-        boolean isWatched;
+        boolean watched = false;
 
         try {
-            resultSet.next();
-            isWatched = resultSet.getBoolean("Is_watched");
+            if(watchedSet.next())
+                watched = watchedSet.getBoolean("Is_watched");
         } catch (SQLException e) {
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
@@ -414,24 +418,24 @@ public class ListDaoJdbc implements ListDao {
         //check whether or not the given film is in the watchlist
 
         //case: in the watchlist
-        if (isWatched) {
+        if (watched) {
             final String updateQuery = "UPDATE lists SET Is_wished = FALSE WHERE User_ID = ? AND Film_ID = ?";
-            PreparedStatement statement1;
+            PreparedStatement updateStatement;
             try {
-                statement1 = connection.prepareStatement(updateQuery);
+                updateStatement = connection.prepareStatement(updateQuery);
             } catch (SQLException e) {
                 LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
             }
-            set(User_ID, film, statement1);
+            set(User_ID, film, updateStatement);
             try {
-                result = statement1.execute();
+                result = updateStatement.execute();
             } catch (SQLException e) {
                 LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
             }
             try {
-                closeAll(connection, resultSet, preparedStatement, statement1, statement);
+                closeAll(connection, watchedSet, plannedCheckStatement, updateStatement, watchedCheckStatement);
             } catch (SQLException e) {
                 LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
@@ -439,7 +443,7 @@ public class ListDaoJdbc implements ListDao {
             return result;
         }
 
-        //case: not in the watchlist
+        //case: not
         else {
             try {
                 return delete(connection, User_ID, film);

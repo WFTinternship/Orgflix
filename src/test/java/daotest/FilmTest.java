@@ -15,7 +15,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 /**
- * Created by Vardan on 07.06.2017.
+ * Created by Vardan on 07.06.2017
  */
 public class FilmTest {
 
@@ -26,6 +26,7 @@ public class FilmTest {
 
     @Before
     public void setUp() {
+        film = new Film();
     }
 
     @After
@@ -37,7 +38,6 @@ public class FilmTest {
     @Test
     public void addFilm_Fail() {
 
-        film = new Film();
         director = new DirectorDaoJdbc().addDirector("", false);
         directorList = new ArrayList<>();
 
@@ -51,7 +51,6 @@ public class FilmTest {
     @Test
     public void editFilm_Succeeded() {
 
-        film = new Film();
         director = new DirectorDaoJdbc().addDirector("Matt Ross", false);
         directorList = new ArrayList<>();
 
@@ -68,7 +67,6 @@ public class FilmTest {
     @Test
     public void editFilm_Fail() {
 
-        film = new Film();
         director = new DirectorDaoJdbc().addDirector("", false);
         directorList = new ArrayList<>();
 
@@ -82,7 +80,6 @@ public class FilmTest {
     @Test
     public void getFilmById_Succeeded() {
 
-        film = new Film();
         director = new DirectorDaoJdbc().addDirector("Matt Ross", false);
         directorList = new ArrayList<>();
 
@@ -99,7 +96,6 @@ public class FilmTest {
     @Test
     public void getFilmsByDirector_byId() {
 
-        film = new Film();
         director = new DirectorDaoJdbc().addDirector("Matt Ross", false);
         directorList = new ArrayList<>();
         film.setTitle("Captain Fantastic");
@@ -119,7 +115,6 @@ public class FilmTest {
     @Test
     public void getFilmsByDirector_byDirector() {
 
-        film = new Film();
         director = new DirectorDaoJdbc().addDirector("Matt Ross", false);
         directorList = new ArrayList<>();
         film.setTitle("Captain Fantastic");
@@ -137,7 +132,6 @@ public class FilmTest {
     @Test
     public void rateFilm() {
 
-        film = new Film();
         director = new DirectorDaoJdbc().addDirector("Matt Ross", false);
         directorList = new ArrayList<>();
         film.setTitle("Captain Fantastic");
@@ -152,7 +146,6 @@ public class FilmTest {
     @Test
     public void addGenreToFilm_ByGenreAndFilmId() {
 
-        film = new Film();
         director = new DirectorDaoJdbc().addDirector("Matt Ross", false);
         film.setTitle("Captain Fantastic");
         film.addDirector(director);
@@ -165,13 +158,13 @@ public class FilmTest {
     @Test
     public void addGenreToFilm_ByGenreAndFilm() {
 
-        film = new Film();
         director = new DirectorDaoJdbc().addDirector("Matt Ross", false);
         film.setTitle("Captain Fantastic");
         film.addDirector(director);
         film.addGeners(Genre.DRAMA);
         filmDao.addFilm(film);
 
+        assertTrue(filmDao.addGenreToFilm(film.getGeners().get(0), film));
         assertTrue(filmDao.addGenreToFilm(film.getGeners().get(0), film));
     }
 

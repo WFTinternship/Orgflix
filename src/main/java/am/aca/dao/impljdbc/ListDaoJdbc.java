@@ -19,7 +19,7 @@ public class ListDaoJdbc implements ListDao {
 
     
     @Override
-    public boolean addToWatched(Film film, boolean isPublic, int User_ID) {
+    public boolean addToWatched(Film film, boolean isPublic, int userId) {
         boolean result;
         Connection connection;
         try {
@@ -40,7 +40,7 @@ public class ListDaoJdbc implements ListDao {
             throw new DaoException(e.getMessage());
         }
 
-        set(User_ID, film, checkStatement);
+        set(userId, film, checkStatement);
         ResultSet rs;
         try {
             rs = checkStatement.executeQuery();
@@ -50,6 +50,12 @@ public class ListDaoJdbc implements ListDao {
         }
 
         int checkSetLength = hasNext(rs);
+        try {
+            connection.setAutoCommit(false);
+        } catch (SQLException e) {
+            LOGGER.warn(e.getMessage());
+            throw new DaoException(e.getMessage());
+        }
 
         //check whether or not the given film is marked as planned
 
@@ -64,7 +70,7 @@ public class ListDaoJdbc implements ListDao {
                 LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
             }
-            set(User_ID, film, updateStatement);
+            set(userId, film, updateStatement);
             try {
                 result = updateStatement.execute();
             } catch (SQLException e) {
@@ -72,7 +78,7 @@ public class ListDaoJdbc implements ListDao {
                 throw new DaoException(e.getMessage());
             }
             try {
-                closeAll(connection, checkStatement, updateStatement);
+                closeAll(true, connection, checkStatement, updateStatement);
             } catch (SQLException e) {
                 LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
@@ -92,7 +98,7 @@ public class ListDaoJdbc implements ListDao {
             }
 
             try {
-                set(User_ID, film, insertStatement);
+                set(userId, film, insertStatement);
                 insertStatement.setBoolean(3, isPublic);
             } catch (SQLException e) {
                 LOGGER.warn(e.getMessage());
@@ -105,7 +111,7 @@ public class ListDaoJdbc implements ListDao {
                 throw new DaoException(e.getMessage());
             }
             try {
-                closeAll(connection, checkStatement, insertStatement);
+                closeAll(true, connection, checkStatement, insertStatement);
             } catch (SQLException e) {
                 LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
@@ -115,7 +121,7 @@ public class ListDaoJdbc implements ListDao {
     }
 
     @Override
-    public boolean addToWished(Film film, boolean isPublic, int User_ID)  {
+    public boolean addToWished(Film film, boolean isPublic, int userId)  {
         boolean result;
         Connection connection;
         try {
@@ -136,7 +142,7 @@ public class ListDaoJdbc implements ListDao {
             throw new DaoException(e.getMessage());
         }
 
-        set(User_ID, film, checkStatement);
+        set(userId, film, checkStatement);
         ResultSet rs;
         try {
             rs = checkStatement.executeQuery();
@@ -158,6 +164,12 @@ public class ListDaoJdbc implements ListDao {
         //check if the film is watched
 
         //case: film marked as watched
+        try {
+            connection.setAutoCommit(false);
+        } catch (SQLException e) {
+            LOGGER.warn(e.getMessage());
+            throw new DaoException(e.getMessage());
+        }
         if (resultSetLength == 1) {
             final String updateQuery = "UPDATE lists SET Is_wished = TRUE " +
                     "WHERE User_ID = ? AND Film_ID = ?";
@@ -169,7 +181,7 @@ public class ListDaoJdbc implements ListDao {
                 throw new DaoException(e.getMessage());
             }
 
-            set(User_ID, film, updateStatement);
+            set(userId, film, updateStatement);
 
             try {
                 result = updateStatement.execute();
@@ -178,7 +190,7 @@ public class ListDaoJdbc implements ListDao {
                 throw new DaoException(e.getMessage());
             }
             try {
-                closeAll(connection, checkStatement, updateStatement);
+                closeAll(true, connection, checkStatement, updateStatement);
             } catch (SQLException e) {
                 LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
@@ -196,7 +208,7 @@ public class ListDaoJdbc implements ListDao {
                 LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
             }
-            set(User_ID, film, insertStatement);
+            set(userId, film, insertStatement);
             try {
                 insertStatement.setBoolean(3, isPublic);
             } catch (SQLException e) {
@@ -210,7 +222,7 @@ public class ListDaoJdbc implements ListDao {
                 throw new DaoException(e.getMessage());
             }
             try {
-                closeAll(connection, checkStatement, insertStatement);
+                closeAll(true, connection, checkStatement, insertStatement);
             } catch (SQLException e) {
                 LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
@@ -220,7 +232,7 @@ public class ListDaoJdbc implements ListDao {
     }
 
     @Override
-    public boolean removeFromWatched(Film film, int User_ID) {
+    public boolean removeFromWatched(Film film, int userId) {
         boolean result;
         Connection connection;
         try {
@@ -241,7 +253,7 @@ public class ListDaoJdbc implements ListDao {
             throw new DaoException(e.getMessage());
         }
 
-        set(User_ID, film, watchedCheckStatement);
+        set(userId, film, watchedCheckStatement);
 
         ResultSet watchedSet;
         try {
@@ -251,9 +263,14 @@ public class ListDaoJdbc implements ListDao {
             throw new DaoException(e.getMessage());
         }
 
-//        int watchedSetSize;
 
         if(!checkForResultSet(watchedSet, connection, watchedCheckStatement)){
+            try {
+                closeAll(false, connection, watchedSet, watchedCheckStatement);
+            } catch (SQLException e) {
+                LOGGER.warn(e.getMessage());
+                throw new DaoException(e.getMessage());
+            }
             return false;
         }
 
@@ -270,7 +287,7 @@ public class ListDaoJdbc implements ListDao {
             throw new DaoException(e.getMessage());
         }
 
-        set(User_ID, film, plannedCheckStatement);
+        set(userId, film, plannedCheckStatement);
         ResultSet plannedSet;
         try {
             plannedSet = plannedCheckStatement.executeQuery();
@@ -292,6 +309,12 @@ public class ListDaoJdbc implements ListDao {
 
         //case: film marked as planned => UPDATE
         if (planned) {
+            try {
+                connection.setAutoCommit(false);
+            } catch (SQLException e) {
+                LOGGER.warn(e.getMessage());
+                throw new DaoException(e.getMessage());
+            }
             final String updateQuery = "UPDATE lists SET Is_watched = FALSE WHERE User_ID = ? AND Film_ID = ?";
             PreparedStatement updateStatement;
             try {
@@ -300,7 +323,7 @@ public class ListDaoJdbc implements ListDao {
                 LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
             }
-            set(User_ID, film, updateStatement);
+            set(userId, film, updateStatement);
             try {
                 result = updateStatement.execute();
             } catch (SQLException e) {
@@ -308,7 +331,7 @@ public class ListDaoJdbc implements ListDao {
                 throw new DaoException(e.getMessage());
             }
             try {
-                closeAll(connection, plannedSet, plannedCheckStatement, updateStatement);
+                closeAll(true,connection, plannedSet, plannedCheckStatement, updateStatement);
             } catch (SQLException e) {
                 LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
@@ -319,7 +342,7 @@ public class ListDaoJdbc implements ListDao {
         //case: not marked as planned
         else {
             try {
-                return delete(connection, User_ID, film);
+                return delete(connection, userId, film);
             } catch (SQLException e) {
                 LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
@@ -332,10 +355,9 @@ public class ListDaoJdbc implements ListDao {
         try {
             //case: marked as watched => terminated
             if (!resultSet.next()) {
-                closeAll(connection, watchedCheckStatement);
+                closeAll(false, connection, watchedCheckStatement);
                 return false;
             }
-//            watchedSetSize = watchedSet.getInt(1);
         } catch (SQLException e) {
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
@@ -345,7 +367,7 @@ public class ListDaoJdbc implements ListDao {
     }
 
     @Override
-    public boolean removeFromWished(Film film, int User_ID)  {
+    public boolean removeFromWished(Film film, int userId)  {
         boolean result;
         Connection connection;
         try {
@@ -366,7 +388,7 @@ public class ListDaoJdbc implements ListDao {
             throw new DaoException(e.getMessage());
         }
 
-        set(User_ID, film, plannedCheckStatement);
+        set(userId, film, plannedCheckStatement);
 
         ResultSet plannedSet;
         try {
@@ -395,7 +417,7 @@ public class ListDaoJdbc implements ListDao {
         }
 
 
-        set(User_ID, film, watchedCheckStatement);
+        set(userId, film, watchedCheckStatement);
         ResultSet watchedSet;
         try {
             watchedSet = watchedCheckStatement.executeQuery();
@@ -419,6 +441,12 @@ public class ListDaoJdbc implements ListDao {
 
         //case: in the watchlist
         if (watched) {
+            try {
+                connection.setAutoCommit(false);
+            } catch (SQLException e) {
+                LOGGER.warn(e.getMessage());
+                throw new DaoException(e.getMessage());
+            }
             final String updateQuery = "UPDATE lists SET Is_wished = FALSE WHERE User_ID = ? AND Film_ID = ?";
             PreparedStatement updateStatement;
             try {
@@ -427,7 +455,7 @@ public class ListDaoJdbc implements ListDao {
                 LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
             }
-            set(User_ID, film, updateStatement);
+            set(userId, film, updateStatement);
             try {
                 result = updateStatement.execute();
             } catch (SQLException e) {
@@ -435,7 +463,7 @@ public class ListDaoJdbc implements ListDao {
                 throw new DaoException(e.getMessage());
             }
             try {
-                closeAll(connection, watchedSet, plannedCheckStatement, updateStatement, watchedCheckStatement);
+                closeAll(true, connection, watchedSet, plannedCheckStatement, updateStatement, watchedCheckStatement);
             } catch (SQLException e) {
                 LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
@@ -446,7 +474,7 @@ public class ListDaoJdbc implements ListDao {
         //case: not
         else {
             try {
-                return delete(connection, User_ID, film);
+                return delete(connection, userId, film);
             } catch (SQLException e) {
                 LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
@@ -455,7 +483,7 @@ public class ListDaoJdbc implements ListDao {
     }
 
     @Override
-    public ArrayList<Film> showOwnWatched(int User_ID) {
+    public ArrayList<Film> showOwnWatched(int userId) {
         Connection connection;
         try {
             connection = DbManager.getInstance().getConnection();
@@ -474,7 +502,7 @@ public class ListDaoJdbc implements ListDao {
             throw new DaoException(e.getMessage());
         }
         try {
-            statement.setInt(1, User_ID);
+            statement.setInt(1, userId);
         } catch (SQLException e) {
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
@@ -489,7 +517,7 @@ public class ListDaoJdbc implements ListDao {
 
         add(resultSet, watched);
         try {
-            closeAll(connection, resultSet, statement);
+            closeAll(false, connection, resultSet, statement);
         } catch (SQLException e) {
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
@@ -498,7 +526,7 @@ public class ListDaoJdbc implements ListDao {
     }
 
     @Override
-    public ArrayList<Film> showOwnWished(int User_ID)  {
+    public ArrayList<Film> showOwnWished(int userId)  {
         Connection connection;
         try {
             connection = DbManager.getInstance().getConnection();
@@ -517,7 +545,7 @@ public class ListDaoJdbc implements ListDao {
             throw new DaoException(e.getMessage());
         }
         try {
-            statement.setInt(1, User_ID);
+            statement.setInt(1, userId);
         } catch (SQLException e) {
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
@@ -531,7 +559,7 @@ public class ListDaoJdbc implements ListDao {
         }
         add(resultSet, wished);
         try {
-            closeAll(connection, resultSet, statement);
+            closeAll(false, connection, resultSet, statement);
         } catch (SQLException e) {
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
@@ -540,7 +568,7 @@ public class ListDaoJdbc implements ListDao {
     }
 
     @Override
-    public ArrayList<Film> showOthersWatched(int User_ID)  {
+    public ArrayList<Film> showOthersWatched(int userId)  {
         Connection connection;
         try {
             connection = DbManager.getInstance().getConnection();
@@ -559,7 +587,7 @@ public class ListDaoJdbc implements ListDao {
             throw new DaoException(e.getMessage());
         }
         try {
-            statement.setInt(1, User_ID);
+            statement.setInt(1, userId);
         } catch (SQLException e) {
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
@@ -581,7 +609,7 @@ public class ListDaoJdbc implements ListDao {
             throw new DaoException(e.getMessage());
         }
         try {
-            closeAll(connection, resultSet, statement);
+            closeAll(false, connection, resultSet, statement);
         } catch (SQLException e) {
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
@@ -590,7 +618,7 @@ public class ListDaoJdbc implements ListDao {
     }
 
     @Override
-    public ArrayList<Film> showOthersWished(int User_ID)  {
+    public ArrayList<Film> showOthersWished(int userId)  {
         Connection connection;
         try {
             connection = DbManager.getInstance().getConnection();
@@ -609,7 +637,7 @@ public class ListDaoJdbc implements ListDao {
             throw new DaoException(e.getMessage());
         }
         try {
-            statement.setInt(1, User_ID);
+            statement.setInt(1, userId);
         } catch (SQLException e) {
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
@@ -631,7 +659,7 @@ public class ListDaoJdbc implements ListDao {
         }
         try {
 
-            closeAll(connection, resultSet, statement);
+            closeAll(false, connection, resultSet, statement);
         } catch (SQLException e) {
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
@@ -639,17 +667,17 @@ public class ListDaoJdbc implements ListDao {
         return wished;
     }
 
-    private boolean delete(Connection connection, int User_ID, Film film) throws SQLException {
+    private boolean delete(Connection connection, int userId, Film film) throws SQLException {
         final String deleteQuery = "DELETE FROM lists WHERE User_ID = ? AND Film_ID = ?";
-        PreparedStatement statement1 = connection.prepareStatement(deleteQuery);
-        statement1.setInt(1, User_ID);
-        statement1.setInt(2, film.getId());
-        return statement1.execute();
+        PreparedStatement statement = connection.prepareStatement(deleteQuery);
+        statement.setInt(1, userId);
+        statement.setInt(2, film.getId());
+        return statement.execute();
     }
 
-    private void set(int User_ID, Film film, PreparedStatement statement){
+    private void set(int userId, Film film, PreparedStatement statement){
         try {
-            statement.setInt(1, User_ID);
+            statement.setInt(1, userId);
             statement.setInt(2, film.getId());
         } catch (SQLException e) {
             LOGGER.warn(e.getMessage());
@@ -678,16 +706,16 @@ public class ListDaoJdbc implements ListDao {
         }
     }
 
-    private void closeAll(Connection connection, PreparedStatement... statements) throws SQLException {
+    private void closeAll(boolean commit, Connection connection, PreparedStatement... statements) throws SQLException {
+        if (commit) connection.commit();
         for (PreparedStatement statement: statements) {
             statement.close();
         }
         connection.close();
     }
 
-    private void closeAll(Connection connection, ResultSet resultSet, PreparedStatement... statements) throws SQLException {
+    private void closeAll(boolean commit, Connection connection, ResultSet resultSet, PreparedStatement... statements) throws SQLException {
         resultSet.close();
-        closeAll(connection, statements);
+        closeAll(commit, connection, statements);
     }
-
 }

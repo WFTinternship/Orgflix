@@ -32,7 +32,7 @@ public class FilmTest {
     @After
     public void tearDown() {
 
-        TestHelper.emptyTable(new String[]{"film_to_director", "films", "directors"});
+        TestHelper.emptyTable(new String[]{"film_to_director", "genre_to_film", "films", "directors", });
     }
 
     @Test
@@ -151,6 +151,7 @@ public class FilmTest {
         film.addDirector(director);
         film.addGeners(Genre.DRAMA);
         filmDao.addFilm(film);
+        filmDao.addGenreToFilm(Genre.COMEDY, film.getId());
         assertTrue(filmDao.addGenreToFilm(film.getGeners().get(0), film.getId()));
 
     }
@@ -164,7 +165,6 @@ public class FilmTest {
         film.addGeners(Genre.DRAMA);
         filmDao.addFilm(film);
 
-        assertTrue(filmDao.addGenreToFilm(film.getGeners().get(0), film));
         assertTrue(filmDao.addGenreToFilm(film.getGeners().get(0), film));
     }
 

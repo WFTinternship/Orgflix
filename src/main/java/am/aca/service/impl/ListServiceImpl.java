@@ -7,7 +7,6 @@ import am.aca.dao.impljdbc.ListDaoJdbc;
 import am.aca.entity.Film;
 import am.aca.service.ListService;
 
-import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -21,7 +20,7 @@ public class ListServiceImpl implements ListService {
     }
 
     @Override
-    public boolean addToWatched(Film film, boolean isPublic, int user_ID) throws SQLException {
+    public boolean addToWatched(Film film, boolean isPublic, int user_ID)  {
         FilmDao filmDao = new FilmDaoJdbc();
 
         //case: the film does not exist
@@ -34,7 +33,7 @@ public class ListServiceImpl implements ListService {
     }
 
     @Override
-    public boolean addToWished(Film film, boolean isPublic, int user_ID) throws SQLException {
+    public boolean addToWished(Film film, boolean isPublic, int user_ID)  {
         FilmDao filmDao = new FilmDaoJdbc();
 
         //case: the film does not exist
@@ -47,32 +46,32 @@ public class ListServiceImpl implements ListService {
     }
 
     @Override
-    public boolean removeFromWatched(Film film, int user_ID) throws SQLException {
+    public boolean removeFromWatched(Film film, int user_ID)  {
         return listDao.removeFromWatched(film,user_ID);
     }
 
     @Override
-    public boolean removeFromWished(Film film, int user_ID) throws SQLException {
+    public boolean removeFromWished(Film film, int user_ID)  {
         return listDao.removeFromWished(film,user_ID);
     }
 
     @Override
-    public List<Film> showOwnWatched(int user_ID) throws SQLException {
+    public List<Film> showOwnWatched(int user_ID)  {
         return listDao.showOwnWatched(user_ID);
     }
 
     @Override
-    public List<Film> showOwnWished(int user_ID) throws SQLException {
+    public List<Film> showOwnWished(int user_ID)  {
         return listDao.showOwnWished(user_ID);
     }
 
     @Override
-    public List<Film> showOthersWatched(int user_ID) throws SQLException {
+    public List<Film> showOthersWatched(int user_ID)  {
         return listDao.showOthersWatched(user_ID);
     }
 
     @Override
-    public List<Film> showOthersWished(int user_ID) throws SQLException {
+    public List<Film> showOthersWished(int user_ID)  {
         return listDao.showOthersWished(user_ID);
     }
 }

@@ -100,4 +100,12 @@ public class DbManager {
             throw new DaoException(e.toString());
         }
     }
+    public static void connectionRollback(Connection connection){
+        try{
+            connection.rollback();
+            LOGGER.info("Committed successfully");
+        }catch(SQLException e){
+            LOGGER.warn(e.toString());
+        }
+    }
 }

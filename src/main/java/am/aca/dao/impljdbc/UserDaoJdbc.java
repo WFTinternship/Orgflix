@@ -30,7 +30,7 @@ public class UserDaoJdbc implements UserDao {
             final String query = "INSERT INTO users (Nick,User_Name,Email,User_Pass) " +
                     " VALUES( ? , ? , ? , ? ) ";
 
-            statement = connection.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
+            statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, user.getNick());
             statement.setString(2, user.getUserName());
             statement.setString(3, user.getEmail());
@@ -44,7 +44,7 @@ public class UserDaoJdbc implements UserDao {
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         } finally {
-            DbManager.closeConnections(new Object[]{statement,resultSet,connection});
+            DbManager.closeConnections(new Object[]{statement, resultSet, connection});
         }
         user.setId(id);
         return id;
@@ -76,7 +76,7 @@ public class UserDaoJdbc implements UserDao {
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         } finally {
-            DbManager.closeConnections(new Object[]{resultSet,statement,connection});
+            DbManager.closeConnections(new Object[]{resultSet, statement, connection});
         }
         return user;
     }
@@ -107,7 +107,7 @@ public class UserDaoJdbc implements UserDao {
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         } finally {
-            DbManager.closeConnections(new Object[]{resultSet,statement,connection});
+            DbManager.closeConnections(new Object[]{resultSet, statement, connection});
         }
         return user;
     }
@@ -139,7 +139,7 @@ public class UserDaoJdbc implements UserDao {
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         } finally {
-            DbManager.closeConnections(new Object[]{statement,connection});
+            DbManager.closeConnections(new Object[]{statement, connection});
         }
         return state;
     }

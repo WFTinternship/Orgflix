@@ -26,6 +26,7 @@ create table films (
     Title varchar(250) not null,
     Prod_Year smallint,
     HasOscar boolean not null default false,
+    image_ref varchar(250),
     Rate_1star int default 0,
     Rate_2star int default 0,
     Rate_3star int default 0,
@@ -85,10 +86,32 @@ insert into directors(Director_Name,HasOscar)
    values('Thomas Jahn',false);
 
 # 2 films
-insert into films(Title,Prod_Year,HasOscar)
-   values('Pulp fiction',1994,true);
-insert into films(Title,Prod_Year,HasOscar)
-   values('Knocking on heavens door',1997,false);
+insert into films(Title,Prod_Year,HasOscar,image_ref)
+   values('The Shawshank Redemption',1994,true,'12345');
+insert into films(Title,Prod_Year,HasOscar,image_ref)
+   values('The Godfather',1972,true,'23452');
+insert into films(Title,Prod_Year,HasOscar,image_ref)
+  values('The Godfather: Part II',1974,true,'34555');
+insert into films(Title,Prod_Year,HasOscar,image_ref)
+  values('The Dark Knight',2008,false,'72623');
+insert into films(Title,Prod_Year,HasOscar,image_ref)
+  values('12 Angry Men',1957,false,'53234');
+insert into films(Title,Prod_Year,HasOscar,image_ref)
+  values('Schindlers List',1993,true,'86523');
+insert into films(Title,Prod_Year,HasOscar,image_ref)
+  values('Pulp Fiction',1994,true,'45352');
+insert into films(Title,Prod_Year,HasOscar,image_ref)
+  values('The Lord of the Rings: The Return of the King',2003,true,'98343');
+insert into films(Title,Prod_Year,HasOscar,image_ref)
+  values('The Good, the Bad and the Ugly',1996,false,'12923');
+insert into films(Title,Prod_Year,HasOscar,image_ref)
+  values('Fight Club',1999,false,'76765');
+insert into films(Title,Prod_Year,HasOscar,image_ref)
+  values('The Lord of the Rings: The Fellowship of the Ring',2001,true,'89733');
+insert into films(Title,Prod_Year,HasOscar,image_ref)
+  values('Star Wars: Episode V - The Empire Strikes Back',1980,true,'99778');
+insert into films(Title,Prod_Year,HasOscar,image_ref)
+  values('Forrest Gump',1994,true,'54545');
 
 # directors for 2 films
 insert into film_to_director(Director_ID,Film_ID) values(1,1);
@@ -96,10 +119,16 @@ insert into film_to_director(Director_ID,Film_ID) values(2,1);
 insert into film_to_director(Director_ID,Film_ID) values(2,2);
 
 # 3 genre
-insert into genre(ID,genre) values(1,'Crime');
-insert into genre(ID,genre) values(2,'Comedy');
-insert into genre(ID,genre) values(3,'Action');
-
+insert into genre(ID,genre) values(0,'CRIME');
+insert into genre(ID,genre) values(1,'COMEDY');
+insert into genre(ID,genre) values(2,'ACTION');
+insert into genre(ID,genre) values(3,'ADVENTURE');
+insert into genre(ID,genre) values(4,'DRAMA');
+insert into genre(ID,genre) values(5,'HISTORICAL');
+insert into genre(ID,genre) values(6,'FANTASY');
+insert into genre(ID,genre) values(7,'HORROR');
+insert into genre(ID,genre) values(8,'THRILLER');
+insert into genre(ID,genre) values(9,'MYSTERY');
 
 # 2 genre to 2 films
 insert into genre_to_film(Genre_ID,Film_ID) values(1,1);

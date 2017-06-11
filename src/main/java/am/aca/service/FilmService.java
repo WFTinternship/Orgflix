@@ -15,6 +15,7 @@ public interface FilmService {
     Film getFilmById(int id);
     List<Film> getFilmsByDirector(Director director);
     List<Film> getFilmsByDirector(int directorId);
+    List<Film> getFilmsList(int startIndex);
     boolean rateFilm(int filmId, int starType);
     boolean addGenreToFilm(Genre genre, Film film);
     boolean addGenreToFilm(Genre genre, int filmId);

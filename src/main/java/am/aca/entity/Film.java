@@ -11,6 +11,16 @@ public class Film {
     private String title;
     private int prodYear;
     private boolean hasOscar;
+    private String image;
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
     private int rate_1star;
     private int rate_2star;
     private int rate_3star;
@@ -28,11 +38,16 @@ public class Film {
         rate_5star = 0;
         geners = new ArrayList<>();
         directors = new ArrayList<>();
+        image = "00000";
     }
     public Film(String title, int prodYear){
         this();
         this.title = title;
         this.prodYear = prodYear;
+    }
+    public Film(String title, int prodYear, String image){
+        this(title,prodYear);
+        this.image = image;
     }
 
     @Override

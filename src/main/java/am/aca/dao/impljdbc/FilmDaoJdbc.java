@@ -70,8 +70,9 @@ public class FilmDaoJdbc implements FilmDao {
         PreparedStatement statement = null;
         try {
             connection = DbManager.getInstance().getConnection();
-            statement = connection.prepareStatement(query);
+            connection.setAutoCommit(false);
 
+            statement = connection.prepareStatement(query);
             statement.setString(1, film.getTitle());
             statement.setInt(2, film.getProdYear());
             statement.setBoolean(3, film.isHasOscar());
@@ -95,10 +96,12 @@ public class FilmDaoJdbc implements FilmDao {
                     statement.setInt(2, film.getId());
                     statement.executeUpdate();
                 }
+                connection.commit();
                 state = true; // film update statement is successful
             }
         } catch (SQLException e) {
             LOGGER.warn(e.toString());
+            DbManager.connectionRollback(connection);
             throw new DaoException(e.toString());
         } finally {
             DbManager.closeConnections(new Object[]{statement, connection});
@@ -130,6 +133,7 @@ public class FilmDaoJdbc implements FilmDao {
                 film.setTitle(resultSet.getString("Title"));
                 film.setHasOscar(resultSet.getBoolean("HasOscar"));
                 film.setProdYear(resultSet.getInt("Prod_Year"));
+                film.setImage(resultSet.getString("image_ref"));
                 film.setRate_1star(resultSet.getInt("Rate_1star"));
                 film.setRate_2star(resultSet.getInt("Rate_2star"));
                 film.setRate_3star(resultSet.getInt("Rate_3star"));
@@ -180,7 +184,7 @@ public class FilmDaoJdbc implements FilmDao {
 
     @Override
     public List<Film> getFilmsByDirector(int directorId) {
-        List<Film> films = null;
+        List<Film> films = new ArrayList<>();
 
         final String filmQuery = "SELECT * FROM film_to_director" +
                 " LEFT JOIN directors ON film_to_director.Director_ID = directors.ID " +
@@ -197,7 +201,36 @@ public class FilmDaoJdbc implements FilmDao {
             resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
-                films.add( getFilmById(resultSet.getInt("ID")) );
+                films.add(getFilmById(resultSet.getInt("ID")));
+            }
+        } catch (SQLException e) {
+            LOGGER.warn(e.toString());
+            throw new DaoException(e.toString());
+        } finally {
+            DbManager.closeConnections(new Object[]{resultSet, statement, connection});
+        }
+
+        return films;
+    }
+
+    @Override
+    public List<Film> getFilmsList(int startIndex) {
+        List<Film> films = new ArrayList<>();
+
+        final String filmQuery = "SELECT * FROM films LIMIT ? , 12 ";
+
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = DbManager.getInstance().getConnection();
+            statement = connection.prepareStatement(filmQuery);
+            statement.setInt(1, startIndex);
+
+            resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                films.add(getFilmById(resultSet.getInt("ID")));
             }
         } catch (SQLException e) {
             LOGGER.warn(e.toString());
@@ -219,7 +252,7 @@ public class FilmDaoJdbc implements FilmDao {
         boolean state = false;
 
         final String query = "UPDATE films set Rate_" + starType + "star = Rate_" + starType +
-                "_star + 1 WHERE ID = ? ";
+                "star + 1 WHERE ID = ? ";
 
         Connection connection = null;
         PreparedStatement statement = null;
@@ -228,7 +261,7 @@ public class FilmDaoJdbc implements FilmDao {
             statement = connection.prepareStatement(query);
             statement.setInt(1, filmId);
 
-            state = statement.execute();
+            state = (statement.executeUpdate()==1);
 
         } catch (SQLException e) {
             LOGGER.warn(e.toString());
@@ -240,25 +273,25 @@ public class FilmDaoJdbc implements FilmDao {
     }
 
     @Override
-    public boolean addGenreToFilm(Genre genre, int filmId){
+    public boolean addGenreToFilm(Genre genre, int filmId) {
         boolean state = false;
 
         final String query = "INSERT INTO genre_to_film(Genre_ID,Film_ID) VALUES (? , ? ) ";
 
         Connection connection = null;
         PreparedStatement statement = null;
-        try{
+        try {
             connection = DbManager.getInstance().getConnection();
             statement = connection.prepareStatement(query);
             statement.setInt(1, genre.ordinal());
             statement.setInt(2, filmId);
 
-            state = statement.execute();
-        } catch(SQLException e){
+            state = ( statement.executeUpdate()==1 );
+        } catch (SQLException e) {
             LOGGER.warn(e.toString());
             throw new DaoException(e.toString());
         } finally {
-            DbManager.closeConnections(new Object[]{statement,connection});
+            DbManager.closeConnections(new Object[]{statement, connection});
         }
         return state;
     }

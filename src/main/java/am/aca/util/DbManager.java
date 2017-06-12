@@ -54,14 +54,14 @@ public class DbManager {
 
     public Connection getConnection(ConnectionType type) throws SQLException {
         if(type==ConnectionType.POOL) {
-            LOGGER.info("connection oppened");
+            LOGGER.info("connection opened");
             return this.cpds.getConnection();
         } else {
             Connection connection = null;
            try {
                 Class.forName(propManager.getProperties().getProperty("DriverClass"));
                 connection = DriverManager.getConnection(propManager.getProperties().getProperty("JdbcUrl"));
-                LOGGER.info("connection oppened");
+                LOGGER.info("connection opened");
            } catch (Exception e) {
                LOGGER.warn(e.toString());
            }

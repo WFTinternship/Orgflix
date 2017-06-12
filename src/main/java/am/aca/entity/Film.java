@@ -12,22 +12,18 @@ public class Film {
     private int prodYear;
     private boolean hasOscar;
     private String image;
+    private String director;
 
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
 
     private int rate_1star;
     private int rate_2star;
     private int rate_3star;
+
+
     private int rate_4star;
     private int rate_5star;
-    private List<Director> directors;
-    private List<Genre> geners;
+    private List<Cast> casts;
+    private List<Genre> genres;
 
     public Film() {
         hasOscar = false;
@@ -36,8 +32,8 @@ public class Film {
         rate_3star = 0;
         rate_4star = 0;
         rate_5star = 0;
-        geners = new ArrayList<>();
-        directors = new ArrayList<>();
+        genres = new ArrayList<>();
+        casts = new ArrayList<>();
         image = "00000";
     }
     public Film(String title, int prodYear){
@@ -57,9 +53,7 @@ public class Film {
 
         Film film = (Film) o;
 
-        if (getId() != film.getId()) return false;
-        if (getProdYear() != film.getProdYear()) return false;
-        return getTitle().equals(film.getTitle());
+        return getId() == film.getId() && getProdYear() == film.getProdYear() && getTitle().equals(film.getTitle());
     }
 
     @Override
@@ -82,7 +76,7 @@ public class Film {
                 ", rate_3star=" + rate_3star +
                 ", rate_4star=" + rate_4star +
                 ", rate_5star=" + rate_5star +
-                ", geners=" + geners +
+                ", genres=" + genres +
                 '}';
     }
 
@@ -102,6 +96,14 @@ public class Film {
         this.title = title;
     }
 
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
     public int getProdYear() {
         return prodYear;
     }
@@ -114,6 +116,14 @@ public class Film {
 
     public void setHasOscar(boolean hasOscar) {
         this.hasOscar = hasOscar;
+    }
+
+    public String getDirector() {
+        return director;
+    }
+
+    public void setDirector(String director) {
+        this.director = director;
     }
 
     public int getRate_1star() {
@@ -156,23 +166,23 @@ public class Film {
         this.rate_5star = rate_5star;
     }
 
-    public List<Director> getDirectors() {
-        return directors;
+    public List<Cast> getCasts() {
+        return casts;
     }
 
-    public void addDirector(Director director) {
-        this.directors.add(director);
+    public void addCast(Cast cast) {
+        this.casts.add(cast);
     }
 
-    public void setDirectors(List<Director> directors) {
-        this.directors = directors;
+    public void setCasts(List<Cast> casts) {
+        this.casts = casts;
     }
 
-    public List<Genre> getGeners() {
-        return geners;
+    public List<Genre> getGenres() {
+        return genres;
     }
 
     public void addGeners(Genre gener) {
-        geners.add(gener);
+        genres.add(gener);
     }
 }

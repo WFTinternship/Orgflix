@@ -1,9 +1,9 @@
 package daotest;
 
-import am.aca.dao.impljdbc.DirectorDaoJdbc;
+import am.aca.dao.impljdbc.CastDaoJdbc;
 import am.aca.dao.FilmDao;
 import am.aca.dao.impljdbc.FilmDaoJdbc;
-import am.aca.entity.Director;
+import am.aca.entity.Cast;
 import am.aca.entity.Film;
 import org.junit.After;
 import org.junit.Assert;
@@ -23,8 +23,8 @@ import static org.junit.Assert.*;
 public class FilmDaoTest {
     private FilmDao filmDao = new FilmDaoJdbc();
     private Film film;
-    private Director director;
-    private List<Director> directorList;
+    private Cast cast;
+    private List<Cast> castList;
 
     @Before
     public void setUp() throws Exception {
@@ -32,7 +32,7 @@ public class FilmDaoTest {
 
     @After
     public void tearDown() throws Exception {
-        TestHelper.emptyTable(new String[]{"film_to_director","films","directors"});
+        TestHelper.emptyTable(new String[]{"film_to_cast","films","casts"});
 
     }
 
@@ -40,12 +40,12 @@ public class FilmDaoTest {
     public void addFilm_Succeeded() throws SQLException {
 
         film = new Film();
-        director= new DirectorDaoJdbc().addDirector("Matt Ross",false);
-        directorList= new ArrayList<>();
+        cast = new CastDaoJdbc().addCast("Matt Ross",false);
+        castList = new ArrayList<>();
 
         film.setTitle("Captain Fantastic");
-        directorList.add(director);
-        film.setDirectors(directorList);
+        castList.add(cast);
+        film.setCasts(castList);
         assertTrue(filmDao.addFilm(film));
 
     }
@@ -53,11 +53,11 @@ public class FilmDaoTest {
     public void addFilm_Fail() throws SQLException {
 
         film = new Film();
-        director= new DirectorDaoJdbc().addDirector("",false);
-        directorList= new ArrayList<>();
+        cast = new CastDaoJdbc().addCast("",false);
+        castList = new ArrayList<>();
 
-        directorList.add(director);
-        film.setDirectors(directorList);
+        castList.add(cast);
+        film.setCasts(castList);
         assertFalse(filmDao.addFilm(film));
 
     }
@@ -65,12 +65,12 @@ public class FilmDaoTest {
     @Test
     public void editFilm_Succeeded() throws Exception {
         film = new Film();
-        director= new DirectorDaoJdbc().addDirector("Matt Ross",false);
-        directorList= new ArrayList<>();
+        cast = new CastDaoJdbc().addCast("Matt Ross",false);
+        castList = new ArrayList<>();
 
         film.setTitle("Captain Fantastic");
-        directorList.add(director);
-        film.setDirectors(directorList);
+        castList.add(cast);
+        film.setCasts(castList);
         filmDao.addFilm(film);
         film.setHasOscar(true);
         assertTrue(filmDao.editFilm(film));
@@ -80,11 +80,11 @@ public class FilmDaoTest {
     @Test
     public void editFilm_Fail() throws Exception {
         film = new Film();
-        director= new DirectorDaoJdbc().addDirector("",false);
-        directorList= new ArrayList<>();
+        cast = new CastDaoJdbc().addCast("",false);
+        castList = new ArrayList<>();
 
-        directorList.add(director);
-        film.setDirectors(directorList);
+        castList.add(cast);
+        film.setCasts(castList);
         filmDao.addFilm(film);
         assertFalse(filmDao.editFilm(film));
     }
@@ -92,11 +92,11 @@ public class FilmDaoTest {
     @Test
     public void getFilmById_Succeeded() throws Exception {
         film = new Film();
-        director= new DirectorDaoJdbc().addDirector("Matt Ross",false);
-        directorList= new ArrayList<>();
+        cast = new CastDaoJdbc().addCast("Matt Ross",false);
+        castList = new ArrayList<>();
         film.setTitle("Captain Fantastic");
-        directorList.add(director);
-        film.setDirectors(directorList);
+        castList.add(cast);
+        film.setCasts(castList);
         filmDao.addFilm(film);
         int id = film.getId();
         assertTrue(filmDao.getFilmById(id).equals(film) );
@@ -107,11 +107,11 @@ public class FilmDaoTest {
     public void getFilmById_Fail() throws Exception {
         /*
         film = new Film();
-        director= new DirectorDaoJdbc().addDirector("Matt Ross",false);
-        directorList= new ArrayList<>();
+        cast= new CastDaoJdbc().addCast("Matt Ross",false);
+        castList= new ArrayList<>();
         film.setTitle("Captain Fantastic");
-        directorList.add(director);
-        film.setDirectors(directorList);
+        castList.add(cast);
+        film.setCasts(castList);
         filmDao.addFilm(film);
         int id = film.getId();
         */
@@ -123,11 +123,11 @@ public class FilmDaoTest {
     @Test
     public void rateFilm_Succeeded() throws Exception {
         film = new Film();
-        director= new DirectorDaoJdbc().addDirector("Matt Ross",false);
-        directorList= new ArrayList<>();
+        cast = new CastDaoJdbc().addCast("Matt Ross",false);
+        castList = new ArrayList<>();
         film.setTitle("Captain Fantastic");
-        directorList.add(director);
-        film.setDirectors(directorList);
+        castList.add(cast);
+        film.setCasts(castList);
         filmDao.addFilm(film);
 
             Assert.assertTrue(filmDao.rateFilm(film.getId(), 5));

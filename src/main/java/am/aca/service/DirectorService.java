@@ -1,6 +1,6 @@
 package am.aca.service;
 
-import am.aca.entity.Director;
+import am.aca.entity.Cast;
 import am.aca.entity.Film;
 
 import java.util.List;
@@ -9,11 +9,11 @@ import java.util.List;
  * Created by David on 5/27/2017
  */
 public interface DirectorService {
-    Director addDirector(String director, boolean hasOscar);
-    Director addDirector(String director);
-    boolean addDirectorToFilm(Director director, Film film);
+    Cast addDirector(String director, boolean hasOscar);
+    Cast addDirector(String director);
+    boolean addDirectorToFilm(Cast cast, Film film);
     boolean addDirectorToFilm(int directorId, int filmId);
-    boolean editDirector(Director director);
-    List<Director> listDirectors();
+    boolean editDirector(Cast cast);
+    List<Cast> listDirectors();
     List<Integer> listFilmsIdByDirector(int directorId);
 }

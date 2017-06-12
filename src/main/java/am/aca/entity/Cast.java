@@ -3,12 +3,12 @@ package am.aca.entity;
 /**
  * Created by David on 5/31/2017
  */
-public class Director {
+public class Cast {
     private int id;
     private String name;
     private boolean hasOscar;
 
-    public Director() {
+    public Cast() {
         this.id = -1;
         this.hasOscar = false;
     }

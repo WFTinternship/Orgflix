@@ -1,8 +1,8 @@
 package am.aca.service.impl;
 
-import am.aca.dao.DirectorDao;
-import am.aca.dao.impljdbc.DirectorDaoJdbc;
-import am.aca.entity.Director;
+import am.aca.dao.CastDao;
+import am.aca.dao.impljdbc.CastDaoJdbc;
+import am.aca.entity.Cast;
 import am.aca.entity.Film;
 import am.aca.service.DirectorService;
 
@@ -12,44 +12,44 @@ import java.util.List;
  * Created by David on 6/7/2017
  */
 public class DirectorServiceImpl implements DirectorService {
-    private DirectorDao directorDao;
+    private CastDao CastDao;
 
     public DirectorServiceImpl() {
-        directorDao = new DirectorDaoJdbc();
+        CastDao = new CastDaoJdbc();
     }
 
     @Override
-    public Director addDirector(String director, boolean hasOscar) {
-        return directorDao.addDirector(director,hasOscar);
+    public Cast addDirector(String director, boolean hasOscar) {
+        return CastDao.addCast(director,hasOscar);
     }
 
     @Override
-    public Director addDirector(String director) {
-        return directorDao.addDirector(director);
+    public Cast addDirector(String director) {
+        return CastDao.addCast(director);
     }
 
     @Override
-    public boolean addDirectorToFilm(Director director, Film film) {
-        return directorDao.addDirectorToFilm(director,film);
+    public boolean addDirectorToFilm(Cast cast, Film film) {
+        return CastDao.addCastToFilm(cast,film);
     }
 
     @Override
     public boolean addDirectorToFilm(int directorId, int filmId) {
-        return directorDao.addDirectorToFilm(directorId,filmId);
+        return CastDao.addCastToFilm(directorId,filmId);
     }
 
     @Override
-    public boolean editDirector(Director director) {
-        return directorDao.editDirector(director);
+    public boolean editDirector(Cast cast) {
+        return CastDao.editCast(cast);
     }
 
     @Override
-    public List<Director> listDirectors() {
-        return directorDao.listDirectors();
+    public List<Cast> listDirectors() {
+        return CastDao.listCast();
     }
 
     @Override
     public List<Integer> listFilmsIdByDirector(int directorId) {
-        return directorDao.listFilmsIdByDirector(directorId);
+        return CastDao.listFilmsIdByCast(directorId);
     }
 }

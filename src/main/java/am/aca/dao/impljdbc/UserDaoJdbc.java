@@ -18,7 +18,7 @@ public class UserDaoJdbc implements UserDao {
     @Override
     public int addUser(User user) {
         // Assures that no null or empty record will be passed for NOT NULL fields
-        if (!user.checkFileds()) return -1;
+        if (!user.checkFields()) return -1;
         // default return value which means nothing added
         int id = -1;
 
@@ -115,8 +115,8 @@ public class UserDaoJdbc implements UserDao {
     @Override
     public boolean editUser(User user) {
         // Assures that no null or empty record will be passed for NOT NULL fields
-        if (!user.checkFileds()) return false;
-        boolean state = false;
+        if (!user.checkFields()) return false;
+        boolean state;
 
         Connection connection = null;
         PreparedStatement statement = null;

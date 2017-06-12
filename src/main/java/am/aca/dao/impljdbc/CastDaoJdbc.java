@@ -1,7 +1,7 @@
 package am.aca.dao.impljdbc;
 
 import am.aca.dao.*;
-import am.aca.entity.Director;
+import am.aca.entity.Cast;
 import am.aca.entity.Film;
 import am.aca.util.DbManager;
 import org.apache.log4j.Logger;
@@ -13,12 +13,12 @@ import java.util.List;
 /**
  * Created by David on 5/28/2017
  */
-public class DirectorDaoJdbc implements DirectorDao {
-    private static final Logger LOGGER = Logger.getLogger(DirectorDao.class);
+public class CastDaoJdbc implements CastDao {
+    private static final Logger LOGGER = Logger.getLogger(CastDao.class);
 
-    public Director addDirector(String name, boolean hasOscar) {
+    public Cast addCast(String name, boolean hasOscar) {
 
-        final String query = "INSERT INTO directors (Director_Name,HasOscar) VALUES( ?, ? ) ";
+        final String query = "INSERT INTO casts (Actor_Name,HasOscar) VALUES( ?, ? ) ";
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
@@ -40,34 +40,34 @@ public class DirectorDaoJdbc implements DirectorDao {
             DbManager.closeConnections(new Object[]{resultSet, statement, connection});
         }
 
-        Director director = new Director();
-        director.setName(name);
-        director.setHasOscar(hasOscar);
-        director.setId(id);
+        Cast cast = new Cast();
+        cast.setName(name);
+        cast.setHasOscar(hasOscar);
+        cast.setId(id);
 
-        return director;
+        return cast;
     }
 
     @Override
-    public Director addDirector(String director) {
-        return addDirector(director, false);
+    public Cast addCast(String name) {
+        return addCast(name, false);
     }
 
     @Override
-    public boolean addDirectorToFilm(Director director, Film film) {
-        return addDirectorToFilm(director.getId(), film.getId());
+    public boolean addCastToFilm(Cast cast, Film film) {
+        return addCastToFilm(cast.getId(), film.getId());
     }
 
     @Override
-    public boolean addDirectorToFilm(int directorId, int filmId) {
-        final String query = "INSERT INTO film_to_director(Director_ID,Film_ID) VALUES (? , ? ) ";
-        boolean state = false;
+    public boolean addCastToFilm(int actorId, int filmId) {
+        final String query = "INSERT INTO film_to_cast(Actor_ID,Film_ID) VALUES (? , ? ) ";
+        boolean state;
         Connection connection = null;
         PreparedStatement statement = null;
         try {
             connection = DbManager.getInstance().getConnection();
             statement = connection.prepareStatement(query);
-            statement.setInt(1, directorId);
+            statement.setInt(1, actorId);
             statement.setInt(2, filmId);
             state = statement.execute();
         } catch (SQLException e) {
@@ -80,20 +80,20 @@ public class DirectorDaoJdbc implements DirectorDao {
     }
 
     @Override
-    public List<Director> listDirectors() {
-        List<Director> listDirector = new ArrayList<>();
+    public List<Cast> listCast() {
+        List<Cast> listCast = new ArrayList<>();
         Connection connection = null;
         ResultSet resultSet = null;
         try {
             connection = DbManager.getInstance().getConnection();
-            resultSet = connection.createStatement().executeQuery("SELECT * FROM directors");
+            resultSet = connection.createStatement().executeQuery("SELECT * FROM casts");
 
             while (resultSet.next()) {
-                Director director = new Director();
-                director.setId(resultSet.getInt("ID"));
-                director.setName(resultSet.getString("Director_Name"));
-                director.setHasOscar(resultSet.getBoolean("HasOscar"));
-                listDirector.add(director);
+                Cast cast = new Cast();
+                cast.setId(resultSet.getInt("ID"));
+                cast.setName(resultSet.getString("Actor_Name"));
+                cast.setHasOscar(resultSet.getBoolean("HasOscar"));
+                listCast.add(cast);
             }
         } catch (SQLException e) {
             LOGGER.warn(e.getMessage());
@@ -101,19 +101,19 @@ public class DirectorDaoJdbc implements DirectorDao {
         } finally {
             DbManager.closeConnections(new Object[]{resultSet, connection});
         }
-        return listDirector;
+        return listCast;
     }
 
     @Override
-    public List<Integer> listFilmsIdByDirector(int directorId) {
+    public List<Integer> listFilmsIdByCast(int actorId) {
 
         List<Integer> filmsByDirector = new ArrayList<>();
 
-        final String query = "SELECT directors.ID AS Id, film_to_director.Film_ID AS film " +
-                " FROM directors JOIN film_to_director " +
-                " ON directors.ID = film_to_director.Director_ID " +
-                " WHERE directors.ID = ? " +
-                " ORDER BY film_to_director.Film_ID DESC ";
+        final String query = "SELECT casts.ID AS Id, film_to_cast.Film_ID AS film " +
+                " FROM casts JOIN film_to_cast " +
+                " ON casts.ID = film_to_cast.Actor_ID " +
+                " WHERE casts.ID = ? " +
+                " ORDER BY film_to_cast.Film_ID DESC ";
 
         Connection connection = null;
         PreparedStatement statement = null;
@@ -121,7 +121,7 @@ public class DirectorDaoJdbc implements DirectorDao {
         try {
             connection = DbManager.getInstance().getConnection();
             statement = connection.prepareStatement(query);
-            statement.setInt(1, directorId);
+            statement.setInt(1, actorId);
 
             resultSet = statement.executeQuery();
 
@@ -138,17 +138,17 @@ public class DirectorDaoJdbc implements DirectorDao {
     }
 
     @Override
-    public boolean editDirector(Director director) {
-        boolean state = false;
+    public boolean editCast(Cast cast) {
+        boolean state;
         Connection connection = null;
         PreparedStatement statement = null;
-        final String query = "UPDATE directors SET Director_Name = ?, HasOscar = ? WHERE ID = ?";
+        final String query = "UPDATE casts SET Actor_Name = ?, HasOscar = ? WHERE ID = ?";
         try {
             connection = DbManager.getInstance().getConnection();
             statement = connection.prepareStatement(query);
-            statement.setString(1, director.getName());
-            statement.setBoolean(2, director.isHasOscar());
-            statement.setInt(3, director.getId());
+            statement.setString(1, cast.getName());
+            statement.setBoolean(2, cast.isHasOscar());
+            statement.setInt(3, cast.getId());
             state = statement.executeUpdate() == 1;
         } catch (SQLException e) {
             LOGGER.warn(e.toString());

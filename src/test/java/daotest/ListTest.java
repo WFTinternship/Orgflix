@@ -2,7 +2,7 @@ package daotest;
 
 import am.aca.dao.*;
 import am.aca.dao.impljdbc.*;
-import am.aca.entity.Director;
+import am.aca.entity.Cast;
 import am.aca.entity.Film;
 import am.aca.entity.Genre;
 import am.aca.entity.User;
@@ -24,13 +24,13 @@ public class ListTest {
     private ListDao listDao;
     private Film film;
     private User user;
-    private ArrayList<Director> dirs = new ArrayList<>();
+    private ArrayList<Cast> dirs = new ArrayList<>();
 
     @Before
     public void setUp() throws SQLException {
 
-        //setup Director
-        dirs.add(new DirectorDaoJdbc().addDirector("Brian De Palma", false));
+        //setup Cast
+        dirs.add(new CastDaoJdbc().addCast("Brian De Palma", false));
 
         //setup Film and Film DAO
         film = new Film();
@@ -38,7 +38,7 @@ public class ListTest {
         film.addGeners(Genre.ACTION);
         film.setProdYear(1983);
         film.setRate_5star(1);
-        film.setDirectors(dirs);
+        film.setCasts(dirs);
 
         FilmDao filmDao = new FilmDaoJdbc();
 
@@ -56,7 +56,7 @@ public class ListTest {
 
     @After
     public void revert() throws SQLException, IOException, PropertyVetoException {
-        TestHelper.emptyTable(new String[]{"genre_to_film", "film_to_director", "lists", "directors", "films", "users"});
+        TestHelper.emptyTable(new String[]{"genre_to_film", "film_to_cast", "lists", "casts", "films", "users"});
     }
 
     @Test

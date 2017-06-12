@@ -2,7 +2,7 @@ package am.aca.service.impl;
 
 import am.aca.dao.FilmDao;
 import am.aca.dao.impljdbc.FilmDaoJdbc;
-import am.aca.entity.Director;
+import am.aca.entity.Cast;
 import am.aca.entity.Film;
 import am.aca.entity.Genre;
 import am.aca.service.FilmService;
@@ -21,7 +21,14 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public boolean addFilm(Film film) {
-        return filmDao.addFilm(film);
+        filmDao.addFilm(film);
+        for (Genre genre:film.getGenres()) {
+            filmDao.addGenreToFilm(genre, film);
+        }
+        for (Cast cast:film.getCasts()) {
+            filmDao.addCastToFilm(cast, film);  ////////////////////NEEDS REVIEW, WHAT IF CAST MEMBER IS TO BE NEWLY CREATED?
+        }
+        return true; //////////////////////////////////////////////TO BW UPDATED
     }
 
     @Override
@@ -35,13 +42,13 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    public List<Film> getFilmsByDirector(Director director) {
-        return filmDao.getFilmsByDirector(director);
+    public List<Film> getFilmsByCast(Cast cast) {
+        return filmDao.getFilmsByCast(cast);
     }
 
     @Override
-    public List<Film> getFilmsByDirector(int directorId) {
-        return filmDao.getFilmsByDirector(directorId);
+    public List<Film> getFilmsByCast(int castId) {
+        return filmDao.getFilmsByCast(castId);
     }
 
     @Override

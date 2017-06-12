@@ -1,9 +1,5 @@
 package am.aca.entity;
 
-import am.aca.dao.impljdbc.UserDaoJdbc;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
 
 /**
  * Created by David on 5/26/2017
@@ -23,7 +19,7 @@ public class User {
     }
     public User(){}
 
-    public boolean checkFileds(){
+    public boolean checkFields(){
         return nick != null && nick.length()!=0 &&
                 email != null && email.length() !=0 &&
                 pass != null && pass.length() != 0;
@@ -36,8 +32,7 @@ public class User {
 
         User user = (User) o;
 
-        if (!getNick().equals(user.getNick())) return false;
-        return getEmail().equals(user.getEmail());
+        return getNick().equals(user.getNick()) && getEmail().equals(user.getEmail());
     }
 
     @Override

@@ -6,9 +6,6 @@ import am.aca.entity.*;
 import org.junit.*;
 import org.junit.Test;
 
-import java.beans.PropertyVetoException;
-import java.io.IOException;
-import java.sql.SQLException;
 
 /**
  * Created by David on 5/29/2017

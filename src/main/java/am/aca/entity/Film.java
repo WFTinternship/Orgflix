@@ -14,12 +14,9 @@ public class Film {
     private String image;
     private String director;
 
-
     private int rate_1star;
     private int rate_2star;
     private int rate_3star;
-
-
     private int rate_4star;
     private int rate_5star;
     private List<Cast> casts;

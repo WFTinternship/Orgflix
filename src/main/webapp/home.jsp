@@ -22,7 +22,7 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
-    <link rel="stylesheet" href="assets/css/main.css" />
+    <link rel="stylesheet" href="assets/css/main.css?v=101" />
     <!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
     <!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
 </head>
@@ -67,12 +67,21 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
                 <h1>This is OrgFlix, a free film list organizer</h1>
             </header>
             <section class="tiles">
-<% List<Film> films = filmService.getFilmsList(Integer.valueOf(request.getAttribute("message").toString()));
+<% List<Film> films = filmService.getFilmsList(Integer.valueOf(request.getAttribute("message").toString())*12);
     for (Film film: films ) {
     out.print("<article class='style1'><span class='image'><img src='images/"+film.getImage()+".jpg'/></span>");
     out.print("<a href='generic'><h2>"+film.getTitle()+"</h2>");
     out.print("<div class='content'><p>Somthing</p></div></a></article>");
-} %>
+}
+    int filmnum=filmService.totalNumberOfFilms();
+    if(filmnum>12){
+        out.print("<form class='pagintion_container' id='pageForm' method='GET' action='/home'><input type='hidden' id='currPage' name='currPage' value='0'>");
+        for(int i=0;i<=filmnum/12;++i){
+            out.print("<div class='pagination' id='"+i+"' onclick='pagination(this.id)'>"+(i+1)+"</div>");
+        }
+        out.print("</form>");
+    }
+%>
             </section>
         </div>
     </div>
@@ -124,6 +133,7 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
 <script src="assets/js/util.js"></script>
 <!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
 <script src="assets/js/main.js"></script>
+<script src="assets/js/custom.js?v=102"></script>
 
 </body>
 </html>

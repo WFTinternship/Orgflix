@@ -3348,10 +3348,28 @@
 		padding: 0 2.5em;
 	}
 
-		@media screen and (max-width: 736px) {
+	@media screen and (max-width: 736px) {
 
-			#wrapper > * > .inner {
-				padding: 0 1.25em;
-			}
-
+		#wrapper > * > .inner {
+			padding: 0 1.25em;
 		}
+
+	}
+
+
+/*  Our customisation */
+
+	.pagination {
+		margin: 5px;
+		float: left;
+		width: 50px;
+		text-align: center;
+		color: red;
+		font-weight: bold;
+		border: 1px solid blue;
+	}
+
+	.pagintion_container{
+		margin: 20px auto 20px auto;
+		padding: 5px;
+	}

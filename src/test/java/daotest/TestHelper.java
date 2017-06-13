@@ -17,7 +17,6 @@ public class TestHelper {
     public static void emptyTable(String[] tables) {
         Connection connection = null;
         PreparedStatement statement = null;
-
         for (String table : tables) {
             try {
                 final String query = "DELETE FROM  " + table;
@@ -31,6 +30,5 @@ public class TestHelper {
                 DbManager.closeConnections(new Object[]{statement, connection});
             }
         }
-
     }
 }

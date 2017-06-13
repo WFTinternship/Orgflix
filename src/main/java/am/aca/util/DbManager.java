@@ -56,6 +56,7 @@ public class DbManager {
         if(type==ConnectionType.POOL) {
             LOGGER.info("connection opened");
             return this.cpds.getConnection();
+          //  LOGGER.info(this.cpds.)
         } else {
             Connection connection = null;
            try {

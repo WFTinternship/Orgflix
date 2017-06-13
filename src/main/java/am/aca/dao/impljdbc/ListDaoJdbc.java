@@ -5,6 +5,7 @@ import am.aca.dao.ListDao;
 import am.aca.dao.UserDao;
 import am.aca.entity.Film;
 import am.aca.util.DbManager;
+import sun.rmi.runtime.Log;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -110,9 +111,7 @@ public class ListDaoJdbc implements ListDao {
                 throw new DaoException(e.getMessage());
             }
             try {
-                System.out.println("HERE");
                 closeAll(true, connection, checkStatement, insertStatement);
-                System.out.println("AND HERE");
             } catch (SQLException e) {
                 LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
@@ -712,6 +711,7 @@ public class ListDaoJdbc implements ListDao {
             statement.close();
         }
         connection.close();
+        LOGGER.info("Connection closed");
     }
 
     private void closeAll(boolean commit, Connection connection, ResultSet resultSet, PreparedStatement... statements) throws SQLException {

@@ -4,6 +4,7 @@ import am.aca.dao.*;
 import am.aca.dao.impljdbc.CastDaoJdbc;
 import am.aca.dao.impljdbc.FilmDaoJdbc;
 import am.aca.entity.*;
+import am.aca.util.DbManager;
 import org.apache.log4j.Logger;
 import org.junit.*;
 import org.junit.Test;
@@ -25,7 +26,7 @@ public class CastTest {
 
     @After
     public void end(){
-        TestHelper.emptyTable(new String[]{"film_to_cast","casts"});
+        DbManager.emptyTable(new String[]{"film_to_cast","casts"});
         cast = null;
     }
 

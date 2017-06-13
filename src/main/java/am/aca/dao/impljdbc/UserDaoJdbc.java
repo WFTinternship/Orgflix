@@ -3,7 +3,6 @@ package am.aca.dao.impljdbc;
 import am.aca.dao.DaoException;
 import am.aca.dao.UserDao;
 import am.aca.entity.*;
-import am.aca.util.DbManager;
 
 import java.sql.*;
 
@@ -26,7 +25,7 @@ public class UserDaoJdbc extends DaoJdbc implements UserDao {
         PreparedStatement statement = null;
         Connection connection = null;
         try {
-            connection = DbManager.getInstance().getConnection();
+            connection = dataSource.getConnection();
             final String query = "INSERT INTO users (Nick,User_Name,Email,User_Pass) " +
                     " VALUES( ? , ? , ? , ? ) ";
 
@@ -44,7 +43,7 @@ public class UserDaoJdbc extends DaoJdbc implements UserDao {
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         } finally {
-            DbManager.closeConnections(new Object[]{statement, resultSet, connection});
+            dataSource.closeConnections(new Object[]{statement, resultSet, connection});
         }
         user.setId(id);
         return id;
@@ -57,7 +56,7 @@ public class UserDaoJdbc extends DaoJdbc implements UserDao {
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         try {
-            connection = DbManager.getInstance().getConnection();
+            connection = dataSource.getConnection();
             final String query = "SELECT Nick,User_Name,Email,User_Pass FROM users WHERE ID = ? LIMIT 1";
 
             statement = connection.prepareStatement(query);
@@ -76,7 +75,7 @@ public class UserDaoJdbc extends DaoJdbc implements UserDao {
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         } finally {
-            DbManager.closeConnections(new Object[]{resultSet, statement, connection});
+            dataSource.closeConnections(new Object[]{resultSet, statement, connection});
         }
         return user;
     }
@@ -88,7 +87,7 @@ public class UserDaoJdbc extends DaoJdbc implements UserDao {
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         try {
-            connection = DbManager.getInstance().getConnection();
+            connection = dataSource.getConnection();
             final String query = "SELECT ID,Nick,User_Name,User_Pass FROM users WHERE Email = ? LIMIT 1";
 
             statement = connection.prepareStatement(query);
@@ -107,7 +106,7 @@ public class UserDaoJdbc extends DaoJdbc implements UserDao {
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         } finally {
-            DbManager.closeConnections(new Object[]{resultSet, statement, connection});
+            dataSource.closeConnections(new Object[]{resultSet, statement, connection});
         }
         return user;
     }
@@ -122,7 +121,7 @@ public class UserDaoJdbc extends DaoJdbc implements UserDao {
         PreparedStatement statement = null;
 
         try {
-            connection = DbManager.getInstance().getConnection();
+            connection = dataSource.getConnection();
 
             final String query = "UPDATE users SET Nick = ?,User_Name = ?,Email = ?, User_Pass = ? " +
                     " WHERE ID = ? ";
@@ -139,7 +138,7 @@ public class UserDaoJdbc extends DaoJdbc implements UserDao {
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         } finally {
-            DbManager.closeConnections(new Object[]{statement, connection});
+            dataSource.closeConnections(new Object[]{statement, connection});
         }
         return state;
     }

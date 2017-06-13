@@ -3,6 +3,7 @@ package daotest;
 import am.aca.dao.*;
 import am.aca.dao.impljdbc.UserDaoJdbc;
 import am.aca.entity.*;
+import am.aca.util.DbManager;
 import org.junit.*;
 import org.junit.Test;
 
@@ -19,7 +20,7 @@ public class UserTest {
 
     @After
     public void end(){
-        TestHelper.emptyTable(new String[]{"lists","users"});
+        DbManager.emptyTable(new String[]{"lists","users"});
         user = null;
     }
 

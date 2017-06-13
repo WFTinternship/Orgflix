@@ -4,7 +4,6 @@ import am.aca.dao.DaoException;
 import am.aca.dao.ListDao;
 import am.aca.dao.UserDao;
 import am.aca.entity.Film;
-import am.aca.util.DbManager;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -22,7 +21,7 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
         boolean result;
         Connection connection;
         try {
-            connection = DbManager.getInstance().getConnection();
+            connection = dataSource.getConnection();
         } catch (SQLException e) {
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
@@ -124,7 +123,7 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
         boolean result;
         Connection connection;
         try {
-            connection = DbManager.getInstance().getConnection();
+            connection = dataSource.getConnection();
         } catch (SQLException e) {
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
@@ -235,7 +234,7 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
         boolean result;
         Connection connection;
         try {
-            connection = DbManager.getInstance().getConnection();
+            connection = dataSource.getConnection();
         } catch (SQLException e) {
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
@@ -369,7 +368,7 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
         boolean result;
         Connection connection;
         try {
-            connection = DbManager.getInstance().getConnection();
+            connection = dataSource.getConnection();
         } catch (SQLException e) {
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
@@ -484,7 +483,7 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
     public ArrayList<Film> showOwnWatched(int userId) {
         Connection connection;
         try {
-            connection = DbManager.getInstance().getConnection();
+            connection = dataSource.getConnection();
         } catch (SQLException e) {
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
@@ -527,7 +526,7 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
     public ArrayList<Film> showOwnWished(int userId) {
         Connection connection;
         try {
-            connection = DbManager.getInstance().getConnection();
+            connection = dataSource.getConnection();
         } catch (SQLException e) {
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
@@ -569,7 +568,7 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
     public ArrayList<Film> showOthersWatched(int userId) {
         Connection connection;
         try {
-            connection = DbManager.getInstance().getConnection();
+            connection = dataSource.getConnection();
         } catch (SQLException e) {
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
@@ -619,7 +618,7 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
     public ArrayList<Film> showOthersWished(int userId) {
         Connection connection;
         try {
-            connection = DbManager.getInstance().getConnection();
+            connection = dataSource.getConnection();
         } catch (SQLException e) {
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());

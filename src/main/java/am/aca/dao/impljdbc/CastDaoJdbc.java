@@ -3,7 +3,6 @@ package am.aca.dao.impljdbc;
 import am.aca.dao.*;
 import am.aca.entity.Cast;
 import am.aca.entity.Film;
-import am.aca.util.DbManager;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
@@ -24,7 +23,7 @@ public class CastDaoJdbc extends DaoJdbc implements CastDao {
         ResultSet resultSet = null;
         int id = -1;
         try {
-            connection = DbManager.getInstance().getConnection();
+            connection = dataSource.getConnection();
             statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, name);
             statement.setBoolean(2, hasOscar);
@@ -37,7 +36,7 @@ public class CastDaoJdbc extends DaoJdbc implements CastDao {
             LOGGER.warn(e.toString());
             throw new DaoException(e.toString());
         } finally {
-            DbManager.closeConnections(new Object[]{resultSet, statement, connection});
+            dataSource.closeConnections(new Object[]{resultSet, statement, connection});
         }
 
         Cast cast = new Cast();
@@ -65,7 +64,7 @@ public class CastDaoJdbc extends DaoJdbc implements CastDao {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
-            connection = DbManager.getInstance().getConnection();
+            connection = dataSource.getConnection();
             statement = connection.prepareStatement(query);
             statement.setInt(1, actorId);
             statement.setInt(2, filmId);
@@ -74,7 +73,7 @@ public class CastDaoJdbc extends DaoJdbc implements CastDao {
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         } finally {
-            DbManager.closeConnections(new Object[]{statement, connection});
+            dataSource.closeConnections(new Object[]{statement, connection});
         }
         return state;
     }
@@ -85,7 +84,7 @@ public class CastDaoJdbc extends DaoJdbc implements CastDao {
         Connection connection = null;
         ResultSet resultSet = null;
         try {
-            connection = DbManager.getInstance().getConnection();
+            connection = dataSource.getConnection();
             resultSet = connection.createStatement().executeQuery("SELECT * FROM casts");
 
             while (resultSet.next()) {
@@ -99,7 +98,7 @@ public class CastDaoJdbc extends DaoJdbc implements CastDao {
             LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         } finally {
-            DbManager.closeConnections(new Object[]{resultSet, connection});
+            dataSource.closeConnections(new Object[]{resultSet, connection});
         }
         return listCast;
     }
@@ -119,7 +118,7 @@ public class CastDaoJdbc extends DaoJdbc implements CastDao {
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         try {
-            connection = DbManager.getInstance().getConnection();
+            connection = dataSource.getConnection();
             statement = connection.prepareStatement(query);
             statement.setInt(1, actorId);
 
@@ -132,7 +131,7 @@ public class CastDaoJdbc extends DaoJdbc implements CastDao {
             LOGGER.warn(e.toString());
             throw new DaoException(e.toString());
         } finally {
-            DbManager.closeConnections(new Object[]{resultSet, statement, connection});
+            dataSource.closeConnections(new Object[]{resultSet, statement, connection});
         }
         return filmsByDirector;
     }
@@ -144,7 +143,7 @@ public class CastDaoJdbc extends DaoJdbc implements CastDao {
         PreparedStatement statement = null;
         final String query = "UPDATE casts SET Actor_Name = ?, HasOscar = ? WHERE ID = ?";
         try {
-            connection = DbManager.getInstance().getConnection();
+            connection = dataSource.getConnection();
             statement = connection.prepareStatement(query);
             statement.setString(1, cast.getName());
             statement.setBoolean(2, cast.isHasOscar());
@@ -154,7 +153,7 @@ public class CastDaoJdbc extends DaoJdbc implements CastDao {
             LOGGER.warn(e.toString());
             throw new DaoException(e.toString());
         } finally {
-            DbManager.closeConnections(new Object[]{statement, connection});
+            dataSource.closeConnections(new Object[]{statement, connection});
         }
         return state;
     }

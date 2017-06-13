@@ -3,7 +3,6 @@ package am.aca.dao.impljdbc;
 import am.aca.dao.DaoException;
 import am.aca.dao.FilmDao;
 import am.aca.entity.*;
-import am.aca.util.DbManager;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
@@ -30,7 +29,7 @@ public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         try {
-            connection = DbManager.getInstance().getConnection();
+            connection = dataSource.getConnection();
             connection.setAutoCommit(false);
             statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
@@ -75,7 +74,7 @@ public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
             LOGGER.warn(e.toString());
             throw new DaoException(e.toString());
         } finally {
-            DbManager.closeConnections(new Object[]{resultSet, statement, connection});
+            dataSource.closeConnections(new Object[]{resultSet, statement, connection});
         }
         return state;
     }
@@ -92,7 +91,7 @@ public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
-            connection = DbManager.getInstance().getConnection();
+            connection = dataSource.getConnection();
             connection.setAutoCommit(false);
 
             statement = connection.prepareStatement(query);
@@ -125,10 +124,10 @@ public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
             }
         } catch (SQLException e) {
             LOGGER.warn(e.toString());
-            DbManager.connectionRollback(connection);
+            dataSource.connectionRollback(connection);
             throw new DaoException(e.toString());
         } finally {
-            DbManager.closeConnections(new Object[]{statement, connection});
+            dataSource.closeConnections(new Object[]{statement, connection});
         }
 
         return state;
@@ -145,7 +144,7 @@ public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         try {
-            connection = DbManager.getInstance().getConnection();
+            connection = dataSource.getConnection();
             statement = connection.prepareStatement(getQuery);
             statement.setInt(1, id);
 
@@ -203,7 +202,7 @@ public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
             LOGGER.warn(e.toString());
             throw new DaoException(e.toString());
         } finally {
-            DbManager.closeConnections(new Object[]{resultSet, statement, connection});
+            dataSource.closeConnections(new Object[]{resultSet, statement, connection});
         }
         film.setCasts(castList);
 
@@ -222,7 +221,7 @@ public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         try {
-            connection = DbManager.getInstance().getConnection();
+            connection = dataSource.getConnection();
             statement = connection.prepareStatement(filmQuery);
             statement.setInt(1, actorId);
 
@@ -235,7 +234,7 @@ public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
             LOGGER.warn(e.toString());
             throw new DaoException(e.toString());
         } finally {
-            DbManager.closeConnections(new Object[]{resultSet, statement, connection});
+            dataSource.closeConnections(new Object[]{resultSet, statement, connection});
         }
 
         return films;
@@ -251,7 +250,7 @@ public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         try {
-            connection = DbManager.getInstance().getConnection();
+            connection = dataSource.getConnection();
             statement = connection.prepareStatement(filmQuery);
             statement.setInt(1, startIndex);
 
@@ -264,7 +263,7 @@ public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
             LOGGER.warn(e.toString());
             throw new DaoException(e.toString());
         } finally {
-            DbManager.closeConnections(new Object[]{resultSet, statement, connection});
+            dataSource.closeConnections(new Object[]{resultSet, statement, connection});
         }
 
         return films;
@@ -287,7 +286,7 @@ public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         try {
-            connection = DbManager.getInstance().getConnection();
+            connection = dataSource.getConnection();
             statement = connection.prepareStatement(filmQuery);
             statement.setInt(1, genre.getValue());
 
@@ -300,7 +299,7 @@ public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
             LOGGER.warn(e.toString());
             throw new DaoException(e.toString());
         } finally {
-            DbManager.closeConnections(new Object[]{resultSet, statement, connection});
+            dataSource.closeConnections(new Object[]{resultSet, statement, connection});
         }
 
         return films;
@@ -316,7 +315,7 @@ public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
-            connection = DbManager.getInstance().getConnection();
+            connection = dataSource.getConnection();
             statement = connection.prepareStatement(query);
             statement.setInt(1, filmId);
 
@@ -326,7 +325,7 @@ public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
             LOGGER.warn(e.toString());
             throw new DaoException(e.toString());
         } finally {
-            DbManager.closeConnections(new Object[]{statement, connection});
+            dataSource.closeConnections(new Object[]{statement, connection});
         }
         return state;
     }
@@ -340,7 +339,7 @@ public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
-            connection = DbManager.getInstance().getConnection();
+            connection = dataSource.getConnection();
             statement = connection.prepareStatement(query);
             statement.setInt(1, genre.getValue());
             statement.setInt(2, filmId);
@@ -350,7 +349,7 @@ public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
             LOGGER.warn(e.toString());
             throw new DaoException(e.toString());
         } finally {
-            DbManager.closeConnections(new Object[]{statement, connection});
+            dataSource.closeConnections(new Object[]{statement, connection});
         }
         return state;
     }
@@ -369,7 +368,7 @@ public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
-            connection = DbManager.getInstance().getConnection();
+            connection = dataSource.getConnection();
             statement = connection.prepareStatement(query);
             statement.setInt(1, cast.getId());
             statement.setInt(2, filmId);
@@ -379,7 +378,7 @@ public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
             LOGGER.warn(e.toString());
             throw new DaoException(e.toString());
         } finally {
-            DbManager.closeConnections(new Object[]{statement, connection});
+            dataSource.closeConnections(new Object[]{statement, connection});
         }
         return result;
     }
@@ -388,12 +387,12 @@ public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
     public int totalNumberOfFilms() {
         int totalNumber = 0;
 
-        final String query = "SELECT count(ID) as total FROM films ";
+        final String query = "SELECT count(ID) AS total FROM films ";
 
         Connection connection = null;
         ResultSet resultSet = null;
         try {
-            connection = DbManager.getInstance().getConnection();
+            connection = dataSource.getConnection();
             resultSet = connection.prepareStatement(query).executeQuery();
 
             if (resultSet.next()) {
@@ -403,7 +402,7 @@ public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
             LOGGER.warn(e.toString());
             throw new DaoException(e.toString());
         } finally {
-            DbManager.closeConnections(new Object[]{resultSet, connection});
+            dataSource.closeConnections(new Object[]{resultSet, connection});
         }
 
         return totalNumber;

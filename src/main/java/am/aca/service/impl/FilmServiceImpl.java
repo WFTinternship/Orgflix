@@ -71,4 +71,9 @@ public class FilmServiceImpl implements FilmService {
     public boolean addGenreToFilm(Genre genre, int filmId) {
         return filmDao.addGenreToFilm(genre,filmId);
     }
+
+    @Override
+    public int totalNumberOfFilms(){
+        return filmDao.totalNumberOfFilms();
+    };
 }

@@ -352,6 +352,31 @@ public class FilmDaoJdbc implements FilmDao {
     }
 
     @Override
+    public int totalNumberOfFilms() {
+        int totalNumber = 0;
+
+        final String query = "SELECT count(ID) as total FROM films ";
+
+        Connection connection = null;
+        ResultSet resultSet = null;
+        try {
+            connection = DbManager.getInstance().getConnection();
+            resultSet = connection.prepareStatement(query).executeQuery();
+
+            if (resultSet.next()) {
+                totalNumber = resultSet.getInt("total");
+            }
+        } catch (SQLException e) {
+            LOGGER.warn(e.toString());
+            throw new DaoException(e.toString());
+        } finally {
+            DbManager.closeConnections(new Object[]{resultSet, connection});
+        }
+
+        return totalNumber;
+    }
+
+    @Override
     public boolean addCastToFilm(Cast cast, Film film) {
         return addCastToFilm(cast, film.getId());
     }

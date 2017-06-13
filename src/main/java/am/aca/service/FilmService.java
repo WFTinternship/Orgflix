@@ -27,4 +27,6 @@ public interface FilmService {
     boolean addGenreToFilm(Genre genre, Film film);
 
     boolean addGenreToFilm(Genre genre, int filmId);
+
+    int totalNumberOfFilms();
 }

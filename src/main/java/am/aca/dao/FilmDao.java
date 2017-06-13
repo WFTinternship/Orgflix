@@ -29,4 +29,6 @@ public interface FilmDao {
     boolean addCastToFilm(Cast cast, Film film);
 
     boolean addCastToFilm(Cast cast, int filmId);
+
+    int totalNumberOfFilms();
 }

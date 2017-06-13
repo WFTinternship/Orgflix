@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Created by Vardan on 09.06.2017.
+ * Created by Vardan on 09.06.2017
  */
 @WebServlet("/home")
 public class HomeServlet extends HttpServlet {
@@ -23,7 +23,8 @@ public class HomeServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         response.setContentType("text/html");
-        request.setAttribute("message", "0");
+        String page = request.getParameter("currPage");
+        request.setAttribute("message", Integer.valueOf( page!=null ? page : "0" ) );
         request.getRequestDispatcher("/home.jsp").forward(request, response);
     }
 }

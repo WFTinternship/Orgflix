@@ -135,6 +135,18 @@ public class FilmDaoTest {
     }
 
     @Test
+    public void getFilmsList_Succed(){
+        Film film = new Film("Film 1",2000,"Director 1");
+        filmDao.addFilm(film);
+        film = new Film("Film 2",2000,"Director 2");
+        filmDao.addFilm(film);
+        film = new Film("Film 3",2000,"Director 3");
+        filmDao.addFilm(film);
+
+        Assert.assertEquals(filmDao.getFilmsList(0).size(),3);
+    }
+
+    @Test
     public void addGenreToFilm() throws Exception {
     }
 

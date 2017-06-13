@@ -16,7 +16,9 @@ public interface FilmDao {
 
     List<Film> getFilmsByCast(Cast cast);
 
-    List<Film> getFilmsByCast(int directorId);
+    List<Film> getFilmsByCast(int actorId);
+
+    List<Film> getFilmsByGenre(Genre genre);
 
     List<Film> getFilmsList(int startIndex);
 
@@ -29,4 +31,5 @@ public interface FilmDao {
     boolean addCastToFilm(Cast cast, Film film);
 
     boolean addCastToFilm(Cast cast, int filmId);
+
 }

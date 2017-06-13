@@ -12,7 +12,7 @@ import org.apache.log4j.Logger;
 /**
  * Created by David on 5/27/2017
  */
-public class UserDaoJdbc implements UserDao {
+public class UserDaoJdbc extends DaoJdbc implements UserDao {
     private static final Logger LOGGER = Logger.getLogger(UserDao.class.getName());
 
     @Override

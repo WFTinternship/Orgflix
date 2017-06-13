@@ -21,15 +21,19 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public boolean addFilm(Film film) {
-//        filmDao.addFilm(film);
-//        for (Genre genre:film.getGenres()) {
-//            filmDao.addGenreToFilm(genre, film);
-//        }
-//        for (Cast cast:film.getCasts()) {
-//            filmDao.addCastToFilm(cast, film);  ////////////////////NEEDS REVIEW, WHAT IF CAST MEMBER IS TO BE NEWLY CREATED?
-//        }
-//        return true; //////////////////////////////////////////////TO BW UPDATED
-        return filmDao.addFilm(film);
+        boolean result = filmDao.addFilm(film);
+        if (!result)
+            return false;
+
+        for (Genre genre : film.getGenres()) {
+            filmDao.addGenreToFilm(genre, film);
+        }
+
+        for (Cast cast : film.getCasts()) {
+            filmDao.addCastToFilm(cast, film);
+        }
+
+        return true;
     }
 
     @Override

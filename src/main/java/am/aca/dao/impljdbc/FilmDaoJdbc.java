@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Created by David on 5/28/2017
  */
-public class FilmDaoJdbc implements FilmDao {
+public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
     private static final Logger LOGGER = Logger.getLogger(FilmDao.class);
 
     @Override
@@ -60,7 +60,7 @@ public class FilmDaoJdbc implements FilmDao {
 //
 //
 //                for (Genre genre:film.getGenres()) {
-//                    genreStatement.setInt(1, genre.ordinal());
+//                    genreStatement.setInt(1, genre.getValue());
 //                    genreStatement.setInt(2, film.getId());
 //                    genreStatement.addBatch();
 //                }
@@ -151,7 +151,9 @@ public class FilmDaoJdbc implements FilmDao {
 
             resultSet = statement.executeQuery();
 
-            if (resultSet.next()) {
+            if (!resultSet.next()) return null;
+
+            else {
                 film = new Film();
                 film.setId(id);
                 film.setTitle(resultSet.getString("Title"));
@@ -227,7 +229,7 @@ public class FilmDaoJdbc implements FilmDao {
             resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
-                films.add(getFilmById(resultSet.getInt("ID")));
+                films.add(getFilmById(resultSet.getInt("Film_ID")));
             }
         } catch (SQLException e) {
             LOGGER.warn(e.toString());
@@ -274,6 +276,37 @@ public class FilmDaoJdbc implements FilmDao {
     }
 
     @Override
+    public List<Film> getFilmsByGenre(Genre genre) {
+        List<Film> films = new ArrayList<>();
+
+        final String filmQuery = "SELECT * FROM genre_to_film" +
+                " LEFT JOIN genre ON genre_to_film.Genre_ID = genre.ID " +
+                " WHERE Genre_ID = ?";
+
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = DbManager.getInstance().getConnection();
+            statement = connection.prepareStatement(filmQuery);
+            statement.setInt(1, genre.getValue());
+
+            resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                films.add(getFilmById(resultSet.getInt("Film_ID")));
+            }
+        } catch (SQLException e) {
+            LOGGER.warn(e.toString());
+            throw new DaoException(e.toString());
+        } finally {
+            DbManager.closeConnections(new Object[]{resultSet, statement, connection});
+        }
+
+        return films;
+    }
+
+    @Override
     public boolean rateFilm(int filmId, int starType) {
         boolean state;
 
@@ -309,7 +342,7 @@ public class FilmDaoJdbc implements FilmDao {
         try {
             connection = DbManager.getInstance().getConnection();
             statement = connection.prepareStatement(query);
-            statement.setInt(1, genre.ordinal());
+            statement.setInt(1, genre.getValue());
             statement.setInt(2, filmId);
 
             state = (statement.executeUpdate() == 1);

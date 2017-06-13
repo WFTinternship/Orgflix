@@ -114,38 +114,29 @@ create table lists(
 # insert into films(Title,Prod_Year,HasOscar,image_ref)
 #   values('Forrest Gump',1994,true,'54545');
 #
-# # casts for 2 films
-# insert into film_to_cast(Actor_ID,Film_ID) values(1,1);
-# insert into film_to_cast(Actor_ID,Film_ID) values(2,1);
-# insert into film_to_cast(Actor_ID,Film_ID) values(2,2);
+
 
 # 3 genre
-INSERT INTO genre(id, genre) VALUES (0, 'FAMILY');
-INSERT INTO genre(id, genre) VALUES (1, 'HISTORY');
-INSERT INTO genre(id, genre) VALUES (2, 'MUSIC');
-INSERT INTO genre(id, genre) VALUES (3, 'MYSTERY');
-INSERT INTO genre(id, genre) VALUES (4, 'SCI_FI');
-INSERT INTO genre(id, genre) VALUES (5, 'THRILLER');
-INSERT INTO genre(id, genre) VALUES (6, 'WESTERN');
-INSERT INTO genre(id, genre) VALUES (7, 'ACTION');
-INSERT INTO genre(id, genre) VALUES (8, 'ANIMATION');
-INSERT INTO genre(id, genre) VALUES (9, 'COMEDY');
-INSERT INTO genre(id, genre) VALUES (10, 'DOCUMENTARY');
-INSERT INTO genre(id, genre) VALUES (11, 'ADVENTURE');
-INSERT INTO genre(id, genre) VALUES (12, 'BIOGRAPHY');
-INSERT INTO genre(id, genre) VALUES (13, 'CRIME');
-INSERT INTO genre(id, genre) VALUES (14, 'DRAMA');
-INSERT INTO genre(id, genre) VALUES (15, 'FANTASY');
-INSERT INTO genre(id, genre) VALUES (16, 'HORROR');
-INSERT INTO genre(id, genre) VALUES (17, 'MUSICAL');
-INSERT INTO genre(id, genre) VALUES (18, 'ROMANCE');
-INSERT INTO genre(id, genre) VALUES (19, 'SPORT');
-INSERT INTO genre(id, genre) VALUES (20, 'WAR');
+INSERT INTO genre(id, genre) VALUES (1, 'FAMILY');
+INSERT INTO genre(id, genre) VALUES (2, 'HISTORY');
+INSERT INTO genre(id, genre) VALUES (3, 'MUSIC');
+INSERT INTO genre(id, genre) VALUES (4, 'MYSTERY');
+INSERT INTO genre(id, genre) VALUES (5, 'SCI-FI');
+INSERT INTO genre(id, genre) VALUES (6, 'THRILLER');
+INSERT INTO genre(id, genre) VALUES (7, 'WESTERN');
+INSERT INTO genre(id, genre) VALUES (8, 'ACTION');
+INSERT INTO genre(id, genre) VALUES (9, 'ANIMATION');
+INSERT INTO genre(id, genre) VALUES (10, 'COMEDY');
+INSERT INTO genre(id, genre) VALUES (11, 'DOCUMENTARY');
+INSERT INTO genre(id, genre) VALUES (12, 'ADVENTURE');
+INSERT INTO genre(id, genre) VALUES (13, 'BIOGRAPHY');
+INSERT INTO genre(id, genre) VALUES (14, 'CRIME');
+INSERT INTO genre(id, genre) VALUES (15, 'DRAMA');
+INSERT INTO genre(id, genre) VALUES (16, 'FANTASY');
+INSERT INTO genre(id, genre) VALUES (17, 'HORROR');
+INSERT INTO genre(id, genre) VALUES (18, 'MUSICAL');
+INSERT INTO genre(id, genre) VALUES (19, 'ROMANCE');
+INSERT INTO genre(id, genre) VALUES (20, 'SPORT');
+INSERT INTO genre(id, genre) VALUES (21, 'WAR');
 
 
-# # 2 genre to 2 films
-# insert into genre_to_film(Genre_ID,Film_ID) values(1,1);
-# insert into genre_to_film(Genre_ID,Film_ID) values(1,2);
-# insert into genre_to_film(Genre_ID,Film_ID) values(2,2);
-# insert into genre_to_film(Genre_ID,Film_ID) values(3,2);
-#

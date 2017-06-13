@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Created by David on 5/28/2017
  */
-public class CastDaoJdbc implements CastDao {
+public class CastDaoJdbc extends DaoJdbc implements CastDao {
     private static final Logger LOGGER = Logger.getLogger(CastDao.class);
 
     public Cast addCast(String name, boolean hasOscar) {

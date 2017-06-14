@@ -3,6 +3,7 @@ package am.aca.dao.impljdbc;
 import am.aca.dao.DaoException;
 import am.aca.dao.FilmDao;
 import am.aca.entity.*;
+import am.aca.util.ConnType;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
@@ -14,6 +15,14 @@ import java.util.List;
  */
 public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
     private static final Logger LOGGER = Logger.getLogger(FilmDao.class);
+
+    public FilmDaoJdbc(){
+        super();
+    }
+
+    public FilmDaoJdbc(ConnType connType){
+        super(connType);
+    }
 
     @Override
     public boolean addFilm(Film film) {

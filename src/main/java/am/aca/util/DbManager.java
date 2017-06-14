@@ -15,16 +15,21 @@ public class DbManager {
     private static final Logger LOGGER = Logger.getLogger(DbManager.class);
 
     private static DbManager datasource;
+    private static DbManager testDatasource;
     private ComboPooledDataSource cpds;
 
     private Properties properties = null;
 
-    private DbManager() {
+    private DbManager(ConnType connType) {
+        String base = "TestJdbcUrl";
         try {
             properties = new PropertyManager("connection.properties").getProperties();
             cpds = new ComboPooledDataSource();
+
+            if (connType == ConnType.PRODUCTION) base = "JdbcUrl";
+
+            cpds.setJdbcUrl(properties.getProperty(base));
             cpds.setDriverClass(properties.getProperty("DriverClass")); //loads the jdbc driver
-            cpds.setJdbcUrl(properties.getProperty("JdbcUrl"));
             cpds.setUser(properties.getProperty("user"));
             cpds.setPassword(properties.getProperty("password"));
 
@@ -40,12 +45,22 @@ public class DbManager {
 
     public static DbManager getInstance() {
         if (datasource == null) {
-            datasource = new DbManager();
+            datasource = new DbManager(ConnType.PRODUCTION);
             return datasource;
         } else {
             return datasource;
         }
     }
+
+    public static DbManager getInstanceTest() {
+        if (testDatasource == null) {
+            testDatasource = new DbManager(ConnType.TEST);
+            return testDatasource;
+        } else {
+            return testDatasource;
+        }
+    }
+
 
     public enum ConnectionType {
         POOL, BASIC
@@ -78,24 +93,18 @@ public class DbManager {
     public void closeConnections(Object[] resources) {
         try {
             for (Object resource : resources) {
-                if (resource instanceof PreparedStatement) {
-                    PreparedStatement statement = (PreparedStatement) resource;
-                    if (statement != null) {
+                if (resource != null) {
+                    if (resource instanceof PreparedStatement) {
+                        PreparedStatement statement = (PreparedStatement) resource;
                         statement.close();
-                    }
-                } else if (resource instanceof Statement) {
-                    Statement statement = (Statement) resource;
-                    if (statement != null) {
+                    } else if (resource instanceof Statement) {
+                        Statement statement = (Statement) resource;
                         statement.close();
-                    }
-                } else if (resource instanceof ResultSet) {
-                    ResultSet resultSet = (ResultSet) resource;
-                    if (resultSet != null) {
+                    } else if (resource instanceof ResultSet) {
+                        ResultSet resultSet = (ResultSet) resource;
                         resultSet.close();
-                    }
-                } else if (resource instanceof Connection) {
-                    Connection connection = (Connection) resource;
-                    if (connection != null) {
+                    } else if (resource instanceof Connection) {
+                        Connection connection = (Connection) resource;
                         connection.close();
                         LOGGER.info("Connection closed: Number of busy connections: " + this.cpds.getNumBusyConnectionsAllUsers());
                     }
@@ -107,20 +116,20 @@ public class DbManager {
         }
     }
 
-    public static void emptyTable(String[] tables) {
+    public static void emptyTestTables(String[] tables) {
         Connection connection = null;
         PreparedStatement statement = null;
         for (String table : tables) {
             try {
                 final String query = "DELETE FROM  " + table;
-                connection = datasource.getConnection();
+                connection = testDatasource.getConnection();
                 statement = connection.prepareStatement(query);
                 statement.executeUpdate();
             } catch (Exception e) {
                 LOGGER.warn(e.toString());
                 throw new DaoException(e.toString());
             } finally {
-                datasource.closeConnections(new Object[]{statement, connection});
+                testDatasource.closeConnections(new Object[]{statement, connection});
             }
         }
     }

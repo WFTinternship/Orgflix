@@ -1,5 +1,6 @@
 package am.aca.dao.impljdbc;
 
+import am.aca.util.ConnType;
 import am.aca.util.DbManager;
 
 /**
@@ -9,6 +10,12 @@ public class DaoJdbc {
     DbManager dataSource;
 
     DaoJdbc() {
-        dataSource = DbManager.getInstance();
+        this(ConnType.PRODUCTION);
+    }
+    DaoJdbc(ConnType connType) {
+        if(connType == ConnType.TEST)
+            dataSource = DbManager.getInstanceTest();
+        else
+            dataSource = DbManager.getInstance();
     }
 }

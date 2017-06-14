@@ -1,11 +1,13 @@
 package daotest;
 
+import am.aca.dao.CastDao;
 import am.aca.dao.impljdbc.CastDaoJdbc;
 import am.aca.dao.FilmDao;
 import am.aca.dao.impljdbc.FilmDaoJdbc;
 import am.aca.entity.Cast;
 import am.aca.entity.Film;
 import am.aca.entity.Genre;
+import am.aca.util.ConnType;
 import am.aca.util.DbManager;
 import org.junit.After;
 import org.junit.Assert;
@@ -18,11 +20,11 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 /**
- * Created by Vardan on 04.06.2017.
- *
+ * Created by Vardan on 04.06.2017
  */
 public class FilmTest {
-    private FilmDao filmDao = new FilmDaoJdbc();
+    private FilmDao filmDao = new FilmDaoJdbc(ConnType.TEST);
+    private CastDao castDao = new CastDaoJdbc(ConnType.TEST);
     private Film film;
     private Cast cast;
     private List<Cast> castList;
@@ -30,12 +32,11 @@ public class FilmTest {
     @Before
     public void setUp() {
         film = new Film();
+        DbManager.emptyTestTables(new String[]{"genre_to_film", "film_to_cast", "films", "casts"});
     }
 
     @After
     public void tearDown() {
-        DbManager.emptyTable(new String[]{"genre_to_film", "film_to_cast","films","casts"});
-
     }
 
     @Test
@@ -53,7 +54,7 @@ public class FilmTest {
 
     @Test
     public void editFilmChangeCheck_Succeeded() {
-        cast = new CastDaoJdbc().addCast("Matt Ross",false);
+        cast = castDao.addCast("Matt Ross", false);
         castList = new ArrayList<>();
 
         film.setTitle("Captain Fantastic");
@@ -61,14 +62,15 @@ public class FilmTest {
         film.setCasts(castList);
         film.setDirector("Matthew Ross");
         filmDao.addFilm(film);
-        film.setDirector("Matt Ross");
-        filmDao.editFilm(film);
-        Assert.assertEquals("Matt Ross", filmDao.getFilmById(film.getId()).getDirector());
+        film.setHasOscar(true);
+        assertTrue(filmDao.editFilm(film));
+
+
     }
 
     @Test
     public void editFilmSizeCheck_Succeeded() {
-        cast = new CastDaoJdbc().addCast("Matt Ross",false);
+        cast = castDao.addCast("Matt Ross", false);
         castList = new ArrayList<>();
 
         film.setTitle("Captain Fantastic");
@@ -102,7 +104,7 @@ public class FilmTest {
 
     @Test
     public void getFilmsByCast_Succeeded() {
-        cast = new CastDaoJdbc().addCast("Matt Ross",false);
+        cast = castDao.addCast("Matt Ross", false);
         castList = new ArrayList<>();
         film.setTitle("Captain Fantastic");
         castList.add(cast);
@@ -114,7 +116,7 @@ public class FilmTest {
 
     @Test
     public void getFilmsByCast_Failed() {
-        Assert.assertEquals(0, filmDao.getFilmsByCast(0).size() );
+        Assert.assertEquals(0, filmDao.getFilmsByCast(0).size());
     }
 
 
@@ -136,7 +138,7 @@ public class FilmTest {
 
     @Test
     public void rateFilm_Succeeded() {
-        cast = new CastDaoJdbc().addCast("Matt Ross",false);
+        cast = castDao.addCast("Matt Ross", false);
         castList = new ArrayList<>();
         film.setTitle("Captain Fantastic");
         castList.add(cast);

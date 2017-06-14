@@ -6,6 +6,7 @@ import am.aca.entity.Cast;
 import am.aca.entity.Film;
 import am.aca.entity.Genre;
 import am.aca.entity.User;
+import am.aca.util.ConnType;
 import am.aca.util.DbManager;
 import org.junit.After;
 import org.junit.Assert;
@@ -22,7 +23,10 @@ import java.util.ArrayList;
  */
 public class ListTest {
 
-    private ListDao listDao;
+    private ListDao listDao = new ListDaoJdbc(ConnType.TEST);
+    private CastDao castDao = new CastDaoJdbc(ConnType.TEST);
+    private UserDao userDao =  new UserDaoJdbc(ConnType.TEST);
+    private FilmDao filmDao = new FilmDaoJdbc(ConnType.TEST);
     private Film film;
     private User user;
     private ArrayList<Cast> dirs = new ArrayList<>();
@@ -31,7 +35,7 @@ public class ListTest {
     public void setUp() {
 
         //setup Cast
-        dirs.add(new CastDaoJdbc().addCast("Brian De Palma", false));
+        dirs.add(castDao.addCast("Brian De Palma", false));
 
         //setup Film and Film DAO
         film = new Film();
@@ -41,23 +45,17 @@ public class ListTest {
         film.setRate_5star(1);
         film.setCasts(dirs);
 
-        FilmDao filmDao = new FilmDaoJdbc();
-
         filmDao.addFilm(film);
 
         //setup User and User DAO
         user = new User("MrSmith","John Smith","JhonSmith@gmail.com","pass");
 
-        UserDao userDao =  new UserDaoJdbc();
         userDao.addUser(user);
-
-        //setup List DAO
-        listDao = new ListDaoJdbc();
     }
 
     @After
-    public void revert() {
-        DbManager.emptyTable(new String[]{"genre_to_film", "film_to_cast", "lists", "casts", "films", "users"});
+    public void revert() throws SQLException, IOException, PropertyVetoException {
+        DbManager.emptyTestTables(new String[]{"genre_to_film", "film_to_cast", "lists", "casts", "films", "users"});
     }
 
     @Test

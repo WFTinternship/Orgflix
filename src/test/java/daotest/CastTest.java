@@ -4,6 +4,7 @@ import am.aca.dao.*;
 import am.aca.dao.impljdbc.CastDaoJdbc;
 import am.aca.dao.impljdbc.FilmDaoJdbc;
 import am.aca.entity.*;
+import am.aca.util.ConnType;
 import am.aca.util.DbManager;
 import org.junit.*;
 import org.junit.Test;
@@ -15,7 +16,8 @@ import java.sql.SQLException;
  */
 public class CastTest {
 
-    private CastDao CastDao = new CastDaoJdbc();
+    private CastDao CastDao = new CastDaoJdbc(ConnType.TEST);
+    private FilmDao filmDao = new FilmDaoJdbc(ConnType.TEST);
     private Cast cast;
 
     @Before
@@ -24,7 +26,7 @@ public class CastTest {
 
     @After
     public void end(){
-        DbManager.emptyTable(new String[]{"film_to_cast","casts"});
+        DbManager.emptyTestTables(new String[]{"film_to_cast","casts"});
         cast = null;
     }
 
@@ -74,7 +76,6 @@ public class CastTest {
 
     @Test
     public void listFilmsIdByCast_Succeeded() throws SQLException {
-        FilmDao filmDao = new FilmDaoJdbc();
         Film f1, f2;
         filmDao.addFilm(f1 = new Film("Titanic",1990));
         filmDao.addFilm(f2 = new Film("Zoro",1992));

@@ -6,6 +6,7 @@ import am.aca.entity.*;
 
 import java.sql.*;
 
+import am.aca.util.ConnType;
 import org.apache.log4j.Logger;
 
 /**
@@ -13,6 +14,14 @@ import org.apache.log4j.Logger;
  */
 public class UserDaoJdbc extends DaoJdbc implements UserDao {
     private static final Logger LOGGER = Logger.getLogger(UserDao.class.getName());
+
+    public UserDaoJdbc() {
+        super();
+    }
+
+    public UserDaoJdbc(ConnType connType) {
+        super(connType);
+    }
 
     @Override
     public int addUser(User user) {

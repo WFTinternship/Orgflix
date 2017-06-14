@@ -59,7 +59,7 @@ public class DbManager {
         Connection connection;
         if (type == ConnectionType.POOL) {
             connection = this.cpds.getConnection();
-            LOGGER.info("Connection opened: Number of bussy connections: " + this.cpds.getNumBusyConnectionsAllUsers());
+            LOGGER.info("Connection opened: Number of busy connections: " + this.cpds.getNumBusyConnectionsAllUsers());
             return connection;
 
         } else {
@@ -97,7 +97,7 @@ public class DbManager {
                     Connection connection = (Connection) resource;
                     if (connection != null) {
                         connection.close();
-                        LOGGER.info("Connection closed: Number of bussy connections: " + this.cpds.getNumBusyConnectionsAllUsers());
+                        LOGGER.info("Connection closed: Number of busy connections: " + this.cpds.getNumBusyConnectionsAllUsers());
                     }
                 }
             }
@@ -128,7 +128,7 @@ public class DbManager {
     public static void connectionRollback(Connection connection) {
         try {
             connection.rollback();
-            LOGGER.info("Transaction rollbacked successfully");
+            LOGGER.info("Transaction rolled back successfully");
         } catch (SQLException e) {
             LOGGER.warn(e.toString());
         }

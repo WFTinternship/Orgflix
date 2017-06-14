@@ -5,7 +5,6 @@ import am.aca.dao.impljdbc.CastDaoJdbc;
 import am.aca.dao.impljdbc.FilmDaoJdbc;
 import am.aca.entity.*;
 import am.aca.util.DbManager;
-import org.apache.log4j.Logger;
 import org.junit.*;
 import org.junit.Test;
 
@@ -15,7 +14,6 @@ import java.sql.SQLException;
  * Created by David on 6/3/2017
  */
 public class CastTest {
-    private static final Logger LOGGER = Logger.getLogger( CastTest.class );
 
     private CastDao CastDao = new CastDaoJdbc();
     private Cast cast;

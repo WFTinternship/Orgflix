@@ -32,11 +32,11 @@ public class FilmTest {
     @Before
     public void setUp() {
         film = new Film();
-        DbManager.emptyTestTables(new String[]{"genre_to_film", "film_to_cast", "films", "casts"});
     }
 
     @After
     public void tearDown() {
+        DbManager.emptyTestTables(new String[]{"genre_to_film", "film_to_cast", "films", "casts"});
     }
 
     @Test

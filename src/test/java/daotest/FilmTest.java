@@ -80,7 +80,7 @@ public class FilmTest {
         filmDao.addFilm(film);
         film.setDirector("Matt Ross");
         filmDao.editFilm(film);
-        Assert.assertEquals(1, filmDao.getFilmsList(0).size());
+        Assert.assertEquals(1, filmDao.totalNumberOfFilms());
     }
 
 
@@ -173,6 +173,19 @@ public class FilmTest {
     }
 
     @Test
+    public void totalNumber_Succeeded() {
+        film.setTitle("Captain Fantastic");
+        for (int i = 0; i < 6; i++) {
+            filmDao.addFilm(film);
+        }
+        Assert.assertEquals(6, filmDao.totalNumberOfFilms());
+    }
+    @Test
+    public void totalNumber_Failed() {
+        Assert.assertEquals(0, filmDao.totalNumberOfFilms());
+    }
+
+    @Test
     public void getFilmsListIndex_Failed() {
         film.setTitle("Captain Fantastic");
         filmDao.addFilm(film);
@@ -199,5 +212,32 @@ public class FilmTest {
     @Test
     public void getFilmsByGenre_Fail() {
         Assert.assertEquals(0, filmDao.getFilmsByGenre(Genre.WAR).size());
+    }
+
+    @Test
+    public void getRatingInt_Succeeded() {
+        film.setTitle("Captain Fantastic");
+        filmDao.addFilm(film);
+        filmDao.rateFilm(film.getId(), 4);
+        filmDao.rateFilm(film.getId(), 4);
+        filmDao.rateFilm(film.getId(), 3);
+        filmDao.rateFilm(film.getId(), 5);
+        Assert.assertEquals(4.0, filmDao.getRating(film), 0.01);
+    }
+
+    @Test
+    public void getRatingDouble_Succeeded() {
+        film.setTitle("Captain Fantastic");
+        filmDao.addFilm(film);
+        filmDao.rateFilm(film.getId(), 4);
+        filmDao.rateFilm(film.getId(), 5);
+        Assert.assertEquals(4.5, filmDao.getRating(film), 0.01);
+    }
+
+    @Test
+    public void getRatingNaN_Failed() {
+        film.setTitle("Captain Fantastic");
+        filmDao.addFilm(film);
+        Assert.assertEquals(0, filmDao.getRating(film), 0.01);
     }
 }

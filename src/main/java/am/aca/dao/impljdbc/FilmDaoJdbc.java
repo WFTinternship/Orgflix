@@ -16,11 +16,11 @@ import java.util.List;
 public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
     private static final Logger LOGGER = Logger.getLogger(FilmDao.class);
 
-    public FilmDaoJdbc(){
+    public FilmDaoJdbc() {
         super();
     }
 
-    public FilmDaoJdbc(ConnType connType){
+    public FilmDaoJdbc(ConnType connType) {
         super(connType);
     }
 
@@ -62,18 +62,6 @@ public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
                 updateImageStatement.setString(1, "..\\..\\..\\..\\..\\..\\webapp\\images\\" + Integer.toString(film.getId()) + ".jpg");
                 updateImageStatement.setInt(2, film.getId());
                 updateImageStatement.execute();
-
-//                final String genreQuery = "INSERT INTO genre_to_film (Genre_ID, Film_ID) VALUES (?, ?)";
-//                PreparedStatement genreStatement = connection.prepareStatement(genreQuery);
-//
-//
-//                for (Genre genre:film.getGenres()) {
-//                    genreStatement.setInt(1, genre.getValue());
-//                    genreStatement.setInt(2, film.getId());
-//                    genreStatement.addBatch();
-//                }
-//
-//                genreStatement.executeBatch();
 
                 connection.commit();
 
@@ -390,6 +378,40 @@ public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
             dataSource.closeConnections(new Object[]{statement, connection});
         }
         return result;
+    }
+
+    @Override
+    public double getRating(int filmId) {
+        int ratingSum = 0;
+        int ratingCount = 0;
+        double result;
+
+        final String ratingQuery = "SELECT * FROM films WHERE ID = ?";
+        try {
+            PreparedStatement ratingSumStatement = dataSource.getConnection().prepareStatement(ratingQuery);
+            ratingSumStatement.setInt(1, filmId);
+            ResultSet ratingSumSet = ratingSumStatement.executeQuery();
+
+            if (ratingSumSet.next()) {
+
+                for (int i = 1; i <= 5; i++) {
+                    ratingSum += ratingSumSet.getInt("Rate_" + i + "star") * i;
+                    ratingCount += ratingSumSet.getInt("Rate_" + i + "star");
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.warn(e.toString());
+            throw new DaoException(e.toString());
+        }
+
+        if (ratingSum == 0)
+            return 0;
+        return (double) ratingSum/ratingCount;
+    }
+
+    @Override
+    public double getRating(Film film) {
+        return getRating(film.getId());
     }
 
     @Override

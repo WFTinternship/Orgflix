@@ -157,6 +157,15 @@ public class FilmTest {
     }
 
     @Test
+    public void getFilmsListPage2_Succeeded() {
+        film.setTitle("Captain Fantastic");
+        for (int i = 0; i < 20; i++) {
+            filmDao.addFilm(film);
+        }
+        Assert.assertEquals(20-12, filmDao.getFilmsList(12).size());
+    }
+
+    @Test
     public void getFilmsList_Failed() {
         Assert.assertEquals(0, filmDao.getFilmsList(0).size());
     }
@@ -183,6 +192,7 @@ public class FilmTest {
         filmDao.addGenreToFilm(Genre.COMEDY, film);
         Assert.assertEquals(film, filmDao.getFilmsByGenre(Genre.COMEDY).get(0));
     }
+
 
     @Test
     public void getFilmsByGenre_Fail() {

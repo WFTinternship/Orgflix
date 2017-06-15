@@ -3,6 +3,7 @@ package daotest;
 import am.aca.dao.*;
 import am.aca.dao.impljdbc.UserDaoJdbc;
 import am.aca.entity.*;
+import am.aca.util.ConnType;
 import am.aca.util.DbManager;
 import org.junit.*;
 import org.junit.Test;
@@ -12,7 +13,7 @@ import org.junit.Test;
  * Created by David on 5/29/2017
  */
 public class UserTest {
-    private UserDao userDao = new UserDaoJdbc();
+    private UserDao userDao = new UserDaoJdbc(ConnType.TEST);
     private User user;
 
     @Before
@@ -20,7 +21,7 @@ public class UserTest {
 
     @After
     public void end(){
-        DbManager.emptyTable(new String[]{"lists","users"});
+        DbManager.emptyTestTables(new String[]{"lists","users"});
         user = null;
     }
 

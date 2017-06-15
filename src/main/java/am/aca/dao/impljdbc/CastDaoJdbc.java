@@ -3,6 +3,7 @@ package am.aca.dao.impljdbc;
 import am.aca.dao.*;
 import am.aca.entity.Cast;
 import am.aca.entity.Film;
+import am.aca.util.ConnType;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
@@ -13,7 +14,16 @@ import java.util.List;
  * Created by David on 5/28/2017
  */
 public class CastDaoJdbc extends DaoJdbc implements CastDao {
+
     private static final Logger LOGGER = Logger.getLogger(CastDao.class);
+
+    public CastDaoJdbc(){
+        super();
+    }
+
+    public CastDaoJdbc(ConnType connType){
+        super(connType);
+    }
 
     public Cast addCast(String name, boolean hasOscar) {
 

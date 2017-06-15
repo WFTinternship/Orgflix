@@ -4,6 +4,7 @@ import am.aca.dao.DaoException;
 import am.aca.dao.ListDao;
 import am.aca.dao.UserDao;
 import am.aca.entity.Film;
+import am.aca.util.ConnType;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -15,6 +16,13 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
 
     private static final org.apache.log4j.Logger LOGGER = org.apache.log4j.Logger.getLogger(UserDao.class.getName());
 
+    public ListDaoJdbc(){
+        super();
+    }
+
+    public ListDaoJdbc(ConnType connType){
+        super(connType);
+    }
 
     @Override
     public boolean addToWatched(Film film, boolean isPublic, int userId) {

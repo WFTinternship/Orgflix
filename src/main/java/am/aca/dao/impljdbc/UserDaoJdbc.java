@@ -13,7 +13,6 @@ import org.apache.log4j.Logger;
  * Created by David on 5/27/2017
  */
 public class UserDaoJdbc extends DaoJdbc implements UserDao {
-    private static final Logger LOGGER = Logger.getLogger(UserDao.class.getName());
 
     public UserDaoJdbc() {
         super();
@@ -49,7 +48,6 @@ public class UserDaoJdbc extends DaoJdbc implements UserDao {
                 if (resultSet.next()) id = resultSet.getInt(1);
             }
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         } finally {
             dataSource.closeConnections(new Object[]{statement, resultSet, connection});
@@ -81,7 +79,6 @@ public class UserDaoJdbc extends DaoJdbc implements UserDao {
                 user.setPass(resultSet.getString("User_Pass"));
             }
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         } finally {
             dataSource.closeConnections(new Object[]{resultSet, statement, connection});
@@ -112,7 +109,6 @@ public class UserDaoJdbc extends DaoJdbc implements UserDao {
                 user.setPass(resultSet.getString("User_Pass"));
             }
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         } finally {
             dataSource.closeConnections(new Object[]{resultSet, statement, connection});
@@ -144,7 +140,6 @@ public class UserDaoJdbc extends DaoJdbc implements UserDao {
 
             state = statement.execute();
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         } finally {
             dataSource.closeConnections(new Object[]{statement, connection});

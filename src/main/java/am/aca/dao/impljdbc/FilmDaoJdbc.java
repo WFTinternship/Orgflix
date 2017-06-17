@@ -14,7 +14,6 @@ import java.util.List;
  * Created by David on 5/28/2017
  */
 public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
-    private static final Logger LOGGER = Logger.getLogger(FilmDao.class);
 
     public FilmDaoJdbc() {
         super();
@@ -68,7 +67,6 @@ public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
                 state = true; // film insert statement is successful
             }
         } catch (SQLException e) {
-            LOGGER.warn(e.toString());
             throw new DaoException(e.toString());
         } finally {
             dataSource.closeConnections(new Object[]{resultSet, statement, connection});
@@ -120,7 +118,6 @@ public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
                 state = true; // film update statement is successful
             }
         } catch (SQLException e) {
-            LOGGER.warn(e.toString());
             dataSource.connectionRollback(connection);
             throw new DaoException(e.toString());
         } finally {
@@ -196,7 +193,6 @@ public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
                 film.addGeners(Genre.valueOf(resultSet.getString("genre")));
             }
         } catch (SQLException e) {
-            LOGGER.warn(e.toString());
             throw new DaoException(e.toString());
         } finally {
             dataSource.closeConnections(new Object[]{resultSet, statement, connection});
@@ -228,13 +224,17 @@ public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
                 films.add(getFilmById(resultSet.getInt("Film_ID")));
             }
         } catch (SQLException e) {
-            LOGGER.warn(e.toString());
             throw new DaoException(e.toString());
         } finally {
             dataSource.closeConnections(new Object[]{resultSet, statement, connection});
         }
 
         return films;
+    }
+
+    @Override
+    public List<Film> getFilmsByCast(Cast cast) {
+        return getFilmsByCast(cast.getId());
     }
 
     @Override
@@ -257,18 +257,12 @@ public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
                 films.add(getFilmById(resultSet.getInt("ID")));
             }
         } catch (SQLException e) {
-            LOGGER.warn(e.toString());
             throw new DaoException(e.toString());
         } finally {
             dataSource.closeConnections(new Object[]{resultSet, statement, connection});
         }
 
         return films;
-    }
-
-    @Override
-    public List<Film> getFilmsByCast(Cast cast) {
-        return getFilmsByCast(cast.getId());
     }
 
     @Override
@@ -293,7 +287,6 @@ public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
                 films.add(getFilmById(resultSet.getInt("Film_ID")));
             }
         } catch (SQLException e) {
-            LOGGER.warn(e.toString());
             throw new DaoException(e.toString());
         } finally {
             dataSource.closeConnections(new Object[]{resultSet, statement, connection});
@@ -319,7 +312,6 @@ public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
             state = (statement.executeUpdate() == 1);
 
         } catch (SQLException e) {
-            LOGGER.warn(e.toString());
             throw new DaoException(e.toString());
         } finally {
             dataSource.closeConnections(new Object[]{statement, connection});
@@ -343,17 +335,11 @@ public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
 
             state = (statement.executeUpdate() == 1);
         } catch (SQLException e) {
-            LOGGER.warn(e.toString());
             throw new DaoException(e.toString());
         } finally {
             dataSource.closeConnections(new Object[]{statement, connection});
         }
         return state;
-    }
-
-    @Override
-    public boolean addGenreToFilm(Genre genre, Film film) {
-        return addGenreToFilm(genre, film.getId());
     }
 
     @Override
@@ -372,7 +358,6 @@ public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
 
             result = (statement.executeUpdate() == 1);
         } catch (SQLException e) {
-            LOGGER.warn(e.toString());
             throw new DaoException(e.toString());
         } finally {
             dataSource.closeConnections(new Object[]{statement, connection});
@@ -400,18 +385,12 @@ public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
                 }
             }
         } catch (SQLException e) {
-            LOGGER.warn(e.toString());
             throw new DaoException(e.toString());
         }
 
         if (ratingSum == 0)
             return 0;
         return (double) ratingSum/ratingCount;
-    }
-
-    @Override
-    public double getRating(Film film) {
-        return getRating(film.getId());
     }
 
     @Override
@@ -430,17 +409,11 @@ public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
                 totalNumber = resultSet.getInt("total");
             }
         } catch (SQLException e) {
-            LOGGER.warn(e.toString());
             throw new DaoException(e.toString());
         } finally {
             dataSource.closeConnections(new Object[]{resultSet, connection});
         }
 
         return totalNumber;
-    }
-
-    @Override
-    public boolean addCastToFilm(Cast cast, Film film) {
-        return addCastToFilm(cast, film.getId());
     }
 }

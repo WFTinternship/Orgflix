@@ -2,7 +2,6 @@ package am.aca.dao.impljdbc;
 
 import am.aca.dao.DaoException;
 import am.aca.dao.ListDao;
-import am.aca.dao.UserDao;
 import am.aca.entity.Film;
 import am.aca.util.ConnType;
 
@@ -14,13 +13,11 @@ import java.util.ArrayList;
  */
 public class ListDaoJdbc extends DaoJdbc implements ListDao {
 
-    private static final org.apache.log4j.Logger LOGGER = org.apache.log4j.Logger.getLogger(UserDao.class.getName());
-
-    public ListDaoJdbc(){
+    public ListDaoJdbc() {
         super();
     }
 
-    public ListDaoJdbc(ConnType connType){
+    public ListDaoJdbc(ConnType connType) {
         super(connType);
     }
 
@@ -31,7 +28,6 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
         try {
             connection = dataSource.getConnection();
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
 
@@ -42,7 +38,6 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
         try {
             checkStatement = connection.prepareStatement(checkQuery);
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
 
@@ -51,7 +46,6 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
         try {
             rs = checkStatement.executeQuery();
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
 
@@ -59,7 +53,6 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
         try {
             connection.setAutoCommit(false);
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
 
@@ -73,20 +66,17 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
             try {
                 updateStatement = connection.prepareStatement(updateQuery);
             } catch (SQLException e) {
-                LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
             }
             set(userId, film, updateStatement);
             try {
                 result = updateStatement.execute();
             } catch (SQLException e) {
-                LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
             }
             try {
                 closeAll(true, connection, checkStatement, updateStatement);
             } catch (SQLException e) {
-                LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
             }
             return result;
@@ -99,7 +89,6 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
             try {
                 insertStatement = connection.prepareStatement(insertQuery);
             } catch (SQLException e) {
-                LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
             }
 
@@ -107,19 +96,16 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
                 set(userId, film, insertStatement);
                 insertStatement.setBoolean(3, isPublic);
             } catch (SQLException e) {
-                LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
             }
             try {
                 result = insertStatement.execute();
             } catch (SQLException e) {
-                LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
             }
             try {
                 closeAll(true, connection, checkStatement, insertStatement);
             } catch (SQLException e) {
-                LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
             }
             return result;
@@ -133,7 +119,6 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
         try {
             connection = dataSource.getConnection();
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
 
@@ -144,7 +129,6 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
         try {
             checkStatement = connection.prepareStatement(checkQuery);
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
 
@@ -153,7 +137,6 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
         try {
             rs = checkStatement.executeQuery();
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
 
@@ -163,7 +146,6 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
             rs.next();
             resultSetLength = rs.getInt(1);
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
 
@@ -173,7 +155,6 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
         try {
             connection.setAutoCommit(false);
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
         if (resultSetLength == 1) {
@@ -183,7 +164,6 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
             try {
                 updateStatement = connection.prepareStatement(updateQuery);
             } catch (SQLException e) {
-                LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
             }
 
@@ -192,13 +172,11 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
             try {
                 result = updateStatement.execute();
             } catch (SQLException e) {
-                LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
             }
             try {
                 closeAll(true, connection, checkStatement, updateStatement);
             } catch (SQLException e) {
-                LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
             }
             return result;
@@ -211,26 +189,22 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
             try {
                 insertStatement = connection.prepareStatement(insertQuery);
             } catch (SQLException e) {
-                LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
             }
             set(userId, film, insertStatement);
             try {
                 insertStatement.setBoolean(3, isPublic);
             } catch (SQLException e) {
-                LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
             }
             try {
                 result = insertStatement.execute();
             } catch (SQLException e) {
-                LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
             }
             try {
                 closeAll(true, connection, checkStatement, insertStatement);
             } catch (SQLException e) {
-                LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
             }
             return result;
@@ -244,7 +218,6 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
         try {
             connection = dataSource.getConnection();
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
 
@@ -255,7 +228,6 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
         try {
             watchedCheckStatement = connection.prepareStatement(watchedCheckQuery);
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
 
@@ -265,16 +237,13 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
         try {
             watchedSet = watchedCheckStatement.executeQuery();
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
-
 
         if (!checkForResultSet(watchedSet, connection, watchedCheckStatement)) {
             try {
                 closeAll(false, connection, watchedSet, watchedCheckStatement);
             } catch (SQLException e) {
-                LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
             }
             return false;
@@ -289,7 +258,6 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
         try {
             plannedCheckStatement = connection.prepareStatement(plannedCheckQuery);
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
 
@@ -298,7 +266,6 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
         try {
             plannedSet = plannedCheckStatement.executeQuery();
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
         boolean planned = false;
@@ -307,17 +274,14 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
                 planned = plannedSet.getBoolean("Is_wished");
             }
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
-
 
         //case: film marked as planned => UPDATE
         if (planned) {
             try {
                 connection.setAutoCommit(false);
             } catch (SQLException e) {
-                LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
             }
             final String updateQuery = "UPDATE lists SET Is_watched = FALSE WHERE User_ID = ? AND Film_ID = ?";
@@ -325,20 +289,17 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
             try {
                 updateStatement = connection.prepareStatement(updateQuery);
             } catch (SQLException e) {
-                LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
             }
             set(userId, film, updateStatement);
             try {
                 result = updateStatement.execute();
             } catch (SQLException e) {
-                LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
             }
             try {
                 closeAll(true, connection, plannedSet, plannedCheckStatement, updateStatement);
             } catch (SQLException e) {
-                LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
             }
             return result;
@@ -346,12 +307,7 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
 
         //case: not marked as planned
         else {
-            try {
-                return delete(connection, userId, film);
-            } catch (SQLException e) {
-                LOGGER.warn(e.getMessage());
-                throw new DaoException(e.getMessage());
-            }
+              return delete(connection, userId, film);
         }
     }
 
@@ -364,7 +320,6 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
                 return false;
             }
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
 
@@ -378,7 +333,6 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
         try {
             connection = dataSource.getConnection();
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
 
@@ -389,7 +343,6 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
         try {
             plannedCheckStatement = connection.prepareStatement(plannedCheckQuery);
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
 
@@ -399,7 +352,6 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
         try {
             plannedSet = plannedCheckStatement.executeQuery();
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
 
@@ -417,17 +369,14 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
         try {
             watchedCheckStatement = connection.prepareStatement(checkQuery);
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
-
 
         set(userId, film, watchedCheckStatement);
         ResultSet watchedSet;
         try {
             watchedSet = watchedCheckStatement.executeQuery();
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
 
@@ -437,10 +386,8 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
             if (watchedSet.next())
                 watched = watchedSet.getBoolean("Is_watched");
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
-
 
         //check whether or not the given film is in the watchlist
 
@@ -449,7 +396,6 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
             try {
                 connection.setAutoCommit(false);
             } catch (SQLException e) {
-                LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
             }
             final String updateQuery = "UPDATE lists SET Is_wished = FALSE WHERE User_ID = ? AND Film_ID = ?";
@@ -457,20 +403,17 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
             try {
                 updateStatement = connection.prepareStatement(updateQuery);
             } catch (SQLException e) {
-                LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
             }
             set(userId, film, updateStatement);
             try {
                 result = updateStatement.execute();
             } catch (SQLException e) {
-                LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
             }
             try {
                 closeAll(true, connection, watchedSet, plannedCheckStatement, updateStatement, watchedCheckStatement);
             } catch (SQLException e) {
-                LOGGER.warn(e.getMessage());
                 throw new DaoException(e.getMessage());
             }
             return result;
@@ -478,12 +421,7 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
 
         //case: not
         else {
-            try {
-                return delete(connection, userId, film);
-            } catch (SQLException e) {
-                LOGGER.warn(e.getMessage());
-                throw new DaoException(e.getMessage());
-            }
+              return delete(connection, userId, film);
         }
     }
 
@@ -493,7 +431,6 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
         try {
             connection = dataSource.getConnection();
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
 
@@ -503,20 +440,17 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
         try {
             statement = connection.prepareStatement(query);
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
         try {
             statement.setInt(1, userId);
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
         ResultSet resultSet;
         try {
             resultSet = statement.executeQuery();
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
 
@@ -524,7 +458,6 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
         try {
             closeAll(false, connection, resultSet, statement);
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
         return watched;
@@ -536,7 +469,6 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
         try {
             connection = dataSource.getConnection();
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
 
@@ -546,27 +478,23 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
         try {
             statement = connection.prepareStatement(query);
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
         try {
             statement.setInt(1, userId);
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
         ResultSet resultSet;
         try {
             resultSet = statement.executeQuery();
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
         add(resultSet, wished);
         try {
             closeAll(false, connection, resultSet, statement);
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
         return wished;
@@ -578,7 +506,6 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
         try {
             connection = dataSource.getConnection();
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
 
@@ -588,20 +515,17 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
         try {
             statement = connection.prepareStatement(query);
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
         try {
             statement.setInt(1, userId);
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
         ResultSet resultSet;
         try {
             resultSet = statement.executeQuery();
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
         try {
@@ -610,13 +534,11 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
                 watched.add(new Film());
             }
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
         try {
             closeAll(false, connection, resultSet, statement);
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
         return watched;
@@ -628,7 +550,6 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
         try {
             connection = dataSource.getConnection();
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
 
@@ -638,20 +559,17 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
         try {
             statement = connection.prepareStatement(query);
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
         try {
             statement.setInt(1, userId);
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
         ResultSet resultSet;
         try {
             resultSet = statement.executeQuery();
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
         try {
@@ -659,25 +577,26 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
                 wished.add(new Film());
             }
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
         try {
-
             closeAll(false, connection, resultSet, statement);
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
         return wished;
     }
 
-    private boolean delete(Connection connection, int userId, Film film) throws SQLException {
-        final String deleteQuery = "DELETE FROM lists WHERE User_ID = ? AND Film_ID = ?";
-        PreparedStatement statement = connection.prepareStatement(deleteQuery);
-        statement.setInt(1, userId);
-        statement.setInt(2, film.getId());
-        return statement.execute();
+    private boolean delete(Connection connection, int userId, Film film){
+        try {
+            final String deleteQuery = "DELETE FROM lists WHERE User_ID = ? AND Film_ID = ?";
+            PreparedStatement statement = connection.prepareStatement(deleteQuery);
+            statement.setInt(1, userId);
+            statement.setInt(2, film.getId());
+            return statement.execute();
+        } catch (SQLException e) {
+            throw new DaoException(e.getMessage());
+        }
     }
 
     private void set(int userId, Film film, PreparedStatement statement) {
@@ -685,7 +604,6 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
             statement.setInt(1, userId);
             statement.setInt(2, film.getId());
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
     }
@@ -695,7 +613,6 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
             rs.next();
             return rs.getInt(1);
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
     }
@@ -706,7 +623,6 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
                 list.add(new Film());
             }
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         }
     }
@@ -717,7 +633,6 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
             statement.close();
         }
         connection.close();
-        LOGGER.info("Connection closed");
     }
 
     private void closeAll(boolean commit, Connection connection, ResultSet resultSet, PreparedStatement... statements) throws SQLException {

@@ -15,8 +15,6 @@ import java.util.List;
  */
 public class CastDaoJdbc extends DaoJdbc implements CastDao {
 
-    private static final Logger LOGGER = Logger.getLogger(CastDao.class);
-
     public CastDaoJdbc(){
         super();
     }
@@ -43,7 +41,6 @@ public class CastDaoJdbc extends DaoJdbc implements CastDao {
                 if (resultSet.next()) id = resultSet.getInt(1);
             }
         } catch (SQLException e) {
-            LOGGER.warn(e.toString());
             throw new DaoException(e.toString());
         } finally {
             dataSource.closeConnections(new Object[]{resultSet, statement, connection});
@@ -80,8 +77,28 @@ public class CastDaoJdbc extends DaoJdbc implements CastDao {
             statement.setInt(2, filmId);
             state = statement.execute();
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
+        } finally {
+            dataSource.closeConnections(new Object[]{statement, connection});
+        }
+        return state;
+    }
+
+    @Override
+    public boolean editCast(Cast cast) {
+        boolean state;
+        Connection connection = null;
+        PreparedStatement statement = null;
+        final String query = "UPDATE casts SET Actor_Name = ?, HasOscar = ? WHERE ID = ?";
+        try {
+            connection = dataSource.getConnection();
+            statement = connection.prepareStatement(query);
+            statement.setString(1, cast.getName());
+            statement.setBoolean(2, cast.isHasOscar());
+            statement.setInt(3, cast.getId());
+            state = statement.executeUpdate() == 1;
+        } catch (SQLException e) {
+            throw new DaoException(e.toString());
         } finally {
             dataSource.closeConnections(new Object[]{statement, connection});
         }
@@ -105,7 +122,6 @@ public class CastDaoJdbc extends DaoJdbc implements CastDao {
                 listCast.add(cast);
             }
         } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
             throw new DaoException(e.getMessage());
         } finally {
             dataSource.closeConnections(new Object[]{resultSet, connection});
@@ -138,7 +154,6 @@ public class CastDaoJdbc extends DaoJdbc implements CastDao {
                 filmsByDirector.add(resultSet.getInt("Film"));
             }
         } catch (SQLException e) {
-            LOGGER.warn(e.toString());
             throw new DaoException(e.toString());
         } finally {
             dataSource.closeConnections(new Object[]{resultSet, statement, connection});
@@ -146,25 +161,4 @@ public class CastDaoJdbc extends DaoJdbc implements CastDao {
         return filmsByDirector;
     }
 
-    @Override
-    public boolean editCast(Cast cast) {
-        boolean state;
-        Connection connection = null;
-        PreparedStatement statement = null;
-        final String query = "UPDATE casts SET Actor_Name = ?, HasOscar = ? WHERE ID = ?";
-        try {
-            connection = dataSource.getConnection();
-            statement = connection.prepareStatement(query);
-            statement.setString(1, cast.getName());
-            statement.setBoolean(2, cast.isHasOscar());
-            statement.setInt(3, cast.getId());
-            state = statement.executeUpdate() == 1;
-        } catch (SQLException e) {
-            LOGGER.warn(e.toString());
-            throw new DaoException(e.toString());
-        } finally {
-            dataSource.closeConnections(new Object[]{statement, connection});
-        }
-        return state;
-    }
 }

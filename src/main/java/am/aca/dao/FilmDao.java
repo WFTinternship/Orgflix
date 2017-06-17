@@ -24,20 +24,11 @@ public interface FilmDao {
 
     boolean rateFilm(int filmId, int starType);
 
-    boolean addGenreToFilm(Genre genre, Film film);
-
     boolean addGenreToFilm(Genre genre, int filmId);
-
-    boolean addCastToFilm(Cast cast, Film film);
 
     boolean addCastToFilm(Cast cast, int filmId);
 
     double getRating(int filmId);
 
-    double getRating(Film film);
-
     int totalNumberOfFilms();
-
-
-
 }

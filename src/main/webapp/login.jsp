@@ -1,34 +1,19 @@
-<%@ page import="am.aca.service.impl.FilmServiceImpl" %>
-<%@ page import="am.aca.entity.Film" %>
-<%@ page import="java.util.List" %>
-<%@ page import="am.aca.service.FilmService" %>
-<%@ page import="java.util.ArrayList" %><%--
-  Created by IntelliJ IDEA.
-  User: Vardan
-  Date: 09.06.2017
-  Time: 14:56
-  To change this template use File | Settings | File Templates.
---%>
+<%@ taglib uri="/WEB-INF/taglib/customtags.tld" prefix="m" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix = "m" uri = "/WEB-INF/taglib/customtags.tld" %>
-<%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 
-<%! FilmService filmService = new FilmServiceImpl(); %>
 <!DOCTYPE HTML>
-<!--
-Phantom by HTML5 UP
-html5up.net | @ajlkn
-Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
 <html>
 <head>
     <title>Orgflix 1.0</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
-    <link rel="stylesheet" href="assets/css/main.css?v=103" />
-    <!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
-    <!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!--[if lte IE 8]>
+    <script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+    <link rel="stylesheet" href="assets/css/main.css?v=103"/>
+    <!--[if lte IE 9]>
+    <link rel="stylesheet" href="assets/css/ie9.css"/><![endif]-->
+    <!--[if lte IE 8]>
+    <link rel="stylesheet" href="assets/css/ie8.css"/><![endif]-->
 </head>
 <body>
 <!-- Wrapper -->
@@ -40,7 +25,7 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
 
             <!-- Logo -->
             <a href="home" class="logo">
-                <span class="symbol"><img src="images/logo.svg" alt="" /></span><span class="title">Orgflix</span>
+                <span class="symbol"><img src="images/logo.svg" alt=""/></span><span class="title">Orgflix</span>
             </a>
 
             <!-- Nav -->
@@ -69,23 +54,22 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
     <div id="main">
         <div class="inner">
             <header>
-                <h1>This is OrgFlix, a free film list organizer</h1>
+                <h1>Login to Your account at OrgFlix</h1>
             </header>
-            <section class="tiles">
-<% List<Film> films = filmService.getFilmsList(Integer.valueOf(request.getAttribute("message").toString())*12);
-    for (Film film: films ) {
-    out.print("<article class='style1'><span class='image'><img src='images/"+film.getImage()+".jpg'/></span>");
-    out.print("<a href='generic'><h2>"+film.getTitle()+"</h2>");
-    out.print("<div class='content'><p>Somthing</p></div></a></article>");
-}
+            <section>
+                <form id="loginForm">
+                    <div>
+                        <span>Email</span>
+                        <input type="text" class="inputField" />
+                    </div>
+                    <div>
+                        <span>Password</span>
+                        <input type="password" class="inputField" />
+                    </div>
 
-%>
-                <c:set var = "salary" scope = "session" value = "${2000*2}"/>
-                <%--<c:if test = "${salary > 2000}">--%>
-                <p>My salary is:  <c:out value = "${salary}"/><p>
-                <%--</c:if>--%>
-
-                <m:pagination />
+                    <input type="button" value="Login" onclick="submitLogin()"/>
+                    Current Date is <m:today />
+                </form>
             </section>
         </div>
     </div>
@@ -97,16 +81,16 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
                 <h2>Get in touch</h2>
                 <form method="post" action="#">
                     <div class="field half first">
-                        <input type="text" name="name" id="name" placeholder="Name" />
+                        <input type="text" name="name" id="name" placeholder="Name"/>
                     </div>
                     <div class="field half">
-                        <input type="email" name="email" id="email" placeholder="Email" />
+                        <input type="email" name="email" id="email" placeholder="Email"/>
                     </div>
                     <div class="field">
                         <textarea name="message" id="message" placeholder="Message"></textarea>
                     </div>
                     <ul class="actions">
-                        <li><input type="submit" value="Send" class="special" /></li>
+                        <li><input type="submit" value="Send" class="special"/></li>
                     </ul>
                 </form>
             </section>
@@ -124,7 +108,8 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
                 </ul>
             </section>
             <ul class="copyright">
-                <li>&copy; Untitled. All rights reserved</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+                <li>&copy; Untitled. All rights reserved</li>
+                <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
             </ul>
         </div>
     </footer>
@@ -135,7 +120,8 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
 <script src="assets/js/jquery.min.js"></script>
 <script src="assets/js/skel.min.js"></script>
 <script src="assets/js/util.js"></script>
-<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+<!--[if lte IE 8]>
+<script src="assets/js/ie/respond.min.js"></script><![endif]-->
 <script src="assets/js/main.js"></script>
 <script src="assets/js/custom.js?v=102"></script>
 

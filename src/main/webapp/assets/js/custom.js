@@ -5,3 +5,8 @@ function pagination(page) {
     $("#currPage").val(page);
     $("#pageForm").submit();
 }
+
+function submitSignUp() {
+    $("#signUpForm").submit();
+}
+

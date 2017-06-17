@@ -3367,9 +3367,11 @@
 		color: red;
 		font-weight: bold;
 		border: 1px solid blue;
+		cursor:pointer;
 	}
 
 	.pagintion_container{
 		margin: 20px auto 20px auto;
 		padding: 5px;
+		width: 100%;
 	}

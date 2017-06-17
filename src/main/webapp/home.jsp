@@ -1,8 +1,4 @@
-<%@ page import="am.aca.service.impl.FilmServiceImpl" %>
-<%@ page import="am.aca.entity.Film" %>
-<%@ page import="java.util.List" %>
-<%@ page import="am.aca.service.FilmService" %>
-<%@ page import="java.util.ArrayList" %><%--
+<%--
   Created by IntelliJ IDEA.
   User: Vardan
   Date: 09.06.2017
@@ -13,7 +9,6 @@
 <%@ taglib prefix = "m" uri = "/WEB-INF/taglib/customtags.tld" %>
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 
-<%! FilmService filmService = new FilmServiceImpl(); %>
 <!DOCTYPE HTML>
 <!--
 Phantom by HTML5 UP
@@ -72,18 +67,16 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
                 <h1>This is OrgFlix, a free film list organizer</h1>
             </header>
             <section class="tiles">
-<% List<Film> films = filmService.getFilmsList(Integer.valueOf(request.getAttribute("message").toString())*12);
-    for (Film film: films ) {
-    out.print("<article class='style1'><span class='image'><img src='images/"+film.getImage()+".jpg'/></span>");
-    out.print("<a href='generic'><h2>"+film.getTitle()+"</h2>");
-    out.print("<div class='content'><p>Somthing</p></div></a></article>");
-}
-
-%>
-                <c:set var = "salary" scope = "session" value = "${2000*2}"/>
-                <%--<c:if test = "${salary > 2000}">--%>
-                <p>My salary is:  <c:out value = "${salary}"/><p>
-                <%--</c:if>--%>
+                <c:forEach items="${films}" var="film" >
+                    <article class='style1'>
+                        <span class='image'>
+                            <img src='<c:out value="${film.image}" />' />
+                        </span>
+                            <a href='generic'>
+                                <h2><c:out value="${film.title}" /></h2>
+                            </a>
+                    </article>
+                </c:forEach>
 
                 <m:pagination />
             </section>

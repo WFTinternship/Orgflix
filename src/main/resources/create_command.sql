@@ -100,31 +100,31 @@ create table lists(
 #
 # 2 films
 insert into films(Title,Prod_Year,HasOscar,image_ref)
-   values('The Shawshank Redemption',1994,true,'12345');
+   values('The Shawshank Redemption',1994,true,'images/12345.jpg');
 insert into films(Title,Prod_Year,HasOscar,image_ref)
-   values('The Godfather',1972,true,'23452');
+   values('The Godfather',1972,true,'images/23452.jpg');
 insert into films(Title,Prod_Year,HasOscar,image_ref)
-  values('The Godfather: Part II',1974,true,'34555');
+  values('The Godfather: Part II',1974,true,'images/34555.jpg');
 insert into films(Title,Prod_Year,HasOscar,image_ref)
-  values('The Dark Knight',2008,false,'72623');
+  values('The Dark Knight',2008,false,'images/72623.jpg');
 insert into films(Title,Prod_Year,HasOscar,image_ref)
-  values('12 Angry Men',1957,false,'53234');
+  values('12 Angry Men',1957,false,'images/53234.jpg');
 insert into films(Title,Prod_Year,HasOscar,image_ref)
-  values('Schindlers List',1993,true,'86523');
+  values('Schindlers List',1993,true,'images/86523.jpg');
 insert into films(Title,Prod_Year,HasOscar,image_ref)
-  values('Pulp Fiction',1994,true,'45352');
+  values('Pulp Fiction',1994,true,'images/45352.jpg');
 insert into films(Title,Prod_Year,HasOscar,image_ref)
-  values('The Lord of the Rings: The Return of the King',2003,true,'98343');
+  values('The Lord of the Rings: The Return of the King',2003,true,'images/98343.jpg');
 insert into films(Title,Prod_Year,HasOscar,image_ref)
-  values('The Good, the Bad and the Ugly',1996,false,'12923');
+  values('The Good, the Bad and the Ugly',1996,false,'images/12923.jpg');
 insert into films(Title,Prod_Year,HasOscar,image_ref)
-  values('Fight Club',1999,false,'76765');
+  values('Fight Club',1999,false,'images/76765.jpg');
 insert into films(Title,Prod_Year,HasOscar,image_ref)
-  values('The Lord of the Rings: The Fellowship of the Ring',2001,true,'89733');
+  values('The Lord of the Rings: The Fellowship of the Ring',2001,true,'images/89733.jpg');
 insert into films(Title,Prod_Year,HasOscar,image_ref)
-  values('Star Wars: Episode V - The Empire Strikes Back',1980,true,'99778');
+  values('Star Wars: Episode V - The Empire Strikes Back',1980,true,'images/99778.jpg');
 insert into films(Title,Prod_Year,HasOscar,image_ref)
-  values('Forrest Gump',1994,true,'54545');
+  values('Forrest Gump',1994,true,'images/54545.jpg');
 
 # # casts for 2 films
 # insert into film_to_cast(Actor_ID,Film_ID) values(1,1);

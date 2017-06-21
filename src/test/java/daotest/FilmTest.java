@@ -23,14 +23,16 @@ import static org.junit.Assert.*;
  * Created by Vardan on 04.06.2017
  */
 public class FilmTest {
-    private FilmDao filmDao = new FilmDaoJdbc(ConnType.TEST);
-    private CastDao castDao = new CastDaoJdbc(ConnType.TEST);
+    private FilmDao filmDao = new FilmDaoJdbc(ConnType.PRODUCTION);
+    private CastDao castDao = new CastDaoJdbc(ConnType.PRODUCTION);
     private Film film;
     private Cast cast;
     private List<Cast> castList;
 
     @Before
     public void setUp() {
+        filmDao.setDataSource(DbManager.getInstance().getDataSource());
+        castDao.setDataSource(DbManager.getInstance().getDataSource());
         film = new Film();
     }
 
@@ -110,8 +112,8 @@ public class FilmTest {
         castList.add(cast);
         film.setCasts(castList);
         filmDao.addFilm(film);
-        filmDao.addCastToFilm(cast, film.getId());
-        Assert.assertEquals(film, filmDao.getFilmsByCast(cast).get(0));
+        filmDao.addCastToFilm(cast, film);
+        Assert.assertEquals(film.getId(), filmDao.getFilmsByCast(cast).get(0));
     }
 
     @Test
@@ -124,7 +126,7 @@ public class FilmTest {
     public void addGenreToFilmBySize_Succeeded() {
         film.setTitle("Captain Fantastic");
         filmDao.addFilm(film);
-        filmDao.addGenreToFilm(Genre.COMEDY, film.getId());
+        filmDao.addGenreToFilm(Genre.COMEDY, film);
         Assert.assertEquals(1, filmDao.getFilmsByGenre(Genre.COMEDY).size());
     }
 
@@ -132,8 +134,8 @@ public class FilmTest {
     public void addGenreToFilmByFilm_Succeeded() {
         film.setTitle("Captain Fantastic");
         filmDao.addFilm(film);
-        filmDao.addGenreToFilm(Genre.COMEDY, film.getId());
-        Assert.assertEquals(film, filmDao.getFilmsByGenre(Genre.COMEDY).get(0));
+        filmDao.addGenreToFilm(Genre.COMEDY, film);
+        Assert.assertEquals(film.getId(), filmDao.getFilmsByGenre(Genre.COMEDY).get(0));
     }
 
     @Test
@@ -196,7 +198,7 @@ public class FilmTest {
     public void getFilmsByGenreSize_Succeeded() {
         film.setTitle("Captain Fantastic");
         filmDao.addFilm(film);
-        filmDao.addGenreToFilm(Genre.COMEDY, film.getId());
+        filmDao.addGenreToFilm(Genre.COMEDY, film);
         Assert.assertEquals(1, filmDao.getFilmsByGenre(Genre.COMEDY).size());
     }
 
@@ -204,8 +206,8 @@ public class FilmTest {
     public void getFilmsByGenreFilm_Succeeded() {
         film.setTitle("Captain Fantastic");
         filmDao.addFilm(film);
-        filmDao.addGenreToFilm(Genre.COMEDY, film.getId());
-        Assert.assertEquals(film, filmDao.getFilmsByGenre(Genre.COMEDY).get(0));
+        filmDao.addGenreToFilm(Genre.COMEDY, film);
+        Assert.assertEquals(film.getId(), filmDao.getFilmsByGenre(Genre.COMEDY).get(0));
     }
 
 
@@ -222,7 +224,7 @@ public class FilmTest {
         filmDao.rateFilm(film.getId(), 4);
         filmDao.rateFilm(film.getId(), 3);
         filmDao.rateFilm(film.getId(), 5);
-        Assert.assertEquals(4.0, filmDao.getRating(film.getId()), 0.01);
+        Assert.assertEquals(4.0, filmDao.getRating(film), 0.01);
     }
 
     @Test
@@ -231,13 +233,13 @@ public class FilmTest {
         filmDao.addFilm(film);
         filmDao.rateFilm(film.getId(), 4);
         filmDao.rateFilm(film.getId(), 5);
-        Assert.assertEquals(4.5, filmDao.getRating(film.getId()), 0.01);
+        Assert.assertEquals(4.5, filmDao.getRating(film), 0.01);
     }
 
     @Test
     public void getRatingNaN_Failed() {
         film.setTitle("Captain Fantastic");
         filmDao.addFilm(film);
-        Assert.assertEquals(0, filmDao.getRating(film.getId()), 0.01);
+        Assert.assertEquals(0, filmDao.getRating(film), 0.01);
     }
 }

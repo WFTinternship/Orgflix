@@ -3,6 +3,7 @@ package am.aca.dao;
 import am.aca.entity.Cast;
 import am.aca.entity.Film;
 
+import javax.sql.DataSource;
 import java.util.List;
 
 /**
@@ -19,7 +20,9 @@ public interface CastDao {
 
     boolean editCast(Cast cast);
 
-    List<Cast> listCast();
+    List listCast();
 
-    List<Integer> listFilmsIdByCast(int actorId);
+    List listFilmsIdByCast(int actorId);
+
+    void setDataSource(DataSource dataSource);
 }

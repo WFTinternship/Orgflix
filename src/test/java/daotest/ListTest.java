@@ -23,19 +23,20 @@ import java.util.ArrayList;
  */
 public class ListTest {
 
-    private ListDao listDao = new ListDaoJdbc(ConnType.TEST);
-    private CastDao castDao = new CastDaoJdbc(ConnType.TEST);
-    private UserDao userDao =  new UserDaoJdbc(ConnType.TEST);
-    private FilmDao filmDao = new FilmDaoJdbc(ConnType.TEST);
+    private ListDao listDao = new ListDaoJdbc(ConnType.PRODUCTION);
+    private CastDao castDao = new CastDaoJdbc(ConnType.PRODUCTION);
+    private FilmDao filmDao = new FilmDaoJdbc(ConnType.PRODUCTION);
+    private UserDao userDao =  new UserDaoJdbc(ConnType.PRODUCTION);
     private Film film;
     private User user;
-    private ArrayList<Cast> dirs = new ArrayList<>();
+    private ArrayList<Cast> actors = new ArrayList<>();
 
     @Before
     public void setUp() {
 
         //setup Cast
-        dirs.add(castDao.addCast("Brian De Palma", false));
+        castDao.setDataSource(DbManager.getInstance().getDataSource());
+        actors.add(castDao.addCast("Brian De Palma", false));
 
         //setup Film and Film DAO
         film = new Film();
@@ -43,19 +44,123 @@ public class ListTest {
         film.addGeners(Genre.ACTION);
         film.setProdYear(1983);
         film.setRate_5star(1);
-        film.setCasts(dirs);
+        film.setCasts(actors);
 
+        filmDao.setDataSource(DbManager.getInstance().getDataSource());
         filmDao.addFilm(film);
 
         //setup User and User DAO
         user = new User("MrSmith","John Smith","JhonSmith@gmail.com","pass");
 
         userDao.addUser(user);
+
+        //setup List DAO
+        listDao.setDataSource(DbManager.getInstance().getDataSource());
     }
 
     @After
     public void revert() throws SQLException, IOException, PropertyVetoException {
         DbManager.emptyTestTables(new String[]{"genre_to_film", "film_to_cast", "lists", "casts", "films", "users"});
+    }
+
+    @Test
+    public void areRelated_Success() {
+        listDao.insertWatched(film, user.getId(), true);
+        Assert.assertEquals(true, listDao.areRelated(film, user.getId()));
+    }
+
+    @Test
+    public void areRelated_Fail() {
+        Assert.assertEquals(false, listDao.areRelated(film, user.getId()));
+    }
+
+    @Test
+    public void updateWatched_Success() {
+        listDao.insertPlanned(film, user.getId(), true);
+        listDao.updateWatched(film, user.getId());
+        Assert.assertEquals(true, listDao.isWatched(film, user.getId()));
+    }
+
+    @Test
+    public void updateWatched_Fail() {
+        listDao.updateWatched(film, user.getId());
+        Assert.assertEquals(false, listDao.isWatched(film, user.getId()));
+    }
+
+    @Test
+    public void updatePlanned_Success() {
+        listDao.insertWatched(film, user.getId(), true);
+        listDao.updatePlanned(film, user.getId());
+        Assert.assertEquals(true, listDao.isPlanned(film, user.getId()));
+    }
+
+    @Test
+    public void updatePlanned_Fail() {
+        listDao.updatePlanned(film, user.getId());
+        Assert.assertEquals(false, listDao.isPlanned(film, user.getId()));
+    }
+
+    @Test
+    public void insertWatched_Success() {
+        listDao.insertWatched(film, user.getId(), true);
+        Assert.assertEquals(true, listDao.isWatched(film, user.getId()));
+    }
+
+    @Test
+    public void insertPlanned_Success() {
+        listDao.insertPlanned(film, user.getId(), true);
+        Assert.assertEquals(true, listDao.isPlanned(film, user.getId()));
+    }
+
+    @Test
+    public void isWatched_Success() {
+        listDao.insertWatched(film, user.getId(), true);
+        Assert.assertEquals(true, listDao.isWatched(film, user.getId()));
+    }
+
+    @Test
+    public void isWatched_Fail() {
+        Assert.assertEquals(false, listDao.isWatched(film, user.getId()));
+    }
+
+    @Test
+    public void isPlanned_Success() {
+        listDao.insertPlanned(film, user.getId(), true);
+        Assert.assertEquals(true, listDao.isPlanned(film, user.getId()));
+    }
+
+    @Test
+    public void isPlanned_Fail() {
+        Assert.assertEquals(false, listDao.isPlanned(film, user.getId()));
+    }
+
+    @Test
+    public void resetWatched_Success() {
+        listDao.insertWatched(film, user.getId(), true);
+        listDao.resetWatched(film, user.getId());
+        Assert.assertEquals(false, listDao.isWatched(film, user.getId()));
+    }
+
+    @Test
+    public void resetPlanned_Success() {
+        listDao.insertPlanned(film, user.getId(), false);
+        listDao.resetPlanned(film, user.getId());
+        Assert.assertEquals(false, listDao.isPlanned(film, user.getId()));
+    }
+
+    @Test
+    public void remove_Succedd() {
+        listDao.insertWatched(film, user.getId(), true);
+        listDao.removeFilm(film, user.getId());
+        Assert.assertEquals(false, listDao.isWatched(film, user.getId()));
+    }
+
+    @Test
+    public void removeBoth_Success() {
+        listDao.insertWatched(film, user.getId(), true);
+        listDao.insertPlanned(film, user.getId(), true);
+        listDao.removeFilm(film, user.getId());
+        Assert.assertEquals(false, listDao.isWatched(film, user.getId()));
     }
 
     @Test

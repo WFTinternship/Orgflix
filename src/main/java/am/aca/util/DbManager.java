@@ -62,8 +62,9 @@ public class DbManager {
     }
 
 
+
     public enum ConnectionType {
-        POOL, BASIC
+        POOL, BASIC;
     }
 
     public Connection getConnection() throws SQLException {
@@ -122,14 +123,14 @@ public class DbManager {
         for (String table : tables) {
             try {
                 final String query = "DELETE FROM  " + table;
-                connection = testDatasource.getConnection();
+                connection = datasource.getConnection();
                 statement = connection.prepareStatement(query);
                 statement.executeUpdate();
             } catch (Exception e) {
                 LOGGER.warn(e.toString());
                 throw new DaoException(e.toString());
             } finally {
-                testDatasource.closeConnections(new Object[]{statement, connection});
+                datasource.closeConnections(new Object[]{statement, connection});
             }
         }
     }
@@ -141,5 +142,9 @@ public class DbManager {
         } catch (SQLException e) {
             LOGGER.warn(e.toString());
         }
+    }
+
+    public ComboPooledDataSource getDataSource() {
+        return this.cpds;
     }
 }

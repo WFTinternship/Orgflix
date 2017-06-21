@@ -21,7 +21,7 @@ public class UserTest {
 
     @After
     public void end(){
-        DbManager.emptyTestTables(new String[]{"lists","users"});
+        DbManager.emptyTestTables(new String[]{"users"});
         user = null;
     }
 

@@ -1,642 +1,200 @@
 package am.aca.dao.impljdbc;
 
-import am.aca.dao.DaoException;
 import am.aca.dao.ListDao;
 import am.aca.entity.Film;
 import am.aca.util.ConnType;
+import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.sql.*;
-import java.util.ArrayList;
+import javax.sql.DataSource;
+import java.util.List;
 
 /**
  * Created by karine on 6/3/2017
  */
 public class ListDaoJdbc extends DaoJdbc implements ListDao {
 
-    public ListDaoJdbc() {
+    private JdbcTemplate jdbcTemplate;
+
+    public ListDaoJdbc(){
         super();
     }
 
-    public ListDaoJdbc(ConnType connType) {
+    public ListDaoJdbc(ConnType connType){
         super(connType);
     }
 
     @Override
-    public boolean addToWatched(Film film, boolean isPublic, int userId) {
-        boolean result;
-        Connection connection;
-        try {
-            connection = dataSource.getConnection();
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
-
-        //check if given film and user are related
+    public boolean areRelated(Film film, int userId) {
         final String checkQuery = "SELECT COUNT(*) FROM lists WHERE User_ID = ? AND Film_ID = ?";
-
-        PreparedStatement checkStatement;
-        try {
-            checkStatement = connection.prepareStatement(checkQuery);
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
-
-        set(userId, film, checkStatement);
-        ResultSet rs;
-        try {
-            rs = checkStatement.executeQuery();
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
-
-        int checkSetLength = hasNext(rs);
-        try {
-            connection.setAutoCommit(false);
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
-
-        //check whether or not the given film is marked as planned
-
-        //case: planned => UPDATE
-        if (checkSetLength == 1) {
-            final String updateQuery = "UPDATE lists SET Is_watched = TRUE " +
-                    "WHERE User_ID = ? AND Film_ID = ?";
-            PreparedStatement updateStatement;
-            try {
-                updateStatement = connection.prepareStatement(updateQuery);
-            } catch (SQLException e) {
-                throw new DaoException(e.getMessage());
-            }
-            set(userId, film, updateStatement);
-            try {
-                result = updateStatement.execute();
-            } catch (SQLException e) {
-                throw new DaoException(e.getMessage());
-            }
-            try {
-                closeAll(true, connection, checkStatement, updateStatement);
-            } catch (SQLException e) {
-                throw new DaoException(e.getMessage());
-            }
-            return result;
-        }
-
-        //case: not planned to watch => INSERT
-        else {
-            final String insertQuery = "INSERT INTO Lists(User_ID, Film_ID, Is_watched, Is_public) VALUES (?, ?, TRUE, ?)";
-            PreparedStatement insertStatement;
-            try {
-                insertStatement = connection.prepareStatement(insertQuery);
-            } catch (SQLException e) {
-                throw new DaoException(e.getMessage());
-            }
-
-            try {
-                set(userId, film, insertStatement);
-                insertStatement.setBoolean(3, isPublic);
-            } catch (SQLException e) {
-                throw new DaoException(e.getMessage());
-            }
-            try {
-                result = insertStatement.execute();
-            } catch (SQLException e) {
-                throw new DaoException(e.getMessage());
-            }
-            try {
-                closeAll(true, connection, checkStatement, insertStatement);
-            } catch (SQLException e) {
-                throw new DaoException(e.getMessage());
-            }
-            return result;
-        }
+        int count = jdbcTemplate.queryForInt(checkQuery, new Object[] {
+                userId, film.getId()
+        });
+        return (count == 1);
     }
+
+    @Override
+    public void updateWatched(Film film, int userId) {
+        final String updateQuery = "UPDATE lists SET Is_watched = TRUE " +
+                "WHERE User_ID = ? AND Film_ID = ?";
+        jdbcTemplate.update(updateQuery, new Object[] {
+                userId, film.getId()
+        });
+    }
+
+    @Override
+    public void updatePlanned (Film film, int userId) {
+        final String updateQuery = "UPDATE lists SET Is_wished = TRUE " +
+                "WHERE User_ID = ? AND Film_ID = ?";
+        jdbcTemplate.update(updateQuery, new Object[] {
+                userId, film.getId()
+        });
+    }
+
+    @Override
+    public void insertPlanned (Film film, int userId, boolean isPublic) {
+        final String insertQuery = "INSERT INTO Lists(User_ID, Film_ID, Is_wished, Is_public) VALUES (?, ?, TRUE, ?)";
+        jdbcTemplate.update(insertQuery, new Object[] {
+                userId, film.getId(), isPublic
+        });
+    }
+
+    @Override
+    public void insertWatched(Film film, int userId, boolean isPublic) {
+        final String insertQuery = "INSERT INTO Lists(User_ID, Film_ID, Is_watched, Is_public) VALUES (?, ?, TRUE, ?)";
+        jdbcTemplate.update(insertQuery, new Object[] {
+                userId, film.getId(), isPublic
+        });
+    }
+
+
+    @Override
+    public boolean addToWatched(Film film, boolean isPublic, int userId){
+        if (areRelated(film, userId)){
+            updateWatched(film, userId);
+        }
+        else insertWatched(film, userId, isPublic);
+
+
+        return true; /////////////////////////////////CHANGE THIS
+    }
+
+
+
+
+
 
     @Override
     public boolean addToWished(Film film, boolean isPublic, int userId) {
-        boolean result;
-        Connection connection;
-        try {
-            connection = dataSource.getConnection();
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
+        if (areRelated(film, userId))
+            updatePlanned(film, userId);
+        else insertPlanned(film, userId, isPublic);
+        return true;
+    }
 
-        //check if given film and user are related
-        final String checkQuery = "SELECT COUNT(*) FROM lists WHERE User_ID = ? AND Film_ID = ?";
 
-        PreparedStatement checkStatement;
-        try {
-            checkStatement = connection.prepareStatement(checkQuery);
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
-
-        set(userId, film, checkStatement);
-        ResultSet rs;
-        try {
-            rs = checkStatement.executeQuery();
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
-
-        int resultSetLength;
-
-        try {
-            rs.next();
-            resultSetLength = rs.getInt(1);
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
-
-        //check if the film is watched
-
-        //case: film marked as watched
-        try {
-            connection.setAutoCommit(false);
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
-        if (resultSetLength == 1) {
-            final String updateQuery = "UPDATE lists SET Is_wished = TRUE " +
-                    "WHERE User_ID = ? AND Film_ID = ?";
-            PreparedStatement updateStatement;
-            try {
-                updateStatement = connection.prepareStatement(updateQuery);
-            } catch (SQLException e) {
-                throw new DaoException(e.getMessage());
-            }
-
-            set(userId, film, updateStatement);
-
-            try {
-                result = updateStatement.execute();
-            } catch (SQLException e) {
-                throw new DaoException(e.getMessage());
-            }
-            try {
-                closeAll(true, connection, checkStatement, updateStatement);
-            } catch (SQLException e) {
-                throw new DaoException(e.getMessage());
-            }
-            return result;
-        }
-
-        //case: not marked as watched
-        else {
-            final String insertQuery = "INSERT INTO Lists(User_ID, Film_ID, Is_wished, Is_public) VALUES (?, ?, TRUE, ?)";
-            PreparedStatement insertStatement;
-            try {
-                insertStatement = connection.prepareStatement(insertQuery);
-            } catch (SQLException e) {
-                throw new DaoException(e.getMessage());
-            }
-            set(userId, film, insertStatement);
-            try {
-                insertStatement.setBoolean(3, isPublic);
-            } catch (SQLException e) {
-                throw new DaoException(e.getMessage());
-            }
-            try {
-                result = insertStatement.execute();
-            } catch (SQLException e) {
-                throw new DaoException(e.getMessage());
-            }
-            try {
-                closeAll(true, connection, checkStatement, insertStatement);
-            } catch (SQLException e) {
-                throw new DaoException(e.getMessage());
-            }
-            return result;
-        }
+    @Override
+    public boolean isWatched (Film film, int userId) {
+        final String watchedCheckQuery = "SELECT COUNT(*) FROM lists WHERE User_ID = ? AND Film_ID = ? AND Is_watched = TRUE";
+        int watchedCount = jdbcTemplate.queryForInt(watchedCheckQuery, new Object[] {
+                userId, film.getId()
+        });
+        return (watchedCount == 1);
     }
 
     @Override
-    public boolean removeFromWatched(Film film, int userId) {
-        boolean result;
-        Connection connection;
-        try {
-            connection = dataSource.getConnection();
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
-
-        //check if the film is marked as watched
-
-        final String watchedCheckQuery = "SELECT * FROM lists WHERE User_ID = ? AND Film_ID = ? AND Is_watched = TRUE";
-        PreparedStatement watchedCheckStatement;
-        try {
-            watchedCheckStatement = connection.prepareStatement(watchedCheckQuery);
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
-
-        set(userId, film, watchedCheckStatement);
-
-        ResultSet watchedSet;
-        try {
-            watchedSet = watchedCheckStatement.executeQuery();
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
-
-        if (!checkForResultSet(watchedSet, connection, watchedCheckStatement)) {
-            try {
-                closeAll(false, connection, watchedSet, watchedCheckStatement);
-            } catch (SQLException e) {
-                throw new DaoException(e.getMessage());
-            }
-            return false;
-        }
-
-        //case: marked as watched
-
-        //check if film is marked as planned
-        final String plannedCheckQuery = "SELECT * FROM Lists WHERE User_ID = ? AND Film_ID = ? AND Is_wished = TRUE ";
-
-        PreparedStatement plannedCheckStatement;
-        try {
-            plannedCheckStatement = connection.prepareStatement(plannedCheckQuery);
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
-
-        set(userId, film, plannedCheckStatement);
-        ResultSet plannedSet;
-        try {
-            plannedSet = plannedCheckStatement.executeQuery();
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
-        boolean planned = false;
-        try {
-            if (plannedSet.next()) {
-                planned = plannedSet.getBoolean("Is_wished");
-            }
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
-
-        //case: film marked as planned => UPDATE
-        if (planned) {
-            try {
-                connection.setAutoCommit(false);
-            } catch (SQLException e) {
-                throw new DaoException(e.getMessage());
-            }
-            final String updateQuery = "UPDATE lists SET Is_watched = FALSE WHERE User_ID = ? AND Film_ID = ?";
-            PreparedStatement updateStatement;
-            try {
-                updateStatement = connection.prepareStatement(updateQuery);
-            } catch (SQLException e) {
-                throw new DaoException(e.getMessage());
-            }
-            set(userId, film, updateStatement);
-            try {
-                result = updateStatement.execute();
-            } catch (SQLException e) {
-                throw new DaoException(e.getMessage());
-            }
-            try {
-                closeAll(true, connection, plannedSet, plannedCheckStatement, updateStatement);
-            } catch (SQLException e) {
-                throw new DaoException(e.getMessage());
-            }
-            return result;
-        }
-
-        //case: not marked as planned
-        else {
-              return delete(connection, userId, film);
-        }
+    public boolean isPlanned (Film film, int userId) {
+        final String plannedCheckQuery = "SELECT COUNT(*) FROM Lists WHERE User_ID = ? AND Film_ID = ? AND Is_wished = TRUE ";
+        int plannedCount = jdbcTemplate.queryForInt(plannedCheckQuery, new Object[] {
+                userId, film.getId()
+        });
+        return (plannedCount == 1);
     }
 
-    private boolean checkForResultSet(ResultSet resultSet, Connection connection, PreparedStatement watchedCheckStatement) {
+    @Override
+    public void resetWatched (Film film, int userId) {
+        final String updateQuery = "UPDATE lists SET Is_watched = FALSE WHERE User_ID = ? AND Film_ID = ?";
+        jdbcTemplate.update(updateQuery, new Object[] {
+                userId, film.getId()
+        });
+    }
 
-        try {
-            //case: marked as watched => terminated
-            if (!resultSet.next()) {
-                closeAll(false, connection, watchedCheckStatement);
-                return false;
-            }
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
+    @Override
+    public void resetPlanned (Film film, int userId) {
+        final String updateQuery = "UPDATE lists SET Is_wished = FALSE WHERE User_ID = ? AND Film_ID = ?";
+        jdbcTemplate.update(updateQuery, new Object[] {
+                userId, film.getId()
+        });
+    }
+
+    @Override
+    public void removeFilm (Film film, int userId) {
+        final String deleteQuery = "DELETE FROM lists WHERE User_ID = ? AND Film_ID = ?";
+        jdbcTemplate.update(deleteQuery, new Object[] {
+                userId, film.getId()
+        });
+    }
+    @Override
+    public boolean removeFromWatched(Film film, int userId) {
+        if (!isWatched(film, userId))
+            return false;
+        if (isPlanned(film, userId)) {
+            resetWatched(film, userId);
         }
+        else removeFilm(film, userId);
+        return true;
+    }
 
+
+    @Override
+    public boolean removeFromWished(Film film, int userId) {
+        if (!isPlanned(film, userId))
+            return false;
+        if (isWatched(film, userId))
+            resetPlanned(film, userId);
+        else removeFilm(film, userId);
         return true;
     }
 
     @Override
-    public boolean removeFromWished(Film film, int userId) {
-        boolean result;
-        Connection connection;
-        try {
-            connection = dataSource.getConnection();
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
+    public List showOwnWatched(int userId) {
+        final String query = "SELECT lists.Film_ID FROM lists INNER JOIN films " +
+                "ON lists.Film_ID = films.ID WHERE lists.User_ID = ? AND Is_watched = TRUE ";
+        return jdbcTemplate.queryForList(query, new Object[] {
+                userId
+        });
+    }
 
-        //check if the film is marked as planned
 
-        final String plannedCheckQuery = "SELECT * FROM lists WHERE User_ID = ? AND Film_ID = ? AND Is_wished = TRUE";
-        PreparedStatement plannedCheckStatement;
-        try {
-            plannedCheckStatement = connection.prepareStatement(plannedCheckQuery);
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
-
-        set(userId, film, plannedCheckStatement);
-
-        ResultSet plannedSet;
-        try {
-            plannedSet = plannedCheckStatement.executeQuery();
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
-
-        if (!checkForResultSet(plannedSet, connection, plannedCheckStatement)) {
-            return false;
-        }
-
-        //case: marked as planned
-
-        //check if film is marked as watched
-
-        final String checkQuery = "SELECT * FROM Lists WHERE User_ID = ? AND Film_ID = ? AND Is_watched = TRUE ";
-
-        PreparedStatement watchedCheckStatement;
-        try {
-            watchedCheckStatement = connection.prepareStatement(checkQuery);
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
-
-        set(userId, film, watchedCheckStatement);
-        ResultSet watchedSet;
-        try {
-            watchedSet = watchedCheckStatement.executeQuery();
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
-
-        boolean watched = false;
-
-        try {
-            if (watchedSet.next())
-                watched = watchedSet.getBoolean("Is_watched");
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
-
-        //check whether or not the given film is in the watchlist
-
-        //case: in the watchlist
-        if (watched) {
-            try {
-                connection.setAutoCommit(false);
-            } catch (SQLException e) {
-                throw new DaoException(e.getMessage());
-            }
-            final String updateQuery = "UPDATE lists SET Is_wished = FALSE WHERE User_ID = ? AND Film_ID = ?";
-            PreparedStatement updateStatement;
-            try {
-                updateStatement = connection.prepareStatement(updateQuery);
-            } catch (SQLException e) {
-                throw new DaoException(e.getMessage());
-            }
-            set(userId, film, updateStatement);
-            try {
-                result = updateStatement.execute();
-            } catch (SQLException e) {
-                throw new DaoException(e.getMessage());
-            }
-            try {
-                closeAll(true, connection, watchedSet, plannedCheckStatement, updateStatement, watchedCheckStatement);
-            } catch (SQLException e) {
-                throw new DaoException(e.getMessage());
-            }
-            return result;
-        }
-
-        //case: not
-        else {
-              return delete(connection, userId, film);
-        }
+    @Override
+    public List showOwnWished(int userId) {
+        final String query = "SELECT lists.Film_ID FROM lists INNER JOIN films " +
+                "ON lists.Film_ID = films.ID WHERE lists.User_ID = ? AND Is_wished = TRUE ";
+        return jdbcTemplate.queryForList(query, new Object[] {
+                userId
+        });
     }
 
     @Override
-    public ArrayList<Film> showOwnWatched(int userId) {
-        Connection connection;
-        try {
-            connection = dataSource.getConnection();
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
-
-        ArrayList<Film> watched = new ArrayList<>();
-        final String query = "SELECT lists.Film_ID FROM lists INNER JOIN films ON lists.Film_ID = films.ID WHERE lists.User_ID = ? AND Is_watched = TRUE ";
-        PreparedStatement statement;
-        try {
-            statement = connection.prepareStatement(query);
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
-        try {
-            statement.setInt(1, userId);
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
-        ResultSet resultSet;
-        try {
-            resultSet = statement.executeQuery();
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
-
-        add(resultSet, watched);
-        try {
-            closeAll(false, connection, resultSet, statement);
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
-        return watched;
+    public List showOthersWatched(int userId) {
+        final String query = "SELECT lists.Film_ID FROM lists INNER JOIN films " +
+                "ON lists.Film_ID = films.ID WHERE lists.User_ID = ? AND Is_watched = TRUE AND Is_public = TRUE ";
+        return jdbcTemplate.queryForList(query, new Object[] {
+                userId
+        });
     }
 
     @Override
-    public ArrayList<Film> showOwnWished(int userId) {
-        Connection connection;
-        try {
-            connection = dataSource.getConnection();
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
-
-        ArrayList<Film> wished = new ArrayList<>();
-        final String query = "SELECT lists.Film_ID FROM lists INNER JOIN films ON lists.Film_ID = films.ID WHERE lists.User_ID = ? AND Is_wished = TRUE ";
-        PreparedStatement statement;
-        try {
-            statement = connection.prepareStatement(query);
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
-        try {
-            statement.setInt(1, userId);
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
-        ResultSet resultSet;
-        try {
-            resultSet = statement.executeQuery();
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
-        add(resultSet, wished);
-        try {
-            closeAll(false, connection, resultSet, statement);
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
-        return wished;
+    public List showOthersWished(int userId) {
+        final String query = "SELECT lists.Film_ID FROM lists INNER JOIN films " +
+                "ON lists.Film_ID = films.ID WHERE lists.User_ID = ? AND Is_wished = TRUE AND Is_public = TRUE ";
+        return jdbcTemplate.queryForList(query, new Object[] {
+                userId
+        });
     }
 
     @Override
-    public ArrayList<Film> showOthersWatched(int userId) {
-        Connection connection;
-        try {
-            connection = dataSource.getConnection();
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
-
-        ArrayList<Film> watched = new ArrayList<>();
-        final String query = "SELECT lists.Film_ID FROM lists INNER JOIN films ON lists.Film_ID = films.ID WHERE lists.User_ID = ? AND Is_watched = TRUE AND Is_public = TRUE ";
-        PreparedStatement statement;
-        try {
-            statement = connection.prepareStatement(query);
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
-        try {
-            statement.setInt(1, userId);
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
-        ResultSet resultSet;
-        try {
-            resultSet = statement.executeQuery();
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
-        try {
-            assert resultSet != null;
-            while (resultSet.next()) {
-                watched.add(new Film());
-            }
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
-        try {
-            closeAll(false, connection, resultSet, statement);
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
-        return watched;
+    public void setDataSource(DataSource dataSource) {
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    @Override
-    public ArrayList<Film> showOthersWished(int userId) {
-        Connection connection;
-        try {
-            connection = dataSource.getConnection();
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
-
-        ArrayList<Film> wished = new ArrayList<>();
-        final String query = "SELECT lists.Film_ID FROM lists INNER JOIN films ON lists.Film_ID = films.ID WHERE lists.User_ID = ? AND Is_wished = TRUE AND Is_public = TRUE ";
-        PreparedStatement statement;
-        try {
-            statement = connection.prepareStatement(query);
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
-        try {
-            statement.setInt(1, userId);
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
-        ResultSet resultSet;
-        try {
-            resultSet = statement.executeQuery();
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
-        try {
-            while (resultSet != null && resultSet.next()) {
-                wished.add(new Film());
-            }
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
-        try {
-            closeAll(false, connection, resultSet, statement);
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
-        return wished;
-    }
-
-    private boolean delete(Connection connection, int userId, Film film){
-        try {
-            final String deleteQuery = "DELETE FROM lists WHERE User_ID = ? AND Film_ID = ?";
-            PreparedStatement statement = connection.prepareStatement(deleteQuery);
-            statement.setInt(1, userId);
-            statement.setInt(2, film.getId());
-            return statement.execute();
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
-    }
-
-    private void set(int userId, Film film, PreparedStatement statement) {
-        try {
-            statement.setInt(1, userId);
-            statement.setInt(2, film.getId());
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
-    }
-
-    private int hasNext(ResultSet rs) {
-        try {
-            rs.next();
-            return rs.getInt(1);
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
-    }
-
-    private void add(ResultSet resultSet, ArrayList<Film> list) {
-        try {
-            while (resultSet.next()) {
-                list.add(new Film());
-            }
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
-    }
-
-    private void closeAll(boolean commit, Connection connection, PreparedStatement... statements) throws SQLException {
-        if (commit) connection.commit();
-        for (PreparedStatement statement : statements) {
-            statement.close();
-        }
-        connection.close();
-    }
-
-    private void closeAll(boolean commit, Connection connection, ResultSet resultSet, PreparedStatement... statements) throws SQLException {
-        resultSet.close();
-        closeAll(commit, connection, statements);
-    }
 }

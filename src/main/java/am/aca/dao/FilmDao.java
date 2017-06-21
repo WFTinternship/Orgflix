@@ -2,6 +2,7 @@ package am.aca.dao;
 
 import am.aca.entity.*;
 
+import javax.sql.DataSource;
 import java.util.List;
 
 /**
@@ -14,21 +15,32 @@ public interface FilmDao {
 
     Film getFilmById(int id);
 
-    List<Film> getFilmsList(int startIndex);
+    List getFilmsList(int startIndex);
 
-    List<Film> getFilmsByCast(Cast cast);
+    List getFilmsByCast(Cast cast);
 
-    List<Film> getFilmsByCast(int actorId);
+    List getFilmsByCast(int actorId);
 
-    List<Film> getFilmsByGenre(Genre genre);
+    List getFilmsByGenre(Genre genre);
 
     boolean rateFilm(int filmId, int starType);
 
+    boolean addGenreToFilm(Genre genre, Film film);
+
     boolean addGenreToFilm(Genre genre, int filmId);
+
+    boolean addCastToFilm(Cast cast, Film film);
 
     boolean addCastToFilm(Cast cast, int filmId);
 
     double getRating(int filmId);
 
+    double getRating(Film film);
+
     int totalNumberOfFilms();
+
+    void setDataSource(DataSource dataSource);
+
+
+
 }

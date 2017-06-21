@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-3.0.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+
+    <context:property-placeholder location="classpath:connection.properties"/>
+
+    <!-- DB data source. -->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+        <property name="driverClass" value="${DriverClass}" />
+        <property name="jdbcUrl" value="${TestJdbcUrl}" />
+        <property name="user" value="${user}" />
+        <property name="password" value="${password}" />
+        <property name="initialPoolSize" value="${InitialPoolSize}" />
+        <property name="acquireIncrement" value="${AcquireIncrement}" />
+        <property name="maxPoolSize" value="${MaxPoolSize}" />
+        <property name="minPoolSize" value="${MinPoolSize}" />
+    </bean>
+
+
+    <context:component-scan base-package="am.aca.dao.springjdbc.implspringjdbc" />
+
+    <bean id="JdbcUserDAO" class="am.aca.dao.springjdbc.implspringjdbc.JdbcUserDAO" />
+    <bean id="TestHelper" class="am.aca.util.TestHelper" />
+
+</beans>

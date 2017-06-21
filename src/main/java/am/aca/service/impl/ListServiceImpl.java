@@ -1,8 +1,10 @@
 package am.aca.service.impl;
 
 import am.aca.dao.*;
-import am.aca.dao.impljdbc.FilmDaoJdbc;
-import am.aca.dao.impljdbc.ListDaoJdbc;
+import am.aca.dao.jdbc.FilmDao;
+import am.aca.dao.jdbc.ListDao;
+import am.aca.dao.jdbc.impljdbc.FilmDaoJdbc;
+import am.aca.dao.jdbc.impljdbc.ListDaoJdbc;
 import am.aca.entity.Film;
 import am.aca.service.ListService;
 import org.apache.log4j.Logger;

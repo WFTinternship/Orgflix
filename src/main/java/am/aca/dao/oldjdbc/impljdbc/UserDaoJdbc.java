@@ -1,13 +1,12 @@
-package am.aca.dao.impljdbc;
+package am.aca.dao.jdbc.impljdbc;
 
 import am.aca.dao.DaoException;
-import am.aca.dao.UserDao;
+import am.aca.dao.jdbc.UserDao;
 import am.aca.entity.*;
 
 import java.sql.*;
 
 import am.aca.util.ConnType;
-import org.apache.log4j.Logger;
 
 /**
  * Created by David on 5/27/2017

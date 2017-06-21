@@ -15,6 +15,6 @@
     </description>
     <tag>
         <name>pagination</name>
-        <tag-class>servlet.taghandler.PaginationTagHandler</tag-class>
+        <tag-class>am.aca.servlet.taghandler.PaginationTagHandler</tag-class>
     </tag>
 </taglib>

@@ -1,12 +1,16 @@
-package am.aca.dao.impljdbc;
+package am.aca.dao.jdbc.impljdbc;
 
 import am.aca.dao.*;
+import am.aca.dao.jdbc.CastDao;
 import am.aca.entity.Cast;
 import am.aca.entity.Film;
 import am.aca.util.ConnType;
+<<<<<<< Updated upstream:src/main/java/am/aca/dao/impljdbc/CastDaoJdbc.java
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+=======
+>>>>>>> Stashed changes:src/main/java/am/aca/dao/jdbc/impljdbc/CastDaoJdbc.java
 
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;

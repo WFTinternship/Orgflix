@@ -23,6 +23,7 @@ public class DbManager {
     private DbManager(ConnType connType) {
         String base = "TestJdbcUrl";
         try {
+
             properties = new PropertyManager("connection.properties").getProperties();
             cpds = new ComboPooledDataSource();
 

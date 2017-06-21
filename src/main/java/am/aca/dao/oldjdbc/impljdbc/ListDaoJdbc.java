@@ -1,6 +1,11 @@
-package am.aca.dao.impljdbc;
+package am.aca.dao.jdbc.impljdbc;
 
+<<<<<<< Updated upstream:src/main/java/am/aca/dao/impljdbc/ListDaoJdbc.java
 import am.aca.dao.ListDao;
+=======
+import am.aca.dao.DaoException;
+import am.aca.dao.jdbc.ListDao;
+>>>>>>> Stashed changes:src/main/java/am/aca/dao/jdbc/impljdbc/ListDaoJdbc.java
 import am.aca.entity.Film;
 import am.aca.util.ConnType;
 import org.springframework.jdbc.core.JdbcTemplate;

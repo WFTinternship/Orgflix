@@ -1,4 +1,4 @@
-package servlet;
+package am.aca.servlet;
 
 import am.aca.entity.Film;
 import am.aca.service.impl.FilmServiceImpl;
@@ -28,6 +28,9 @@ public class HomeServlet extends HttpServlet {
         List<Film> films = new FilmServiceImpl().getFilmsList(pageNum*12);
         request.setAttribute("films", films );
         request.setAttribute("message", pageNum );
+        request.setAttribute("userId", -1);
+        request.setAttribute("userAuth", 0);
+        request.setAttribute("user", request.getParameter("user"));
         request.getRequestDispatcher("/home.jsp").forward(request, response);
     }
 
@@ -40,6 +43,9 @@ public class HomeServlet extends HttpServlet {
         response.setContentType("text/html");
         request.setAttribute("message", "0" );
         request.setAttribute("films", films );
+        request.setAttribute("userId", -1);
+        request.setAttribute("userAuth", 0);
+        request.setAttribute("user", "");
         request.getRequestDispatcher("/home.jsp").forward(request, response);
     }
 }

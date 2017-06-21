@@ -1,5 +1,6 @@
-package am.aca.dao.impljdbc;
+package am.aca.dao.jdbc.impljdbc;
 
+<<<<<<< Updated upstream:src/main/java/am/aca/dao/impljdbc/FilmDaoJdbc.java
 import am.aca.dao.FilmDao;
 import am.aca.entity.*;
 import am.aca.util.ConnType;
@@ -7,6 +8,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
+=======
+import am.aca.dao.DaoException;
+import am.aca.dao.jdbc.FilmDao;
+import am.aca.entity.*;
+import am.aca.util.ConnType;
+>>>>>>> Stashed changes:src/main/java/am/aca/dao/jdbc/impljdbc/FilmDaoJdbc.java
 
 import javax.sql.DataSource;
 import java.sql.*;

@@ -1,9 +1,9 @@
-package daotest;
+package daotest.jdcb;
 
-import am.aca.dao.CastDao;
-import am.aca.dao.impljdbc.CastDaoJdbc;
-import am.aca.dao.FilmDao;
-import am.aca.dao.impljdbc.FilmDaoJdbc;
+import am.aca.dao.jdbc.CastDao;
+import am.aca.dao.jdbc.impljdbc.CastDaoJdbc;
+import am.aca.dao.jdbc.FilmDao;
+import am.aca.dao.jdbc.impljdbc.FilmDaoJdbc;
 import am.aca.entity.Cast;
 import am.aca.entity.Film;
 import am.aca.entity.Genre;

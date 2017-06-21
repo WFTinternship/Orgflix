@@ -52,12 +52,21 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
     <nav id="menu">
         <h2>Menu</h2>
         <ul>
-            <li><a href="home">Home</a></li>
-            <%--<li><a href="watch_list">Watch list</a></li>--%>
-            <%--<li><a href="wish_list">Wish List</a></li>--%>
-            <li><a href="login">Login</a></li>
-            <li><a href="signup">Sign up</a></li>
+            <c:if test="${userId != -1}">
+                <li><c:out value="${user}"/></li>
+                <li><a href="home">Home</a></li>
+                <li><a href="watch_list">Watch list</a></li>
+                <li><a href="wish_list">Wish List</a></li>
+                <li><a href="home">Logout</a></li>
+            </c:if>
+            <c:if test="${userId == -1}">
+                <li><a href="home">Home</a></li>
+                <li><a href="login">Login</a></li>
+                <li><a href="signup">Sign up</a></li>
+            </c:if>
         </ul>
+        <input type="hidden" id="userId" value='<c:out value="${userId}"/>'/>
+        <input type="hidden" id="userAuth" value='<c:out value="${userAuth}"/>'/>
     </nav>
 
     <!-- Main -->
@@ -130,7 +139,7 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
 <script src="assets/js/util.js"></script>
 <!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
 <script src="assets/js/main.js"></script>
-<script src="assets/js/custom.js?v=102"></script>
+<script src="assets/js/custom.js?v=108"></script>
 
 </body>
 </html>

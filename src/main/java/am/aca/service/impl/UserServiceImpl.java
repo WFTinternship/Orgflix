@@ -1,8 +1,8 @@
 package am.aca.service.impl;
 
 import am.aca.dao.DaoException;
-import am.aca.dao.UserDao;
-import am.aca.dao.impljdbc.UserDaoJdbc;
+import am.aca.dao.jdbc.UserDao;
+import am.aca.dao.jdbc.impljdbc.UserDaoJdbc;
 import am.aca.entity.User;
 import am.aca.service.UserService;
 import org.apache.log4j.Logger;
@@ -46,6 +46,7 @@ public class UserServiceImpl implements UserService {
         User user = null;
         try {
             user = userDao.getUser(email);
+            System.out.println(user);
         }catch (DaoException e){
             LOGGER.warn(e.getMessage());
         }

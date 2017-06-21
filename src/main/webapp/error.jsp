@@ -1,4 +1,3 @@
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <!DOCTYPE HTML>
@@ -43,6 +42,8 @@
         <h2>Menu</h2>
         <ul>
             <li><a href="home">Home</a></li>
+            <%--<li><a href="watch_list">Watch list</a></li>--%>
+            <%--<li><a href="wish_list">Wish List</a></li>--%>
             <li><a href="login">Login</a></li>
             <li><a href="signup">Sign up</a></li>
         </ul>
@@ -52,23 +53,8 @@
     <div id="main">
         <div class="inner">
             <header>
-                <h1>Login to Your account at OrgFlix</h1>
+                <h1>ERROR - Something bad has happaned !</h1>
             </header>
-            <section>
-                <form id="loginForm" method="POST" action="/login">
-                    <div>
-                        <span>Email</span>
-                        <input type="text" id="email" name="email" class="inputField" />
-                    </div>
-                    <div>
-                        <span>Password</span>
-                        <input type="password" id="pass" name="pass" class="inputField" />
-                    </div>
-
-                    <input type="button" value="Login" onclick="submitLogin()"/>
-                </form>
-                <div id="error" class="error"></div>
-            </section>
         </div>
     </div>
 
@@ -82,7 +68,7 @@
                         <input type="text" name="name" id="name" placeholder="Name"/>
                     </div>
                     <div class="field half">
-                        <input type="email" name="email" id="" placeholder="Email"/>
+                        <input type="email" name="email" id="email" placeholder="Email"/>
                     </div>
                     <div class="field">
                         <textarea name="message" id="message" placeholder="Message"></textarea>
@@ -121,7 +107,7 @@
 <!--[if lte IE 8]>
 <script src="assets/js/ie/respond.min.js"></script><![endif]-->
 <script src="assets/js/main.js"></script>
-<script src="assets/js/custom.js?v=108"></script>
+<script src="assets/js/custom.js?v=102"></script>
 
 </body>
 </html>

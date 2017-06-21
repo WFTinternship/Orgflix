@@ -1,4 +1,4 @@
-package am.aca.dao;
+package am.aca.dao.jdbc;
 
 import am.aca.entity.Cast;
 import am.aca.entity.Film;

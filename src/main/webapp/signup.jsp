@@ -70,29 +70,31 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
                 <h1>Sign up to OrgFlix</h1>
             </header>
             <section>
-                <form id="signUpForm">
+                <form id="signUpForm" method="POST" action="/signup">
                     <div>
                         <span>Nick</span>
-                        <input type="text" class="inputField" />
-                    </div>
-                    <div>
-                        <span>Email</span>
-                        <input type="text" class="inputField" />
+                        <input type="text" name="nick" id="nick" class="inputField" />
                     </div>
                     <div>
                         <span>User name</span>
-                        <input type="text" class="inputField" />
+                        <input type="text" name="userName" class="inputField" />
+                    </div>
+                    <div>
+                        <span>Email</span>
+                        <input type="text" name="email" id="email" class="inputField" />
                     </div>
                     <div>
                         <span>Password</span>
-                        <input type="password" class="inputField" />
+                        <input type="password" id="pass" name="pass" id="pass" class="inputField" />
                     </div>
                     <div>
                         <span>Confirm password</span>
-                        <input type="password" class="inputField" />
+                        <input type="password" id="pass_check" class="inputField" />
                     </div>
                     <input type="button" value="submit" onclick="submitSignUp()"/>
+
                 </form>
+                <div id="error" class="error"></div>
             </section>
         </div>
     </div>
@@ -107,7 +109,7 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
                         <input type="text" name="name" id="name" placeholder="Name"/>
                     </div>
                     <div class="field half">
-                        <input type="email" name="email" id="email" placeholder="Email"/>
+                        <input type="email" name="email" id="" placeholder="Email"/>
                     </div>
                     <div class="field">
                         <textarea name="message" id="message" placeholder="Message"></textarea>
@@ -146,7 +148,7 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
 <!--[if lte IE 8]>
 <script src="assets/js/ie/respond.min.js"></script><![endif]-->
 <script src="assets/js/main.js"></script>
-<script src="assets/js/custom.js?v=102"></script>
+<script src="assets/js/custom.js?v=108"></script>
 
 </body>
 </html>

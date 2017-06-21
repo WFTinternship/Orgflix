@@ -1,8 +1,8 @@
 package am.aca.service.impl;
 
-import am.aca.dao.CastDao;
+import am.aca.dao.jdbc.CastDao;
 import am.aca.dao.DaoException;
-import am.aca.dao.impljdbc.CastDaoJdbc;
+import am.aca.dao.jdbc.impljdbc.CastDaoJdbc;
 import am.aca.entity.Cast;
 import am.aca.entity.Film;
 import am.aca.service.CastService;

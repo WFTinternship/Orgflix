@@ -1,7 +1,8 @@
-package am.aca.dao.jdbc.impljdbc;
+package am.aca.dao.oldjdbc.impljdbc;
 
 import am.aca.dao.DaoException;
-import am.aca.dao.jdbc.UserDao;
+import am.aca.dao.oldjdbc.impljdbc.DaoJdbc;
+import am.aca.dao.oldjdbc.UserDao;
 import am.aca.entity.*;
 
 import java.sql.*;

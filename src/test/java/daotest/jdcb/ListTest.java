@@ -1,10 +1,11 @@
 package daotest.jdcb;
 
-import am.aca.dao.jdbc.CastDao;
-import am.aca.dao.jdbc.FilmDao;
+import am.aca.dao.jdbc.FilmDAO;
 import am.aca.dao.jdbc.ListDao;
-import am.aca.dao.jdbc.UserDao;
+import am.aca.dao.jdbc.UserDAO;
 import am.aca.dao.jdbc.impljdbc.*;
+import am.aca.dao.jdbc.CastDAO;
+import am.aca.dao.jdbc.impljdbc.JdbcCastDAO;
 import am.aca.entity.Cast;
 import am.aca.entity.Film;
 import am.aca.entity.Genre;
@@ -15,6 +16,8 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.beans.PropertyVetoException;
 import java.io.IOException;
@@ -26,10 +29,15 @@ import java.util.ArrayList;
  */
 public class ListTest {
 
+    ApplicationContext ctx =
+            new ClassPathXmlApplicationContext("applicationContext-persistance-test.xml");
+
+    private UserDAO userDao = ctx.getBean("JdbcUserDAO",JdbcUserDAO.class);
+    private CastDAO castDAO = ctx.getBean("JdbcCastDAO",JdbcCastDAO.class);
+    private FilmDAO filmDAO = ctx.getBean("JdbcFilmDAO", JdbcFilmDAO.class);
+
     private ListDao listDao = new ListDaoJdbc(ConnType.PRODUCTION);
-    private CastDao castDao = new CastDaoJdbc(ConnType.PRODUCTION);
-    private FilmDao filmDao = new FilmDaoJdbc(ConnType.PRODUCTION);
-    private UserDao userDao =  new UserDaoJdbc(ConnType.PRODUCTION);
+
     private Film film;
     private User user;
     private ArrayList<Cast> actors = new ArrayList<>();
@@ -38,8 +46,7 @@ public class ListTest {
     public void setUp() {
 
         //setup Cast
-        castDao.setDataSource(DbManager.getInstance().getDataSource());
-        actors.add(castDao.addCast("Brian De Palma", false));
+        actors.add(castDAO.addCast("Brian De Palma", false));
 
         //setup Film and Film DAO
         film = new Film();
@@ -49,13 +56,12 @@ public class ListTest {
         film.setRate_5star(1);
         film.setCasts(actors);
 
-        filmDao.setDataSource(DbManager.getInstance().getDataSource());
-        filmDao.addFilm(film);
+        filmDAO.addFilm(film);
 
         //setup User and User DAO
         user = new User("MrSmith","John Smith","JhonSmith@gmail.com","pass");
 
-        userDao.addUser(user);
+        userDao.add(user);
 
         //setup List DAO
         listDao.setDataSource(DbManager.getInstance().getDataSource());

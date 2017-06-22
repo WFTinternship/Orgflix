@@ -1,6 +1,8 @@
-package am.aca.dao.oldjdbc;
+package am.aca.dao.jdbc;
 
-import am.aca.entity.*;
+import am.aca.entity.Cast;
+import am.aca.entity.Film;
+import am.aca.entity.Genre;
 
 import javax.sql.DataSource;
 import java.util.List;
@@ -8,7 +10,7 @@ import java.util.List;
 /**
  * Created by David on 5/28/2017
  */
-public interface FilmDao {
+public interface FilmDAO {
     boolean addFilm(Film film);
 
     boolean editFilm(Film film);
@@ -38,9 +40,4 @@ public interface FilmDao {
     double getRating(Film film);
 
     int totalNumberOfFilms();
-
-    void setDataSource(DataSource dataSource);
-
-
-
 }

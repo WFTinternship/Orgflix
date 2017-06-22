@@ -1,13 +1,15 @@
 package am.aca.service.impl;
 
 import am.aca.dao.*;
-import am.aca.dao.jdbc.FilmDao;
+import am.aca.dao.jdbc.FilmDAO;
 import am.aca.dao.jdbc.ListDao;
-import am.aca.dao.jdbc.impljdbc.FilmDaoJdbc;
+import am.aca.dao.jdbc.impljdbc.JdbcCastDAO;
+import am.aca.dao.jdbc.impljdbc.JdbcFilmDAO;
 import am.aca.dao.jdbc.impljdbc.ListDaoJdbc;
 import am.aca.entity.Film;
 import am.aca.service.ListService;
 import org.apache.log4j.Logger;
+import org.springframework.context.ApplicationContext;
 
 import java.util.List;
 
@@ -17,9 +19,11 @@ import java.util.List;
 public class ListServiceImpl implements ListService {
 
     private static final Logger LOGGER = Logger.getLogger(ListServiceImpl.class);
+    ApplicationContext ctx = null;
     private ListDao listDao;
 
-    public ListServiceImpl() {
+    public ListServiceImpl(ApplicationContext ctx) {
+        this.ctx = ctx;
         listDao = new ListDaoJdbc();
     }
 
@@ -27,11 +31,11 @@ public class ListServiceImpl implements ListService {
     public boolean addToWatched(Film film, boolean isPublic, int user_ID) {
         boolean state = false;
         try {
-            FilmDao filmDao = new FilmDaoJdbc();
+            FilmDAO filmDAO = ctx.getBean("JdbcFilmtDAO", JdbcFilmDAO.class);
 
             //case: the film does not exist
-            if (filmDao.getFilmById(film.getId()) == null) {
-                filmDao.addFilm(film);
+            if (filmDAO.getFilmById(film.getId()) == null) {
+                filmDAO.addFilm(film);
             }
 
             //case: any
@@ -46,11 +50,11 @@ public class ListServiceImpl implements ListService {
     public boolean addToWished(Film film, boolean isPublic, int user_ID) {
         boolean state = false;
         try {
-            FilmDao filmDao = new FilmDaoJdbc();
+            FilmDAO filmDAO = ctx.getBean("JdbcFilmtDAO", JdbcFilmDAO.class);
 
             //case: the film does not exist
-            if (filmDao.getFilmById(film.getId()) == null) {
-                filmDao.addFilm(film);
+            if (filmDAO.getFilmById(film.getId()) == null) {
+                filmDAO.addFilm(film);
             }
 
             //case: any

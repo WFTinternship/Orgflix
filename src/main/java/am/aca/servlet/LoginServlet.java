@@ -4,6 +4,8 @@ import am.aca.entity.Film;
 import am.aca.entity.User;
 import am.aca.service.impl.FilmServiceImpl;
 import am.aca.service.impl.UserServiceImpl;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,15 +25,19 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        ApplicationContext ctx =
+                new ClassPathXmlApplicationContext("applicationContext-persistance.xml");
+
+
         response.setContentType("text/html");
 
         String email = request.getParameter("email");
-        User user = new UserServiceImpl().getUser(email);
+        User user = new UserServiceImpl(ctx).getUser(email);
 
         if(user != null){
             final String showUser = user.getNick() + " (" + email + ")";
 
-            List<Film> films = new FilmServiceImpl().getFilmsList(0);
+            List<Film> films = new FilmServiceImpl(ctx).getFilmsList(0);
             request.setAttribute("films", films);
             request.setAttribute("message", 0);
             request.setAttribute("userId", user.getId());

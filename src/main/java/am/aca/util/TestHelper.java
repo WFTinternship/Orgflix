@@ -1,7 +1,7 @@
 package am.aca.util;
 
-import am.aca.dao.springjdbc.BaseDAO;
-import am.aca.dao.springjdbc.implspringjdbc.JdbcUserDAO;
+import am.aca.dao.jdbc.BaseDAO;
+import am.aca.dao.jdbc.impljdbc.JdbcUserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

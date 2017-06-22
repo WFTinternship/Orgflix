@@ -1,4 +1,4 @@
-package am.aca.dao.oldjdbc;
+package am.aca.dao.jdbc;
 
 import am.aca.entity.Film;
 

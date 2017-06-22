@@ -1,8 +1,8 @@
 package daotest.jdcb;
 
 import am.aca.dao.*;
-import am.aca.dao.jdbc.UserDao;
-import am.aca.dao.jdbc.impljdbc.UserDaoJdbc;
+import am.aca.dao.oldjdbc.UserDao;
+import am.aca.dao.oldjdbc.impljdbc.UserDaoJdbc;
 import am.aca.entity.*;
 import am.aca.util.ConnType;
 import am.aca.util.DbManager;

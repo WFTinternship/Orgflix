@@ -6,17 +6,23 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import am.aca.service.impl.*;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * Created by David on 6/17/2017
  */
 public class PaginationTagHandler extends TagSupport {
 
+    ApplicationContext ctx =
+            new ClassPathXmlApplicationContext("applicationContext-persistance.xml");
+
+
     public int doStartTag() throws JspException {
         JspWriter out = pageContext.getOut();//returns the instance of JspWriter
         try {
 
-            int filmnum = new FilmServiceImpl().totalNumberOfFilms();
+            int filmnum = new FilmServiceImpl(ctx).totalNumberOfFilms();
             if (filmnum > 12) {
                 out.print("<form class='pagintion_container' id='pageForm' method='POST' action='/home'><input type='hidden' id='currPage' name='currPage' value='0'>");
                 for (int i = 0; i <= filmnum / 12; ++i) {

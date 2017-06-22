@@ -1,12 +1,14 @@
 package am.aca.service.impl;
 
-import am.aca.dao.jdbc.CastDao;
+import am.aca.dao.jdbc.CastDAO;
 import am.aca.dao.DaoException;
-import am.aca.dao.jdbc.impljdbc.CastDaoJdbc;
+import am.aca.dao.jdbc.impljdbc.JdbcCastDAO;
+import am.aca.dao.jdbc.impljdbc.JdbcUserDAO;
 import am.aca.entity.Cast;
 import am.aca.entity.Film;
 import am.aca.service.CastService;
 import org.apache.log4j.Logger;
+import org.springframework.context.ApplicationContext;
 
 import java.util.List;
 
@@ -16,17 +18,19 @@ import java.util.List;
 public class CastServiceImpl implements CastService {
 
     private static final Logger LOGGER = Logger.getLogger(CastServiceImpl.class);
-    private CastDao CastDao;
+    ApplicationContext ctx = null;
+    private CastDAO CastDAO;
 
-    public CastServiceImpl() {
-        CastDao = new CastDaoJdbc();
+    public CastServiceImpl(ApplicationContext ctx) {
+        this.ctx = ctx;
+        CastDAO = ctx.getBean("JdbcCastDAO", JdbcCastDAO.class);
     }
 
     @Override
     public Cast addCast(String cast, boolean hasOscar) {
         Cast castObj = null;
         try {
-            castObj = CastDao.addCast(cast, hasOscar);
+            castObj = CastDAO.addCast(cast, hasOscar);
         } catch (DaoException e) {
             LOGGER.warn(e.toString());
         }
@@ -35,19 +39,19 @@ public class CastServiceImpl implements CastService {
 
     @Override
     public Cast addCast(String cast) {
-        return CastDao.addCast(cast);
+        return CastDAO.addCast(cast);
     }
 
     @Override
     public boolean addCastToFilm(Cast cast, Film film) {
-        return CastDao.addCastToFilm(cast, film);
+        return CastDAO.addCastToFilm(cast, film);
     }
 
     @Override
     public boolean addCastToFilm(int castId, int filmId) {
         boolean state = false;
         try {
-            state = CastDao.addCastToFilm(castId, filmId);
+            state = CastDAO.addCastToFilm(castId, filmId);
         }catch(DaoException e){
             LOGGER.warn(e.getMessage());
         }
@@ -58,7 +62,7 @@ public class CastServiceImpl implements CastService {
     public boolean editCast(Cast cast) {
         boolean state = false;
         try {
-            state = CastDao.editCast(cast);
+            state = CastDAO.editCast(cast);
         }catch (DaoException e){
             LOGGER.warn(e.toString());
         }
@@ -69,7 +73,7 @@ public class CastServiceImpl implements CastService {
     public List<Cast> listCasts() {
         List<Cast> list = null;
         try {
-            list = CastDao.listCast();
+            list = CastDAO.listCast();
         }catch (DaoException e){
             LOGGER.warn(e.getMessage());
         }
@@ -80,7 +84,7 @@ public class CastServiceImpl implements CastService {
     public List<Integer> listFilmsIdByCast(int castId) {
         List<Integer> list = null;
         try {
-            list = CastDao.listFilmsIdByCast(castId);
+            list = CastDAO.listFilmsByCast(castId);
         }catch (DaoException e){
             LOGGER.warn(e.toString());
         }

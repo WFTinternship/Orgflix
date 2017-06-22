@@ -27,9 +27,10 @@
     </bean>
 
 
-    <context:component-scan base-package="am.aca.dao.springjdbc.implspringjdbc" />
+    <context:component-scan base-package="am.aca.dao.jdbc.impljdbc" />
 
-    <bean id="JdbcUserDAO" class="am.aca.dao.springjdbc.implspringjdbc.JdbcUserDAO" />
-
+    <bean id="JdbcUserDAO" class="am.aca.dao.jdbc.impljdbc.JdbcUserDAO" />
+    <bean id="JdbcCastDAO" class="am.aca.dao.jdbc.impljdbc.JdbcCastDAO" />
+    <bean id="JdbcFilmDAO" class="am.aca.dao.jdbc.impljdbc.JdbcFilmDAO" />
 
 </beans>

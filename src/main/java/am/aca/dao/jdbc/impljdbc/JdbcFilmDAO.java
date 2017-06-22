@@ -1,19 +1,15 @@
 package am.aca.dao.jdbc.impljdbc;
 
-<<<<<<< Updated upstream:src/main/java/am/aca/dao/impljdbc/FilmDaoJdbc.java
-import am.aca.dao.FilmDao;
+
+import am.aca.dao.jdbc.BaseDAO;
+import am.aca.dao.jdbc.FilmDAO;
 import am.aca.entity.*;
-import am.aca.util.ConnType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
-=======
-import am.aca.dao.DaoException;
-import am.aca.dao.jdbc.FilmDao;
-import am.aca.entity.*;
-import am.aca.util.ConnType;
->>>>>>> Stashed changes:src/main/java/am/aca/dao/jdbc/impljdbc/FilmDaoJdbc.java
+import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -22,17 +18,14 @@ import java.util.List;
 /**
  * Created by David on 5/28/2017
  */
-public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
-    private JdbcTemplate jdbcTemplate;
+@Repository
+public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
 
-    public FilmDaoJdbc() {
-        super();
+    @Autowired
+    public JdbcFilmDAO(DataSource dataSource) {
+        super(JdbcFilmDAO.class);
+        this.setDataSource(dataSource);
     }
-
-    public FilmDaoJdbc(ConnType connType) {
-        super(connType);
-    }
-
 
     @Override
     public boolean addFilm(Film film) {
@@ -44,7 +37,7 @@ public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
         final String query = "INSERT INTO films (Title, Prod_Year, HasOscar, Rate_1star, Rate_2star, Rate_3star, Rate_4star, Rate_5star, director) " +
                 " VALUES( ? , ? , ?, ?, ?, ?, ?, ?, ?) ";
 
-        jdbcTemplate.update(connection -> {
+        getJdbcTemplate().update(connection -> {
             PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, film.getTitle());
         statement.setInt(2, film.getProdYear());
@@ -72,7 +65,7 @@ public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
         final String query = "UPDATE films SET Title = ?,Prod_Year = ?,HasOscar = ?,Rate_1star = ? " +
                 ",Rate_2star = ?, Rate_3star = ?,Rate_4star = ?,Rate_5star = ?, director = ? " +
                 " WHERE id = ? ";
-        jdbcTemplate.update(query, new Object[] {
+        getJdbcTemplate().update(query, new Object[] {
                 film.getTitle(), film.getProdYear(), film.isHasOscar(), film.getRate_1star(), film.getRate_2star(), film.getRate_3star(), film.getRate_4star(), film.getRate_5star(), film.getDirector(), film.getId()
         });
         return true;
@@ -83,9 +76,9 @@ public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
     public Film getFilmById(int id) {
         final String getQuery = "SELECT * FROM films WHERE ID = ? LIMIT 1";
         final String countQuery = "SELECT COUNT(*) FROM films WHERE ID = ? LIMIT 1";
-        if (jdbcTemplate.queryForInt(countQuery, new Object[] { id }) == 0)
+        if (getJdbcTemplate().queryForObject(countQuery, new Object[] { id },Integer.class) == 0)
             return null;
-        return (Film) jdbcTemplate.queryForObject(getQuery, new Object[]{
+        return (Film) getJdbcTemplate().queryForObject(getQuery, new Object[]{
                 id
         }, (resultSet, i) -> {
             Film film = new Film();
@@ -111,14 +104,14 @@ public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
         final String filmQuery = "SELECT films.ID FROM film_to_cast" +
                 " LEFT JOIN films ON film_to_cast.Film_ID = films.ID " +
                 " WHERE Actor_ID = ?";
-        return jdbcTemplate.queryForList(filmQuery, new Object[] { actorId }, Integer.class);
+        return getJdbcTemplate().queryForList(filmQuery, new Object[] { actorId }, Integer.class);
     }
 
 
     @Override
     public List getFilmsList(int startIndex) {
         final String filmQuery = "SELECT * FROM films LIMIT ? , 12 ";
-        return jdbcTemplate.queryForList(filmQuery, new Object[] {startIndex});
+        return getJdbcTemplate().queryForList(filmQuery, new Object[] {startIndex});
     }
 
     @Override
@@ -133,7 +126,7 @@ public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
                 " LEFT JOIN films ON genre_to_film.Film_ID = films.ID " +
                 " WHERE Genre_ID = ?";
 
-        return jdbcTemplate.queryForList(filmQuery, new Object[] {genre.getValue()}, Integer.class);
+        return getJdbcTemplate().queryForList(filmQuery, new Object[] {genre.getValue()}, Integer.class);
     }
 
 
@@ -141,7 +134,7 @@ public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
     public boolean rateFilm(int filmId, int starType) {
         final String query = "UPDATE films set Rate_" + starType + "star = Rate_" + starType +
                 "star + 1 WHERE ID = ? ";
-        jdbcTemplate.update(query, new Object[] {filmId});
+        getJdbcTemplate().update(query, new Object[] {filmId});
         return true;
     }
 
@@ -153,7 +146,7 @@ public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
     @Override
     public boolean addGenreToFilm(Genre genre, int filmId) {
         final String query = "INSERT INTO genre_to_film(Genre_ID,Film_ID) VALUES (? , ? ) ";
-        jdbcTemplate.update(query, new Object[] {
+        getJdbcTemplate().update(query, new Object[] {
                 genre.getValue(), filmId
         });
         return true;
@@ -168,7 +161,7 @@ public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
     @Override
     public boolean addCastToFilm(Cast cast, int filmId) {
         final String query = "INSERT INTO film_to_cast(Actor_ID,Film_ID) VALUES (? , ? ) ";
-        jdbcTemplate.update(query, new Object[] {
+        getJdbcTemplate().update(query, new Object[] {
                 cast.getId(), filmId
         });
         return true;
@@ -180,7 +173,7 @@ public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
         final String ratingQuery = "SELECT * FROM films WHERE ID = ?";
         int ratingSum = 0;
         int ratingCount = 0;
-        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(ratingQuery, new Object[]{filmId});
+        SqlRowSet sqlRowSet = getJdbcTemplate().queryForRowSet(ratingQuery, new Object[]{filmId});
         while (sqlRowSet.next()) {
             for (int i = 1; i <= 5; i++) {
                 ratingSum += sqlRowSet.getInt("Rate_" + i + "star") * i;
@@ -202,11 +195,6 @@ public class FilmDaoJdbc extends DaoJdbc implements FilmDao {
     @Override
     public int totalNumberOfFilms() {
         final String query = "SELECT count(ID) AS total FROM films ";
-        return jdbcTemplate.queryForInt(query);
-    }
-
-    @Override
-    public void setDataSource(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
+        return getJdbcTemplate().queryForObject(query,Integer.class);
     }
 }

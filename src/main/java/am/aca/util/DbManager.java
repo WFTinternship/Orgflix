@@ -30,7 +30,7 @@ public class DbManager {
             if (connType == ConnType.PRODUCTION) base = "JdbcUrl";
 
             cpds.setJdbcUrl(properties.getProperty(base));
-            cpds.setDriverClass(properties.getProperty("DriverClass")); //loads the jdbc driver
+            cpds.setDriverClass(properties.getProperty("DriverClass")); //loads the oldjdbc driver
             cpds.setUser(properties.getProperty("user"));
             cpds.setPassword(properties.getProperty("password"));
 

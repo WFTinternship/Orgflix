@@ -1,4 +1,4 @@
-package am.aca.dao.jdbc;
+package am.aca.dao.oldjdbc;
 
 import am.aca.entity.*;
 

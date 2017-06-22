@@ -92,11 +92,11 @@ create table lists(
 # insert into users(Nick,User_Name,User_Pass,Email)
 #    values('karine','Karine','password2','karine@gmail.com');
 #
-# # 2 casts
-# insert into casts(Actor_Name,HasOscar)
-#    values('Quentin Tarantino',true);
-# insert into casts(Actor_Name,HasOscar)
-#    values('Thomas Jahn',false);
+# 2 casts
+insert into casts(Actor_Name,HasOscar)
+   values('Quentin Tarantino',true);
+insert into casts(Actor_Name,HasOscar)
+   values('Thomas Jahn',false);
 #
 # 2 films
 insert into films(Title,Prod_Year,HasOscar,image_ref)
@@ -126,10 +126,10 @@ insert into films(Title,Prod_Year,HasOscar,image_ref)
 insert into films(Title,Prod_Year,HasOscar,image_ref)
   values('Forrest Gump',1994,true,'images/54545.jpg');
 
-# # casts for 2 films
-# insert into film_to_cast(Actor_ID,Film_ID) values(1,1);
-# insert into film_to_cast(Actor_ID,Film_ID) values(2,1);
-# insert into film_to_cast(Actor_ID,Film_ID) values(2,2);
+# casts for 2 films
+insert into film_to_cast(Actor_ID,Film_ID) values(1,1);
+insert into film_to_cast(Actor_ID,Film_ID) values(2,1);
+insert into film_to_cast(Actor_ID,Film_ID) values(2,2);
 
 # 3 genre
 INSERT INTO genre(id, genre) VALUES (0, 'FAMILY');
@@ -156,8 +156,8 @@ INSERT INTO genre(id, genre) VALUES (20, 'WAR');
 
 
 # # 2 genre to 2 films
-# insert into genre_to_film(Genre_ID,Film_ID) values(1,1);
-# insert into genre_to_film(Genre_ID,Film_ID) values(1,2);
-# insert into genre_to_film(Genre_ID,Film_ID) values(2,2);
-# insert into genre_to_film(Genre_ID,Film_ID) values(3,2);
+insert into genre_to_film(Genre_ID,Film_ID) values(1,1);
+insert into genre_to_film(Genre_ID,Film_ID) values(1,2);
+insert into genre_to_film(Genre_ID,Film_ID) values(2,2);
+insert into genre_to_film(Genre_ID,Film_ID) values(3,2);
 #

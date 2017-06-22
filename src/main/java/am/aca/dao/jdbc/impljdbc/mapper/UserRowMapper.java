@@ -1,4 +1,4 @@
-package am.aca.dao.springjdbc.implspringjdbc.mapper;
+package am.aca.dao.jdbc.impljdbc.mapper;
 
 
 import am.aca.entity.User;

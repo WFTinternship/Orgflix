@@ -1,11 +1,14 @@
 package am.aca.service.impl;
 
 import am.aca.dao.DaoException;
-import am.aca.dao.jdbc.UserDao;
-import am.aca.dao.jdbc.impljdbc.UserDaoJdbc;
+import am.aca.dao.jdbc.impljdbc.JdbcCastDAO;
+import am.aca.dao.jdbc.impljdbc.JdbcUserDAO;
+import am.aca.dao.jdbc.UserDAO;
+import am.aca.dao.jdbc.impljdbc.JdbcUserDAO;
 import am.aca.entity.User;
 import am.aca.service.UserService;
 import org.apache.log4j.Logger;
+import org.springframework.context.ApplicationContext;
 
 /**
  * Created by David on 6/7/2017
@@ -13,17 +16,20 @@ import org.apache.log4j.Logger;
 public class UserServiceImpl implements UserService {
 
     private static final Logger LOGGER = Logger.getLogger(UserServiceImpl.class.getName());
-    private UserDao userDao;
+    ApplicationContext ctx = null;
 
-    public UserServiceImpl() {
-        userDao = new UserDaoJdbc();
+    private UserDAO userDao;
+
+    public UserServiceImpl(ApplicationContext ctx) {
+        this.ctx = ctx;
+        userDao = ctx.getBean("JdbcUserDAO", JdbcUserDAO.class);
     }
 
     @Override
     public int addUser(User user) {
         int id = -1;
         try {
-            id = userDao.addUser(user);
+            id = userDao.add(user);
         }catch (DaoException e){
             LOGGER.warn(e.getMessage());
         }
@@ -34,7 +40,7 @@ public class UserServiceImpl implements UserService {
     public User getUser(int id) {
         User user = null;
         try {
-            user = userDao.getUser(id);
+            user = userDao.get(id);
         }catch (DaoException e){
             LOGGER.warn(e.getMessage());
         }
@@ -45,7 +51,7 @@ public class UserServiceImpl implements UserService {
     public User getUser(String email) {
         User user = null;
         try {
-            user = userDao.getUser(email);
+            user = userDao.get(email);
             System.out.println(user);
         }catch (DaoException e){
             LOGGER.warn(e.getMessage());
@@ -57,7 +63,7 @@ public class UserServiceImpl implements UserService {
     public boolean editUser(User user) {
         boolean state = false;
         try {
-            state = userDao.editUser(user);
+            state = userDao.edit(user);
         }catch (DaoException e){
             LOGGER.warn(e.getMessage());
         }

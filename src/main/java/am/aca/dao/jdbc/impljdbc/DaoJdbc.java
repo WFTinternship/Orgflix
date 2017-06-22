@@ -1,4 +1,4 @@
-package am.aca.dao.oldjdbc.impljdbc;
+package am.aca.dao.jdbc.impljdbc;
 
 import am.aca.util.ConnType;
 import am.aca.util.DbManager;

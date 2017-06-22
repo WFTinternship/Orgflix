@@ -4,6 +4,8 @@ import am.aca.entity.Film;
 import am.aca.entity.User;
 import am.aca.service.impl.FilmServiceImpl;
 import am.aca.service.impl.UserServiceImpl;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,6 +25,9 @@ public class SignUpServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        ApplicationContext ctx =
+                new ClassPathXmlApplicationContext("applicationContext-persistance.xml");
+
         response.setContentType("text/html");
 
         String nick, userName, email, pass;
@@ -35,9 +40,9 @@ public class SignUpServlet extends HttpServlet {
 
 
         User user = new User(nick, userName, email, pass);
-        int userId = new UserServiceImpl().addUser(user);
+        int userId = new UserServiceImpl(ctx).addUser(user);
         if( userId != -1) {
-            List<Film> films = new FilmServiceImpl().getFilmsList(0);
+            List<Film> films = new FilmServiceImpl(ctx).getFilmsList(0);
             request.setAttribute("films", films);
             request.setAttribute("message", 0);
             request.setAttribute("userId", userId);

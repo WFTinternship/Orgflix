@@ -1,6 +1,5 @@
 package am.aca.util;
 
-import am.aca.dao.oldjdbc.UserDao;
 import org.apache.log4j.Logger;
 
 import java.io.FileNotFoundException;
@@ -12,7 +11,7 @@ import java.util.Properties;
  * Created by David on 6/6/2017
  */
 public class PropertyManager {
-    private static final Logger LOGGER = Logger.getLogger(UserDao.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(PropertyManager.class.getName());
 
     private String fileName;
 

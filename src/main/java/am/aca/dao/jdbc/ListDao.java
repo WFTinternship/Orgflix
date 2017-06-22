@@ -16,7 +16,7 @@ public interface ListDao {
 
     void insertWatched(Film film, int userId, boolean isPublic);
 
-    boolean addToWatched(Film film, boolean isPublic, int User_ID);
+    boolean addToWatched(Film film, boolean isPublic, int userId);
 
     void updatePlanned(Film film, int userId);
 
@@ -30,21 +30,22 @@ public interface ListDao {
 
     void removeFilm(Film film, int userId);
 
-    boolean addToWished(Film film, boolean isPublic, int User_ID);
+    boolean addToWished(Film film, boolean isPublic, int userId);
 
     void resetPlanned(Film film, int userId);
 
-    boolean removeFromWatched(Film film, int User_ID);
+    boolean removeFromWatched(Film film, int userId);
 
-    boolean removeFromWished(Film film, int User_ID);
+    boolean removeFromPlanned(Film film, int userId);
 
-    List showOwnWatched(int User_ID);
+    List showOwnWatched(int userId);
 
-    List showOwnWished(int User_ID);
+    List showOwnPlanned(int userId);
 
-    List showOthersWatched(int User_ID);
+    List showOthersWatched(int userId);
 
-    List showOthersWished(int User_ID);
+    List showOthersPlanned(int userId);
 
-    void setDataSource(DataSource dataSource);
+    void changePrivacy (Film film, int userId, boolean isPublic);
+
 }

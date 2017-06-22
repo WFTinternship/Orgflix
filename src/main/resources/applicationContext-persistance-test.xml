@@ -33,5 +33,7 @@
     <bean id="JdbcCastDAO" class="am.aca.dao.jdbc.impljdbc.JdbcCastDAO" />
     <bean id="JdbcFilmDAO" class="am.aca.dao.jdbc.impljdbc.JdbcFilmDAO" />
     <bean id="TestHelper" class="am.aca.util.TestHelper" />
+    <bean id="ListDaoJdbc" class="am.aca.dao.jdbc.impljdbc.JdbcListDAO" />
+
 
 </beans>

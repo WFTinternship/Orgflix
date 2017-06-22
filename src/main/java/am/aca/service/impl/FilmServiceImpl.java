@@ -1,13 +1,15 @@
 package am.aca.service.impl;
 
 import am.aca.dao.DaoException;
-import am.aca.dao.jdbc.FilmDAO;
-import am.aca.dao.jdbc.impljdbc.JdbcCastDAO;
 import am.aca.dao.jdbc.impljdbc.JdbcFilmDAO;
+import am.aca.dao.jdbc.FilmDAO;
+import am.aca.dao.oldjdbc.FilmDao;
 import am.aca.entity.Cast;
 import am.aca.entity.Film;
 import am.aca.entity.Genre;
 import am.aca.service.FilmService;
+import am.aca.util.ConnType;
+import am.aca.util.DbManager;
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 
@@ -19,21 +21,20 @@ import java.util.List;
 public class FilmServiceImpl implements FilmService {
 
     private static final Logger LOGGER = Logger.getLogger(FilmServiceImpl.class);
-    ApplicationContext ctx = null;
-
-    private FilmDAO filmDAO;
+    private ApplicationContext ctx;
+    private FilmDAO filmDao;
 
     public FilmServiceImpl(ApplicationContext ctx) {
         this.ctx = ctx;
-        filmDAO = ctx.getBean("JdbcFilmDAO", JdbcFilmDAO.class);
+        filmDao = ctx.getBean("JdbcFilmDAO", JdbcFilmDAO.class);
     }
 
     @Override
-    public boolean addFilm(Film film) {
+    public void addFilm(Film film) {
         try {
-            boolean result = filmDAO.addFilm(film);
+            boolean result = filmDao.addFilm(film);
             if (!result)
-                return false;
+                return;
         } catch (DaoException e) {
             LOGGER.warn(e.toString());
         }
@@ -54,25 +55,45 @@ public class FilmServiceImpl implements FilmService {
             LOGGER.warn(e.toString());
         }
 
-        return true;
     }
 
     @Override
-    public boolean editFilm(Film film) {
-        boolean state = false;
+    public void editFilm(Film film) {
         try {
-            state = filmDAO.editFilm(film);
+            if (!filmDao.editFilm(film))
+                return;
         } catch (DaoException e) {
             LOGGER.warn(e.toString());
         }
-        return state;
+//        try {
+//
+//            filmDao.resetRelationGenres(film);
+//            filmDao.resetRelationCasts(film);
+//        } catch (DaoException e) {
+//            LOGGER.warn(e.toString());
+//        }
+        try {
+            for (Genre genre : film.getGenres()) {
+                addGenreToFilm(genre, film);
+            }
+        } catch (DaoException e) {
+            LOGGER.warn(e.toString());
+        }
+
+        try {
+            for (Cast cast : film.getCasts()) {
+                addCastToFilm(cast, film);
+            }
+        } catch (DaoException e) {
+            LOGGER.warn(e.toString());
+        }
     }
 
     @Override
     public Film getFilmById(int id) {
         Film film = null;
         try {
-            film = filmDAO.getFilmById(id);
+            film = filmDao.getFilmById(id);
         } catch (DaoException e) {
             LOGGER.warn(e.toString());
         }
@@ -80,10 +101,10 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    public List<Film> getFilmsByCast(int castId) {
-        List<Film> list = null;
+    public List getFilmsByCast(int castId) {
+        List list = null;
         try {
-            list = filmDAO.getFilmsByCast(castId);
+            list = filmDao.getFilmsByCast(castId);
         } catch (DaoException e) {
             LOGGER.warn(e.toString());
         }
@@ -91,15 +112,15 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    public List<Film> getFilmsByCast(Cast cast) {
-        return filmDAO.getFilmsByCast(cast);
+    public List getFilmsByCast(Cast cast) {
+        return filmDao.getFilmsByCast(cast);
     }
 
     @Override
-    public List<Film> getFilmsList(int startIndex) {
-        List<Film> list = null;
+    public List getFilmsList(int startIndex) {
+        List list = null;
         try {
-            list = filmDAO.getFilmsList(startIndex);
+            list = filmDao.getFilmsList(startIndex);
         } catch (DaoException e) {
             LOGGER.warn(e.toString());
         }
@@ -107,10 +128,10 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    public List<Film> getFilmsByGenre(Genre genre) {
-        List<Film> list = null;
+    public List getFilmsByGenre(Genre genre) {
+        List list = null;
         try {
-            list = filmDAO.getFilmsByGenre(genre);
+            list = filmDao.getFilmsByGenre(genre);
         } catch (DaoException e) {
             LOGGER.warn(e.toString());
         }
@@ -121,7 +142,7 @@ public class FilmServiceImpl implements FilmService {
     public boolean rateFilm(int filmId, int starType) {
         boolean state = false;
         try {
-            state = filmDAO.rateFilm(filmId, starType);
+            state = filmDao.rateFilm(filmId, starType);
         } catch (DaoException e) {
             LOGGER.warn(e.toString());
         }
@@ -132,7 +153,7 @@ public class FilmServiceImpl implements FilmService {
     public boolean addGenreToFilm(Genre genre, int filmId) {
         boolean state = false;
         try {
-            state = filmDAO.addGenreToFilm(genre, filmId);
+            state = filmDao.addGenreToFilm(genre, filmId);
         } catch (DaoException e) {
             LOGGER.warn(e.toString());
         }
@@ -141,15 +162,15 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public boolean addGenreToFilm(Genre genre, Film film) {
-        return filmDAO.addGenreToFilm(genre, film.getId());
+        return filmDao.addGenreToFilm(genre, film.getId());
     }
 
     @Override
     public boolean addCastToFilm(Cast cast, int filmId) {
         boolean state = false;
-        try{
-            state = filmDAO.addCastToFilm(cast,filmId);
-        }catch (DaoException e){
+        try {
+            state = filmDao.addCastToFilm(cast, filmId);
+        } catch (DaoException e) {
             LOGGER.warn(e.toString());
         }
         return state;
@@ -157,15 +178,15 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public boolean addCastToFilm(Cast cast, Film film) {
-        return filmDAO.addCastToFilm(cast,film.getId());
+        return filmDao.addCastToFilm(cast, film.getId());
     }
 
     @Override
     public double getRating(int filmId) {
         double rate = 0.0;
-        try{
-            rate = filmDAO.getRating(filmId);
-        }catch (DaoException e){
+        try {
+            rate = filmDao.getRating(filmId);
+        } catch (DaoException e) {
             LOGGER.warn(e.toString());
         }
         return rate;
@@ -179,9 +200,9 @@ public class FilmServiceImpl implements FilmService {
     @Override
     public int totalNumberOfFilms() {
         int total = 0;
-        try{
-            total = filmDAO.totalNumberOfFilms();
-        }catch (DaoException e){
+        try {
+            total = filmDao.totalNumberOfFilms();
+        } catch (DaoException e) {
             LOGGER.warn(e.toString());
         }
         return total;

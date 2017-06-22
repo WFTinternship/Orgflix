@@ -1,14 +1,10 @@
 package am.aca.dao.jdbc.impljdbc;
 
-<<<<<<< Updated upstream:src/main/java/am/aca/dao/impljdbc/ListDaoJdbc.java
-import am.aca.dao.ListDao;
-=======
-import am.aca.dao.DaoException;
+import am.aca.dao.jdbc.BaseDAO;
+import org.springframework.beans.factory.annotation.Autowired;
 import am.aca.dao.jdbc.ListDao;
->>>>>>> Stashed changes:src/main/java/am/aca/dao/jdbc/impljdbc/ListDaoJdbc.java
 import am.aca.entity.Film;
-import am.aca.util.ConnType;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.List;
@@ -16,24 +12,21 @@ import java.util.List;
 /**
  * Created by karine on 6/3/2017
  */
-public class ListDaoJdbc extends DaoJdbc implements ListDao {
+@Repository
+public class JdbcListDAO extends BaseDAO implements ListDao {
 
-    private JdbcTemplate jdbcTemplate;
-
-    public ListDaoJdbc(){
-        super();
-    }
-
-    public ListDaoJdbc(ConnType connType){
-        super(connType);
+    @Autowired
+    public JdbcListDAO(DataSource dataSource) {
+        super(JdbcUserDAO.class);
+        this.setDataSource(dataSource);
     }
 
     @Override
     public boolean areRelated(Film film, int userId) {
         final String checkQuery = "SELECT COUNT(*) FROM lists WHERE User_ID = ? AND Film_ID = ?";
-        int count = jdbcTemplate.queryForInt(checkQuery, new Object[] {
+        int count = getJdbcTemplate().queryForObject(checkQuery, new Object[] {
                 userId, film.getId()
-        });
+        }, Integer.class);
         return (count == 1);
     }
 
@@ -41,7 +34,7 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
     public void updateWatched(Film film, int userId) {
         final String updateQuery = "UPDATE lists SET Is_watched = TRUE " +
                 "WHERE User_ID = ? AND Film_ID = ?";
-        jdbcTemplate.update(updateQuery, new Object[] {
+        getJdbcTemplate().update(updateQuery, new Object[] {
                 userId, film.getId()
         });
     }
@@ -50,7 +43,7 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
     public void updatePlanned (Film film, int userId) {
         final String updateQuery = "UPDATE lists SET Is_wished = TRUE " +
                 "WHERE User_ID = ? AND Film_ID = ?";
-        jdbcTemplate.update(updateQuery, new Object[] {
+        getJdbcTemplate().update(updateQuery, new Object[] {
                 userId, film.getId()
         });
     }
@@ -58,7 +51,7 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
     @Override
     public void insertPlanned (Film film, int userId, boolean isPublic) {
         final String insertQuery = "INSERT INTO Lists(User_ID, Film_ID, Is_wished, Is_public) VALUES (?, ?, TRUE, ?)";
-        jdbcTemplate.update(insertQuery, new Object[] {
+        getJdbcTemplate().update(insertQuery, new Object[] {
                 userId, film.getId(), isPublic
         });
     }
@@ -66,7 +59,7 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
     @Override
     public void insertWatched(Film film, int userId, boolean isPublic) {
         final String insertQuery = "INSERT INTO Lists(User_ID, Film_ID, Is_watched, Is_public) VALUES (?, ?, TRUE, ?)";
-        jdbcTemplate.update(insertQuery, new Object[] {
+        getJdbcTemplate().update(insertQuery, new Object[] {
                 userId, film.getId(), isPublic
         });
     }
@@ -100,25 +93,25 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
     @Override
     public boolean isWatched (Film film, int userId) {
         final String watchedCheckQuery = "SELECT COUNT(*) FROM lists WHERE User_ID = ? AND Film_ID = ? AND Is_watched = TRUE";
-        int watchedCount = jdbcTemplate.queryForInt(watchedCheckQuery, new Object[] {
+        int watchedCount = getJdbcTemplate().queryForObject(watchedCheckQuery, new Object[] {
                 userId, film.getId()
-        });
+        }, Integer.class);
         return (watchedCount == 1);
     }
 
     @Override
     public boolean isPlanned (Film film, int userId) {
         final String plannedCheckQuery = "SELECT COUNT(*) FROM Lists WHERE User_ID = ? AND Film_ID = ? AND Is_wished = TRUE ";
-        int plannedCount = jdbcTemplate.queryForInt(plannedCheckQuery, new Object[] {
+        int plannedCount = getJdbcTemplate().queryForObject(plannedCheckQuery, new Object[] {
                 userId, film.getId()
-        });
+        }, Integer.class);
         return (plannedCount == 1);
     }
 
     @Override
     public void resetWatched (Film film, int userId) {
         final String updateQuery = "UPDATE lists SET Is_watched = FALSE WHERE User_ID = ? AND Film_ID = ?";
-        jdbcTemplate.update(updateQuery, new Object[] {
+        getJdbcTemplate().update(updateQuery, new Object[] {
                 userId, film.getId()
         });
     }
@@ -126,7 +119,7 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
     @Override
     public void resetPlanned (Film film, int userId) {
         final String updateQuery = "UPDATE lists SET Is_wished = FALSE WHERE User_ID = ? AND Film_ID = ?";
-        jdbcTemplate.update(updateQuery, new Object[] {
+        getJdbcTemplate().update(updateQuery, new Object[] {
                 userId, film.getId()
         });
     }
@@ -134,7 +127,7 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
     @Override
     public void removeFilm (Film film, int userId) {
         final String deleteQuery = "DELETE FROM lists WHERE User_ID = ? AND Film_ID = ?";
-        jdbcTemplate.update(deleteQuery, new Object[] {
+        getJdbcTemplate().update(deleteQuery, new Object[] {
                 userId, film.getId()
         });
     }
@@ -151,7 +144,7 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
 
 
     @Override
-    public boolean removeFromWished(Film film, int userId) {
+    public boolean removeFromPlanned(Film film, int userId) {
         if (!isPlanned(film, userId))
             return false;
         if (isWatched(film, userId))
@@ -164,17 +157,17 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
     public List showOwnWatched(int userId) {
         final String query = "SELECT lists.Film_ID FROM lists INNER JOIN films " +
                 "ON lists.Film_ID = films.ID WHERE lists.User_ID = ? AND Is_watched = TRUE ";
-        return jdbcTemplate.queryForList(query, new Object[] {
+        return getJdbcTemplate().queryForList(query, new Object[] {
                 userId
         });
     }
 
 
     @Override
-    public List showOwnWished(int userId) {
+    public List showOwnPlanned(int userId) {
         final String query = "SELECT lists.Film_ID FROM lists INNER JOIN films " +
                 "ON lists.Film_ID = films.ID WHERE lists.User_ID = ? AND Is_wished = TRUE ";
-        return jdbcTemplate.queryForList(query, new Object[] {
+        return getJdbcTemplate().queryForList(query, new Object[] {
                 userId
         });
     }
@@ -183,23 +176,27 @@ public class ListDaoJdbc extends DaoJdbc implements ListDao {
     public List showOthersWatched(int userId) {
         final String query = "SELECT lists.Film_ID FROM lists INNER JOIN films " +
                 "ON lists.Film_ID = films.ID WHERE lists.User_ID = ? AND Is_watched = TRUE AND Is_public = TRUE ";
-        return jdbcTemplate.queryForList(query, new Object[] {
+        return getJdbcTemplate().queryForList(query, new Object[] {
                 userId
         });
     }
 
     @Override
-    public List showOthersWished(int userId) {
+    public List showOthersPlanned(int userId) {
         final String query = "SELECT lists.Film_ID FROM lists INNER JOIN films " +
                 "ON lists.Film_ID = films.ID WHERE lists.User_ID = ? AND Is_wished = TRUE AND Is_public = TRUE ";
-        return jdbcTemplate.queryForList(query, new Object[] {
+        return getJdbcTemplate().queryForList(query, new Object[] {
                 userId
         });
     }
 
     @Override
-    public void setDataSource(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    public void changePrivacy(Film film, int userId, boolean isPublic) {
+        final String query = "UPDATE lists SET Is_public = ? WHERE User_ID = ? AND Film_ID = ?;";
+        getJdbcTemplate().update(query, new Object[] {
+                isPublic, userId, film.getId()
+        });
     }
+
 
 }

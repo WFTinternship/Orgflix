@@ -40,4 +40,8 @@ public interface FilmDAO {
     double getRating(Film film);
 
     int totalNumberOfFilms();
+
+    void resetRelationCasts(Film film);
+
+    void resetRelationGenres(Film film);
 }

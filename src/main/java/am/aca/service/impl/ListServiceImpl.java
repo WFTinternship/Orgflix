@@ -1,11 +1,9 @@
 package am.aca.service.impl;
 
-import am.aca.dao.*;
+import am.aca.dao.DaoException;
 import am.aca.dao.jdbc.FilmDAO;
 import am.aca.dao.jdbc.ListDao;
-import am.aca.dao.jdbc.impljdbc.JdbcCastDAO;
 import am.aca.dao.jdbc.impljdbc.JdbcFilmDAO;
-import am.aca.dao.jdbc.impljdbc.ListDaoJdbc;
 import am.aca.entity.Film;
 import am.aca.service.ListService;
 import org.apache.log4j.Logger;
@@ -19,79 +17,87 @@ import java.util.List;
 public class ListServiceImpl implements ListService {
 
     private static final Logger LOGGER = Logger.getLogger(ListServiceImpl.class);
-    ApplicationContext ctx = null;
     private ListDao listDao;
+    private ApplicationContext ctx;
 
     public ListServiceImpl(ApplicationContext ctx) {
         this.ctx = ctx;
-        listDao = new ListDaoJdbc();
     }
 
     @Override
-    public boolean addToWatched(Film film, boolean isPublic, int user_ID) {
-        boolean state = false;
+    public void addToWatched(Film film, boolean isPublic, int userId) {
         try {
-            FilmDAO filmDAO = ctx.getBean("JdbcFilmtDAO", JdbcFilmDAO.class);
+            FilmDAO filmDao = ctx.getBean("JdbcFilmDAO", JdbcFilmDAO.class);
 
             //case: the film does not exist
-            if (filmDAO.getFilmById(film.getId()) == null) {
-                filmDAO.addFilm(film);
+            if (filmDao.getFilmById(film.getId()) == null) {
+                filmDao.addFilm(film);
             }
 
             //case: any
-            state = listDao.addToWatched(film, isPublic, user_ID);
+            if (listDao.areRelated(film, userId)){
+                listDao.updateWatched(film, userId);
+            }
+            else listDao.insertWatched(film, userId, isPublic);
+//            state = listDao.addToWatched(film, isPublic, userId);
         } catch (DaoException e) {
             LOGGER.warn(e.getMessage());
         }
-        return state;
     }
 
     @Override
-    public boolean addToWished(Film film, boolean isPublic, int user_ID) {
-        boolean state = false;
+    public void addToPlanned(Film film, boolean isPublic, int userId) {
         try {
-            FilmDAO filmDAO = ctx.getBean("JdbcFilmtDAO", JdbcFilmDAO.class);
-
+            FilmDAO filmDao = ctx.getBean("JdbcFilmDAO", JdbcFilmDAO.class);
             //case: the film does not exist
-            if (filmDAO.getFilmById(film.getId()) == null) {
-                filmDAO.addFilm(film);
+            if (filmDao.getFilmById(film.getId()) == null) {
+                filmDao.addFilm(film);
             }
 
             //case: any
-            state = listDao.addToWished(film, isPublic, user_ID);
+//            state = listDao.addToPlanned(film, isPublic, userId);
+            if (listDao.areRelated(film, userId))
+                listDao.updatePlanned(film, userId);
+            else listDao.insertPlanned(film, userId, isPublic);
         } catch (DaoException e) {
             LOGGER.warn(e.getMessage());
         }
-        return state;
     }
 
     @Override
-    public boolean removeFromWatched(Film film, int user_ID) {
-        boolean state = false;
+    public void removeFromWatched(Film film, int userId) {
         try {
-            state = listDao.removeFromWatched(film, user_ID);
+            if (!listDao.isWatched(film, userId))
+                return;
+            if (listDao.isPlanned(film, userId)) {
+                listDao.resetWatched(film, userId);
+            }
+            else listDao.removeFilm(film, userId);
+//            state = listDao.removeFromWatched(film, userId);
         } catch (DaoException e) {
             LOGGER.warn(e.getMessage());
         }
-        return state;
     }
 
     @Override
-    public boolean removeFromWished(Film film, int user_ID) {
-        boolean state = false;
+    public void removeFromPlanned(Film film, int userId) {
         try {
-            state = listDao.removeFromWished(film, user_ID);
+            if (!listDao.isPlanned(film, userId))
+                return;
+            if (listDao.isWatched(film, userId))
+                listDao.resetPlanned(film, userId);
+            else listDao.removeFilm(film, userId);
+//            state = listDao.removeFromPlanned(film, userId);
         } catch (DaoException e) {
             LOGGER.warn(e.getMessage());
         }
-        return state;
     }
 
     @Override
-    public List<Film> showOwnWatched(int user_ID) {
-        List<Film> list = null;
+    public List showOwnWatched(int userId) {
+        List list = null;
         try {
-            list = listDao.showOwnWatched(user_ID);
+            list = listDao.showOwnWatched(userId);
         }catch (DaoException e){
             LOGGER.warn(e.getMessage());
         }
@@ -99,10 +105,10 @@ public class ListServiceImpl implements ListService {
     }
 
     @Override
-    public List<Film> showOwnWished(int user_ID) {
-        List<Film> list = null;
+    public List showOwnPlanned(int userId) {
+        List list = null;
         try {
-            list = listDao.showOwnWished(user_ID);
+            list = listDao.showOwnPlanned(userId);
         }catch (DaoException e){
             LOGGER.warn(e.getMessage());
         }
@@ -110,10 +116,10 @@ public class ListServiceImpl implements ListService {
     }
 
     @Override
-    public List<Film> showOthersWatched(int user_ID) {
-        List<Film> list = null;
+    public List showOthersWatched(int userId) {
+        List list = null;
         try {
-            list = listDao.showOthersWatched(user_ID);
+            list = listDao.showOthersWatched(userId);
         }catch (DaoException e){
             LOGGER.warn(e.getMessage());
         }
@@ -121,13 +127,27 @@ public class ListServiceImpl implements ListService {
     }
 
     @Override
-    public List<Film> showOthersWished(int user_ID) {
-        List<Film> list = null;
+    public List showOthersPlanned(int userId) {
+        List list = null;
         try {
-            list = listDao.showOthersWished(user_ID);
+            list = listDao.showOthersPlanned(userId);
         }catch (DaoException e){
             LOGGER.warn(e.getMessage());
         }
         return list;
+    }
+
+    @Override
+    public void makePrivate(int userId, Film film) {
+        if (!listDao.areRelated(film, userId))
+            return;
+        listDao.changePrivacy(film, userId, false);
+    }
+
+    @Override
+    public void makePublic(int userId, Film film) {
+        if (!listDao.areRelated(film, userId))
+            return;
+        listDao.changePrivacy(film, userId, true);
     }
 }

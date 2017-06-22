@@ -32,5 +32,6 @@
     <bean id="JdbcUserDAO" class="am.aca.dao.jdbc.impljdbc.JdbcUserDAO" />
     <bean id="JdbcCastDAO" class="am.aca.dao.jdbc.impljdbc.JdbcCastDAO" />
     <bean id="JdbcFilmDAO" class="am.aca.dao.jdbc.impljdbc.JdbcFilmDAO" />
+    <bean id="ListDaoJdbc" class="am.aca.dao.jdbc.impljdbc.JdbcListDAO" />
 
 </beans>

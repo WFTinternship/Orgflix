@@ -19,7 +19,7 @@ public interface CastService {
 
     boolean editCast(Cast cast);
 
-    List<Cast> listCasts();
+    List listCasts();
 
-    List<Integer> listFilmsIdByCast(int castId);
+    List listFilmsIdByCast(int castId);
 }

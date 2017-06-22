@@ -132,6 +132,8 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
 
     @Override
     public boolean rateFilm(int filmId, int starType) {
+        if (starType > 5 || starType < 1)
+            return false;
         final String query = "UPDATE films set Rate_" + starType + "star = Rate_" + starType +
                 "star + 1 WHERE ID = ? ";
         getJdbcTemplate().update(query, new Object[] {filmId});
@@ -196,5 +198,17 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
     public int totalNumberOfFilms() {
         final String query = "SELECT count(ID) AS total FROM films ";
         return getJdbcTemplate().queryForObject(query,Integer.class);
+    }
+
+    @Override
+    public void resetRelationCasts(Film film) {
+        final String query = "DELETE FROM film_to_cast WHERE Film_ID = ?";
+        getJdbcTemplate().update(query, new Object[] { film.getId() });
+    }
+
+    @Override
+    public void resetRelationGenres(Film film) {
+        final String query = "DELETE FROM genre_to_film WHERE Film_ID = ?";
+        getJdbcTemplate().update(query, new Object[] { film.getId() });
     }
 }

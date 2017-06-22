@@ -10,19 +10,19 @@ import java.util.List;
  * Created by David on 5/28/2017
  */
 public interface FilmService {
-    boolean addFilm(Film film);
+    void addFilm(Film film);
 
-    boolean editFilm(Film film);
+    void editFilm(Film film);
 
     Film getFilmById(int id);
 
-    List<Film> getFilmsByCast(Cast cast);
+    List getFilmsByCast(Cast cast);
 
-    List<Film> getFilmsByCast(int castId);
+    List getFilmsByCast(int castId);
 
-    List<Film> getFilmsByGenre(Genre genre);
+    List getFilmsByGenre(Genre genre);
 
-    List<Film> getFilmsList(int startIndex);
+    List getFilmsList(int startIndex);
 
     boolean rateFilm(int filmId, int starType);
 

@@ -16,7 +16,7 @@ import org.springframework.context.ApplicationContext;
 public class UserServiceImpl implements UserService {
 
     private static final Logger LOGGER = Logger.getLogger(UserServiceImpl.class.getName());
-    ApplicationContext ctx = null;
+    private ApplicationContext ctx = null;
 
     private UserDAO userDao;
 

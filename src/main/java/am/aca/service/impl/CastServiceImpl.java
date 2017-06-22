@@ -70,8 +70,8 @@ public class CastServiceImpl implements CastService {
     }
 
     @Override
-    public List<Cast> listCasts() {
-        List<Cast> list = null;
+    public List listCasts() {
+        List list = null;
         try {
             list = CastDAO.listCast();
         }catch (DaoException e){
@@ -81,8 +81,8 @@ public class CastServiceImpl implements CastService {
     }
 
     @Override
-    public List<Integer> listFilmsIdByCast(int castId) {
-        List<Integer> list = null;
+    public List listFilmsIdByCast(int castId) {
+        List list = null;
         try {
             list = CastDAO.listFilmsByCast(castId);
         }catch (DaoException e){

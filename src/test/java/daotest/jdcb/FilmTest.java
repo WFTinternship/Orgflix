@@ -174,7 +174,7 @@ public class FilmTest {
     }
 
     @Test
-    public void getFilmsList_Failed() {
+    public void getFilmsList_EmptyList() {
         Assert.assertEquals(0, filmDAO.getFilmsList(0).size());
     }
 

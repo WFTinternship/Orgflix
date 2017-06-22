@@ -3,7 +3,6 @@ package am.aca.service.impl;
 import am.aca.dao.DaoException;
 import am.aca.dao.jdbc.impljdbc.JdbcFilmDAO;
 import am.aca.dao.jdbc.FilmDAO;
-import am.aca.dao.oldjdbc.FilmDao;
 import am.aca.entity.Cast;
 import am.aca.entity.Film;
 import am.aca.entity.Genre;
@@ -117,8 +116,8 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    public List getFilmsList(int startIndex) {
-        List list = null;
+    public List<Film> getFilmsList(int startIndex) {
+        List<Film> list = null;
         try {
             list = filmDao.getFilmsList(startIndex);
         } catch (DaoException e) {

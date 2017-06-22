@@ -1,4 +1,4 @@
-package daotest.jdcb;
+package daotest.jdbc;
 
 import am.aca.dao.jdbc.CastDAO;
 import am.aca.dao.jdbc.FilmDAO;
@@ -29,25 +29,29 @@ import java.util.ArrayList;
  */
 public class ListTest {
 
-    ApplicationContext ctx =
+    private ApplicationContext ctx =
             new ClassPathXmlApplicationContext("applicationContext-persistance-test.xml");
 
-    private UserDAO userDao = ctx.getBean("JdbcUserDAO",JdbcUserDAO.class);
-    private CastDAO castDAO = ctx.getBean("JdbcCastDAO",JdbcCastDAO.class);
-    private FilmDAO filmDAO = ctx.getBean("JdbcFilmDAO", JdbcFilmDAO.class);
+    private UserDAO userDao = ctx.getBean("jdbcUserDAO",JdbcUserDAO.class);
+    private CastDAO castDAO = ctx.getBean("jdbcCastDAO",JdbcCastDAO.class);
+    private FilmDAO filmDAO = ctx.getBean("jdbcFilmDAO", JdbcFilmDAO.class);
 
-    private ListDao listDao = ctx.getBean("ListDaoJdbc", JdbcListDAO.class);
+    private ListDao listDao = ctx.getBean("jdbcListDAO", JdbcListDAO.class);
 
     private Film film;
+    private Cast cast;
     private int userId;
     private ArrayList<Cast> actors = new ArrayList<>();
 
-    private TestHelper testHelper = ctx.getBean("TestHelper", TestHelper.class);
+    private TestHelper testHelper = ctx.getBean("testHelper", TestHelper.class);
     @Before
     public void setUp() {
 
         //setup Cast
-        actors.add(castDAO.addCast("Brian De Palma", false));
+
+        cast = new Cast("Brian De Palma");
+        castDAO.addCast(cast);
+        actors.add(cast);
 
         //setup Film and Film DAO
         film = new Film();

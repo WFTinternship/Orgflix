@@ -8,30 +8,34 @@ import am.aca.entity.Film;
 import am.aca.entity.Genre;
 import am.aca.service.FilmService;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
  * Created by David on 6/7/2017
  */
+@Service
 public class FilmServiceImpl implements FilmService {
 
     private static final Logger LOGGER = Logger.getLogger(FilmServiceImpl.class);
     private ApplicationContext ctx;
     private FilmDAO filmDao;
 
+    @Autowired
     public FilmServiceImpl(ApplicationContext ctx) {
         this.ctx = ctx;
-        filmDao = ctx.getBean("JdbcFilmDAO", JdbcFilmDAO.class);
+        filmDao = ctx.getBean("jdbcFilmDAO", JdbcFilmDAO.class);
     }
 
     @Override
-    public void addFilm(Film film) {
+    public boolean addFilm(Film film) {
         try {
             boolean result = filmDao.addFilm(film);
             if (!result)
-                return;
+                return false;
         } catch (DaoException e) {
             LOGGER.warn(e.toString());
         }
@@ -51,6 +55,7 @@ public class FilmServiceImpl implements FilmService {
         } catch (DaoException e) {
             LOGGER.warn(e.toString());
         }
+        return true;
 
     }
 
@@ -98,7 +103,7 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    public List getFilmsByCast(int castId) {
+    public List<Film> getFilmsByCast(int castId) {
         List list = null;
         try {
             list = filmDao.getFilmsByCast(castId);
@@ -109,12 +114,12 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    public List getFilmsByCast(Cast cast) {
+    public List<Film> getFilmsByCast(Cast cast) {
         return filmDao.getFilmsByCast(cast);
     }
 
     @Override
-    public List getFilmsList(int startIndex) {
+    public List<Film> getFilmsList(int startIndex) {
         List list = null;
         try {
             list = filmDao.getFilmsList(startIndex);
@@ -125,7 +130,7 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    public List getFilmsByGenre(Genre genre) {
+    public List<Film> getFilmsByGenre(Genre genre) {
         List list = null;
         try {
             list = filmDao.getFilmsByGenre(genre);

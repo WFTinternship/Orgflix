@@ -4,30 +4,36 @@ import am.aca.dao.DaoException;
 import am.aca.dao.jdbc.FilmDAO;
 import am.aca.dao.jdbc.ListDao;
 import am.aca.dao.jdbc.impljdbc.JdbcFilmDAO;
+import am.aca.dao.jdbc.impljdbc.JdbcListDAO;
 import am.aca.entity.Film;
 import am.aca.service.ListService;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
  * Created by David on 6/7/2017
  */
+@Service
 public class ListServiceImpl implements ListService {
 
     private static final Logger LOGGER = Logger.getLogger(ListServiceImpl.class);
     private ListDao listDao;
     private ApplicationContext ctx;
 
+    @Autowired
     public ListServiceImpl(ApplicationContext ctx) {
         this.ctx = ctx;
+        listDao = ctx.getBean("jdbcListDAO", JdbcListDAO.class);
     }
 
     @Override
     public void addToWatched(Film film, boolean isPublic, int userId) {
         try {
-            FilmDAO filmDao = ctx.getBean("JdbcFilmDAO", JdbcFilmDAO.class);
+            FilmDAO filmDao = ctx.getBean("jdbcFilmDAO", JdbcFilmDAO.class);
 
             //case: the film does not exist
             if (filmDao.getFilmById(film.getId()) == null) {
@@ -48,7 +54,7 @@ public class ListServiceImpl implements ListService {
     @Override
     public void addToPlanned(Film film, boolean isPublic, int userId) {
         try {
-            FilmDAO filmDao = ctx.getBean("JdbcFilmDAO", JdbcFilmDAO.class);
+            FilmDAO filmDao = ctx.getBean("jdbcFilmDAO", JdbcFilmDAO.class);
             //case: the film does not exist
             if (filmDao.getFilmById(film.getId()) == null) {
                 filmDao.addFilm(film);
@@ -73,7 +79,6 @@ public class ListServiceImpl implements ListService {
                 listDao.resetWatched(film, userId);
             }
             else listDao.removeFilm(film, userId);
-//            state = listDao.removeFromWatched(film, userId);
         } catch (DaoException e) {
             LOGGER.warn(e.getMessage());
         }
@@ -87,7 +92,6 @@ public class ListServiceImpl implements ListService {
             if (listDao.isWatched(film, userId))
                 listDao.resetPlanned(film, userId);
             else listDao.removeFilm(film, userId);
-//            state = listDao.removeFromPlanned(film, userId);
         } catch (DaoException e) {
             LOGGER.warn(e.getMessage());
         }

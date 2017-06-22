@@ -18,6 +18,11 @@ public class Cast {
         this.hasOscar = hasOscar;
     }
 
+    public Cast(String name) {
+        this.name = name;
+        this.hasOscar = false;
+    }
+
     public int getId() {
         return id;
     }

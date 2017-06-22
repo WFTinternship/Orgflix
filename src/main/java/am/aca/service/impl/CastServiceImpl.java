@@ -1,57 +1,79 @@
 package am.aca.service.impl;
 
-import am.aca.dao.jdbc.CastDAO;
 import am.aca.dao.DaoException;
+import am.aca.dao.jdbc.CastDAO;
 import am.aca.dao.jdbc.impljdbc.JdbcCastDAO;
-import am.aca.dao.jdbc.impljdbc.JdbcUserDAO;
 import am.aca.entity.Cast;
 import am.aca.entity.Film;
 import am.aca.service.CastService;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
  * Created by David on 6/7/2017
  */
+@Service
 public class CastServiceImpl implements CastService {
 
     private static final Logger LOGGER = Logger.getLogger(CastServiceImpl.class);
-    ApplicationContext ctx = null;
-    private CastDAO CastDAO;
+    private ApplicationContext ctx = null;
+    private CastDAO castDAO;
 
+    @Autowired
     public CastServiceImpl(ApplicationContext ctx) {
         this.ctx = ctx;
-        CastDAO = ctx.getBean("JdbcCastDAO", JdbcCastDAO.class);
+        castDAO = ctx.getBean("jdbcCastDAO", JdbcCastDAO.class);
     }
 
+//    @Override
+//    public Cast addCast(String cast, boolean hasOscar) {
+//        Cast castObj = null;
+//        try {
+//            castObj = castDAO.addCast(cast, hasOscar);
+//        } catch (DaoException e) {
+//            LOGGER.warn(e.toString());
+//        }
+//        return castObj;
+//    }
+
+//    @Override
+//    public Cast addCast(String cast) {
+//        return castDAO.addCast(cast);
+//    }
+
     @Override
-    public Cast addCast(String cast, boolean hasOscar) {
-        Cast castObj = null;
+    public boolean addCast(Cast cast) {
+        boolean result = false;
         try {
-            castObj = CastDAO.addCast(cast, hasOscar);
-        } catch (DaoException e) {
+            result = castDAO.addCast(cast);
+        }
+        catch (RuntimeException e){
             LOGGER.warn(e.toString());
         }
-        return castObj;
-    }
-
-    @Override
-    public Cast addCast(String cast) {
-        return CastDAO.addCast(cast);
+        return result;
     }
 
     @Override
     public boolean addCastToFilm(Cast cast, Film film) {
-        return CastDAO.addCastToFilm(cast, film);
+        return castDAO.addCastToFilm(cast, film);
     }
 
     @Override
     public boolean addCastToFilm(int castId, int filmId) {
         boolean state = false;
+            try {
+                if (castDAO.isStarringIn(castId, filmId))
+                    return false;
+            }
+            catch (RuntimeException e){
+                LOGGER.warn(e.getMessage());
+            }
         try {
-            state = CastDAO.addCastToFilm(castId, filmId);
+                state = castDAO.addCastToFilm(castId, filmId);
         }catch(DaoException e){
             LOGGER.warn(e.getMessage());
         }
@@ -61,30 +83,34 @@ public class CastServiceImpl implements CastService {
     @Override
     public boolean editCast(Cast cast) {
         boolean state = false;
+        if (!castDAO.exists(cast))
+            return false;
         try {
-            state = CastDAO.editCast(cast);
+            state = castDAO.editCast(cast);
         }catch (DaoException e){
             LOGGER.warn(e.toString());
         }
         return state;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public List listCasts() {
-        List list = null;
+    public List<Cast> listCasts() {
+        List<Cast> list = null;
         try {
-            list = CastDAO.listCast();
+            list = castDAO.listCast();
         }catch (DaoException e){
             LOGGER.warn(e.getMessage());
         }
         return list;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public List listFilmsIdByCast(int castId) {
+    public List<Film> listFilmsByCast(int castId) {
         List list = null;
         try {
-            list = CastDAO.listFilmsByCast(castId);
+            list = castDAO.listFilmsByCast(castId);
         }catch (DaoException e){
             LOGGER.warn(e.toString());
         }

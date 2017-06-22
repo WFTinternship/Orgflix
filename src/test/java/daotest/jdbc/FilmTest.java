@@ -119,8 +119,8 @@ public class FilmTest {
         castList.add(cast);
         film.setCasts(castList);
         filmDAO.addFilm(film);
-        filmDAO.addCastToFilm(cast, film);
-        Assert.assertEquals(film.getId(), filmDAO.getFilmsByCast(cast).get(0));
+        castDAO.addCastToFilm(cast, film);
+        Assert.assertEquals(film.getId(), filmDAO.getFilmsByCast(cast.getId()).get(0));
     }
 
     @Test

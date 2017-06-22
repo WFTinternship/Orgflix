@@ -137,7 +137,8 @@ public class JdbcUserDAO extends BaseDAO implements UserDAO {
     @Override
     public boolean edit(int id, String nick, String name, String pass, String email) {
         // ensure that no null record will be passed for NOT NULL fields
-        if (!checkRequiredFields(nick, pass, email)) return false;
+        if (!checkRequiredFields(nick, pass, email))
+            throw new DaoException("Illegal argument");
 
         final String query = "UPDATE users SET Nick = ?,User_Name = ?,Email = ?, User_Pass = ? " +
                 " WHERE ID = ? ";

@@ -97,7 +97,7 @@ public class CastTest {
         castService.addCast(cast);
         film = new Film("Fight Club", 1997);
         filmService.addFilm(film);
-        castService.addCastToFilm(cast.getId(), film.getId());
+        castService.addCastToFilm(cast, film.getId());
         Assert.assertEquals(film.getId(), castService.listFilmsByCast(cast.getId()).get(0).getId());
     }
 
@@ -107,8 +107,8 @@ public class CastTest {
         castService.addCast(cast);
         film = new Film("Fight Club", 1997);
         filmService.addFilm(film);
-        castService.addCastToFilm(cast.getId(), film.getId());
-        castService.addCastToFilm(cast.getId(), film.getId());
+        castService.addCastToFilm(cast, film.getId());
+        castService.addCastToFilm(cast, film.getId());
         Assert.assertEquals(film.getId(), castService.listFilmsByCast(cast.getId()).get(0).getId());
     }
 

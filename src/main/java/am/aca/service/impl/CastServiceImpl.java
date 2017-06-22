@@ -2,7 +2,9 @@ package am.aca.service.impl;
 
 import am.aca.dao.DaoException;
 import am.aca.dao.jdbc.CastDAO;
+import am.aca.dao.jdbc.FilmDAO;
 import am.aca.dao.jdbc.impljdbc.JdbcCastDAO;
+import am.aca.dao.jdbc.impljdbc.JdbcFilmDAO;
 import am.aca.entity.Cast;
 import am.aca.entity.Film;
 import am.aca.service.CastService;
@@ -22,11 +24,13 @@ public class CastServiceImpl implements CastService {
     private static final Logger LOGGER = Logger.getLogger(CastServiceImpl.class);
     private ApplicationContext ctx = null;
     private CastDAO castDAO;
+    private FilmDAO filmDAO;
 
     @Autowired
     public CastServiceImpl(ApplicationContext ctx) {
         this.ctx = ctx;
         castDAO = ctx.getBean("jdbcCastDAO", JdbcCastDAO.class);
+        filmDAO = ctx.getBean("jdbcFilmDAO", JdbcFilmDAO.class);
     }
 
 //    @Override
@@ -63,17 +67,17 @@ public class CastServiceImpl implements CastService {
     }
 
     @Override
-    public boolean addCastToFilm(int castId, int filmId) {
+    public boolean addCastToFilm(Cast cast, int filmId) {
         boolean state = false;
             try {
-                if (castDAO.isStarringIn(castId, filmId))
+                if (castDAO.isStarringIn(cast.getId(), filmId))
                     return false;
             }
             catch (RuntimeException e){
                 LOGGER.warn(e.getMessage());
             }
         try {
-                state = castDAO.addCastToFilm(castId, filmId);
+                state = castDAO.addCastToFilm(cast, filmId);
         }catch(DaoException e){
             LOGGER.warn(e.getMessage());
         }
@@ -110,7 +114,7 @@ public class CastServiceImpl implements CastService {
     public List<Film> listFilmsByCast(int castId) {
         List list = null;
         try {
-            list = castDAO.listFilmsByCast(castId);
+            list = filmDAO.getFilmsByCast(castId);
         }catch (DaoException e){
             LOGGER.warn(e.toString());
         }

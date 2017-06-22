@@ -162,7 +162,7 @@ public class UserTest {
         Assert.assertFalse(userDao.edit(otherUser));
     }
 
-    @Test
+    @Test(expected = DaoException.class)
     public void editUser_Fail_EmailNULL() {
         user = new User("davit", "Davit Abvoyan", "davit.abovyan@gmail.com", "pass");
         userDao.add(user);
@@ -170,7 +170,7 @@ public class UserTest {
         Assert.assertFalse(userDao.edit(user));
     }
 
-    @Test
+    @Test(expected = DaoException.class)
     public void editUser_Fail_NickNULL() {
         user = new User("davit", "Davit Abvoyan", "davit.abovyan@gmail.com", "pass");
         userDao.add(user);
@@ -178,7 +178,7 @@ public class UserTest {
         Assert.assertFalse(userDao.edit(user));
     }
 
-    @Test
+    @Test(expected = DaoException.class)
     public void editUser_Fail_PassNULL() {
         user = new User("davit", "Davit Abvoyan", "davit.abovyan@gmail.com", "pass");
         userDao.add(user);
@@ -186,7 +186,7 @@ public class UserTest {
         Assert.assertFalse(userDao.edit(user));
     }
 
-    @Test
+    @Test(expected = DaoException.class)
     public void editUser_Fail_EmailEmpty() {
         user = new User("davit", "Davit Abvoyan", "davit.abovyan@gmail.com", "pass");
         userDao.add(user);
@@ -194,7 +194,7 @@ public class UserTest {
         Assert.assertFalse(userDao.edit(user));
     }
 
-    @Test
+    @Test(expected = DaoException.class)
     public void editUser_Fail_NickEmpty() {
         user = new User("davit", "Davit Abvoyan", "davit.abovyan@gmail.com", "pass");
         userDao.add(user);
@@ -202,7 +202,7 @@ public class UserTest {
         Assert.assertFalse(userDao.edit(user));
     }
 
-    @Test
+    @Test(expected = DaoException.class)
     public void editUser_Fail_PassEmpty() {
         user = new User("davit", "Davit Abvoyan", "davit.abovyan@gmail.com", "pass");
         userDao.add(user);

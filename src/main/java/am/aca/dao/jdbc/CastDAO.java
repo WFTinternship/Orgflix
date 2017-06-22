@@ -9,27 +9,21 @@ import java.util.List;
  * Created by David on 5/27/2017
  */
 public interface CastDAO {
-    // Create
-//    Cast addCast(String name, boolean hasOscar);
-//
-//    Cast addCast(String name);
-
+    // CREATE
     boolean addCast(Cast cast);
-
     boolean addCastToFilm(Cast cast, Film film);
+    boolean addCastToFilm(Cast cast, int filmId);
 
-    boolean addCastToFilm(int actorId, int filmId);
-
-    // Read
+    // READ
     List<Cast> listCast();
 
-    List<Film> listFilmsByCast(int actorId);
-
-    // Update
+    // UPDATE
     boolean editCast(Cast cast);
+
+    // DELETE
+    boolean remove(Cast cast);
 
     // Support methods
     boolean isStarringIn (int actorId, int filmId);
-
     boolean exists(Cast cast);
 }

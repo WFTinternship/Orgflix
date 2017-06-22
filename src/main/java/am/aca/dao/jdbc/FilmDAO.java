@@ -12,39 +12,24 @@ import java.util.List;
 public interface FilmDAO {
     // Create
     boolean addFilm(Film film);
-
-    //Retrieve
-
-    Film getFilmById(int id);
-
-    List<Film> getFilmsList(int startIndex);
-
-    List getFilmsByCast(Cast cast);
-
-    List getFilmsByCast(int actorId);
-
-    List getFilmsByGenre(Genre genre);
-
-    double getRating(int filmId);
-
-    double getRating(Film film);
-
-    int totalNumberOfFilms();
-
-    // Update
-    boolean editFilm(Film film);
-
+    boolean addGenreToFilm(Genre genre, Film film);
+    boolean addGenreToFilm(Genre genre, int filmId);
     boolean rateFilm(int filmId, int starType);
 
-    boolean addGenreToFilm(Genre genre, Film film);
+    //READ
+    Film getFilmById(int id);
+    List<Film> getFilmsList(int startIndex);
+    List getFilmsByGenre(Genre genre);
+    List<Film> getFilmsByCast(int actorId);
+    double getRating(int filmId);
+    double getRating(Film film);
+    int totalNumberOfFilms();
 
-    boolean addGenreToFilm(Genre genre, int filmId);
+    // UPDATE
+    boolean editFilm(Film film);
 
-    boolean addCastToFilm(Cast cast, Film film);
-
-    boolean addCastToFilm(Cast cast, int filmId);
-
-    void resetRelationCasts(Film film);
-
-    void resetRelationGenres(Film film);
+    // DELETE
+    boolean resetRelationCasts(Film film);
+    boolean resetRelationGenres(Film film);
+    boolean remove(Film film);
 }

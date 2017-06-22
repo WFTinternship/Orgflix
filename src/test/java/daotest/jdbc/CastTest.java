@@ -69,7 +69,7 @@ public class CastTest {
         Film film = new Film("Fight Club", 1997);
         filmDAO.addFilm(film);
         castDAO.addCastToFilm(cast, film);
-        Assert.assertEquals(film.getId(), castDAO.listFilmsByCast(cast.getId()).get(0).getId());
+        Assert.assertEquals(film.getId(), filmDAO.getFilmsByCast(cast.getId()).get(0).getId());
     }
 
     @Test
@@ -80,7 +80,7 @@ public class CastTest {
         filmDAO.addFilm(film);
         castDAO.addCastToFilm(cast, film);
         castDAO.addCastToFilm(cast, film);
-        Assert.assertEquals(film.getId(), castDAO.listFilmsByCast(cast.getId()).get(0).getId());
+        Assert.assertEquals(film.getId(), filmDAO.getFilmsByCast(cast.getId()).get(0).getId());
     }
 
     @Test
@@ -89,8 +89,8 @@ public class CastTest {
         castDAO.addCast(cast);
         Film film = new Film("Fight Club", 1997);
         filmDAO.addFilm(film);
-        castDAO.addCastToFilm(cast.getId(), film.getId());
-        Assert.assertEquals(film.getId(), castDAO.listFilmsByCast(cast.getId()).get(0).getId());
+        castDAO.addCastToFilm(cast, film.getId());
+        Assert.assertEquals(film.getId(), filmDAO.getFilmsByCast(cast.getId()).get(0).getId());
     }
 
     @Test
@@ -99,9 +99,9 @@ public class CastTest {
         castDAO.addCast(cast);
         Film film = new Film("Fight Club", 1997);
         filmDAO.addFilm(film);
-        castDAO.addCastToFilm(cast.getId(), film.getId());
-        castDAO.addCastToFilm(cast.getId(), film.getId());
-        Assert.assertEquals(film.getId(), castDAO.listFilmsByCast(cast.getId()).get(0).getId());
+        castDAO.addCastToFilm(cast, film.getId());
+        castDAO.addCastToFilm(cast, film.getId());
+        Assert.assertEquals(film.getId(), filmDAO.getFilmsByCast(cast.getId()).get(0).getId());
     }
 
     @Test
@@ -172,7 +172,7 @@ public class CastTest {
 //        Cast cast = castDAO.addCast("Trantino");
         castDAO.addCastToFilm(cast,f1);
         castDAO.addCastToFilm(cast,f2);
-        Assert.assertEquals(2, castDAO.listFilmsByCast(cast.getId()).size());
+        Assert.assertEquals(2, filmDAO.getFilmsByCast(cast.getId()).size());
     }
 
     @Test
@@ -180,7 +180,7 @@ public class CastTest {
         cast = new Cast("Woody Allen");
         castDAO.addCast(cast);
 //        Cast cast = castDAO.addCast("Trantino");
-        Assert.assertEquals(0, castDAO.listFilmsByCast(cast.getId()).size());
+        Assert.assertEquals(0, filmDAO.getFilmsByCast(cast.getId()).size());
     }
 
     @Test

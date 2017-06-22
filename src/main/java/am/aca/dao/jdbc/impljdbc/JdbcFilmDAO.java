@@ -1,12 +1,14 @@
 package am.aca.dao.jdbc.impljdbc;
 
 
+import am.aca.dao.DaoException;
 import am.aca.dao.jdbc.BaseDAO;
 import am.aca.dao.jdbc.FilmDAO;
 import am.aca.entity.*;
 import am.aca.dao.jdbc.impljdbc.mapper.FilmRowMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -44,7 +46,7 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
     public boolean addFilm(Film film) {
         // ensure that all required fields are properly assigned
         if (!checkRequiredFields(film.getTitle()) || film.getProdYear() < 1900)
-            return false;
+            throw new DaoException("Illegal argument");
 
         KeyHolder holder = new GeneratedKeyHolder();
 
@@ -97,32 +99,6 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
         return addGenreToFilm(genre, film.getId());
     }
 
-    /**
-     * Add an association of actor with film in DB
-     *
-     * @param cast the cast with which the provided film will be associated
-     * @param filmId the id of film which will be associated with provided cast
-     * @return true if the new association of cast to film was successful, otherwise false
-     */
-    @Override
-    public boolean addCastToFilm(Cast cast, int filmId) {
-        final String query = "INSERT INTO film_to_cast(Actor_ID,Film_ID) VALUES (? , ? ) ";
-        return getJdbcTemplate().update(query, cast.getId(), filmId) == 1;
-    }
-
-    /**
-     * @see JdbcFilmDAO#addCastToFilm(am.aca.entity.Cast, int)
-     *
-     * Add an association of actor with film in DB
-     *
-     * @param cast the cast with which the provided film will be associated
-     * @param film the id of film which will be associated with provided cast
-     * @return true if the new association of cast to film was successful, otherwise false
-     */
-    @Override
-    public boolean addCastToFilm(Cast cast, Film film) {
-        return addCastToFilm(cast, film.getId());
-    }
 
     /**
      * Increment by one the selected scale (from 1 to 5) of the film whitch id is provided
@@ -135,7 +111,8 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
     public boolean rateFilm(int filmId, int starType) {
         // the scale of rates is from one up to 5 inclusive
         if (starType > 5 || starType < 1)
-            return false;
+            throw new DaoException("Illegal argument");
+
         final String sratType = "Rate_" + starType + "star";
         final String query = "UPDATE films set " + sratType + " = " + sratType + " + 1 WHERE ID = ? ";
         return getJdbcTemplate().update(query, filmId) == 1;
@@ -160,32 +137,6 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
         }
     }
 
-    /**
-     * Return the list of all films associated with provided actors id
-     *
-     * @param actorId the id of actor who's films should be returned
-     * @return A list of all films associated to the actor with provided id
-     */
-    @Override
-    public List<Film> getFilmsByCast(int actorId) {
-        final String filmQuery = "SELECT films.ID FROM film_to_cast" +
-                " LEFT JOIN films ON film_to_cast.Film_ID = films.ID " +
-                " WHERE Actor_ID = ?";
-        return getJdbcTemplate().queryForList(filmQuery, new Object[]{actorId}, Film.class);
-    }
-
-    /**
-     * @see JdbcFilmDAO#getFilmsByCast(int)
-     *
-     * Return the list of all films associated with provided actors
-     *
-     * @param cast the actor object who's films should be returned
-     * @return A list of all films associated to the actor with provided id
-     */
-    @Override
-    public List getFilmsByCast(Cast cast) {
-        return getFilmsByCast(cast.getId());
-    }
 
     /**
      * Get one page of lists of films from DB, each page contains 12 films
@@ -215,6 +166,31 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
                 " WHERE Genre_ID = ?";
 
         return getJdbcTemplate().queryForList(filmQuery, new Object[]{genre.getValue()}, Film.class);
+    }
+
+    /**
+     * Return the list of all films associated with provided actors id
+     *
+     * @param actorId the id of actor who's films should be returned
+     * @return A list of all films associated to the actor with provided id
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Film> getFilmsByCast(int actorId) {
+        final String query = "SELECT ID, Title, Prod_Year AS prodYear,HasOscar, image_ref AS image, Director, " +
+                " Rate_1star, Rate_2star, Rate_3star, Rate_4star, Rate_5star " +
+                " FROM films INNER JOIN (" +
+                "   SELECT film_to_cast.Film_ID AS film " +
+                "   FROM casts JOIN film_to_cast " +
+                "   ON casts.ID = film_to_cast.Actor_ID " +
+                "   WHERE casts.ID = ? " +
+                "   ORDER BY film_to_cast.Film_ID DESC " +
+                ") AS sel_table " +
+                " ON films.ID = sel_table.film";
+
+        return getJdbcTemplate().query(query,
+                new BeanPropertyRowMapper(Film.class),
+                actorId);
     }
 
     /**
@@ -281,7 +257,7 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
     public boolean editFilm(Film film) {
         // ensure that all required fields are properly assigned
         if (!checkRequiredFields(film.getTitle()) || film.getProdYear() < 1900)
-            return false;
+            throw new DaoException("Illegal argument");
 
         final String query = "UPDATE films SET Title = ?,Prod_Year = ?,HasOscar = ?,Rate_1star = ? " +
                 ",Rate_2star = ?, Rate_3star = ?,Rate_4star = ?,Rate_5star = ?, director = ? " +
@@ -302,28 +278,42 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
     }
 
 
-    // REMOVE
+    // DELETE
 
     /**
      * Remove the all relations of provided film with any actor
      *
      * @param film the film which relations with actors are being removed
+     * @return true if the relation was removed, otherwise false
      */
     @Override
-    public void resetRelationCasts(Film film) {
+    public boolean resetRelationCasts(Film film) {
         final String query = "DELETE FROM film_to_cast WHERE Film_ID = ?";
-        getJdbcTemplate().update(query, film.getId());
+        return getJdbcTemplate().update(query, film.getId()) >= 1;
     }
 
     /**
      * Remove the all relations of provided film with any genre
      *
      * @param film the film which relations with genres are being removed
+     * @return true if the relation was removed, otherwise false
      */
     @Override
-    public void resetRelationGenres(Film film) {
+    public boolean resetRelationGenres(Film film) {
         final String query = "DELETE FROM genre_to_film WHERE Film_ID = ?";
-        getJdbcTemplate().update(query, film.getId());
+        return getJdbcTemplate().update(query, film.getId()) >= 1;
+    }
+
+    /**
+     * Remove the provided film from DB
+     *
+     * @param film the film which are being removed
+     * @return true if the film was removed, otherwise false
+     */
+    @Override
+    public boolean remove(Film film) {
+        final String query = "DELETE FROM films WHERE ID = ?";
+        return getJdbcTemplate().update(query, film.getId()) == 1;
     }
 
 }

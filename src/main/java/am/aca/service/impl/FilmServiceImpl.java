@@ -1,7 +1,9 @@
 package am.aca.service.impl;
 
 import am.aca.dao.DaoException;
+import am.aca.dao.jdbc.CastDAO;
 import am.aca.dao.jdbc.FilmDAO;
+import am.aca.dao.jdbc.impljdbc.JdbcCastDAO;
 import am.aca.dao.jdbc.impljdbc.JdbcFilmDAO;
 import am.aca.entity.Cast;
 import am.aca.entity.Film;
@@ -23,11 +25,13 @@ public class FilmServiceImpl implements FilmService {
     private static final Logger LOGGER = Logger.getLogger(FilmServiceImpl.class);
     private ApplicationContext ctx;
     private FilmDAO filmDao;
+    private CastDAO castDao;
 
     @Autowired
     public FilmServiceImpl(ApplicationContext ctx) {
         this.ctx = ctx;
         filmDao = ctx.getBean("jdbcFilmDAO", JdbcFilmDAO.class);
+        castDao = ctx.getBean("jdbcCastDAO", JdbcCastDAO.class);
     }
 
     @Override
@@ -115,7 +119,7 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public List<Film> getFilmsByCast(Cast cast) {
-        return filmDao.getFilmsByCast(cast);
+        return filmDao.getFilmsByCast(cast.getId());
     }
 
     @Override
@@ -171,7 +175,7 @@ public class FilmServiceImpl implements FilmService {
     public boolean addCastToFilm(Cast cast, int filmId) {
         boolean state = false;
         try {
-            state = filmDao.addCastToFilm(cast, filmId);
+            state = castDao.addCastToFilm(cast, filmId);
         } catch (DaoException e) {
             LOGGER.warn(e.toString());
         }
@@ -180,7 +184,7 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public boolean addCastToFilm(Cast cast, Film film) {
-        return filmDao.addCastToFilm(cast, film.getId());
+        return castDao.addCastToFilm(cast, film.getId());
     }
 
     @Override

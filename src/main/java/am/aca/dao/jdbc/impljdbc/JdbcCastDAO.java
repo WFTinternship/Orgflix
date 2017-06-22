@@ -17,6 +17,8 @@ import java.sql.Statement;
 import java.util.List;
 
 /**
+ * DAO layer for Cast entity
+ *
  * Created by David on 5/28/2017
  */
 @Repository
@@ -28,65 +30,67 @@ public class JdbcCastDAO extends BaseDAO implements CastDAO {
         this.setDataSource(dataSource);
     }
 
-    // Create
-//    @Override
-//    public Cast addCast(String name, boolean hasOscar) {
-//        Cast cast;
-//        if (!checkRequiredFields(new String[]{name}))
-//            throw new DaoException("Name is required!");
-//
-//        KeyHolder holder = new GeneratedKeyHolder();
-//        final String insertQuery = "INSERT INTO casts (Actor_Name, HasOscar) VALUES( ?, ? ) ";
-//        getJdbcTemplate().update(connection -> {
-//            PreparedStatement ps = connection.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS);
-//            ps.setString(1, name);
-//            ps.setBoolean(2, hasOscar);
-//            return ps;
-//        }, holder);
-//
-//        cast = new Cast(name, hasOscar);
-//        cast.setId(holder.getKey().intValue());
-//
-//        return cast;
-//    }
-//
-//    // support method
-//    @Override
-//    public Cast addCast(String name) {
-//        return addCast(name, false);
-//    }
+     // CREATE
 
+    /**
+     * Add new actor to DB
+     *
+     * @param cast the actor object to be added
+     * @return true if actor is added, otherwise false
+     */
     @Override
     public boolean addCast(Cast cast) {
-        if (!checkRequiredFields(new String[]{cast.getName()})){
+        // ensure that all required field is properly assigned
+        if (!checkRequiredFields(cast.getName())){
             throw new DaoException("Name is required");
         }
         KeyHolder holder = new GeneratedKeyHolder();
         final String query = "INSERT INTO casts (Actor_Name, HasOscar) VALUES (?, ?)";
-        getJdbcTemplate().update(connection -> {
+        int result = getJdbcTemplate().update(connection -> {
             PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, cast.getName());
             ps.setBoolean(2, cast.isHasOscar());
             return ps;
         }, holder);
         cast.setId(holder.getKey().intValue());
-        return true;
+        return result == 1;
     }
 
+    /**
+     * Add an association of actor with film in DB
+     *
+     * @param cast the cast with which the provided film will be associated
+     * @param filmId the id of film which will be associated with provided cast
+     * @return true if the new association of cast to film was successful, otherwise false
+     */
     @Override
-    public boolean addCastToFilm(int actorId, int filmId) {
+    public boolean addCastToFilm(Cast cast, int filmId) {
         final String query = "INSERT INTO film_to_cast(Actor_ID,Film_ID) VALUES (? , ? ) ";
-        return getJdbcTemplate().update(query, actorId, filmId) == 1;
+        return getJdbcTemplate().update(query, cast.getId(), filmId) == 1;
     }
 
-    // support method
+    /**
+     * @see JdbcCastDAO#addCastToFilm(am.aca.entity.Cast, int)
+     *
+     * Add an association of actor with film in DB
+     *
+     * @param cast the cast with which the provided film will be associated
+     * @param film the id of film which will be associated with provided cast
+     * @return true if the new association of cast to film was successful, otherwise false
+     */
     @Override
     public boolean addCastToFilm(Cast cast, Film film) {
-        return addCastToFilm(cast.getId(), film.getId());
+        return addCastToFilm(cast, film.getId());
     }
 
 
-    // Read
+    // READ
+
+    /**
+     * List all the casts currently in DB
+     *
+     * @return List of all casts currently in DB
+     */
     @SuppressWarnings("unchecked")
     @Override
     public List<Cast> listCast() {
@@ -94,48 +98,54 @@ public class JdbcCastDAO extends BaseDAO implements CastDAO {
         return getJdbcTemplate().query(query, new BeanPropertyRowMapper(Cast.class));
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public List<Film> listFilmsByCast(int actorId) {
-        final String query = "SELECT ID, Title, Prod_Year AS prodYear,HasOscar, image_ref AS image, Director, " +
-                " Rate_1star, Rate_2star, Rate_3star, Rate_4star, Rate_5star " +
-                " FROM films INNER JOIN (" +
-                "   SELECT film_to_cast.Film_ID AS film " +
-                "   FROM casts JOIN film_to_cast " +
-                "   ON casts.ID = film_to_cast.Actor_ID " +
-                "   WHERE casts.ID = ? " +
-                "   ORDER BY film_to_cast.Film_ID DESC " +
-                ") AS sel_table " +
-                " ON films.ID = sel_table.film";
 
-        return getJdbcTemplate().query(query,
-                new BeanPropertyRowMapper(Film.class),
-                actorId);
-    }
+    // UPDATE
 
-    // Update
+    /**
+     * Update the fileds of the provided actor object in DB
+     *
+     * @param cast the actor which fields will be updated in DB
+     * @return true if the update was successful, otherwise false
+     */
     @Override
     public boolean editCast(Cast cast) {
-        if (cast.getName() == null || cast.getName().equals(""))
-            throw new DaoException();
+        // ensure that all required field is properly assigned
+        if (!checkRequiredFields(cast.getName()))
+            throw new DaoException("Illegal argument");
+
         final String query = "UPDATE casts SET Actor_Name = ?, HasOscar = ? WHERE ID = ?";
-        getJdbcTemplate().update(query, cast.getName(), cast.isHasOscar(), cast.getId());
-        return true;
+        return getJdbcTemplate().update(query, cast.getName(), cast.isHasOscar(), cast.getId()) == 1;
     }
 
-    // support method
+    // DELETE
+    /**
+     * Remove the provided actor from DB
+     *
+     * @param cast the actor which are being removed
+     * @return true if the actor was removed, othrewise false
+     */
+    @Override
+    public boolean remove(Cast cast) {
+        final String query = "DELETE FROM casts WHERE ID = ?";
+        return getJdbcTemplate().update(query, cast.getId()) == 1;
+    }
 
+    // Support methods
     @Override
     public boolean isStarringIn(int actorId, int filmId) {
         String query = "SELECT COUNT(*) FROM film_to_cast WHERE Film_ID = ? AND Actor_ID = ?";
-        int count = getJdbcTemplate().queryForObject(query, new Object[] {filmId, actorId}, Integer.class);
-        return (count == 1);
+        return getJdbcTemplate().queryForObject(query,
+                new Object[] {filmId, actorId},
+                Integer.class
+            ) == 1;
     }
 
     @Override
     public boolean exists(Cast cast) {
         String query = "SELECT COUNT(*) FROM casts WHERE ID = ?";
-        int count = getJdbcTemplate().queryForObject(query, new Object[] {cast.getId()}, Integer.class);
-        return (count == 1);
+        return getJdbcTemplate().queryForObject(query,
+                new Object[] {cast.getId()},
+                Integer.class
+            ) == 1;
     }
 }

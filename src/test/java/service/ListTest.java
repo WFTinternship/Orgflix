@@ -38,9 +38,6 @@
 //
 //    @After
 //    public void revert() {
-//        DbManager.emptyTestTables(new String[] {
-//                "lists", "films", "users"
-//        });
 //    }
 //
 //    @Test

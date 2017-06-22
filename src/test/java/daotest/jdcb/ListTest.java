@@ -63,8 +63,6 @@ public class ListTest {
 
         userId = userDao.add("MrSmith","John Smith","JhonSmith@gmail.com","pass");
 
-        //setup List DAO
-//        listDao.setDataSource(DbManager.getInstance().getDataSource());
     }
 
     @After

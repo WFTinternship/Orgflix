@@ -1,15 +1,12 @@
 package am.aca.service.impl;
 
 import am.aca.dao.DaoException;
-import am.aca.dao.jdbc.impljdbc.JdbcFilmDAO;
 import am.aca.dao.jdbc.FilmDAO;
-import am.aca.dao.oldjdbc.FilmDao;
+import am.aca.dao.jdbc.impljdbc.JdbcFilmDAO;
 import am.aca.entity.Cast;
 import am.aca.entity.Film;
 import am.aca.entity.Genre;
 import am.aca.service.FilmService;
-import am.aca.util.ConnType;
-import am.aca.util.DbManager;
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 

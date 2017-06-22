@@ -1,4 +1,4 @@
-package daotest.jdcb;
+package daotest.jdbc;
 
 import am.aca.dao.DaoException;
 import am.aca.dao.jdbc.UserDAO;
@@ -17,11 +17,11 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * Created by David on 5/29/2017
  */
 public class UserTest {
-    ApplicationContext ctx =
+    private ApplicationContext ctx =
             new ClassPathXmlApplicationContext("applicationContext-persistance-test.xml");
 
-    private UserDAO userDao = ctx.getBean("JdbcUserDAO", JdbcUserDAO.class);
-    private TestHelper helper = ctx.getBean("TestHelper", TestHelper.class);
+    private UserDAO userDao = ctx.getBean("jdbcUserDAO", JdbcUserDAO.class);
+    private TestHelper helper = ctx.getBean("testHelper", TestHelper.class);
     private User user;
     private final User standartUser = new User("gago", "Gagik Petrosyan", "davit.abovyan@gmail.com", "pass");
 

@@ -1,7 +1,11 @@
 package am.aca.dao.jdbc.impljdbc;
 
+
 import am.aca.dao.jdbc.BaseDAO;
 import am.aca.dao.jdbc.FilmDAO;
+import am.aca.entity.Cast;
+import am.aca.entity.Film;
+import am.aca.entity.Genre;
 import am.aca.dao.jdbc.impljdbc.mapper.FilmRowMapper;
 import am.aca.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +16,8 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.List;
 
 /**
@@ -160,6 +165,7 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
                 ratingSum += sqlRowSet.getInt("Rate_" + i + "star") * i;
                 ratingCount += sqlRowSet.getInt("Rate_" + i + "star");
             }
+
         }
         if (ratingCount == 0)
             return 0.0;

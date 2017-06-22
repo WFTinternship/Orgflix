@@ -1,28 +1,30 @@
 package am.aca.service.impl;
 
 import am.aca.dao.DaoException;
-import am.aca.dao.jdbc.impljdbc.JdbcCastDAO;
-import am.aca.dao.jdbc.impljdbc.JdbcUserDAO;
 import am.aca.dao.jdbc.UserDAO;
 import am.aca.dao.jdbc.impljdbc.JdbcUserDAO;
 import am.aca.entity.User;
 import am.aca.service.UserService;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Service;
 
 /**
  * Created by David on 6/7/2017
  */
+@Service
 public class UserServiceImpl implements UserService {
 
     private static final Logger LOGGER = Logger.getLogger(UserServiceImpl.class.getName());
-    private ApplicationContext ctx = null;
+    private ApplicationContext ctx;
 
     private UserDAO userDao;
 
+    @Autowired
     public UserServiceImpl(ApplicationContext ctx) {
         this.ctx = ctx;
-        userDao = ctx.getBean("JdbcUserDAO", JdbcUserDAO.class);
+        userDao = ctx.getBean("jdbcUserDAO", JdbcUserDAO.class);
     }
 
     @Override

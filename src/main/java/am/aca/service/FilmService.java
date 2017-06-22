@@ -10,19 +10,28 @@ import java.util.List;
  * Created by David on 5/28/2017
  */
 public interface FilmService {
-    void addFilm(Film film);
+    // Create
+    boolean addFilm(Film film);
 
-    void editFilm(Film film);
+    // Retrieve
+    List<Film> getFilmsList(int startIndex);
 
     Film getFilmById(int id);
 
-    List getFilmsByCast(Cast cast);
+    List<Film> getFilmsByCast(Cast cast);
 
-    List getFilmsByCast(int castId);
+    List<Film> getFilmsByCast(int castId);
 
-    List getFilmsByGenre(Genre genre);
+    List<Film> getFilmsByGenre(Genre genre);
 
-    List getFilmsList(int startIndex);
+    double getRating(int filmId);
+
+    double getRating(Film film);
+
+    int totalNumberOfFilms();
+
+    // Update
+    void editFilm(Film film);
 
     boolean rateFilm(int filmId, int starType);
 
@@ -33,10 +42,4 @@ public interface FilmService {
     boolean addCastToFilm(Cast cast, Film film);
 
     boolean addCastToFilm(Cast cast, int filmId);
-
-    double getRating(int filmId);
-
-    double getRating(Film film);
-
-    int totalNumberOfFilms();
 }

@@ -1,4 +1,4 @@
-package daotest.jdcb;
+package daotest.jdbc;
 
 import am.aca.dao.jdbc.CastDAO;
 import am.aca.dao.jdbc.impljdbc.JdbcCastDAO;
@@ -24,12 +24,12 @@ import static org.junit.Assert.*;
  * Created by Vardan on 04.06.2017
  */
 public class FilmTest {
-    ApplicationContext ctx =
+    private ApplicationContext ctx =
             new ClassPathXmlApplicationContext("applicationContext-persistance-test.xml");
 
-    private FilmDAO filmDAO = ctx.getBean("JdbcFilmDAO", JdbcFilmDAO.class);
-    private CastDAO castDAO = ctx.getBean("JdbcCastDAO", JdbcCastDAO.class);
-    private TestHelper helper = ctx.getBean("TestHelper", TestHelper.class);
+    private FilmDAO filmDAO = ctx.getBean("jdbcFilmDAO", JdbcFilmDAO.class);
+    private CastDAO castDAO = ctx.getBean("jdbcCastDAO", JdbcCastDAO.class);
+    private TestHelper helper = ctx.getBean("testHelper", TestHelper.class);
 
     private Film film;
     private Cast cast;
@@ -60,7 +60,8 @@ public class FilmTest {
 
     @Test
     public void editFilmChangeCheck_Succeeded() {
-        cast = castDAO.addCast("Matt Ross", false);
+        cast = new Cast("Matt Ross");
+        castDAO.addCast(cast);
         castList = new ArrayList<>();
 
         film.setTitle("Captain Fantastic");
@@ -76,7 +77,8 @@ public class FilmTest {
 
     @Test
     public void editFilmSizeCheck_Succeeded() {
-        cast = castDAO.addCast("Matt Ross", false);
+        cast = new Cast("Matt Ross", false);
+        castDAO.addCast(cast);
         castList = new ArrayList<>();
 
         film.setTitle("Captain Fantastic");
@@ -110,7 +112,8 @@ public class FilmTest {
 
     @Test
     public void getFilmsByCast_Succeeded() {
-        cast = castDAO.addCast("Matt Ross", false);
+        cast = new Cast("Matt Ross", false);
+        castDAO.addCast(cast);
         castList = new ArrayList<>();
         film.setTitle("Captain Fantastic");
         castList.add(cast);
@@ -144,7 +147,8 @@ public class FilmTest {
 
     @Test
     public void rateFilm_Succeeded() {
-        cast = castDAO.addCast("Matt Ross", false);
+        cast = new Cast("Matt Ross", false);
+        castDAO.addCast(cast);
         castList = new ArrayList<>();
         film.setTitle("Captain Fantastic");
         castList.add(cast);

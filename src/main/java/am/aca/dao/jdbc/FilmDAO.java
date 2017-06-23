@@ -1,6 +1,5 @@
 package am.aca.dao.jdbc;
 
-import am.aca.entity.Cast;
 import am.aca.entity.Film;
 import am.aca.entity.Genre;
 
@@ -16,10 +15,10 @@ public interface FilmDAO {
     boolean addGenreToFilm(Genre genre, int filmId);
     boolean rateFilm(int filmId, int starType);
 
-    //READ
+    // READ
     Film getFilmById(int id);
     List<Film> getFilmsList(int startIndex);
-    List getFilmsByGenre(Genre genre);
+    List<Film> getFilmsByGenre(Genre genre);
     List<Film> getFilmsByCast(int actorId);
     double getRating(int filmId);
     double getRating(Film film);

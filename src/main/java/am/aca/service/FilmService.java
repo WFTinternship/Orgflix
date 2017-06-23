@@ -31,7 +31,7 @@ public interface FilmService {
     int totalNumberOfFilms();
 
     // Update
-    void editFilm(Film film);
+    boolean editFilm(Film film);
 
     boolean rateFilm(int filmId, int starType);
 
@@ -39,7 +39,7 @@ public interface FilmService {
 
     boolean addGenreToFilm(Genre genre, int filmId);
 
-    boolean addCastToFilm(Cast cast, Film film);
-
-    boolean addCastToFilm(Cast cast, int filmId);
+//    boolean addCastToFilm(Cast cast, Film film);
+//
+//    boolean addCastToFilm(Cast cast, int filmId);
 }

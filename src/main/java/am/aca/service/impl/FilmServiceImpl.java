@@ -42,57 +42,34 @@ public class FilmServiceImpl implements FilmService {
                 return false;
         } catch (DaoException e) {
             LOGGER.warn(e.toString());
+            return false;
         }
 
-        try {
-            for (Genre genre : film.getGenres()) {
-                addGenreToFilm(genre, film);
-            }
-        } catch (DaoException e) {
-            LOGGER.warn(e.toString());
-        }
+        optimizeRelations(film);
 
-        try {
-            for (Cast cast : film.getCasts()) {
-                addCastToFilm(cast, film);
-            }
-        } catch (DaoException e) {
-            LOGGER.warn(e.toString());
-        }
         return true;
 
     }
 
     @Override
-    public void editFilm(Film film) {
+    public boolean editFilm(Film film) {
         try {
             if (!filmDao.editFilm(film))
-                return;
+                return false;
         } catch (DaoException e) {
             LOGGER.warn(e.toString());
+            return false;
         }
-//        try {
-//
-//            filmDao.resetRelationGenres(film);
-//            filmDao.resetRelationCasts(film);
-//        } catch (DaoException e) {
-//            LOGGER.warn(e.toString());
-//        }
         try {
-            for (Genre genre : film.getGenres()) {
-                addGenreToFilm(genre, film);
-            }
+            filmDao.resetRelationGenres(film);
+            filmDao.resetRelationCasts(film);
         } catch (DaoException e) {
             LOGGER.warn(e.toString());
         }
 
-        try {
-            for (Cast cast : film.getCasts()) {
-                addCastToFilm(cast, film);
-            }
-        } catch (DaoException e) {
-            LOGGER.warn(e.toString());
-        }
+        optimizeRelations(film);
+
+        return true;
     }
 
     @Override
@@ -108,7 +85,7 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public List<Film> getFilmsByCast(int castId) {
-        List list = null;
+        List<Film> list = null;
         try {
             list = filmDao.getFilmsByCast(castId);
         } catch (DaoException e) {
@@ -124,7 +101,7 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public List<Film> getFilmsList(int startIndex) {
-        List list = null;
+        List<Film> list = null;
         try {
             list = filmDao.getFilmsList(startIndex);
         } catch (DaoException e) {
@@ -135,7 +112,7 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public List<Film> getFilmsByGenre(Genre genre) {
-        List list = null;
+        List<Film> list = null;
         try {
             list = filmDao.getFilmsByGenre(genre);
         } catch (DaoException e) {
@@ -171,21 +148,21 @@ public class FilmServiceImpl implements FilmService {
         return filmDao.addGenreToFilm(genre, film.getId());
     }
 
-    @Override
-    public boolean addCastToFilm(Cast cast, int filmId) {
-        boolean state = false;
-        try {
-            state = castDao.addCastToFilm(cast, filmId);
-        } catch (DaoException e) {
-            LOGGER.warn(e.toString());
-        }
-        return state;
-    }
-
-    @Override
-    public boolean addCastToFilm(Cast cast, Film film) {
-        return castDao.addCastToFilm(cast, film.getId());
-    }
+//    @Override
+//    public boolean addCastToFilm(Cast cast, int filmId) {
+//        boolean state = false;
+//        try {
+//            state = castDao.addCastToFilm(cast, filmId);
+//        } catch (DaoException e) {
+//            LOGGER.warn(e.toString());
+//        }
+//        return state;
+//    }
+//
+//    @Override
+//    public boolean addCastToFilm(Cast cast, Film film) {
+//        return castDao.addCastToFilm(cast, film.getId());
+//    }
 
     @Override
     public double getRating(int filmId) {
@@ -212,5 +189,24 @@ public class FilmServiceImpl implements FilmService {
             LOGGER.warn(e.toString());
         }
         return total;
+    }
+
+    private void optimizeRelations(Film film) {
+        try {
+            for (Genre genre : film.getGenres()) {
+                addGenreToFilm(genre, film);
+            }
+        } catch (DaoException e) {
+            LOGGER.warn(e.toString());
+        }
+
+        try {
+            for (Cast cast : film.getCasts()) {
+                castDao.addCast(cast);
+                castDao.addCastToFilm(cast, film);
+            }
+        } catch (DaoException e) {
+            LOGGER.warn(e.toString());
+        }
     }
 }

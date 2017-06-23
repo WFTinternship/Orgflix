@@ -1,18 +1,19 @@
 package daotest.jdbc;
 
-import am.aca.dao.*;
-import am.aca.dao.jdbc.impljdbc.JdbcCastDAO;
-import am.aca.dao.jdbc.FilmDAO;
-import am.aca.dao.jdbc.impljdbc.JdbcFilmDAO;
+import am.aca.dao.DaoException;
 import am.aca.dao.jdbc.CastDAO;
-import am.aca.entity.*;
+import am.aca.dao.jdbc.FilmDAO;
+import am.aca.dao.jdbc.impljdbc.JdbcCastDAO;
+import am.aca.dao.jdbc.impljdbc.JdbcFilmDAO;
+import am.aca.entity.Cast;
+import am.aca.entity.Film;
 import am.aca.util.TestHelper;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-
-import java.sql.SQLException;
 
 /**
  * Created by David on 6/3/2017
@@ -43,7 +44,6 @@ public class CastTest {
     public void addCast_Success(){
         cast = new Cast("Woody Allen", true);
         castDAO.addCast(cast);
-//        cast = castDAO.addCast("Poghos",false);
         Assert.assertTrue(cast.getId()>0);
     }
 
@@ -51,7 +51,6 @@ public class CastTest {
     public void addCast_Success_EmptyOscar(){
         cast = new Cast("Woody Allen");
         castDAO.addCast(cast);
-//        cast = castDAO.addCast("Poghos");
         Assert.assertTrue(cast.getId()>0);
     }
 
@@ -59,7 +58,6 @@ public class CastTest {
     public void addCast_Fail_NameRequired(){
         cast = new Cast(null, false);
         castDAO.addCast(cast);
-//        castDAO.addCast(null,false);
     }
 
     @Test
@@ -105,12 +103,33 @@ public class CastTest {
     }
 
     @Test
+    public void listCasts_Succeeded(){
+        cast = new Cast("Poghos");
+        castDAO.addCast(cast);
+        cast = new Cast("Petros");
+        castDAO.addCast(cast);
+        cast = new Cast("Martiros");
+        castDAO.addCast(cast);
+        Assert.assertEquals(3, castDAO.listCast().size());
+    }
+
+    @Test
+    public void listCastByName_Success() {
+        cast = new Cast("Woody Allen");
+        castDAO.addCast(cast);
+        Assert.assertEquals("Woody Allen", castDAO.listCast().get(0).getName());
+    }
+
+    @Test
+    public void listCast_Emptylist(){
+        Assert.assertEquals(0, castDAO.listCast().size());
+    }
+
+    @Test
     public void editCast_Success(){
         cast = new Cast("Woody Allen");
         castDAO.addCast(cast);
         cast.setName("Christopher Nolan");
-//        cast = castDAO.addCast("Poghos");
-//        cast.setName("Gagik");
         Assert.assertTrue( castDAO.editCast(cast) );
     }
 
@@ -129,59 +148,47 @@ public class CastTest {
         castDAO.addCast(cast);
         cast.setName(null);
         castDAO.editCast(cast);
-//        cast = castDAO.addCast("Poghos");
-//        cast.setName(null);
-//        castDAO.editCast(cast);
     }
 
     @Test
-    public void listCasts_Succeeded(){
-        cast = new Cast("Poghos");
-        castDAO.addCast(cast);
-        cast = new Cast("Petros");
-        castDAO.addCast(cast);
-        cast = new Cast("Martiros");
-        castDAO.addCast(cast);
-//        castDAO.addCast("Poghos");
-//        castDAO.addCast("Petros");
-//        castDAO.addCast("Martiros");
-        Assert.assertEquals(3, castDAO.listCast().size());
-//        Cast cast = (Cast) castDAO.listCast().get(0);
-//        Assert.assertEquals(new Cast("Poghos",false).getName(),cast.getName());
-    }
-
-    @Test
-    public void listCastByName_Success() {
+    public void remove_Success() {
         cast = new Cast("Woody Allen");
         castDAO.addCast(cast);
-        Assert.assertEquals("Woody Allen", castDAO.listCast().get(0).getName());
+        Assert.assertTrue(castDAO.remove(cast));
     }
 
     @Test
-    public void listCast_Emptylist(){
-        Assert.assertEquals(0, castDAO.listCast().size());
-    }
-
-    @Test
-    public void listFilmsByCast_Succeeded() throws SQLException {
-        Film f1, f2;
-        filmDAO.addFilm(f1 = new Film("Titanic",1990));
-        filmDAO.addFilm(f2 = new Film("Zoro",1992));
-        cast = new Cast("Tarantino");
-        castDAO.addCast(cast);
-//        Cast cast = castDAO.addCast("Trantino");
-        castDAO.addCastToFilm(cast,f1);
-        castDAO.addCastToFilm(cast,f2);
-        Assert.assertEquals(2, filmDAO.getFilmsByCast(cast.getId()).size());
-    }
-
-    @Test
-    public void listFilmsIdByCast_EmptyList() throws SQLException {
+    public void removeCheckBySize_Success() {
         cast = new Cast("Woody Allen");
         castDAO.addCast(cast);
-//        Cast cast = castDAO.addCast("Trantino");
-        Assert.assertEquals(0, filmDAO.getFilmsByCast(cast.getId()).size());
+        castDAO.remove(cast);
+        Assert.assertTrue(castDAO.listCast().isEmpty());
     }
+
+    @Test
+    public void remove_Fail() {
+        cast = new Cast("Woody Allen");
+        Assert.assertFalse(castDAO.remove(cast));
+    }
+
+//    @Test
+//    public void listFilmsByCast_Succeeded() throws SQLException {
+//        Film f1, f2;
+//        filmDAO.addFilm(f1 = new Film("Titanic",1990));
+//        filmDAO.addFilm(f2 = new Film("Zoro",1992));
+//        cast = new Cast("Tarantino");
+//        castDAO.addCast(cast);
+//        castDAO.addCastToFilm(cast,f1);
+//        castDAO.addCastToFilm(cast,f2);
+//        Assert.assertEquals(2, filmDAO.getFilmsByCast(cast.getId()).size());
+//    }
+//
+//    @Test
+//    public void listFilmsIdByCast_EmptyList() throws SQLException {
+//        cast = new Cast("Woody Allen");
+//        castDAO.addCast(cast);
+//        Assert.assertEquals(0, filmDAO.getFilmsByCast(cast.getId()).size());
+//    }
 
     @Test
     public void isStarringIn_Success() {

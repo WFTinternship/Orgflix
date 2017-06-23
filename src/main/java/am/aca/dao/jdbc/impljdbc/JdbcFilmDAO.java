@@ -161,11 +161,12 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
      */
     @Override
     public List<Film> getFilmsByGenre(Genre genre) {
-        final String filmQuery = "SELECT films.ID FROM genre_to_film" +
+        final String filmQuery = "SELECT films.ID, films.Title, films.Director, films.HasOscar, " +
+                "films.image_ref, films.Prod_Year, films.Rate_1star, films.Rate_2star, films.Rate_3star, films.Rate_4star, films.Rate_5star FROM genre_to_film" +
                 " LEFT JOIN films ON genre_to_film.Film_ID = films.ID " +
                 " WHERE Genre_ID = ?";
 
-        return getJdbcTemplate().queryForList(filmQuery, new Object[]{genre.getValue()}, Film.class);
+        return getJdbcTemplate().query(filmQuery, new Object[]{genre.getValue()}, new FilmRowMapper());
     }
 
     /**

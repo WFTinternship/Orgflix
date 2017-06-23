@@ -2,13 +2,10 @@ package am.aca.dao.jdbc.impljdbc.mapper;
 
 
 import am.aca.entity.Film;
-import am.aca.entity.User;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by David on 6/20/2017

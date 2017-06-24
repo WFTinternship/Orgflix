@@ -1,19 +1,16 @@
 package am.aca.service;
 
-import am.aca.entity.Cast;
-import am.aca.entity.Film;
-import am.aca.entity.Genre;
+import am.aca.entity.*;
 
 import java.util.List;
 
 /**
- * Created by David on 5/28/2017
+ * Interface for
  */
 public interface FilmService {
-    // Create
+
     boolean addFilm(Film film);
 
-    // Retrieve
     List<Film> getFilmsList(int startIndex);
 
     Film getFilmById(int id);
@@ -30,7 +27,6 @@ public interface FilmService {
 
     int totalNumberOfFilms();
 
-    // Update
     boolean editFilm(Film film);
 
     boolean rateFilm(int filmId, int starType);
@@ -38,8 +34,4 @@ public interface FilmService {
     boolean addGenreToFilm(Genre genre, Film film);
 
     boolean addGenreToFilm(Genre genre, int filmId);
-
-//    boolean addCastToFilm(Cast cast, Film film);
-//
-//    boolean addCastToFilm(Cast cast, int filmId);
 }

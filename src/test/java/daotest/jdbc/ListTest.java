@@ -1,16 +1,8 @@
 package daotest.jdbc;
 
-import am.aca.dao.jdbc.CastDAO;
-import am.aca.dao.jdbc.FilmDAO;
-import am.aca.dao.jdbc.ListDao;
-import am.aca.dao.jdbc.UserDAO;
-import am.aca.dao.jdbc.impljdbc.JdbcCastDAO;
-import am.aca.dao.jdbc.impljdbc.JdbcFilmDAO;
-import am.aca.dao.jdbc.impljdbc.JdbcUserDAO;
-import am.aca.dao.jdbc.impljdbc.JdbcListDAO;
-import am.aca.entity.Cast;
-import am.aca.entity.Film;
-import am.aca.entity.Genre;
+import am.aca.dao.jdbc.*;
+import am.aca.dao.jdbc.impljdbc.*;
+import am.aca.entity.*;
 import am.aca.util.TestHelper;
 import org.junit.After;
 import org.junit.Assert;
@@ -25,7 +17,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
- * Created by karine on 6/3/2017
+ * Test for List DAO methods
  */
 public class ListTest {
 
@@ -65,7 +57,7 @@ public class ListTest {
 
         //setup User and User DAO
 
-        userId = userDao.add("MrSmith","John Smith","JhonSmith@gmail.com","pass");
+        userId = userDao.add(new User("MrSmith","John Smith","JhonSmith@gmail.com","pass"));
 
     }
 

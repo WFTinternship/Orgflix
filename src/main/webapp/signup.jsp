@@ -1,13 +1,10 @@
+<%--
+  Page for user sign up
+--%>
 <%@ page import="am.aca.service.impl.FilmServiceImpl" %>
 <%@ page import="am.aca.entity.Film" %>
 <%@ page import="java.util.List" %>
-<%@ page import="am.aca.service.FilmService" %><%--
-  Created by IntelliJ IDEA.
-  User: Vardan
-  Date: 09.06.2017
-  Time: 14:56
-  To change this template use File | Settings | File Templates.
---%>
+<%@ page import="am.aca.service.FilmService" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%! FilmService filmService = new FilmServiceImpl(); %>
 <!DOCTYPE HTML>

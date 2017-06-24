@@ -7,7 +7,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 /**
  * Base class for all DAO layer classes providing logger and common methods
  *
- * Created by David on 6/13/2017
  */
 public class BaseDAO extends NamedParameterJdbcDaoSupport{
     //common logger for all the classes in the dao layer

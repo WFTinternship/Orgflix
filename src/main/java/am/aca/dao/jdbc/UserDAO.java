@@ -3,13 +3,11 @@ package am.aca.dao.jdbc;
 import am.aca.entity.User;
 
 /**
- * Created by David on 6/20/2017
+ * Interface for user DAO
  */
 public interface UserDAO {
     // Create
     int add(User user);
-    int add(String nick, String name, String pass, String email);
-    int add(String nick, String pass, String email);
 
     //Read
     User get(int id);

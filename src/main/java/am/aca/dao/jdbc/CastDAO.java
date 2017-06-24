@@ -6,7 +6,7 @@ import am.aca.entity.Film;
 import java.util.List;
 
 /**
- * Created by David on 5/27/2017
+ * Interface for actor DAO
  */
 public interface CastDAO {
     // CREATE

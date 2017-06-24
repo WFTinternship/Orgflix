@@ -1,9 +1,5 @@
 <%--
-  Created by IntelliJ IDEA.
-  User: Vardan
-  Date: 09.06.2017
-  Time: 14:56
-  To change this template use File | Settings | File Templates.
+  Main home page
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix = "m" uri = "/WEB-INF/taglib/customtags.tld" %>

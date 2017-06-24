@@ -15,7 +15,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
- * Created by karine on 6/22/2017
+ * Test for Cast services
  */
 public class CastTest {
     private CastService castService;

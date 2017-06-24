@@ -16,7 +16,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
- * Created by David on 6/3/2017
+ * Test for cast DAO methods
  */
 public class CastTest {
 

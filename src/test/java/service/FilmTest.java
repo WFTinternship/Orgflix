@@ -16,7 +16,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
- * Created by karine on 6/22/2017
+ * Test for DAO services
  */
 public class FilmTest {
 

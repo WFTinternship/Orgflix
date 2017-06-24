@@ -1,15 +1,14 @@
 package am.aca.dao.jdbc.impljdbc;
 
-
 import am.aca.dao.DaoException;
 import am.aca.dao.jdbc.BaseDAO;
 import am.aca.dao.jdbc.FilmDAO;
 import am.aca.entity.*;
 import am.aca.dao.jdbc.impljdbc.mapper.FilmRowMapper;
 
+import org.springframework.stereotype.Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.stereotype.Repository;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -23,7 +22,6 @@ import java.util.List;
 /**
  * DAO layer for Film entity
  *
- * Created by David on 5/28/2017
  */
 @Repository
 public class JdbcFilmDAO extends BaseDAO implements FilmDAO {

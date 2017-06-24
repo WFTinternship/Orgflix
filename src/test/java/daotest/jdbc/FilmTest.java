@@ -19,7 +19,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Created by Vardan on 04.06.2017
+ * Test for film DAO methods
  */
 public class FilmTest {
     private ApplicationContext ctx =

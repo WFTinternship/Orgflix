@@ -1,16 +1,17 @@
 package am.aca.dao.jdbc.impljdbc;
 
 import am.aca.dao.jdbc.BaseDAO;
-import org.springframework.beans.factory.annotation.Autowired;
 import am.aca.dao.jdbc.ListDao;
 import am.aca.entity.Film;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.List;
 
 /**
- * Created by karine on 6/3/2017
+ * DAO layer for list of film related methods
  */
 @Repository
 public class JdbcListDAO extends BaseDAO implements ListDao {

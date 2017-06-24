@@ -18,7 +18,6 @@ import java.sql.Statement;
 /**
  * DAO layer for User entity
  *
- * Created by David on 6/20/2017
  */
 
 @Repository
@@ -42,11 +41,11 @@ public class JdbcUserDAO extends BaseDAO implements UserDAO {
      * @return id of added new user in DB
      */
     @Override
-    public int add(String nick, String name, String pass, String email) {
+    public int add(User user) {
         // default return value which means nothing added
         int id = -1;
         // ensure that no null record will be passed for NOT NULL fields
-        if (!checkRequiredFields(nick, pass, email))
+        if (!checkRequiredFields(user.getNick(), user.getPass(), user.getEmail()))
             throw new DaoException("Nick, password and Email are required!");
 
         final String query = "INSERT INTO users (Nick,User_Name,Email,User_Pass) " +
@@ -56,44 +55,18 @@ public class JdbcUserDAO extends BaseDAO implements UserDAO {
 
         int result = getJdbcTemplate().update(connection -> {
             PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, nick);
-            ps.setString(2, name);
-            ps.setString(3, email);
-            ps.setString(4, pass);
+            ps.setString(1, user.getNick());
+            ps.setString(2, user.getUserName());
+            ps.setString(3, user.getEmail());
+            ps.setString(4, user.getPass());
             return ps;
         }, holder);
 
-        if (result == 1)
+        if (result == 1) {
             id = holder.getKey().intValue();
+            user.setId(id);
+        }
         return id;
-    }
-
-    /**
-     * @see am/aca/dao/jdbc/impljdbc/JdbcUserDAO.java:42
-     *
-     * Add new user to DB
-     *
-     * @param user user object to be added to DB
-     * @return id of added new user in DB
-     */
-    @Override
-    public int add(User user) {
-        return add(user.getNick(), user.getUserName(), user.getPass(), user.getEmail());
-    }
-
-    /**
-     * @see am/aca/dao/jdbc/impljdbc/JdbcUserDAO.java:42
-     *
-     * Add new user to DB
-     *
-     * @param nick  new user's nick name
-     * @param pass  new user's password
-     * @param email new user's email
-     * @return id of added new user in DB
-     */
-    @Override
-    public int add(String nick, String pass, String email) {
-        return add(nick, "", pass, email);
     }
 
     // READ

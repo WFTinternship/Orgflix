@@ -3,7 +3,7 @@ package am.aca.service;
 import am.aca.entity.User;
 
 /**
- * Created by David on 5/27/2017
+ * Interface for user service layer
  */
 public interface UserService {
 

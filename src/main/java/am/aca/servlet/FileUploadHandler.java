@@ -17,7 +17,7 @@ import java.nio.file.Paths;
 import java.util.List;
 
 /**
- * Created by Vardan on 16.06.2017
+ *
  */
 @WebServlet("/upload")
 public class FileUploadHandler extends HttpServlet {

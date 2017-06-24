@@ -2,11 +2,10 @@ package am.aca.dao.jdbc;
 
 import am.aca.entity.Film;
 
-import javax.sql.DataSource;
 import java.util.List;
 
 /**
- * Created by karine on 5/31/2017
+ * Interface for list of films DAO
  */
 
 public interface ListDao {

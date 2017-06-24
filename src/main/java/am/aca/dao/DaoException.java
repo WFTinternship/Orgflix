@@ -1,7 +1,7 @@
 package am.aca.dao;
 
 /**
- * Created by Vardan on 02.06.2017
+ * DAO exception class for JDBC implementation
  */
 public class DaoException extends RuntimeException {
 

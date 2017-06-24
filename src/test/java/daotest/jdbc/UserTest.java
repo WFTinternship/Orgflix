@@ -14,16 +14,17 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 
 /**
- * Created by David on 5/29/2017
+ * Test for user DAO
  */
 public class UserTest {
     private ApplicationContext ctx =
             new ClassPathXmlApplicationContext("applicationContext-persistance-test.xml");
 
     private UserDAO userDao = ctx.getBean("jdbcUserDAO", JdbcUserDAO.class);
-    private TestHelper helper = ctx.getBean("testHelper", TestHelper.class);
+    private TestHelper testHelper = ctx.getBean("testHelper", TestHelper.class);
+
     private User user;
-    private final User standartUser = new User("gago", "Gagik Petrosyan", "davit.abovyan@gmail.com", "pass");
+    private final User standardUser = new User("gago", "Gagik Petrosyan", "davit.abovyan@gmail.com", "pass");
 
     @Before
     public void setUp() {
@@ -31,13 +32,13 @@ public class UserTest {
 
     @After
     public void end() {
-        helper.emptyTable(new String[]{"users"});
+        testHelper.emptyTable(new String[]{"users"});
         user = null;
     }
 
     @Test
     public void addUser_Successed() {
-        Assert.assertTrue(userDao.add(standartUser) > 0);
+        Assert.assertTrue(userDao.add(standardUser) > 0);
     }
 
     @Test
@@ -46,7 +47,7 @@ public class UserTest {
         Assert.assertTrue(userDao.add(user) > 0);
     }
 
-    @Test (expected = DaoException.class)
+    @Test(expected = DaoException.class)
     public void addUser_Fail_EmptyNick() {
         userDao.add(new User("", "Gagik Petrosyan", "gagik2@gmail.com", "pass"));
     }
@@ -79,33 +80,33 @@ public class UserTest {
 
     @Test(expected = org.springframework.dao.DuplicateKeyException.class)
     public void addUser_Fail_EmailAlreadyExists() {
-        userDao.add(standartUser);
+        userDao.add(standardUser);
         userDao.add(new User("armen", "Armen Hakobyan", "davit.abovyan@gmail.com", "pass1"));
     }
 
     @Test
-    public void getUser_Succed_ById() {
-        int id = userDao.add(standartUser);
+    public void getUser_Succeed_ById() {
+        int id = userDao.add(standardUser);
         User gotUser = userDao.get(id);
-        Assert.assertTrue(standartUser.equals(gotUser));
+        Assert.assertTrue(standardUser.equals(gotUser));
     }
 
     @Test
     public void getUser_Fail_ByWrongId() {
-        userDao.add(standartUser);
+        userDao.add(standardUser);
         int id = userDao.add(new User("gago", "Gagik Petrosyan", "davit.abovyan1@gmail.com", "pass"));
-        Assert.assertFalse(standartUser.equals(userDao.get(id)));
+        Assert.assertFalse(standardUser.equals(userDao.get(id)));
     }
 
     @Test
     public void getUser_Succed_ByEmail() {
-        userDao.add(standartUser);
-        Assert.assertTrue(standartUser.equals(userDao.get("davit.abovyan@gmail.com")));
+        userDao.add(standardUser);
+        Assert.assertTrue(standardUser.equals(userDao.get("davit.abovyan@gmail.com")));
     }
 
     @Test(expected = org.springframework.dao.EmptyResultDataAccessException.class)
     public void getUser_Fail_ByWrongEmail() {
-        userDao.add(standartUser);
+        userDao.add(standardUser);
         Assert.assertFalse(user.equals(userDao.get("davit.abovyan1@gmail.com")));
     }
 
@@ -155,7 +156,7 @@ public class UserTest {
 
     @Test
     public void editUser_Fail_EmailNonUnic() {
-        userDao.add(standartUser);
+        userDao.add(standardUser);
         User otherUser = new User("gago", "Gagik Petrosyan", "gagik.petrosyan@gmail.com", "pass");
         userDao.add(otherUser);
         otherUser.setEmail("davit.abovyan@gmail.com");

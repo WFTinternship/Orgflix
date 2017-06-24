@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 
 /**
- * Created by David on 6/21/2017
+ * Helper methods used in testing
  */
 
 @Repository
@@ -19,9 +19,13 @@ public class TestHelper extends BaseDAO {
         this.setDataSource(dataSource);
     }
     public void emptyTable(String[] tables){
-        for (String table : tables) {
-            final String query = "DELETE FROM " + table;
-            getJdbcTemplate().update(query);
+        try {
+            for (String table : tables) {
+                final String query = "DELETE FROM " + table;
+                getJdbcTemplate().update(query);
+            }
+        }catch (RuntimeException e){
+            e.toString();
         }
     }
 }

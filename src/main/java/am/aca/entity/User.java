@@ -2,7 +2,7 @@ package am.aca.entity;
 
 
 /**
- * Created by David on 5/26/2017
+ * User entity class
  */
 public class User {
     private int id = -1;
@@ -18,12 +18,6 @@ public class User {
         this.pass = pass;
     }
     public User(){}
-
-    public boolean checkFields(){
-        return nick != null && nick.length()!=0 &&
-                email != null && email.length() !=0 &&
-                pass != null && pass.length() != 0;
-    }
 
     @Override
     public boolean equals(Object o) {

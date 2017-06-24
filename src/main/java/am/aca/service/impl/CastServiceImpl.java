@@ -1,6 +1,5 @@
 package am.aca.service.impl;
 
-import am.aca.dao.DaoException;
 import am.aca.dao.jdbc.CastDAO;
 import am.aca.dao.jdbc.FilmDAO;
 import am.aca.dao.jdbc.impljdbc.JdbcCastDAO;
@@ -8,27 +7,27 @@ import am.aca.dao.jdbc.impljdbc.JdbcFilmDAO;
 import am.aca.entity.Cast;
 import am.aca.entity.Film;
 import am.aca.service.CastService;
+
 import org.apache.log4j.Logger;
+
+import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
- * Created by David on 6/7/2017
+ * Service layer for actor related methods
  */
 @Service
 public class CastServiceImpl implements CastService {
 
     private static final Logger LOGGER = Logger.getLogger(CastServiceImpl.class);
-    private ApplicationContext ctx = null;
     private CastDAO castDAO;
     private FilmDAO filmDAO;
 
     @Autowired
     public CastServiceImpl(ApplicationContext ctx) {
-        this.ctx = ctx;
         castDAO = ctx.getBean("jdbcCastDAO", JdbcCastDAO.class);
         filmDAO = ctx.getBean("jdbcFilmDAO", JdbcFilmDAO.class);
     }
@@ -38,7 +37,7 @@ public class CastServiceImpl implements CastService {
 //        Cast castObj = null;
 //        try {
 //            castObj = castDAO.addCast(cast, hasOscar);
-//        } catch (DaoException e) {
+//        } catch (RuntimeException e) {
 //            LOGGER.warn(e.toString());
 //        }
 //        return castObj;
@@ -78,7 +77,7 @@ public class CastServiceImpl implements CastService {
             }
         try {
                 state = castDAO.addCastToFilm(cast, filmId);
-        }catch(DaoException e){
+        }catch(RuntimeException e){
             LOGGER.warn(e.getMessage());
         }
         return state;
@@ -91,7 +90,7 @@ public class CastServiceImpl implements CastService {
             return false;
         try {
             state = castDAO.editCast(cast);
-        }catch (DaoException e){
+        }catch (RuntimeException e){
             LOGGER.warn(e.toString());
         }
         return state;
@@ -103,7 +102,7 @@ public class CastServiceImpl implements CastService {
         List<Cast> list = null;
         try {
             list = castDAO.listCast();
-        }catch (DaoException e){
+        }catch (RuntimeException e){
             LOGGER.warn(e.getMessage());
         }
         return list;
@@ -115,7 +114,7 @@ public class CastServiceImpl implements CastService {
         List list = null;
         try {
             list = filmDAO.getFilmsByCast(castId);
-        }catch (DaoException e){
+        }catch (RuntimeException e){
             LOGGER.warn(e.toString());
         }
         return list;

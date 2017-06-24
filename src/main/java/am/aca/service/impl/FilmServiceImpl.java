@@ -1,35 +1,31 @@
 package am.aca.service.impl;
 
-import am.aca.dao.DaoException;
 import am.aca.dao.jdbc.CastDAO;
 import am.aca.dao.jdbc.FilmDAO;
 import am.aca.dao.jdbc.impljdbc.JdbcCastDAO;
 import am.aca.dao.jdbc.impljdbc.JdbcFilmDAO;
-import am.aca.entity.Cast;
-import am.aca.entity.Film;
-import am.aca.entity.Genre;
+import am.aca.entity.*;
 import am.aca.service.FilmService;
 import org.apache.log4j.Logger;
+
+import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
- * Created by David on 6/7/2017
+ * Service layer for film related methods
  */
 @Service
 public class FilmServiceImpl implements FilmService {
 
     private static final Logger LOGGER = Logger.getLogger(FilmServiceImpl.class);
-    private ApplicationContext ctx;
     private FilmDAO filmDao;
     private CastDAO castDao;
 
     @Autowired
     public FilmServiceImpl(ApplicationContext ctx) {
-        this.ctx = ctx;
         filmDao = ctx.getBean("jdbcFilmDAO", JdbcFilmDAO.class);
         castDao = ctx.getBean("jdbcCastDAO", JdbcCastDAO.class);
     }
@@ -40,7 +36,7 @@ public class FilmServiceImpl implements FilmService {
             boolean result = filmDao.addFilm(film);
             if (!result)
                 return false;
-        } catch (DaoException e) {
+        } catch (RuntimeException e) {
             LOGGER.warn(e.toString());
             return false;
         }
@@ -56,14 +52,14 @@ public class FilmServiceImpl implements FilmService {
         try {
             if (!filmDao.editFilm(film))
                 return false;
-        } catch (DaoException e) {
+        } catch (RuntimeException e) {
             LOGGER.warn(e.toString());
             return false;
         }
         try {
             filmDao.resetRelationGenres(film);
             filmDao.resetRelationCasts(film);
-        } catch (DaoException e) {
+        } catch (RuntimeException e) {
             LOGGER.warn(e.toString());
         }
 
@@ -77,7 +73,7 @@ public class FilmServiceImpl implements FilmService {
         Film film = null;
         try {
             film = filmDao.getFilmById(id);
-        } catch (DaoException e) {
+        } catch (RuntimeException e) {
             LOGGER.warn(e.toString());
         }
         return film;
@@ -88,7 +84,7 @@ public class FilmServiceImpl implements FilmService {
         List<Film> list = null;
         try {
             list = filmDao.getFilmsByCast(castId);
-        } catch (DaoException e) {
+        } catch (RuntimeException e) {
             LOGGER.warn(e.toString());
         }
         return list;
@@ -104,7 +100,7 @@ public class FilmServiceImpl implements FilmService {
         List<Film> list = null;
         try {
             list = filmDao.getFilmsList(startIndex);
-        } catch (DaoException e) {
+        } catch (RuntimeException e) {
             LOGGER.warn(e.toString());
         }
         return list;
@@ -115,7 +111,7 @@ public class FilmServiceImpl implements FilmService {
         List<Film> list = null;
         try {
             list = filmDao.getFilmsByGenre(genre);
-        } catch (DaoException e) {
+        } catch (RuntimeException e) {
             LOGGER.warn(e.toString());
         }
         return list;
@@ -126,7 +122,7 @@ public class FilmServiceImpl implements FilmService {
         boolean state = false;
         try {
             state = filmDao.rateFilm(filmId, starType);
-        } catch (DaoException e) {
+        } catch (RuntimeException e) {
             LOGGER.warn(e.toString());
         }
         return state;
@@ -137,7 +133,7 @@ public class FilmServiceImpl implements FilmService {
         boolean state = false;
         try {
             state = filmDao.addGenreToFilm(genre, filmId);
-        } catch (DaoException e) {
+        } catch (RuntimeException e) {
             LOGGER.warn(e.toString());
         }
         return state;
@@ -153,7 +149,7 @@ public class FilmServiceImpl implements FilmService {
 //        boolean state = false;
 //        try {
 //            state = castDao.addCastToFilm(cast, filmId);
-//        } catch (DaoException e) {
+//        } catch (RuntimeException e) {
 //            LOGGER.warn(e.toString());
 //        }
 //        return state;
@@ -169,7 +165,7 @@ public class FilmServiceImpl implements FilmService {
         double rate = 0.0;
         try {
             rate = filmDao.getRating(filmId);
-        } catch (DaoException e) {
+        } catch (RuntimeException e) {
             LOGGER.warn(e.toString());
         }
         return rate;
@@ -185,7 +181,7 @@ public class FilmServiceImpl implements FilmService {
         int total = 0;
         try {
             total = filmDao.totalNumberOfFilms();
-        } catch (DaoException e) {
+        } catch (RuntimeException e) {
             LOGGER.warn(e.toString());
         }
         return total;
@@ -196,7 +192,7 @@ public class FilmServiceImpl implements FilmService {
             for (Genre genre : film.getGenres()) {
                 addGenreToFilm(genre, film);
             }
-        } catch (DaoException e) {
+        } catch (RuntimeException e) {
             LOGGER.warn(e.toString());
         }
 
@@ -205,7 +201,7 @@ public class FilmServiceImpl implements FilmService {
                 castDao.addCast(cast);
                 castDao.addCastToFilm(cast, film);
             }
-        } catch (DaoException e) {
+        } catch (RuntimeException e) {
             LOGGER.warn(e.toString());
         }
     }

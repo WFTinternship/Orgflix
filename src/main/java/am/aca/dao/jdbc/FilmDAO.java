@@ -6,7 +6,7 @@ import am.aca.entity.Genre;
 import java.util.List;
 
 /**
- * Created by David on 5/28/2017
+ * Interface for Film DAO
  */
 public interface FilmDAO {
     // Create

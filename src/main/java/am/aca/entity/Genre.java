@@ -1,7 +1,7 @@
 package am.aca.entity;
 
 /**
- * Created by karine on 6/3/2017
+ * Fixed enumeration for types of film genres
  */
 public enum Genre {
     FAMILY (1, "Family"),

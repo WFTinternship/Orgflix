@@ -1,7 +1,7 @@
 package am.aca.entity;
 
 /**
- * Created by David on 5/31/2017
+ * Actor entity class
  */
 public class Cast {
     private int id;

@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Created by Vardan on 09.06.2017
+ *
  */
 @WebServlet("/home")
 public class HomeServlet extends HttpServlet {

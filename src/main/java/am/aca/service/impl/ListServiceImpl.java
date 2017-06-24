@@ -1,6 +1,5 @@
 package am.aca.service.impl;
 
-import am.aca.dao.DaoException;
 import am.aca.dao.jdbc.FilmDAO;
 import am.aca.dao.jdbc.ListDao;
 import am.aca.dao.jdbc.impljdbc.JdbcFilmDAO;
@@ -15,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * Created by David on 6/7/2017
+ * Service layer for methods related to list of films
  */
 @Service
 public class ListServiceImpl implements ListService {
@@ -46,7 +45,7 @@ public class ListServiceImpl implements ListService {
             }
             else listDao.insertWatched(film, userId, isPublic);
 //            state = listDao.addToWatched(film, isPublic, userId);
-        } catch (DaoException e) {
+        } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
         }
     }
@@ -65,7 +64,7 @@ public class ListServiceImpl implements ListService {
             if (listDao.areRelated(film, userId))
                 listDao.updatePlanned(film, userId);
             else listDao.insertPlanned(film, userId, isPublic);
-        } catch (DaoException e) {
+        } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
         }
     }
@@ -79,7 +78,7 @@ public class ListServiceImpl implements ListService {
                 listDao.resetWatched(film, userId);
             }
             else listDao.removeFilm(film, userId);
-        } catch (DaoException e) {
+        } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
         }
     }
@@ -92,7 +91,7 @@ public class ListServiceImpl implements ListService {
             if (listDao.isWatched(film, userId))
                 listDao.resetPlanned(film, userId);
             else listDao.removeFilm(film, userId);
-        } catch (DaoException e) {
+        } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
         }
     }
@@ -102,7 +101,7 @@ public class ListServiceImpl implements ListService {
         List list = null;
         try {
             list = listDao.showOwnWatched(userId);
-        }catch (DaoException e){
+        }catch (RuntimeException e){
             LOGGER.warn(e.getMessage());
         }
         return list;
@@ -113,7 +112,7 @@ public class ListServiceImpl implements ListService {
         List list = null;
         try {
             list = listDao.showOwnPlanned(userId);
-        }catch (DaoException e){
+        }catch (RuntimeException e){
             LOGGER.warn(e.getMessage());
         }
         return list;
@@ -124,7 +123,7 @@ public class ListServiceImpl implements ListService {
         List list = null;
         try {
             list = listDao.showOthersWatched(userId);
-        }catch (DaoException e){
+        }catch (RuntimeException e){
             LOGGER.warn(e.getMessage());
         }
         return list;
@@ -135,7 +134,7 @@ public class ListServiceImpl implements ListService {
         List list = null;
         try {
             list = listDao.showOthersPlanned(userId);
-        }catch (DaoException e){
+        }catch (RuntimeException e){
             LOGGER.warn(e.getMessage());
         }
         return list;
@@ -143,15 +142,23 @@ public class ListServiceImpl implements ListService {
 
     @Override
     public void makePrivate(int userId, Film film) {
-        if (!listDao.areRelated(film, userId))
-            return;
-        listDao.changePrivacy(film, userId, false);
+        try {
+            if (!listDao.areRelated(film, userId))
+                return;
+            listDao.changePrivacy(film, userId, false);
+        }catch (RuntimeException e){
+            LOGGER.warn(e.getMessage());
+        }
     }
 
     @Override
     public void makePublic(int userId, Film film) {
-        if (!listDao.areRelated(film, userId))
-            return;
-        listDao.changePrivacy(film, userId, true);
+        try {
+            if (!listDao.areRelated(film, userId))
+                return;
+            listDao.changePrivacy(film, userId, true);
+        }catch (RuntimeException e){
+            LOGGER.warn(e.getMessage());
+        }
     }
 }

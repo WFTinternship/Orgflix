@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by David on 5/26/2017
+ * Film entity class
  */
 public class Film {
     private int id;

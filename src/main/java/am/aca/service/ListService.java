@@ -5,7 +5,7 @@ import am.aca.entity.Film;
 import java.util.List;
 
 /**
- * Created by karine on 5/31/2017
+ * Interface for film lists service layer
  */
 public interface ListService {
     void addToWatched(Film film, boolean isPublic, int userId);

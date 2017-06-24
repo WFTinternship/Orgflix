@@ -26,13 +26,13 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
 
         ApplicationContext ctx =
-                new ClassPathXmlApplicationContext("applicationContext-persistance.xml");
+                new ClassPathXmlApplicationContext("WEB-INF/applicationContext-persistance.xml");
 
 
         response.setContentType("text/html");
 
         String email = request.getParameter("email");
-        User user = new UserServiceImpl(ctx).getUser(email);
+        User user = new UserServiceImpl(ctx).get(email);
 
         if(user != null){
             final String showUser = user.getNick() + " (" + email + ")";
@@ -44,9 +44,9 @@ public class LoginServlet extends HttpServlet {
             request.setAttribute("user", showUser);
             request.setAttribute("userAuth", user.getNick().hashCode()+email.hashCode());
 
-            request.getRequestDispatcher("/home.jsp").forward(request, response);
+            request.getRequestDispatcher("WEB-INF/home.jsp").forward(request, response);
         } else {
-            request.getRequestDispatcher("/error.jsp").forward(request, response);
+            request.getRequestDispatcher("WEB-INF/error.jsp").forward(request, response);
         }
     }
 
@@ -55,6 +55,6 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
 
         response.setContentType("text/html");
-        request.getRequestDispatcher("/login.jsp").forward(request, response);
+        request.getRequestDispatcher("WEB-INF/login.jsp").forward(request, response);
     }
 }

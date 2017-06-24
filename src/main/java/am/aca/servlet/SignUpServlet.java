@@ -26,7 +26,7 @@ public class SignUpServlet extends HttpServlet {
             throws ServletException, IOException {
 
         ApplicationContext ctx =
-                new ClassPathXmlApplicationContext("applicationContext-persistance.xml");
+                new ClassPathXmlApplicationContext("WEB-INF/applicationContext-persistance.xml");
 
         response.setContentType("text/html");
 
@@ -40,7 +40,7 @@ public class SignUpServlet extends HttpServlet {
 
 
         User user = new User(nick, userName, email, pass);
-        int userId = new UserServiceImpl(ctx).addUser(user);
+        int userId = new UserServiceImpl(ctx).add(user);
         if( userId != -1) {
             List<Film> films = new FilmServiceImpl(ctx).getFilmsList(0);
             request.setAttribute("films", films);
@@ -49,9 +49,9 @@ public class SignUpServlet extends HttpServlet {
             request.setAttribute("user", showUser);
             request.setAttribute("userAuth", nick.hashCode()+email.hashCode());
 
-            request.getRequestDispatcher("/home.jsp").forward(request, response);
+            request.getRequestDispatcher("WEB-INF/home.jsp").forward(request, response);
         } else {
-            request.getRequestDispatcher("/error.jsp").forward(request, response);
+            request.getRequestDispatcher("WEB-INF/error.jsp").forward(request, response);
         }
 
     }
@@ -61,6 +61,6 @@ public class SignUpServlet extends HttpServlet {
             throws ServletException, IOException {
 
         response.setContentType("text/html");
-        request.getRequestDispatcher("/signup.jsp").forward(request, response);
+        request.getRequestDispatcher("WEB-INF/signup.jsp").forward(request, response);
     }
 }

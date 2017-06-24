@@ -1,34 +1,40 @@
-package service;
+package am.aca.orgflix.service;
 
 import am.aca.entity.Cast;
 import am.aca.entity.Film;
+import am.aca.orgflix.BaseIntegrationTest;
 import am.aca.service.CastService;
 import am.aca.service.FilmService;
-import am.aca.service.impl.CastServiceImpl;
-import am.aca.service.impl.FilmServiceImpl;
 import am.aca.util.TestHelper;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
  * Test for Cast services
  */
-public class CastTest {
+public class CastTest extends BaseIntegrationTest{
+
+    @Autowired
+    @Qualifier("castServiceImpl")
     private CastService castService;
+
+    @Autowired
+    @Qualifier("filmServiceImpl")
     private FilmService filmService;
-    private ApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext-persistance-test.xml");
-    private TestHelper helper = ctx.getBean("testHelper", TestHelper.class);
+
+    @Autowired
+    @Qualifier("testHelper")
+    private TestHelper helper;
+
     private Cast cast;
     private Film film;
 
     @Before
     public void setUp() {
-        castService = ctx.getBean("castServiceImpl", CastServiceImpl.class);
-        filmService = ctx.getBean("filmServiceImpl", FilmServiceImpl.class);
     }
 
     @After

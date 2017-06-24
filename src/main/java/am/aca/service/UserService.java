@@ -7,12 +7,12 @@ import am.aca.entity.User;
  */
 public interface UserService {
 
-    int addUser(User user);
+    int add(User user);
 
-    User getUser(int id);
+    User get(int id);
 
-    User getUser(String email);
+    User get(String email);
 
-    boolean editUser(User user);
+    boolean edit(User user);
 
 }

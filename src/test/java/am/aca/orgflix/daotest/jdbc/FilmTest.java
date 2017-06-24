@@ -1,33 +1,38 @@
-package daotest.jdbc;
+package am.aca.orgflix.daotest.jdbc;
 
 import am.aca.dao.DaoException;
 import am.aca.dao.jdbc.CastDAO;
 import am.aca.dao.jdbc.FilmDAO;
-import am.aca.dao.jdbc.impljdbc.JdbcCastDAO;
-import am.aca.dao.jdbc.impljdbc.JdbcFilmDAO;
 import am.aca.entity.Cast;
 import am.aca.entity.Film;
 import am.aca.entity.Genre;
+import am.aca.orgflix.BaseIntegrationTest;
 import am.aca.util.TestHelper;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import static org.junit.Assert.assertTrue;
 
 /**
  * Test for film DAO methods
  */
-public class FilmTest {
-    private ApplicationContext ctx =
-            new ClassPathXmlApplicationContext("applicationContext-persistance-test.xml");
+public class FilmTest extends BaseIntegrationTest {
 
-    private FilmDAO filmDAO = ctx.getBean("jdbcFilmDAO", JdbcFilmDAO.class);
-    private CastDAO castDAO = ctx.getBean("jdbcCastDAO", JdbcCastDAO.class);
-    private TestHelper helper = ctx.getBean("testHelper", TestHelper.class);
+    @Autowired
+    @Qualifier("jdbcFilmDAO")
+    private FilmDAO filmDAO;
+
+    @Autowired
+    @Qualifier("jdbcCastDAO")
+    private CastDAO castDAO;
+
+    @Autowired
+    @Qualifier("testHelper")
+    private TestHelper helper;
 
     private Film film;
     private Cast cast;

@@ -15,7 +15,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class PaginationTagHandler extends TagSupport {
 
     ApplicationContext ctx =
-            new ClassPathXmlApplicationContext("applicationContext-persistance.xml");
+            new ClassPathXmlApplicationContext("WEB-INF/applicationContext-persistance.xml");
 
 
     public int doStartTag() throws JspException {

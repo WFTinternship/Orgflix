@@ -6,7 +6,6 @@
 <%@ page import="java.util.List" %>
 <%@ page import="am.aca.service.FilmService" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%! FilmService filmService = new FilmServiceImpl(); %>
 <!DOCTYPE HTML>
 <!--
 Phantom by HTML5 UP
@@ -53,10 +52,10 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
     <nav id="menu">
         <h2>Menu</h2>
         <ul>
-            <li><a href="home">Home</a></li>
-            <li><a href="watch_list">Watch list</a></li>
-            <li><a href="wish_list">Wish List</a></li>
-            <li><a href="loging">Login</a></li>
+            <li><a href="/home">Home</a></li>
+            <li><a href="/watch_list">Watch list</a></li>
+            <li><a href="/wish_list">Wish List</a></li>
+            <li><a href="/loging">Login</a></li>
         </ul>
     </nav>
 

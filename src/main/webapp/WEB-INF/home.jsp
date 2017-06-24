@@ -51,7 +51,7 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
             <c:if test="${userId != -1}">
                 <li><c:out value="${user}"/></li>
                 <li><a href="home">Home</a></li>
-                <li><a href="watch_list">Watch list</a></li>
+                <li><a onclick="navigator('watch_list')">Watch list</a></li>
                 <li><a href="wish_list">Wish List</a></li>
                 <li><a href="home">Logout</a></li>
             </c:if>
@@ -61,8 +61,10 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
                 <li><a href="signup">Sign up</a></li>
             </c:if>
         </ul>
+        <form id="navigator" method="POST" action="">
         <input type="hidden" id="userId" value='<c:out value="${userId}"/>'/>
         <input type="hidden" id="userAuth" value='<c:out value="${userAuth}"/>'/>
+        </form>
     </nav>
 
     <!-- Main -->
@@ -135,7 +137,7 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
 <script src="assets/js/util.js"></script>
 <!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
 <script src="assets/js/main.js"></script>
-<script src="assets/js/custom.js?v=108"></script>
+<script src="assets/js/custom.js?v=109"></script>
 
 </body>
 </html>

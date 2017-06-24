@@ -6,6 +6,10 @@ function pagination(page) {
     $("#pageForm").submit();
 }
 
+function navigator(page){
+    $('#navigator').attr('action', page);
+    $("#navigator").submit();
+}
 function submitSignUp() {
     $("#error").html(" ");
     if( $("#nick").val()=="" || $("#email").val()=="" || $("#pass").val()=="" ) {

@@ -1,11 +1,9 @@
 package am.aca.servlet;
 
 import am.aca.entity.Film;
-import am.aca.service.impl.FilmServiceImpl;
+import am.aca.service.impl.ListServiceImpl;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,8 +16,8 @@ import java.util.List;
 /**
  *
  */
-@WebServlet("/home")
-public class HomeServlet extends HttpServlet {
+@WebServlet("/watch_list")
+public class WatchListServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -30,13 +28,14 @@ public class HomeServlet extends HttpServlet {
 
         response.setContentType("text/html");
         String page = request.getParameter("currPage");
+        int userId = Integer.parseInt(request.getParameter("userId"));
 
         int pageNum = Integer.valueOf( page!=null ? page : "0" );
-        List<Film> films = new FilmServiceImpl(ctx).getFilmsList(pageNum*12);
+        List<Film> films = new ListServiceImpl(ctx).showOwnWatched(userId);
         request.setAttribute("films", films );
         request.setAttribute("message", pageNum );
-        request.setAttribute("userId", -1);
-        request.setAttribute("userAuth", 0);
+        request.setAttribute("userId", userId);
+        request.setAttribute("userAuth", request.getParameter("userAuth"));
         request.setAttribute("user", request.getParameter("user"));
         request.getRequestDispatcher("WEB-INF/home.jsp").forward(request, response);
     }
@@ -47,17 +46,19 @@ public class HomeServlet extends HttpServlet {
 
         ApplicationContext ctx =
                 new ClassPathXmlApplicationContext("WEB-INF/applicationContext-persistance.xml");
-//        WebApplicationContext ctx =
-//                WebApplicationContextUtils.getRequiredWebApplicationContext(servlet.getServletContext());
 
-        List<Film> films = new FilmServiceImpl(ctx).getFilmsList(0);
+        int userId = Integer.parseInt(request.getParameter("userId"));
+        String page = request.getParameter("currPage");
+
+        int pageNum = Integer.valueOf( page!=null ? page : "0" );
+        List<Film> films = new ListServiceImpl(ctx).showOwnWatched(userId);
 
         response.setContentType("text/html");
         request.setAttribute("message", "0" );
         request.setAttribute("films", films );
-        request.setAttribute("userId", -1);
-        request.setAttribute("userAuth", 0);
-        request.setAttribute("user", "");
-        request.getRequestDispatcher("WEB-INF/home.jsp").forward(request, response);
+        request.setAttribute("userId", userId);
+        request.setAttribute("userAuth", request.getParameter("userAuth"));
+        request.setAttribute("user", request.getParameter("user"));
+        request.getRequestDispatcher("WEB-INF/watch_list.jsp").forward(request, response);
     }
 }

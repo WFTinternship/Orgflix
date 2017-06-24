@@ -1,30 +1,39 @@
-package service;
+package am.aca.orgflix.service;
 
 import am.aca.entity.Film;
 import am.aca.entity.User;
+import am.aca.orgflix.BaseIntegrationTest;
 import am.aca.service.FilmService;
 import am.aca.service.ListService;
 import am.aca.service.UserService;
-import am.aca.service.impl.FilmServiceImpl;
 import am.aca.util.TestHelper;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
  * Created by karine on 6/21/2017
  */
-public class ListTest {
+public class ListTest extends BaseIntegrationTest{
 
-    private ApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext-persistance-test.xml");
+    @Autowired
+    @Qualifier("listServiceImpl")
+    private ListService listService;
 
-    private ListService listService = ctx.getBean("listServiceImpl", ListService.class);
-    private FilmService filmService = ctx.getBean("filmServiceImpl", FilmServiceImpl.class);
-    private UserService userService = ctx.getBean("userServiceImpl", UserService.class);
-    private TestHelper helper = ctx.getBean("testHelper", TestHelper.class);
+    @Autowired
+    @Qualifier("filmServiceImpl")
+    private FilmService filmService;
+
+    @Autowired
+    @Qualifier("userServiceImpl")
+    private UserService userService;
+
+    @Autowired
+    @Qualifier("testHelper")
+    private TestHelper helper;
 
     private Film film;
     private User user;
@@ -35,7 +44,7 @@ public class ListTest {
         filmService.addFilm(film);
 
         user = new User("hulk", "Bruce Banner", "brucebanner@avengers.com", "natasha");
-        userService.addUser(user);
+        userService.add(user);
 
     }
 

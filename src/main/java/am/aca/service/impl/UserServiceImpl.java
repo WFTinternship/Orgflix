@@ -1,5 +1,6 @@
 package am.aca.service.impl;
 
+import am.aca.dao.DaoException;
 import am.aca.dao.jdbc.UserDAO;
 import am.aca.dao.jdbc.impljdbc.JdbcUserDAO;
 import am.aca.entity.User;
@@ -25,46 +26,50 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int addUser(User user) {
+    public int add(User user) {
         int id = -1;
         try {
             id = userDao.add(user);
         }catch (RuntimeException e){
             LOGGER.warn(e.getMessage());
+            throw new DaoException(e.getMessage());
         }
         return id;
     }
 
     @Override
-    public User getUser(int id) {
+    public User get(int id) {
         User user = null;
         try {
             user = userDao.get(id);
         }catch (RuntimeException e){
             LOGGER.warn(e.getMessage());
+            throw new DaoException(e.getMessage());
         }
         return user;
     }
 
     @Override
-    public User getUser(String email) {
+    public User get(String email) {
         User user = null;
         try {
             user = userDao.get(email);
             System.out.println(user);
         }catch (RuntimeException e){
             LOGGER.warn(e.getMessage());
+            throw new DaoException(e.getMessage());
         }
         return user;
     }
 
     @Override
-    public boolean editUser(User user) {
+    public boolean edit(User user) {
         boolean state = false;
         try {
             state = userDao.edit(user);
         }catch (RuntimeException e){
             LOGGER.warn(e.getMessage());
+            throw new DaoException(e.getMessage());
         }
         return state;
     }

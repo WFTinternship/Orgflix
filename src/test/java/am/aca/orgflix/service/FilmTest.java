@@ -1,8 +1,9 @@
-package service;
+package am.aca.orgflix.service;
 
 import am.aca.entity.Cast;
 import am.aca.entity.Film;
 import am.aca.entity.Genre;
+import am.aca.orgflix.BaseIntegrationTest;
 import am.aca.service.CastService;
 import am.aca.service.FilmService;
 import am.aca.service.impl.CastServiceImpl;
@@ -12,18 +13,28 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * Test for DAO services
  */
-public class FilmTest {
+public class FilmTest extends BaseIntegrationTest{
 
-    private ApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext-persistance-test.xml");
-    private FilmService filmService = ctx.getBean("filmServiceImpl", FilmServiceImpl.class);
-    private CastService castService = ctx.getBean("castServiceImpl", CastServiceImpl.class);
-    private TestHelper helper = ctx.getBean("testHelper", TestHelper.class);
+    @Autowired
+    @Qualifier("filmServiceImpl")
+    private FilmService filmService;
+
+    @Autowired
+    @Qualifier("castServiceImpl")
+    private CastService castService;
+
+    @Autowired
+    @Qualifier("testHelper")
+    private TestHelper helper;
+
     private Film film;
     private Cast cast;
 

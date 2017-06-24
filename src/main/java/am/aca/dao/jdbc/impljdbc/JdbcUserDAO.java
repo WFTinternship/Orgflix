@@ -34,10 +34,7 @@ public class JdbcUserDAO extends BaseDAO implements UserDAO {
     /**
      * Add new user to DB
      *
-     * @param nick  new user's nick name
-     * @param name  new user's name (not required)
-     * @param pass  new user's password
-     * @param email new user's email
+     * @param user
      * @return id of added new user in DB
      */
     @Override

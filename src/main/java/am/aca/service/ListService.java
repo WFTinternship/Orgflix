@@ -8,13 +8,13 @@ import java.util.List;
  * Interface for film lists service layer
  */
 public interface ListService {
-    void addToWatched(Film film, boolean isPublic, int userId);
+    boolean addToWatched(Film film, boolean isPublic, int userId);
 
-    void addToPlanned(Film film, boolean isPublic, int userId);
+    boolean addToPlanned(Film film, boolean isPublic, int userId);
 
-    void removeFromWatched(Film film, int userId);
+    boolean removeFromWatched(Film film, int userId);
 
-    void removeFromPlanned(Film film, int userId);
+    boolean removeFromPlanned(Film film, int userId);
 
     List showOwnWatched(int userId);
 
@@ -24,7 +24,7 @@ public interface ListService {
 
     List showOthersPlanned(int userId);
 
-    void makePrivate (int userId, Film film);
+    boolean makePrivate (int userId, Film film);
 
-    void makePublic (int userId, Film film);
+    boolean makePublic (int userId, Film film);
 }

@@ -11,27 +11,27 @@ import java.util.List;
 public interface ListDao {
     boolean areRelated(Film film, int userId);
 
-    void updateWatched(Film film, int userId);
+    boolean updateWatched(Film film, int userId);
 
-    void insertWatched(Film film, int userId, boolean isPublic);
+    boolean insertWatched(Film film, int userId, boolean isPublic);
 
     boolean addToWatched(Film film, boolean isPublic, int userId);
 
-    void updatePlanned(Film film, int userId);
+    boolean updatePlanned(Film film, int userId);
 
-    void insertPlanned(Film film, int userId, boolean isPublic);
+    boolean insertPlanned(Film film, int userId, boolean isPublic);
 
     boolean isWatched(Film film, int userId);
 
     boolean isPlanned(Film film, int userId);
 
-    void resetWatched(Film film, int userId);
+    boolean resetWatched(Film film, int userId);
 
-    void removeFilm(Film film, int userId);
+    boolean removeFilm(Film film, int userId);
 
     boolean addToWished(Film film, boolean isPublic, int userId);
 
-    void resetPlanned(Film film, int userId);
+    boolean resetPlanned(Film film, int userId);
 
     boolean removeFromWatched(Film film, int userId);
 
@@ -45,6 +45,6 @@ public interface ListDao {
 
     List showOthersPlanned(int userId);
 
-    void changePrivacy (Film film, int userId, boolean isPublic);
+    boolean changePrivacy (Film film, int userId, boolean isPublic);
 
 }

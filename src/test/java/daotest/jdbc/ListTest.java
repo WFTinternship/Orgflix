@@ -1,8 +1,13 @@
 package daotest.jdbc;
 
-import am.aca.dao.jdbc.*;
-import am.aca.dao.jdbc.impljdbc.*;
-import am.aca.entity.*;
+import am.aca.dao.jdbc.FilmDAO;
+import am.aca.dao.jdbc.ListDao;
+import am.aca.dao.jdbc.UserDAO;
+import am.aca.dao.jdbc.impljdbc.JdbcFilmDAO;
+import am.aca.dao.jdbc.impljdbc.JdbcListDAO;
+import am.aca.dao.jdbc.impljdbc.JdbcUserDAO;
+import am.aca.entity.Film;
+import am.aca.entity.User;
 import am.aca.util.TestHelper;
 import org.junit.After;
 import org.junit.Assert;
@@ -14,7 +19,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import java.beans.PropertyVetoException;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 /**
  * Test for List DAO methods
@@ -25,15 +29,12 @@ public class ListTest {
             new ClassPathXmlApplicationContext("applicationContext-persistance-test.xml");
 
     private UserDAO userDao = ctx.getBean("jdbcUserDAO",JdbcUserDAO.class);
-    private CastDAO castDAO = ctx.getBean("jdbcCastDAO",JdbcCastDAO.class);
     private FilmDAO filmDAO = ctx.getBean("jdbcFilmDAO", JdbcFilmDAO.class);
 
     private ListDao listDao = ctx.getBean("jdbcListDAO", JdbcListDAO.class);
 
     private Film film;
-    private Cast cast;
     private int userId;
-    private ArrayList<Cast> actors = new ArrayList<>();
 
     private TestHelper testHelper = ctx.getBean("testHelper", TestHelper.class);
     @Before
@@ -41,17 +42,9 @@ public class ListTest {
 
         //setup Cast
 
-        cast = new Cast("Brian De Palma");
-        castDAO.addCast(cast);
-        actors.add(cast);
-
-        //setup Film and Film DAO
         film = new Film();
         film.setTitle("Scarface");
-        film.addGeners(Genre.ACTION);
         film.setProdYear(1983);
-        film.setRate_5star(1);
-        film.setCasts(actors);
 
         filmDAO.addFilm(film);
 
@@ -63,7 +56,7 @@ public class ListTest {
 
     @After
     public void revert() throws SQLException, IOException, PropertyVetoException {
-        testHelper.emptyTable(new String[]{"genre_to_film", "film_to_cast", "lists", "casts", "films", "users"});
+        testHelper.emptyTable(new String[]{ "lists", "films", "users"});
     }
 
     @Test

@@ -30,7 +30,8 @@ public class ListServiceImpl implements ListService {
     }
 
     @Override
-    public void addToWatched(Film film, boolean isPublic, int userId) {
+    public boolean addToWatched(Film film, boolean isPublic, int userId) {
+        boolean state = false;
         try {
             FilmDAO filmDao = ctx.getBean("jdbcFilmDAO", JdbcFilmDAO.class);
 
@@ -41,17 +42,18 @@ public class ListServiceImpl implements ListService {
 
             //case: any
             if (listDao.areRelated(film, userId)){
-                listDao.updateWatched(film, userId);
+                 state = listDao.updateWatched(film, userId);
             }
-            else listDao.insertWatched(film, userId, isPublic);
-//            state = listDao.addToWatched(film, isPublic, userId);
+            else state =  listDao.insertWatched(film, userId, isPublic);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
         }
+        return state;
     }
 
     @Override
-    public void addToPlanned(Film film, boolean isPublic, int userId) {
+    public boolean addToPlanned(Film film, boolean isPublic, int userId) {
+        boolean state = false;
         try {
             FilmDAO filmDao = ctx.getBean("jdbcFilmDAO", JdbcFilmDAO.class);
             //case: the film does not exist
@@ -60,40 +62,44 @@ public class ListServiceImpl implements ListService {
             }
 
             //case: any
-//            state = listDao.addToPlanned(film, isPublic, userId);
             if (listDao.areRelated(film, userId))
-                listDao.updatePlanned(film, userId);
-            else listDao.insertPlanned(film, userId, isPublic);
+                state = listDao.updatePlanned(film, userId);
+            else state = listDao.insertPlanned(film, userId, isPublic);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
         }
+        return state;
     }
 
     @Override
-    public void removeFromWatched(Film film, int userId) {
+    public boolean removeFromWatched(Film film, int userId) {
+        boolean state = false;
         try {
             if (!listDao.isWatched(film, userId))
-                return;
+                return false;
             if (listDao.isPlanned(film, userId)) {
-                listDao.resetWatched(film, userId);
+                state = listDao.resetWatched(film, userId);
             }
-            else listDao.removeFilm(film, userId);
+            else state = listDao.removeFilm(film, userId);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
         }
+        return state;
     }
 
     @Override
-    public void removeFromPlanned(Film film, int userId) {
+    public boolean removeFromPlanned(Film film, int userId) {
+        boolean state = false;
         try {
             if (!listDao.isPlanned(film, userId))
-                return;
+                return false;
             if (listDao.isWatched(film, userId))
-                listDao.resetPlanned(film, userId);
-            else listDao.removeFilm(film, userId);
+                state = listDao.resetPlanned(film, userId);
+            else state = listDao.removeFilm(film, userId);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
         }
+        return state;
     }
 
     @Override
@@ -141,24 +147,28 @@ public class ListServiceImpl implements ListService {
     }
 
     @Override
-    public void makePrivate(int userId, Film film) {
+    public boolean makePrivate(int userId, Film film) {
+        boolean state = false;
         try {
             if (!listDao.areRelated(film, userId))
-                return;
-            listDao.changePrivacy(film, userId, false);
+                return false;
+            state = listDao.changePrivacy(film, userId, false);
         }catch (RuntimeException e){
             LOGGER.warn(e.getMessage());
         }
+        return state;
     }
 
     @Override
-    public void makePublic(int userId, Film film) {
+    public boolean makePublic(int userId, Film film) {
+        boolean state = false;
         try {
             if (!listDao.areRelated(film, userId))
-                return;
-            listDao.changePrivacy(film, userId, true);
+                return false;
+            state = listDao.changePrivacy(film, userId, true);
         }catch (RuntimeException e){
             LOGGER.warn(e.getMessage());
         }
+        return state;
     }
 }

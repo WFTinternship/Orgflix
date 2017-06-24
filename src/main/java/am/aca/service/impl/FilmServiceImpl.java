@@ -92,7 +92,7 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public List<Film> getFilmsByCast(Cast cast) {
-        return filmDao.getFilmsByCast(cast.getId());
+        return this.getFilmsByCast(cast.getId());
     }
 
     @Override
@@ -141,24 +141,8 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public boolean addGenreToFilm(Genre genre, Film film) {
-        return filmDao.addGenreToFilm(genre, film.getId());
+        return this.addGenreToFilm(genre, film.getId());
     }
-
-//    @Override
-//    public boolean addCastToFilm(Cast cast, int filmId) {
-//        boolean state = false;
-//        try {
-//            state = castDao.addCastToFilm(cast, filmId);
-//        } catch (RuntimeException e) {
-//            LOGGER.warn(e.toString());
-//        }
-//        return state;
-//    }
-//
-//    @Override
-//    public boolean addCastToFilm(Cast cast, Film film) {
-//        return castDao.addCastToFilm(cast, film.getId());
-//    }
 
     @Override
     public double getRating(int filmId) {

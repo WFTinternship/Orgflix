@@ -1,4 +1,4 @@
-package am.aca.orgflix.service;
+package am.aca.orgflix.integration.service;
 
 import am.aca.entity.Cast;
 import am.aca.entity.Film;
@@ -44,17 +44,17 @@ public class CastTest extends BaseIntegrationTest{
         });
     }
 
-//    @Test
-//    public void addCastWOscar_Success() {
-//        castService.addCast("Edward Norton", true);
-//        Assert.assertEquals(1, castService.listCasts().size());
-//    }
-//
-//    @Test
-//    public void addCastWoOscar_Success() {
-//        castService.addCast("Edward Norton");
-//        Assert.assertEquals(1, castService.listCasts().size());
-//    }
+    @Test
+    public void addCastWOscar_Success() {
+        castService.addCast(new Cast("Edward Norton", true));
+        Assert.assertEquals(1, castService.listCasts().size());
+    }
+
+    @Test
+    public void addCastWoOscar_Success() {
+        castService.addCast(new Cast("Edward Norton"));
+        Assert.assertEquals(1, castService.listCasts().size());
+    }
 
     @Test
     public void addCast_Success() {
@@ -82,7 +82,7 @@ public class CastTest extends BaseIntegrationTest{
         castService.addCast(cast);
         film = new Film("Fight Club", 1997);
         filmService.addFilm(film);
-        castService.addCastToFilm(cast, film);
+        Assert.assertTrue(castService.addCastToFilm(cast, film));
         Assert.assertEquals(film.getId(), castService.listFilmsByCast(cast.getId()).get(0).getId());
     }
 
@@ -92,8 +92,8 @@ public class CastTest extends BaseIntegrationTest{
         castService.addCast(cast);
         film = new Film("Fight Club", 1997);
         filmService.addFilm(film);
-        castService.addCastToFilm(cast, film);
-        castService.addCastToFilm(cast, film);
+        Assert.assertTrue(castService.addCastToFilm(cast, film.getId()));
+        Assert.assertFalse(castService.addCastToFilm(cast, film));
         Assert.assertEquals(film.getId(), castService.listFilmsByCast(cast.getId()).get(0).getId());
     }
 

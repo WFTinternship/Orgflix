@@ -1,20 +1,18 @@
-package daotest.jdbc;
+package am.aca.orgflix.integration.daotest.jdbc;
 
 import am.aca.dao.jdbc.FilmDAO;
 import am.aca.dao.jdbc.ListDao;
 import am.aca.dao.jdbc.UserDAO;
-import am.aca.dao.jdbc.impljdbc.JdbcFilmDAO;
-import am.aca.dao.jdbc.impljdbc.JdbcListDAO;
-import am.aca.dao.jdbc.impljdbc.JdbcUserDAO;
 import am.aca.entity.Film;
 import am.aca.entity.User;
+import am.aca.orgflix.BaseIntegrationTest;
 import am.aca.util.TestHelper;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.beans.PropertyVetoException;
 import java.io.IOException;
@@ -23,20 +21,27 @@ import java.sql.SQLException;
 /**
  * Test for List DAO methods
  */
-public class ListTest {
+public class ListTest extends BaseIntegrationTest {
 
-    private ApplicationContext ctx =
-            new ClassPathXmlApplicationContext("applicationContext-persistance-test.xml");
+    @Autowired
+    @Qualifier("jdbcUserDAO")
+    private UserDAO userDao;
 
-    private UserDAO userDao = ctx.getBean("jdbcUserDAO",JdbcUserDAO.class);
-    private FilmDAO filmDAO = ctx.getBean("jdbcFilmDAO", JdbcFilmDAO.class);
+    @Autowired
+    @Qualifier("jdbcFilmDAO")
+    private FilmDAO filmDAO;
 
-    private ListDao listDao = ctx.getBean("jdbcListDAO", JdbcListDAO.class);
+    @Autowired
+    @Qualifier("jdbcListDAO")
+    private ListDao listDao;
+
+    @Autowired
+    @Qualifier("testHelper")
+    private TestHelper helper;
 
     private Film film;
     private int userId;
 
-    private TestHelper testHelper = ctx.getBean("testHelper", TestHelper.class);
     @Before
     public void setUp() {
 
@@ -56,7 +61,7 @@ public class ListTest {
 
     @After
     public void revert() throws SQLException, IOException, PropertyVetoException {
-        testHelper.emptyTable(new String[]{ "lists", "films", "users"});
+        helper.emptyTable(new String[]{ "lists", "films", "users"});
     }
 
     @Test

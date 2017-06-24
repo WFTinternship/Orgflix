@@ -23,6 +23,7 @@
     </bean>
 
 
+
     <context:component-scan base-package="am.aca.dao.jdbc.impljdbc" />
 
     <bean id="jdbcUserDAO" class="am.aca.dao.jdbc.impljdbc.JdbcUserDAO" />

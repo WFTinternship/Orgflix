@@ -1,4 +1,4 @@
-package am.aca.orgflix.service;
+package am.aca.orgflix.integration.service;
 
 import am.aca.entity.Cast;
 import am.aca.entity.Film;
@@ -6,8 +6,6 @@ import am.aca.entity.Genre;
 import am.aca.orgflix.BaseIntegrationTest;
 import am.aca.service.CastService;
 import am.aca.service.FilmService;
-import am.aca.service.impl.CastServiceImpl;
-import am.aca.service.impl.FilmServiceImpl;
 import am.aca.util.TestHelper;
 import org.junit.After;
 import org.junit.Assert;
@@ -15,8 +13,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * Test for DAO services
@@ -52,7 +48,7 @@ public class FilmTest extends BaseIntegrationTest{
     @Test
     public void addFilm_Success() {
         film = new Film("In Bruges", 2008);
-        filmService.addFilm(film);
+        Assert.assertTrue(filmService.addFilm(film));
         Assert.assertTrue(film.getId() > 0);
     }
 
@@ -60,7 +56,7 @@ public class FilmTest extends BaseIntegrationTest{
     public void addFilmWithGenre_Success() {
         film = new Film("In Bruges", 2008);
         film.addGeners(Genre.ACTION);
-        filmService.addFilm(film);
+        Assert.assertTrue(filmService.addFilm(film));
         Assert.assertEquals(film, filmService.getFilmsByGenre(Genre.ACTION).get(0));
     }
 
@@ -239,8 +235,8 @@ public class FilmTest extends BaseIntegrationTest{
     public void rateFilm_Succeeded() {
         film = new Film("The Departed", 2004);
         filmService.addFilm(film);
-        filmService.rateFilm(film.getId(), 5);
-        filmService.rateFilm(film.getId(), 5);
+        Assert.assertTrue(filmService.rateFilm(film.getId(), 5));
+        Assert.assertTrue(filmService.rateFilm(film.getId(), 5));
         Assert.assertEquals(2, filmService.getFilmById(film.getId()).getRate_5star());
     }
 
@@ -255,7 +251,7 @@ public class FilmTest extends BaseIntegrationTest{
     public void addGenreToFilmBySize_Succeeded() {
         film = new Film("La La Land", 2016);
         filmService.addFilm(film);
-        filmService.addGenreToFilm(Genre.MUSICAL, film);
+        Assert.assertTrue(filmService.addGenreToFilm(Genre.MUSICAL, film));
         Assert.assertEquals(film, filmService.getFilmsByGenre(Genre.MUSICAL).get(0));
     }
 
@@ -263,7 +259,7 @@ public class FilmTest extends BaseIntegrationTest{
     public void addGenreToFilmByIdByFilm_Succeeded() {
         film = new Film("La La Land", 2016);
         filmService.addFilm(film);
-        filmService.addGenreToFilm(Genre.MUSICAL, film.getId());
+        Assert.assertTrue(filmService.addGenreToFilm(Genre.MUSICAL, film.getId()));
         Assert.assertEquals(film, filmService.getFilmsByGenre(Genre.MUSICAL).get(0));
     }
 }

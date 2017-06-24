@@ -1,4 +1,4 @@
-package am.aca.orgflix.daotest.jdbc;
+package am.aca.orgflix.integration.daotest.jdbc;
 
 import am.aca.dao.DaoException;
 import am.aca.dao.jdbc.UserDAO;
@@ -11,8 +11,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-
-import java.sql.SQLException;
 
 
 /**

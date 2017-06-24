@@ -1,4 +1,4 @@
-package am.aca.orgflix.daotest.jdbc;
+package am.aca.orgflix.integration.daotest.jdbc;
 
 import am.aca.dao.DaoException;
 import am.aca.dao.jdbc.CastDAO;

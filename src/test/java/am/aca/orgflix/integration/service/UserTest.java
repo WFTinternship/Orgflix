@@ -1,4 +1,4 @@
-package am.aca.orgflix.service;
+package am.aca.orgflix.integration.service;
 
 import am.aca.dao.DaoException;
 import am.aca.entity.User;

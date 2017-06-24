@@ -32,22 +32,6 @@ public class CastServiceImpl implements CastService {
         filmDAO = ctx.getBean("jdbcFilmDAO", JdbcFilmDAO.class);
     }
 
-//    @Override
-//    public Cast addCast(String cast, boolean hasOscar) {
-//        Cast castObj = null;
-//        try {
-//            castObj = castDAO.addCast(cast, hasOscar);
-//        } catch (RuntimeException e) {
-//            LOGGER.warn(e.toString());
-//        }
-//        return castObj;
-//    }
-
-//    @Override
-//    public Cast addCast(String cast) {
-//        return castDAO.addCast(cast);
-//    }
-
     @Override
     public boolean addCast(Cast cast) {
         boolean result = false;
@@ -62,7 +46,7 @@ public class CastServiceImpl implements CastService {
 
     @Override
     public boolean addCastToFilm(Cast cast, Film film) {
-        return castDAO.addCastToFilm(cast, film);
+        return this.addCastToFilm(cast, film.getId());
     }
 
     @Override

@@ -9,42 +9,44 @@ import java.util.List;
  */
 
 public interface ListDao {
-    boolean areRelated(Film film, int userId);
-
-    boolean updateWatched(Film film, int userId);
+    // CREATE
 
     boolean insertWatched(Film film, int userId, boolean isPublic);
 
-    boolean addToWatched(Film film, boolean isPublic, int userId);
+    boolean insertPlanned(Film film, int userId, boolean isPublic);
+
+    // RETRIEVE
+
+    List<Film> showOwnWatched(int userId);
+
+    List<Film> showOwnPlanned(int userId);
+
+    List<Film> showOthersWatched(int userId);
+
+    List<Film> showOthersPlanned(int userId);
+
+    // UPDATE
+
+    boolean updateWatched(Film film, int userId);
 
     boolean updatePlanned(Film film, int userId);
 
-    boolean insertPlanned(Film film, int userId, boolean isPublic);
+    boolean changePrivacy (Film film, int userId, boolean isPublic);
+
+    // DELETE
+
+    boolean resetWatched(Film film, int userId);
+
+    boolean resetPlanned(Film film, int userId);
+
+    boolean removeFilm(Film film, int userId);
+
+    // SUPPORT METHODS
+
+    boolean areRelated(Film film, int userId);
 
     boolean isWatched(Film film, int userId);
 
     boolean isPlanned(Film film, int userId);
-
-    boolean resetWatched(Film film, int userId);
-
-    boolean removeFilm(Film film, int userId);
-
-    boolean addToWished(Film film, boolean isPublic, int userId);
-
-    boolean resetPlanned(Film film, int userId);
-
-    boolean removeFromWatched(Film film, int userId);
-
-    boolean removeFromPlanned(Film film, int userId);
-
-    List showOwnWatched(int userId);
-
-    List showOwnPlanned(int userId);
-
-    List showOthersWatched(int userId);
-
-    List showOthersPlanned(int userId);
-
-    boolean changePrivacy (Film film, int userId, boolean isPublic);
 
 }

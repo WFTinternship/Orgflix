@@ -69,7 +69,7 @@ public class CastTest extends BaseIntegrationTest{
         castDAO.addCast(cast);
         Film film = new Film("Fight Club", 1997);
         filmDAO.addFilm(film);
-        castDAO.addCastToFilm(cast, film);
+        Assert.assertTrue(castDAO.addCastToFilm(cast, film));
         Assert.assertEquals(film.getId(), filmDAO.getFilmsByCast(cast.getId()).get(0).getId());
     }
 

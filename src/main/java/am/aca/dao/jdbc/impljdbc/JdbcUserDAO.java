@@ -74,6 +74,7 @@ public class JdbcUserDAO extends BaseDAO implements UserDAO {
      * @param id the id of the user in DB
      * @return user object with the matched id
      */
+    @SuppressWarnings("unchecked")
     @Override
     public User get(int id) {
         final String query = "SELECT * FROM users WHERE ID = ? LIMIT 1";
@@ -86,6 +87,7 @@ public class JdbcUserDAO extends BaseDAO implements UserDAO {
      * @param email the email of the user in DB
      * @return user object with the matched id
      */
+    @SuppressWarnings("unchecked")
     @Override
     public User get(String email) {
         final String query = "SELECT * FROM users WHERE Email = ? LIMIT 1";

@@ -215,7 +215,7 @@ public class FilmTest extends BaseIntegrationTest{
     @Test
     public void editFilmObjCheck_Success() {
         film = new Film("The Departed", 2004);
-        film.setHasOscar(true);
+        film.setHasOscar(false);
         filmService.addFilm(film);
 
         cast = new Cast("Matt Damon", true);

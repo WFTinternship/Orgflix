@@ -65,14 +65,95 @@ public class ListTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void areRelated_Success() {
+    public void insertWatched_Success() {
         listDao.insertWatched(film, userId, true);
-        Assert.assertEquals(true, listDao.areRelated(film, userId));
+        Assert.assertEquals(true, listDao.isWatched(film, userId));
     }
 
     @Test
-    public void areRelated_Fail() {
-        Assert.assertEquals(false, listDao.areRelated(film, userId));
+    public void insertPlanned_Success() {
+        listDao.insertPlanned(film, userId, true);
+        Assert.assertEquals(true, listDao.isPlanned(film, userId));
+    }
+
+    @Test
+    public void showOwnWatched_Success() {
+        listDao.insertWatched(film, userId, false);
+        Assert.assertEquals(film, listDao.showOwnWatched(userId).get(0));
+    }
+
+    @Test
+    public void showOwnWatched_Partial() {
+        listDao.insertWatched(film, userId, false);
+        listDao.insertWatched(film, userId, true);
+        Assert.assertEquals(2, listDao.showOwnWatched(userId).size());
+    }
+
+    @Test
+    public void showOwnWatched_Fail() {
+        Assert.assertTrue(listDao.showOwnWatched(userId).isEmpty());
+    }
+
+    @Test
+    public void showOwnPlanned_Success() {
+        listDao.insertPlanned(film, userId, false);
+        Assert.assertEquals(film, listDao.showOwnPlanned(userId).get(0));
+    }
+
+    @Test
+    public void showOwnPlanned_Partial() {
+        listDao.insertPlanned(film, userId, false);
+        listDao.insertPlanned(film, userId, true);
+        Assert.assertEquals(2, listDao.showOwnPlanned(userId).size());
+    }
+
+    @Test
+    public void showOwnPlanned_Fail() {
+        Assert.assertTrue(listDao.showOwnPlanned(userId).isEmpty());
+    }
+
+    @Test
+    public void showOthersWatched_Success() {
+        listDao.insertWatched(film, userId, true);
+        listDao.insertWatched(film, userId, true);
+        Assert.assertEquals(2, listDao.showOthersWatched(userId).size());
+    }
+
+    @Test
+    public void showOthersWatched_Partial() {
+        listDao.insertWatched(film, userId, true);
+        listDao.insertWatched(film, userId, false);
+        Assert.assertEquals(1, listDao.showOthersWatched(userId).size());
+    }
+
+    @Test
+    public void showOthersWatched_Fail() {
+        //setup List
+        listDao.insertWatched(film, userId, false);
+
+        Assert.assertEquals(0, listDao.showOthersWatched(userId).size());
+    }
+
+    @Test
+    public void showOthersPlanned_Success() {
+        listDao.insertPlanned(film, userId, true);
+        listDao.insertPlanned(film, userId, true);
+        Assert.assertEquals(2, listDao.showOthersPlanned(userId).size());
+    }
+
+    @Test
+    public void showOthersPlanned_Partial() {
+        listDao.insertPlanned(film, userId, true);
+        listDao.insertPlanned(film, userId, false);
+        Assert.assertEquals(1, listDao.showOthersPlanned(userId).size());
+    }
+
+    @Test
+    public void showOthersPlanned_Fail() {
+        //setup List
+        listDao.insertPlanned(film, userId, false);
+
+        Assert.assertEquals(0, listDao.showOthersPlanned(userId).size());
     }
 
     @Test
@@ -102,15 +183,68 @@ public class ListTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void insertWatched_Success() {
-        listDao.insertWatched(film, userId, true);
-        Assert.assertEquals(true, listDao.isWatched(film, userId));
+    public void changePrivacy_Success() {
+        listDao.insertPlanned(film, userId, true);
+        Assert.assertTrue(listDao.changePrivacy(film, userId, false));
     }
 
     @Test
-    public void insertPlanned_Success() {
+    public void changePrivacyToPrivate_Success() {
+        listDao.insertWatched(film, userId, true);
+        listDao.changePrivacy(film, userId, false);
+        Assert.assertTrue(listDao.showOthersWatched(userId).isEmpty());
+    }
+
+    @Test
+    public void changePrivacyToPublic_Success() {
+        listDao.insertWatched(film, userId, false);
+        listDao.changePrivacy(film, userId, true);
+        Assert.assertFalse(listDao.showOthersWatched(userId).isEmpty());
+    }
+
+    @Test
+    public void changePrivacy_Fail() {
+        Assert.assertFalse(listDao.changePrivacy(film, userId, false));
+    }
+
+    @Test
+    public void resetWatched_Success() {
+        listDao.insertWatched(film, userId, true);
+        listDao.resetWatched(film, userId);
+        Assert.assertEquals(false, listDao.isWatched(film, userId));
+    }
+
+    @Test
+    public void resetPlanned_Success() {
+        listDao.insertPlanned(film, userId, false);
+        listDao.resetPlanned(film, userId);
+        Assert.assertEquals(false, listDao.isPlanned(film, userId));
+    }
+
+    @Test
+    public void remove_Success() {
+        listDao.insertWatched(film, userId, true);
+        listDao.removeFilm(film, userId);
+        Assert.assertEquals(false, listDao.isWatched(film, userId));
+    }
+
+    @Test
+    public void removeOne_Success() {
+        listDao.insertWatched(film, userId, true);
         listDao.insertPlanned(film, userId, true);
-        Assert.assertEquals(true, listDao.isPlanned(film, userId));
+        listDao.removeFilm(film, userId);
+        Assert.assertEquals(false, listDao.isWatched(film, userId));
+    }
+
+    @Test
+    public void areRelated_Success() {
+        listDao.insertWatched(film, userId, true);
+        Assert.assertEquals(true, listDao.areRelated(film, userId));
+    }
+
+    @Test
+    public void areRelated_Fail() {
+        Assert.assertEquals(false, listDao.areRelated(film, userId));
     }
 
     @Test
@@ -133,148 +267,5 @@ public class ListTest extends BaseIntegrationTest {
     @Test
     public void isPlanned_Fail() {
         Assert.assertEquals(false, listDao.isPlanned(film, userId));
-    }
-
-    @Test
-    public void resetWatched_Success() {
-        listDao.insertWatched(film, userId, true);
-        listDao.resetWatched(film, userId);
-        Assert.assertEquals(false, listDao.isWatched(film, userId));
-    }
-
-    @Test
-    public void resetPlanned_Success() {
-        listDao.insertPlanned(film, userId, false);
-        listDao.resetPlanned(film, userId);
-        Assert.assertEquals(false, listDao.isPlanned(film, userId));
-    }
-
-    @Test
-    public void remove_Succedd() {
-        listDao.insertWatched(film, userId, true);
-        listDao.removeFilm(film, userId);
-        Assert.assertEquals(false, listDao.isWatched(film, userId));
-    }
-
-    @Test
-    public void removeBoth_Success() {
-        listDao.insertWatched(film, userId, true);
-        listDao.insertPlanned(film, userId, true);
-        listDao.removeFilm(film, userId);
-        Assert.assertEquals(false, listDao.isWatched(film, userId));
-    }
-
-    @Test
-    public void addNotWishedToWatchedSucceeded() {
-        listDao.addToWatched(film, true, userId);
-        Assert.assertEquals(1, listDao.showOwnWatched(userId).size());
-    }
-
-    @Test
-    public void addWishedToWatchedSucceeded() {
-        //setup List
-        listDao.addToWished(film, true, userId);
-
-        listDao.addToWatched(film, true, userId);
-        Assert.assertEquals(1, listDao.showOwnWatched(userId).size());
-    }
-
-    @Test
-    public void addNotWatchedToWishedSucceeded() {
-        listDao.addToWished(film, true, userId);
-        Assert.assertEquals(1, listDao.showOwnPlanned(userId).size());
-    }
-
-    @Test
-    public void addWatchedToWishedSucceeded() {
-        //setup List
-        listDao.addToWatched(film, true, userId);
-
-        listDao.addToWished(film, true, userId);
-        Assert.assertEquals(1, listDao.showOwnWatched(userId).size());
-    }
-
-    @Test
-    public void removeNotWatchedFromWishedSucceeded() {
-        //setup List
-        listDao.addToWished(film, true, userId);
-
-        listDao.removeFromPlanned(film, userId);
-        Assert.assertEquals(0,listDao.showOwnPlanned(userId).size());
-    }
-
-    @Test
-    public void removeWatchedFromWishedSucceeded() {
-        //setup List
-        listDao.addToWished(film, true, userId);
-        listDao.addToWatched(film, true, userId);
-
-        listDao.removeFromPlanned(film, userId);
-        Assert.assertEquals(1, listDao.showOwnWatched(userId).size());
-    }
-
-    @Test
-    public void removeNotWishedFromWatchedSucceeded() {
-        //setup List
-        listDao.addToWatched(film, true, userId);
-
-        listDao.removeFromWatched(film, userId);
-        Assert.assertEquals(listDao.showOwnWatched(userId).size(), 0);
-    }
-
-    @Test
-    public void removeWishedFromWatchedSucceeded() {
-        //setup List
-        listDao.addToWished(film, true, userId);
-        listDao.addToWatched(film, true, userId);
-
-        listDao.removeFromWatched(film, userId);
-        Assert.assertEquals(listDao.showOwnPlanned(userId).size(), 1);
-    }
-
-    @Test
-    public void removeNotWatchedFromWishedFailed() {
-        //List setup, empty list
-
-        Assert.assertFalse(listDao.removeFromPlanned(film, userId));
-    }
-
-    @Test
-    public void removeWatchedFromWishedFailed() {
-        //setup List
-        listDao.addToWatched(film, true, userId);
-
-        Assert.assertFalse(listDao.removeFromPlanned(film, userId));
-    }
-
-    @Test
-    public void removeNotWishedFromWatchedFailed() {
-        //List setup, empty list
-
-        Assert.assertFalse(listDao.removeFromWatched(film, userId));
-    }
-
-    @Test
-    public void removeWishedFromWatchedFailed() {
-        //setup List
-        listDao.addToWished(film, true, userId);
-
-        Assert.assertFalse(listDao.removeFromWatched(film, userId));
-    }
-
-    @Test
-    public void showOthersWatchedFailed() {
-        //setup List
-        listDao.addToWished(film, false, userId);
-
-        Assert.assertEquals(0, listDao.showOthersPlanned(userId).size());
-    }
-
-    @Test
-    public void showOthersWishedFailed() {
-        //setup List
-        listDao.addToWatched(film, false, userId);
-
-        Assert.assertEquals(0, listDao.showOthersWatched(userId).size());
     }
 }

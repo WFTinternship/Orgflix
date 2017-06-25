@@ -74,7 +74,7 @@ public class FilmTest extends BaseIntegrationTest {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
         filmDAO.addFilm(film);
-        filmDAO.addGenreToFilm(Genre.COMEDY, film);
+        Assert.assertTrue(filmDAO.addGenreToFilm(Genre.COMEDY, film));
         Assert.assertEquals(1, filmDAO.getFilmsByGenre(Genre.COMEDY).size());
     }
 

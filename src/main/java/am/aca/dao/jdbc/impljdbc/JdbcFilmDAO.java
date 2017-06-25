@@ -124,6 +124,7 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
      * @param id the id of the requested film
      * @return the film matching the provided id
      */
+    @SuppressWarnings("unchecked")
     @Override
     public Film getFilmById(int id) {
         final String getQuery = "SELECT * FROM films WHERE ID = ? LIMIT 1";
@@ -157,6 +158,7 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
      * @param genre the genre object which films should be returned
      * @return A list of all films associated to the provided genre
      */
+    @SuppressWarnings("unchecked")
     @Override
     public List<Film> getFilmsByGenre(Genre genre) {
         final String filmQuery = "SELECT films.ID, films.Title, films.Director, films.HasOscar, " +

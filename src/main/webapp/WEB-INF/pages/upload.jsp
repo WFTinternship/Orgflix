@@ -1,6 +1,4 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-"http://www.w3.org/TR/html4/loose.dtd">
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -11,7 +9,7 @@
 <div>
     <h3> Choose File to Upload in Server </h3>
     <form action="upload" method="post" enctype="multipart/form-data">
-        <input type="file" name="file" />
+        <input type="file" name="file" accept="image/*" />
         <input type="submit" value="upload" />
     </form>
 </div>

@@ -21,40 +21,56 @@ import java.util.List;
  */
 @WebServlet("/upload")
 public class FileUploadHandler extends HttpServlet {
-    private String UPLOAD_DIRECTORY;
+    private static final String UPLOAD_DIRECTORY = "upload";
+    private static final String UPLOAD_FILE_DIRECTORY = UPLOAD_DIRECTORY + File.separator + "New Folder";
 
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.getRequestDispatcher("WEB-INF/pages/upload.jsp").forward(req, resp);
 
+    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        UPLOAD_DIRECTORY = System.getProperty("user.home");
-        String uploadPathName = "uploads";
-        boolean success;
-        if (!Files.exists(Paths.get(System.getProperty("user.home")+"\\"+uploadPathName))) {
-            success = new java.io.File(System.getProperty("user.home"), uploadPathName).mkdirs();
-        } else success = true;
 
-        if (ServletFileUpload.isMultipartContent(request) && success) {
+        if (ServletFileUpload.isMultipartContent(request)) {
+            // constructs the directory path to store upload file
+            String uploadPath = getServletContext().getRealPath("") + File.separator + UPLOAD_FILE_DIRECTORY;
+            // creates the directory if it does not exist
+            File uploadDir = new File(uploadPath);
+            if (!uploadDir.exists()) {
+                uploadDir.mkdirs();
+            }
+
             try {
+                // parses the request's content to extract file data
                 List<FileItem> multiParts = new ServletFileUpload(
                         new DiskFileItemFactory()).parseRequest(request);
-                for (FileItem item : multiParts) {
-                    if (!item.isFormField()) {
-                        String[] name = item.getName().split("\\.");
-                        if(getServletContext().getMimeType(item.getName()).startsWith("image/")) {
-                            int index = name.length - 1;
-                            item.write(new File(UPLOAD_DIRECTORY + "\\" + uploadPathName + File.separator + 1 + "." + name[index]));
-                        } else throw new RuntimeException("The upload file is not image type");
+                if (multiParts != null && multiParts.size() > 0) {
+
+                    for (FileItem item : multiParts) {
+                        if (!item.isFormField()) {
+                            String fileName = new File(item.getName()).getName();
+                            String mimeType = getServletContext().getMimeType(fileName);
+                            if (mimeType.startsWith("image/")) {
+                                // It's an image.
+                                String filePath = uploadPath + File.separator + 1 + ".jpg";
+                                File storeFile = new File(filePath);
+                                item.write(storeFile);
+                                request.setAttribute("message", "File Uploaded Successfully " + filePath);
+                            } else {
+                                request.setAttribute("message", "Upload only jpeg files");
+
+                            }
+                        }
                     }
                 }
-                request.setAttribute("message", null);
             } catch (Exception e) {
                 request.setAttribute("message", "File Upload Failed due to " + e);
             }
         } else {
             request.setAttribute("message", "Sorry this Servlet only handles file upload request");
         }
-        request.getRequestDispatcher("result.jsp").forward(request, response);
+        request.getRequestDispatcher("WEB-INF/pages/result.jsp").forward(request, response);
     }
-
 }

@@ -41,9 +41,7 @@ public class FilmServiceImpl implements FilmService {
             return false;
         }
 
-        optimizeRelations(film);
-
-        return true;
+        return optimizeRelations(film);
 
     }
 
@@ -63,9 +61,7 @@ public class FilmServiceImpl implements FilmService {
             LOGGER.warn(e.toString());
         }
 
-        optimizeRelations(film);
-
-        return true;
+        return optimizeRelations(film);
     }
 
     @Override
@@ -141,7 +137,7 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public boolean addGenreToFilm(Genre genre, Film film) {
-        return this.addGenreToFilm(genre, film.getId());
+        return addGenreToFilm(genre, film.getId());
     }
 
     @Override
@@ -171,10 +167,11 @@ public class FilmServiceImpl implements FilmService {
         return total;
     }
 
-    private void optimizeRelations(Film film) {
+    private boolean optimizeRelations(Film film) {
         try {
             for (Genre genre : film.getGenres()) {
-                addGenreToFilm(genre, film);
+                if (!addGenreToFilm(genre, film))
+                    return false;
             }
         } catch (RuntimeException e) {
             LOGGER.warn(e.toString());
@@ -182,11 +179,13 @@ public class FilmServiceImpl implements FilmService {
 
         try {
             for (Cast cast : film.getCasts()) {
-                castDao.addCast(cast);
-                castDao.addCastToFilm(cast, film);
+                if (!castDao.addCast(cast) || !castDao.addCastToFilm(cast, film))
+                    return false;
             }
         } catch (RuntimeException e) {
             LOGGER.warn(e.toString());
         }
+
+        return true;
     }
 }

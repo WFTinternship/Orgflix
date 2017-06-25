@@ -5,6 +5,7 @@ import am.aca.dao.jdbc.ListDao;
 import am.aca.dao.jdbc.impljdbc.JdbcFilmDAO;
 import am.aca.dao.jdbc.impljdbc.JdbcListDAO;
 import am.aca.entity.Film;
+import am.aca.service.FilmService;
 import am.aca.service.ListService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +22,11 @@ public class ListServiceImpl implements ListService {
 
     private static final Logger LOGGER = Logger.getLogger(ListServiceImpl.class);
     private ListDao listDao;
-    private ApplicationContext ctx;
+    private FilmService filmService;
 
     @Autowired
     public ListServiceImpl(ApplicationContext ctx) {
-        this.ctx = ctx;
+        filmService = ctx.getBean("filmServiceImpl", FilmServiceImpl.class);
         listDao = ctx.getBean("jdbcListDAO", JdbcListDAO.class);
     }
 
@@ -33,11 +34,10 @@ public class ListServiceImpl implements ListService {
     public boolean addToWatched(Film film, boolean isPublic, int userId) {
         boolean state = false;
         try {
-            FilmDAO filmDao = ctx.getBean("jdbcFilmDAO", JdbcFilmDAO.class);
-
             //case: the film does not exist
-            if (filmDao.getFilmById(film.getId()) == null) {
-                filmDao.addFilm(film);
+            if (filmService.getFilmById(film.getId()) == null) {
+                if (!filmService.addFilm(film))
+                    return false;
             }
 
             //case: any
@@ -55,10 +55,9 @@ public class ListServiceImpl implements ListService {
     public boolean addToPlanned(Film film, boolean isPublic, int userId) {
         boolean state = false;
         try {
-            FilmDAO filmDao = ctx.getBean("jdbcFilmDAO", JdbcFilmDAO.class);
             //case: the film does not exist
-            if (filmDao.getFilmById(film.getId()) == null) {
-                filmDao.addFilm(film);
+            if (filmService.getFilmById(film.getId()) == null) {
+                filmService.addFilm(film);
             }
 
             //case: any

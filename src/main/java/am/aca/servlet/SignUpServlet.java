@@ -25,9 +25,6 @@ public class SignUpServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        ApplicationContext ctx =
-                new ClassPathXmlApplicationContext("WEB-INF/applicationContext-persistance.xml");
-
         response.setContentType("text/html");
 
         String nick, userName, email, pass;
@@ -40,18 +37,18 @@ public class SignUpServlet extends HttpServlet {
 
 
         User user = new User(nick, userName, email, pass);
-        int userId = new UserServiceImpl(ctx).add(user);
+        int userId = BeanProvider.getUserService().add(user);
         if( userId != -1) {
-            List<Film> films = new FilmServiceImpl(ctx).getFilmsList(0);
+            List<Film> films = BeanProvider.getFilmService().getFilmsList(0);
             request.setAttribute("films", films);
             request.setAttribute("message", 0);
             request.setAttribute("userId", userId);
             request.setAttribute("user", showUser);
             request.setAttribute("userAuth", nick.hashCode()+email.hashCode());
 
-            request.getRequestDispatcher("WEB-INF/home.jsp").forward(request, response);
+            request.getRequestDispatcher("WEB-INF/pages/home.jsp").forward(request, response);
         } else {
-            request.getRequestDispatcher("WEB-INF/error.jsp").forward(request, response);
+            request.getRequestDispatcher("WEB-INF/pages/error.jsp").forward(request, response);
         }
 
     }
@@ -61,6 +58,6 @@ public class SignUpServlet extends HttpServlet {
             throws ServletException, IOException {
 
         response.setContentType("text/html");
-        request.getRequestDispatcher("WEB-INF/signup.jsp").forward(request, response);
+        request.getRequestDispatcher("WEB-INF/pages/signup.jsp").forward(request, response);
     }
 }

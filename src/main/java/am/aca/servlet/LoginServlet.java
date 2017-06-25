@@ -5,6 +5,7 @@ import am.aca.entity.User;
 import am.aca.service.impl.FilmServiceImpl;
 import am.aca.service.impl.UserServiceImpl;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import javax.servlet.ServletException;
@@ -25,28 +26,24 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        ApplicationContext ctx =
-                new ClassPathXmlApplicationContext("WEB-INF/applicationContext-persistance.xml");
-
-
         response.setContentType("text/html");
 
         String email = request.getParameter("email");
-        User user = new UserServiceImpl(ctx).get(email);
+        User user = BeanProvider.getUserService().get(email);
 
         if(user != null){
             final String showUser = user.getNick() + " (" + email + ")";
 
-            List<Film> films = new FilmServiceImpl(ctx).getFilmsList(0);
+            List<Film> films = BeanProvider.getFilmService().getFilmsList(0);
             request.setAttribute("films", films);
             request.setAttribute("message", 0);
             request.setAttribute("userId", user.getId());
             request.setAttribute("user", showUser);
-            request.setAttribute("userAuth", user.getNick().hashCode()+email.hashCode());
+            request.setAttribute("userAuth", user.getPass().hashCode()+email.hashCode());
 
-            request.getRequestDispatcher("WEB-INF/home.jsp").forward(request, response);
+            request.getRequestDispatcher("WEB-INF/pages/home.jsp").forward(request, response);
         } else {
-            request.getRequestDispatcher("WEB-INF/error.jsp").forward(request, response);
+            request.getRequestDispatcher("WEB-INF/pages/error.jsp").forward(request, response);
         }
     }
 
@@ -55,6 +52,6 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
 
         response.setContentType("text/html");
-        request.getRequestDispatcher("WEB-INF/login.jsp").forward(request, response);
+        request.getRequestDispatcher("WEB-INF/pages/login.jsp").forward(request, response);
     }
 }

@@ -17,7 +17,7 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
-    <link rel="stylesheet" href="assets/css/main.css?v=103" />
+    <link rel="stylesheet" href="assets/css/main.css" />
     <!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
     <!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
 </head>
@@ -49,16 +49,16 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
         <h2>Menu</h2>
         <ul>
             <c:if test="${userId != -1}">
-                <li><c:out value="${user}"/></li>
+                <li><i class="fa fa-user fa-fw"></i> <c:out value="${user}"/></li>
                 <li><a href="home">Home</a></li>
-                <li><a onclick="navigator('watch_list')">Watch list</a></li>
-                <li><a href="wish_list">Wish List</a></li>
-                <li><a href="home">Logout</a></li>
+                <li><a onclick="navigator('watch_list')"><i class="fa fa-watchList fa-fw"></i> Watch list</a></li>
+                <li><a href="wish_list"><i class="fa fa-wishList fa-fw"></i> Wish List</a></li>
+                <li><a href="home"><i class="fa fa-logout fa-fw"></i> Logout</a></li>
             </c:if>
             <c:if test="${userId == -1}">
                 <li><a href="home">Home</a></li>
-                <li><a href="login">Login</a></li>
-                <li><a href="signup">Sign up</a></li>
+                <li><a href="login"><i class="fa fa-login fa-fw"></i> Login</a></li>
+                <li><a href="signup"><i class="fa fa-signUp fa-fw"></i> Sign up</a></li>
             </c:if>
         </ul>
         <form id="navigator" method="POST" action="">
@@ -75,17 +75,25 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
             </header>
             <section class="tiles">
                 <c:forEach items="${films}" var="film" >
-                    <article class='style1'>
-                        <span class='image'>
+                    <article class='style1' id="${film.id}" onmouseout='filmControlMenu(false,this.id)' onmouseover='filmControlMenu(true,this.id)'>
+                        <div class='image' >
                             <img src='<c:out value="${film.image}" />' />
-                        </span>
-                            <a href='generic'>
-                                <h2><c:out value="${film.title}" /></h2>
-                            </a>
+
+                        </div>
+                        <c:if test="${userId != -1}">
+                            <div id="contr_${film.id}" class="film-buttons">
+                                <a href="#" class="no_link" onclick="AddToList(true,'${film.id}')"><i class="fa fa-wishList fa-fw"></i></a>
+                                <a href="#" class="no_link" onclick="AddToList(false,'${film.id}')"><i class="fa fa-watchList fa-fw"></i></a>
+                            </div>
+                        </c:if>
+                        <div class="film-ref">
+                            <h2><c:out value="${film.title}" /></h2>
+                        </div>
                     </article>
                 </c:forEach>
 
                 <m:pagination />
+                <div class="pop-up-result"></div>
             </section>
         </div>
     </div>
@@ -137,7 +145,7 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
 <script src="assets/js/util.js"></script>
 <!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
 <script src="assets/js/main.js"></script>
-<script src="assets/js/custom.js?v=109"></script>
+<script src="assets/js/custom.js"></script>
 
 </body>
 </html>

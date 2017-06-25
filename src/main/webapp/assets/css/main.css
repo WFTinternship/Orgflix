@@ -3379,3 +3379,131 @@
 		color:red;
 		font-weight: bold;
 	}
+	.film-buttons{
+		z-index:10;
+		position:absolute;
+		top:0px;
+		left:0px;
+		padding:0px;
+		display:none;
+		height:60px;
+		color:white;
+		font-size:20px;
+	}
+.film-ref{
+	z-index:10;
+	position:absolute;
+	top:61px;
+	left:0px;
+	padding:10px;
+	margin:40px;
+	background-color: #c9c9c9;
+	opacity:0.4;
+	filter:alpha(opacity='40');
+	text-align: center;
+	color:black;
+	font-size:16px;
+}
+#pop-up-result{
+	display:none;
+	position:fixed;
+	top:0px;
+	left:0px;
+	maring: 200px auto 100px auto;
+	border:1px solid blue;
+	background-color: #7bd0c1;
+	opacity:0.4;
+	filter:alpha(opacity='30');
+	text-align: center;
+	color: red;
+	font-weight: bold;
+}
+
+a.no_link:link,
+a.no_link:visited{
+	color:#fff;
+	text-decoration:none !important;
+}
+a.no_link:hover{
+	color:#e78800 !important;
+	text-decoration:none !important;
+}
+@font-face {
+	font-family: 'FontAwesome';
+	src: url('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/fonts/fontawesome-webfont.eot?v=4.7.0');
+	src: url('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/fonts/fontawesome-webfont.eot?#iefix&v=4.7.0') format('embedded-opentype'), url('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/fonts/fontawesome-webfont.woff2?v=4.7.0') format('woff2'), url('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/fonts/fontawesome-webfont.woff?v=4.7.0') format('woff'), url('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/fonts/fontawesome-webfont.ttf?v=4.7.0') format('truetype'), url('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/fonts/fontawesome-webfont.svg?v=4.7.0#fontawesomeregular') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+/* general class */
+.fa {
+	display: inline-block;
+	font: normal normal normal 14px/1 FontAwesome;
+	font-size: inherit;
+	text-rendering: auto;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+/* ico size */
+.fa-lg {
+	font-size: 1.33333333em;
+	line-height: 0.75em;
+	vertical-align: -15%;
+}
+.fa-2x {
+	font-size: 2em;
+}
+.fa-3x {
+	font-size: 3em;
+}
+.fa-4x {
+	font-size: 4em;
+}
+.fa-5x {
+	font-size: 5em;
+}
+
+/* make icos equal */
+.fa-fw {
+	width: 1.28571429em;
+	text-align: center;
+}
+
+/* ico as list bullet */
+.fa-ul {
+	padding-left: 0;
+	margin-left: 2.14285714em;
+	list-style-type: none;
+}
+.fa-ul > li {
+	position: relative;
+}
+.fa-li {
+	position: absolute;
+	left: -2.14285714em;
+	width: 2.14285714em;
+	top: 0.14285714em;
+	text-align: center;
+}
+.fa-wishList:before {
+	content: "\f274";
+}
+.fa-watchList:before {
+	content: "\f008";
+}
+.fa-user:before {
+	content: "\f2bd";
+}
+.fa-login:before {
+	content: "\f090";
+}
+.fa-logout:before {
+	content: "\f011";
+}
+.fa-star:before {
+	content: "\f005";
+}
+.fa-signUp:before {
+	content: "\f14b";
+}

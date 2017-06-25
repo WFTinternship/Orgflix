@@ -23,35 +23,30 @@ public class WatchListServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        ApplicationContext ctx =
-                new ClassPathXmlApplicationContext("WEB-INF/applicationContext-persistance.xml");
 
         response.setContentType("text/html");
         String page = request.getParameter("currPage");
         int userId = Integer.parseInt(request.getParameter("userId"));
 
         int pageNum = Integer.valueOf( page!=null ? page : "0" );
-        List<Film> films = new ListServiceImpl(ctx).showOwnWatched(userId);
+        List<Film> films = BeanProvider.getListService().showOwnWatched(userId);
         request.setAttribute("films", films );
         request.setAttribute("message", pageNum );
         request.setAttribute("userId", userId);
         request.setAttribute("userAuth", request.getParameter("userAuth"));
         request.setAttribute("user", request.getParameter("user"));
-        request.getRequestDispatcher("WEB-INF/home.jsp").forward(request, response);
+        request.getRequestDispatcher("WEB-INF/pages/home.jsp").forward(request, response);
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        ApplicationContext ctx =
-                new ClassPathXmlApplicationContext("WEB-INF/applicationContext-persistance.xml");
-
         int userId = Integer.parseInt(request.getParameter("userId"));
         String page = request.getParameter("currPage");
 
         int pageNum = Integer.valueOf( page!=null ? page : "0" );
-        List<Film> films = new ListServiceImpl(ctx).showOwnWatched(userId);
+        List<Film> films = BeanProvider.getListService().showOwnWatched(userId);
 
         response.setContentType("text/html");
         request.setAttribute("message", "0" );
@@ -59,6 +54,6 @@ public class WatchListServlet extends HttpServlet {
         request.setAttribute("userId", userId);
         request.setAttribute("userAuth", request.getParameter("userAuth"));
         request.setAttribute("user", request.getParameter("user"));
-        request.getRequestDispatcher("WEB-INF/watch_list.jsp").forward(request, response);
+        request.getRequestDispatcher("WEB-INF/pages/watch_list.jsp").forward(request, response);
     }
 }

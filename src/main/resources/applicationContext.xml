@@ -23,17 +23,16 @@
     </bean>
 
 
-
-    <context:component-scan base-package="am.aca.dao.jdbc.impljdbc" />
+    <context:component-scan base-package="am.aca" />
 
     <bean id="jdbcUserDAO" class="am.aca.dao.jdbc.impljdbc.JdbcUserDAO" />
     <bean id="jdbcCastDAO" class="am.aca.dao.jdbc.impljdbc.JdbcCastDAO" />
     <bean id="jdbcFilmDAO" class="am.aca.dao.jdbc.impljdbc.JdbcFilmDAO" />
     <bean id="listDaoJdbc" class="am.aca.dao.jdbc.impljdbc.JdbcListDAO" />
 
-    <bean id="userServiceImpl" class="am.aca.service.impl.UserServiceImpl" />
-    <bean id="castServiceImpl" class="am.aca.service.impl.CastServiceImpl" />
-    <bean id="filmServiceImpl" class="am.aca.service.impl.FilmServiceImpl" />
-    <bean id="listServiceImpl" class="am.aca.service.impl.ListServiceImpl" />
+    <bean id="userService" class="am.aca.service.impl.UserServiceImpl" />
+    <bean id="castService" class="am.aca.service.impl.CastServiceImpl" />
+    <bean id="filmService" class="am.aca.service.impl.FilmServiceImpl" />
+    <bean id="listService" class="am.aca.service.impl.ListServiceImpl" />
 
 </beans>

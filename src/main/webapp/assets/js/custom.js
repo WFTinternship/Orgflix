@@ -6,6 +6,21 @@ function pagination(page) {
     $("#pageForm").submit();
 }
 
+function filmControlMenu(state,id) {
+    if(state) {
+        $("#contr_" + id).css("display", "block");
+    }else{
+        $("#contr_" + id).css("display", "none");
+    }
+}
+
+function AddToList(type,id) {
+    $.ajax({url: "demo_test.txt",type:"POST",data:{film:id,user:$("#userId").val()},success: function(result){
+        $("#pop-up-result").html(result);
+    }});
+
+}
+
 function navigator(page){
     $('#navigator').attr('action', page);
     $("#navigator").submit();

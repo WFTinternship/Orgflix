@@ -6,6 +6,7 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import am.aca.service.impl.*;
+import am.aca.servlet.BeanProvider;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -14,15 +15,11 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  */
 public class PaginationTagHandler extends TagSupport {
 
-    ApplicationContext ctx =
-            new ClassPathXmlApplicationContext("WEB-INF/applicationContext-persistance.xml");
-
-
     public int doStartTag() throws JspException {
         JspWriter out = pageContext.getOut();//returns the instance of JspWriter
         try {
 
-            int filmnum = new FilmServiceImpl(ctx).totalNumberOfFilms();
+            int filmnum = BeanProvider.getFilmService().totalNumberOfFilms();
             if (filmnum > 12) {
                 out.print("<form class='pagintion_container' id='pageForm' method='POST' action='/home'><input type='hidden' id='currPage' name='currPage' value='0'>");
                 for (int i = 0; i <= filmnum / 12; ++i) {

@@ -17,6 +17,9 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.mockito.Mockito.when;
 
 /**
@@ -26,21 +29,20 @@ public class FilmTest extends BaseUnitTest {
 
     @Autowired
     @InjectMocks
-    @Qualifier("filmServiceImpl")
+    @Qualifier("filmService")
     private FilmService filmService;
 
     @Mock
     private JdbcFilmDAO filmMock;
     @Mock
     private JdbcCastDAO castMock;
-    private Cast cast;
-    private Film film;
+    private Cast cast = new Cast("Cate Blanchett", true);
+    private Film film = new Film("Babel", 2006);
+    private List<Film> films = new ArrayList<>();
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        film = new Film("Babel", 2006);
-        cast = new Cast("Cate Blanchett", true);
     }
 
     @Test
@@ -95,13 +97,6 @@ public class FilmTest extends BaseUnitTest {
             when(castMock.addCastToFilm(cast, film)).thenReturn(true);
         }
         Assert.assertFalse(filmService.addFilm(film));
-    }
-
-    @Ignore
-    @Test
-    public void addFilmResetError_Fail() {
-        when(filmMock.addFilm(film)).thenReturn(true);
-//        when(filmMock.resetRelationCasts(film))
     }
 
     @Test
@@ -167,5 +162,102 @@ public class FilmTest extends BaseUnitTest {
     public void editFilmResetError_Fail() {
         when(filmMock.editFilm(film)).thenReturn(true);
 //        when(filmMock.resetRelationCasts(film)).thenThrow()
+    }
+
+    @Test
+    public void getFilmById_Success() {
+        when(filmMock.getFilmById(cast.getId())).thenReturn(film);
+        Assert.assertEquals(film, filmService.getFilmById(cast.getId()));
+    }
+
+    @Test
+    public void getFilmById_Fail() {
+        when(filmMock.getFilmsByCast(cast.getId())).thenThrow(RuntimeException.class);
+        Assert.assertEquals(null, filmService.getFilmById(cast.getId()));
+    }
+
+    @Test
+    public void getFilmsByCast_Success() {
+        when(filmMock.getFilmsByCast(cast.getId())).thenReturn(films);
+        Assert.assertEquals(films, filmService.getFilmsByCast(cast.getId()));
+    }
+
+    @Test
+    public void getFilmsByCast_Fail() {
+        when(filmMock.getFilmsByCast(cast.getId())).thenThrow(RuntimeException.class);
+        Assert.assertEquals(null, filmService.getFilmById(cast.getId()));
+    }
+
+    @Test
+    public void getFilmsList_Success() {
+        films.add(film);
+        when(filmMock.getFilmsList(0)).thenReturn(films);
+        Assert.assertEquals(1, filmService.getFilmsList(0).size());
+    }
+
+    @Test
+    public void getFilmsList_Fail() {
+        when(filmMock.getFilmsList(0)).thenThrow(RuntimeException.class);
+        Assert.assertEquals(null, filmService.getFilmsList(0));
+    }
+
+    @Test
+    public void getFilmsByGenre_Success() {
+        when(filmMock.getFilmsByGenre(Genre.MUSIC)).thenReturn(films);
+        Assert.assertEquals(films, filmService.getFilmsByGenre(Genre.MUSIC));
+    }
+
+    @Test
+    public void getFilmsByGenre_Fail() {
+        when(filmMock.getFilmsByGenre(Genre.MUSIC)).thenThrow(RuntimeException.class);
+        Assert.assertEquals(null, filmService.getFilmsByGenre(Genre.MUSIC));
+    }
+
+    @Test
+    public void rateFilm_Success() {
+        when(filmMock.rateFilm(film.getId(), 5)).thenReturn(true);
+        Assert.assertTrue(filmService.rateFilm(film.getId(), 5));
+    }
+
+    @Test
+    public void rateFilm_Fail() {
+        when(filmMock.rateFilm(film.getId(), 0)).thenThrow(RuntimeException.class);
+        Assert.assertFalse(filmService.rateFilm(film.getId(), 0));
+    }
+
+    @Test
+    public void addGenreToFilm_Sucess() {
+        when(filmMock.addGenreToFilm(Genre.DRAMA, film.getId())).thenReturn(true);
+        Assert.assertTrue(filmService.addGenreToFilm(Genre.DRAMA, film.getId()));
+    }
+
+    @Test
+    public void addGenreToFilm_Fail() {
+        when(filmMock.addGenreToFilm(Genre.MUSICAL, film.getId())).thenThrow(RuntimeException.class);
+        Assert.assertFalse(filmService.addGenreToFilm(Genre.MUSICAL, film.getId()));
+    }
+
+    @Test
+    public void getRating_Success() {
+        when(filmMock.getRating(film.getId())).thenReturn(4.3);
+        Assert.assertEquals(4.3, filmService.getRating(film.getId()), 0.01);
+    }
+
+    @Test
+    public void getRating_Fail() {
+        when(filmMock.getRating(film.getId())).thenThrow(RuntimeException.class);
+        Assert.assertEquals(0.0, filmService.getRating(film.getId()), 0.01);
+    }
+
+    @Test
+    public void totalNumber_Success() {
+        when(filmMock.totalNumberOfFilms()).thenReturn(100);
+        Assert.assertEquals(100, filmService.totalNumberOfFilms());
+    }
+
+    @Test
+    public void totalNumber_Fail() {
+        when(filmMock.totalNumberOfFilms()).thenThrow(RuntimeException.class);
+        Assert.assertEquals(0, filmService.totalNumberOfFilms());
     }
 }

@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 public class UserTest extends BaseIntegrationTest {
 
     @Autowired
-    @Qualifier("userServiceImpl")
+    @Qualifier("userService")
     private UserService userService;
 
     @Autowired

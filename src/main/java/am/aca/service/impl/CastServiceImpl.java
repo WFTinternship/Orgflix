@@ -7,12 +7,11 @@ import am.aca.dao.jdbc.impljdbc.JdbcFilmDAO;
 import am.aca.entity.Cast;
 import am.aca.entity.Film;
 import am.aca.service.CastService;
-
 import org.apache.log4j.Logger;
-
-import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -37,36 +36,37 @@ public class CastServiceImpl implements CastService {
         boolean result = false;
         try {
             result = castDAO.addCast(cast);
-        }
-        catch (RuntimeException e){
+        } catch (RuntimeException e) {
             LOGGER.warn(e.toString());
         }
         return result;
     }
 
+    @Transactional
     @Override
     public boolean addCastToFilm(Cast cast, Film film) {
         return this.addCastToFilm(cast, film.getId());
     }
 
+    @Transactional
     @Override
     public boolean addCastToFilm(Cast cast, int filmId) {
         boolean state = false;
-            try {
-                if (castDAO.isStarringIn(cast.getId(), filmId))
-                    return false;
-            }
-            catch (RuntimeException e){
-                LOGGER.warn(e.getMessage());
-            }
         try {
-                state = castDAO.addCastToFilm(cast, filmId);
-        }catch(RuntimeException e){
+            if (castDAO.isStarringIn(cast.getId(), filmId))
+                return false;
+        } catch (RuntimeException e) {
+            LOGGER.warn(e.getMessage());
+        }
+        try {
+            state = castDAO.addCastToFilm(cast, filmId);
+        } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
         }
         return state;
     }
 
+    @Transactional
     @Override
     public boolean editCast(Cast cast) {
         boolean state = false;
@@ -74,7 +74,7 @@ public class CastServiceImpl implements CastService {
             return false;
         try {
             state = castDAO.editCast(cast);
-        }catch (RuntimeException e){
+        } catch (RuntimeException e) {
             LOGGER.warn(e.toString());
         }
         return state;
@@ -86,7 +86,7 @@ public class CastServiceImpl implements CastService {
         List<Cast> list = null;
         try {
             list = castDAO.listCast();
-        }catch (RuntimeException e){
+        } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
         }
         return list;
@@ -98,7 +98,7 @@ public class CastServiceImpl implements CastService {
         List list = null;
         try {
             list = filmDAO.getFilmsByCast(castId);
-        }catch (RuntimeException e){
+        } catch (RuntimeException e) {
             LOGGER.warn(e.toString());
         }
         return list;

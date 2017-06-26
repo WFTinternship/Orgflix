@@ -20,15 +20,15 @@ import org.springframework.beans.factory.annotation.Qualifier;
 public class ListTest extends BaseIntegrationTest{
 
     @Autowired
-    @Qualifier("listServiceImpl")
+    @Qualifier("listService")
     private ListService listService;
 
     @Autowired
-    @Qualifier("filmServiceImpl")
+    @Qualifier("filmService")
     private FilmService filmService;
 
     @Autowired
-    @Qualifier("userServiceImpl")
+    @Qualifier("userService")
     private UserService userService;
 
     @Autowired

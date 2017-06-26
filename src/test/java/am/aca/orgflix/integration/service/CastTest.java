@@ -19,11 +19,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 public class CastTest extends BaseIntegrationTest{
 
     @Autowired
-    @Qualifier("castServiceImpl")
+    @Qualifier("castService")
     private CastService castService;
 
     @Autowired
-    @Qualifier("filmServiceImpl")
+    @Qualifier("filmService")
     private FilmService filmService;
 
     @Autowired

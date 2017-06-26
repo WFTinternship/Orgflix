@@ -4,13 +4,15 @@ import am.aca.dao.jdbc.CastDAO;
 import am.aca.dao.jdbc.FilmDAO;
 import am.aca.dao.jdbc.impljdbc.JdbcCastDAO;
 import am.aca.dao.jdbc.impljdbc.JdbcFilmDAO;
-import am.aca.entity.*;
+import am.aca.entity.Cast;
+import am.aca.entity.Film;
+import am.aca.entity.Genre;
 import am.aca.service.FilmService;
 import org.apache.log4j.Logger;
-
-import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -30,6 +32,7 @@ public class FilmServiceImpl implements FilmService {
         castDao = ctx.getBean("jdbcCastDAO", JdbcCastDAO.class);
     }
 
+//    @Transactional
     @Override
     public boolean addFilm(Film film) {
         try {
@@ -45,6 +48,7 @@ public class FilmServiceImpl implements FilmService {
 
     }
 
+//    @Transactional
     @Override
     public boolean editFilm(Film film) {
         try {

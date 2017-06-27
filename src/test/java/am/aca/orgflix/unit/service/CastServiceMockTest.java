@@ -61,20 +61,20 @@ public class CastServiceMockTest extends BaseUnitTest {
     public void addCastToFilm_Success() {
         when(castMock.isStarringIn(cast.getId(), film.getId())).thenReturn(false);
         when(castMock.addCastToFilm(cast, film.getId())).thenReturn(true);
-        Assert.assertTrue(castService.addCastToFilm(cast, film));
+        Assert.assertTrue(castService.addCastToFilm(cast, film.getId()));
     }
 
     @Test
     public void addCastToFilmAlreadyStarring_Fail() {
         when(castMock.isStarringIn(cast.getId(), film.getId())).thenReturn(true);
-        Assert.assertFalse(castService.addCastToFilm(cast, film));
+        Assert.assertFalse(castService.addCastToFilm(cast, film.getId()));
     }
 
     @Test
     public void addCastToFilmInsertionError_Fail() {
         when(castMock.isStarringIn(cast.getId(), film.getId())).thenReturn(true);
-        when(castMock.addCastToFilm(cast, film)).thenReturn(false);
-        Assert.assertFalse(castService.addCastToFilm(cast, film));
+        when(castMock.addCastToFilm(cast, film.getId())).thenReturn(false);
+        Assert.assertFalse(castService.addCastToFilm(cast, film.getId()));
     }
 
     @Test

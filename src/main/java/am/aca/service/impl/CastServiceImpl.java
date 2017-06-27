@@ -48,12 +48,6 @@ public class CastServiceImpl implements CastService {
 
     @Transactional
     @Override
-    public boolean addCastToFilm(Cast cast, Film film) {
-        return this.addCastToFilm(cast, film.getId());
-    }
-
-    @Transactional
-    @Override
     public boolean addCastToFilm(Cast cast, int filmId) {
         boolean state = false;
         try {

@@ -123,8 +123,8 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
         film = new Film("In Bruges", 2008);
         filmService.addFilm(film);
 
-        castService.addCastToFilm(cast, film);
-        Assert.assertEquals(film, filmService.getFilmsByCast(cast).get(0));
+        castService.addCastToFilm(cast, film.getId());
+        Assert.assertEquals(film, filmService.getFilmsByCast(cast.getId()).get(0));
     }
 
 
@@ -156,7 +156,7 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
         film.addGeners(Genre.WAR);
         film.setRate_4star(1);
         filmService.addFilm(film);
-        Assert.assertEquals(4.0, filmService.getRating(film), 0.01);
+        Assert.assertEquals(4.0, filmService.getRating(film.getId()), 0.01);
     }
 
     @Test
@@ -166,7 +166,7 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
         film.setRate_4star(1);
         film.setRate_5star(1);
         filmService.addFilm(film);
-        Assert.assertEquals(4.5, filmService.getRating(film), 0.01);
+        Assert.assertEquals(4.5, filmService.getRating(film.getId()), 0.01);
     }
 
     @Test
@@ -174,7 +174,7 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
         film = new Film("Fury", 2014);
         film.addGeners(Genre.WAR);
         filmService.addFilm(film);
-        Assert.assertEquals(0, filmService.getRating(film), 0.01);
+        Assert.assertEquals(0, filmService.getRating(film.getId()), 0.01);
     }
 
     @Test
@@ -218,7 +218,7 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
         film.addCast(cast);
         filmService.editFilm(film);
 
-        Assert.assertEquals(film, filmService.getFilmsByCast(cast).get(0));
+        Assert.assertEquals(film, filmService.getFilmsByCast(cast.getId()).get(0));
     }
 
     @Test
@@ -247,7 +247,7 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
     public void addGenreToFilmBySize_Succeeded() {
         film = new Film("La La Land", 2016);
         filmService.addFilm(film);
-        Assert.assertTrue(filmService.addGenreToFilm(Genre.MUSICAL, film));
+        Assert.assertTrue(filmService.addGenreToFilm(Genre.MUSICAL, film.getId()));
         Assert.assertEquals(film, filmService.getFilmsByGenre(Genre.MUSICAL).get(0));
     }
 

@@ -3,13 +3,12 @@ package am.aca.dao.jdbc.impljdbc;
 import am.aca.dao.DaoException;
 import am.aca.dao.jdbc.BaseDAO;
 import am.aca.dao.jdbc.FilmDAO;
-import am.aca.entity.*;
 import am.aca.dao.jdbc.impljdbc.mapper.FilmRowMapper;
-
-import org.springframework.stereotype.Repository;
+import am.aca.entity.Film;
+import am.aca.entity.Genre;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -21,7 +20,6 @@ import java.util.List;
 
 /**
  * DAO layer for Film entity
- *
  */
 //@Repository
 public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
@@ -73,7 +71,7 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
     /**
      * Add an association of genre with film in DB
      *
-     * @param genre the genre with which the provided film will be associated
+     * @param genre  the genre with which the provided film will be associated
      * @param filmId the id of film which will be associated with provided genre
      * @return true if the new association of genre to film was successful, otherwise false
      */
@@ -84,24 +82,9 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
     }
 
     /**
-     * @see JdbcFilmDAO#addGenreToFilm(am.aca.entity.Genre, int)
-     *
-     * Add an association of genre with film in DB
-     *
-     * @param genre the genre with which the provided film will be associated
-     * @param film the film which will be associated with provided genre
-     * @return true if the new association of genre to film was successful, otherwise false
-     */
-    @Override
-    public boolean addGenreToFilm(Genre genre, Film film) {
-        return addGenreToFilm(genre, film.getId());
-    }
-
-
-    /**
      * Increment by one the selected scale (from 1 to 5) of the film whitch id is provided
      *
-     * @param filmId the id of the film subject to be rated
+     * @param filmId   the id of the film subject to be rated
      * @param starType the selected scale of rates to be incremented by one
      * @return true if the rating was successful, otherwise false
      */
@@ -218,20 +201,6 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
             return 0.0;
         // each scale of one to five has appropriate weight effecting the overall rate
         return (double) ratingSum / ratingCount;
-    }
-
-    /**
-     * @see JdbcFilmDAO#getRating(int)
-     *
-     * Get the overall current rating of the provided film, each scale of 1 to 5 has appropriate
-     * weight, for example one 5 star and two 4 stars give rate (1*5+2*4)/(1+2)
-     *
-     * @param film the film which rate is requested
-     * @return the current overall rate of the film
-     */
-    @Override
-    public double getRating(Film film) {
-        return getRating(film.getId());
     }
 
     /**

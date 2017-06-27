@@ -93,11 +93,6 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    public List<Film> getFilmsByCast(Cast cast) {
-        return this.getFilmsByCast(cast.getId());
-    }
-
-    @Override
     public List<Film> getFilmsList(int startIndex) {
         List<Film> list = null;
         try {
@@ -143,12 +138,6 @@ public class FilmServiceImpl implements FilmService {
         return state;
     }
 
-    @Transactional
-    @Override
-    public boolean addGenreToFilm(Genre genre, Film film) {
-        return addGenreToFilm(genre, film.getId());
-    }
-
     @Override
     public double getRating(int filmId) {
         double rate = 0.0;
@@ -158,11 +147,6 @@ public class FilmServiceImpl implements FilmService {
             LOGGER.warn(e.toString());
         }
         return rate;
-    }
-
-    @Override
-    public double getRating(Film film) {
-        return getRating(film.getId());
     }
 
     @Override
@@ -179,7 +163,7 @@ public class FilmServiceImpl implements FilmService {
     private boolean optimizeRelations(Film film) {
         try {
             for (Genre genre : film.getGenres()) {
-                if (!addGenreToFilm(genre, film))
+                if (!addGenreToFilm(genre, film.getId()))
                     return false;
             }
         } catch (RuntimeException e) {
@@ -188,7 +172,7 @@ public class FilmServiceImpl implements FilmService {
 
         try {
             for (Cast cast : film.getCasts()) {
-                if (!castDao.addCast(cast) || !castDao.addCastToFilm(cast, film))
+                if (!castDao.addCast(cast) || !castDao.addCastToFilm(cast, film.getId()))
                     return false;
             }
         } catch (RuntimeException e) {

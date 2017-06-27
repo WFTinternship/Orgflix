@@ -39,7 +39,7 @@ public class FilmServiceMockTest extends BaseUnitTest {
     private List<Film> films = new ArrayList<>();
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         MockitoAnnotations.initMocks(this);
         ReflectionTestUtils.setField(filmService, "castDao", castMock);
         ReflectionTestUtils.setField(filmService, "filmDao", filmMock);
@@ -55,7 +55,7 @@ public class FilmServiceMockTest extends BaseUnitTest {
         }
         for (Cast cast : film.getCasts()) {
             when(castMock.addCast(cast)).thenReturn(true);
-            when(castMock.addCastToFilm(cast, film)).thenReturn(true);
+            when(castMock.addCastToFilm(cast, film.getId())).thenReturn(true);
         }
         Assert.assertTrue(filmService.addFilm(film));
     }
@@ -64,11 +64,11 @@ public class FilmServiceMockTest extends BaseUnitTest {
     public void addFilmWOGenresAndCasts_Success() {
         when(filmMock.addFilm(film)).thenReturn(true);
         for (Genre genre : film.getGenres()) {
-            when(filmMock.addGenreToFilm(genre, film)).thenReturn(true);
+            when(filmMock.addGenreToFilm(genre, film.getId())).thenReturn(true);
         }
         for (Cast cast : film.getCasts()) {
             when(castMock.addCast(cast)).thenReturn(true);
-            when(castMock.addCastToFilm(cast, film)).thenReturn(true);
+            when(castMock.addCastToFilm(cast, film.getId())).thenReturn(true);
         }
         Assert.assertTrue(filmService.addFilm(film));
     }
@@ -77,11 +77,11 @@ public class FilmServiceMockTest extends BaseUnitTest {
     public void addFilmInsertionError_Fail() {
         when(filmMock.addFilm(film)).thenReturn(false);
         for (Genre genre : film.getGenres()) {
-            when(filmMock.addGenreToFilm(genre, film)).thenReturn(true);
+            when(filmMock.addGenreToFilm(genre, film.getId())).thenReturn(true);
         }
         for (Cast cast : film.getCasts()) {
             when(castMock.addCast(cast)).thenReturn(true);
-            when(castMock.addCastToFilm(cast, film)).thenReturn(true);
+            when(castMock.addCastToFilm(cast, film.getId())).thenReturn(true);
         }
         Assert.assertFalse(filmService.addFilm(film));
     }
@@ -90,11 +90,11 @@ public class FilmServiceMockTest extends BaseUnitTest {
     public void addFilmOptimizationError_Fail() {
         when(filmMock.addFilm(film)).thenReturn(false);
         for (Genre genre : film.getGenres()) {
-            when(filmMock.addGenreToFilm(genre, film)).thenReturn(true);
+            when(filmMock.addGenreToFilm(genre, film.getId())).thenReturn(true);
         }
         for (Cast cast : film.getCasts()) {
             when(castMock.addCast(cast)).thenReturn(false);
-            when(castMock.addCastToFilm(cast, film)).thenReturn(true);
+            when(castMock.addCastToFilm(cast, film.getId())).thenReturn(true);
         }
         Assert.assertFalse(filmService.addFilm(film));
     }
@@ -111,7 +111,7 @@ public class FilmServiceMockTest extends BaseUnitTest {
         }
         for (Cast cast : film.getCasts()) {
             when(castMock.addCast(cast)).thenReturn(true);
-            when(castMock.addCastToFilm(cast, film)).thenReturn(true);
+            when(castMock.addCastToFilm(cast, film.getId())).thenReturn(true);
         }
         Assert.assertTrue(filmService.editFilm(film));
     }
@@ -120,11 +120,11 @@ public class FilmServiceMockTest extends BaseUnitTest {
     public void editFilmWOGenresAndCasts_Success() {
         when(filmMock.editFilm(film)).thenReturn(true);
         for (Genre genre : film.getGenres()) {
-            when(filmMock.addGenreToFilm(genre, film)).thenReturn(true);
+            when(filmMock.addGenreToFilm(genre, film.getId())).thenReturn(true);
         }
         for (Cast cast : film.getCasts()) {
             when(castMock.addCast(cast)).thenReturn(true);
-            when(castMock.addCastToFilm(cast, film)).thenReturn(true);
+            when(castMock.addCastToFilm(cast, film.getId())).thenReturn(true);
         }
         Assert.assertTrue(filmService.editFilm(film));
     }
@@ -133,11 +133,11 @@ public class FilmServiceMockTest extends BaseUnitTest {
     public void editFilmInsertionError_Fail() {
         when(filmMock.editFilm(film)).thenReturn(false);
         for (Genre genre : film.getGenres()) {
-            when(filmMock.addGenreToFilm(genre, film)).thenReturn(true);
+            when(filmMock.addGenreToFilm(genre, film.getId())).thenReturn(true);
         }
         for (Cast cast : film.getCasts()) {
             when(castMock.addCast(cast)).thenReturn(true);
-            when(castMock.addCastToFilm(cast, film)).thenReturn(true);
+            when(castMock.addCastToFilm(cast, film.getId())).thenReturn(true);
         }
         Assert.assertFalse(filmService.editFilm(film));
     }
@@ -148,11 +148,11 @@ public class FilmServiceMockTest extends BaseUnitTest {
         film.addGeners(Genre.DRAMA);
         when(filmMock.editFilm(film)).thenReturn(false);
         for (Genre genre : film.getGenres()) {
-            when(filmMock.addGenreToFilm(genre, film)).thenReturn(true);
+            when(filmMock.addGenreToFilm(genre, film.getId())).thenReturn(true);
         }
         for (Cast cast : film.getCasts()) {
             when(castMock.addCast(cast)).thenReturn(false);
-            when(castMock.addCastToFilm(cast, film)).thenReturn(true);
+            when(castMock.addCastToFilm(cast, film.getId())).thenReturn(true);
         }
         Assert.assertFalse(filmService.addFilm(film));
     }

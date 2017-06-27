@@ -4,9 +4,6 @@ import am.aca.dao.DaoException;
 import am.aca.dao.jdbc.BaseDAO;
 import am.aca.dao.jdbc.CastDAO;
 import am.aca.entity.Cast;
-import am.aca.entity.Film;
-
-import org.springframework.stereotype.Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -19,7 +16,6 @@ import java.util.List;
 
 /**
  * DAO layer for Cast entity
- *
  */
 //@Repository
 public class JdbcCastDAO extends BaseDAO implements CastDAO {
@@ -30,7 +26,7 @@ public class JdbcCastDAO extends BaseDAO implements CastDAO {
         this.setDataSource(dataSource);
     }
 
-     // CREATE
+    // CREATE
 
     /**
      * Add new actor to DB
@@ -41,7 +37,7 @@ public class JdbcCastDAO extends BaseDAO implements CastDAO {
     @Override
     public boolean addCast(Cast cast) {
         // ensure that all required field is properly assigned
-        if (!checkRequiredFields(cast.getName())){
+        if (!checkRequiredFields(cast.getName())) {
             throw new DaoException("Name is required");
         }
         KeyHolder holder = new GeneratedKeyHolder();
@@ -59,7 +55,7 @@ public class JdbcCastDAO extends BaseDAO implements CastDAO {
     /**
      * Add an association of actor with film in DB
      *
-     * @param cast the cast with which the provided film will be associated
+     * @param cast   the cast with which the provided film will be associated
      * @param filmId the id of film which will be associated with provided cast
      * @return true if the new association of cast to film was successful, otherwise false
      */
@@ -68,21 +64,6 @@ public class JdbcCastDAO extends BaseDAO implements CastDAO {
         final String query = "INSERT INTO film_to_cast(Actor_ID,Film_ID) VALUES (? , ? ) ";
         return getJdbcTemplate().update(query, cast.getId(), filmId) == 1;
     }
-
-    /**
-     * @see JdbcCastDAO#addCastToFilm(am.aca.entity.Cast, int)
-     *
-     * Add an association of actor with film in DB
-     *
-     * @param cast the cast with which the provided film will be associated
-     * @param film the id of film which will be associated with provided cast
-     * @return true if the new association of cast to film was successful, otherwise false
-     */
-    @Override
-    public boolean addCastToFilm(Cast cast, Film film) {
-        return addCastToFilm(cast, film.getId());
-    }
-
 
     // READ
 
@@ -118,6 +99,7 @@ public class JdbcCastDAO extends BaseDAO implements CastDAO {
     }
 
     // DELETE
+
     /**
      * Remove the provided actor from DB
      *
@@ -135,17 +117,17 @@ public class JdbcCastDAO extends BaseDAO implements CastDAO {
     public boolean isStarringIn(int actorId, int filmId) {
         String query = "SELECT COUNT(*) FROM film_to_cast WHERE Film_ID = ? AND Actor_ID = ?";
         return getJdbcTemplate().queryForObject(query,
-                new Object[] {filmId, actorId},
+                new Object[]{filmId, actorId},
                 Integer.class
-            ) == 1;
+        ) == 1;
     }
 
     @Override
     public boolean exists(Cast cast) {
         String query = "SELECT COUNT(*) FROM casts WHERE ID = ?";
         return getJdbcTemplate().queryForObject(query,
-                new Object[] {cast.getId()},
+                new Object[]{cast.getId()},
                 Integer.class
-            ) == 1;
+        ) == 1;
     }
 }

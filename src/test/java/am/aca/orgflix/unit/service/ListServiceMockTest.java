@@ -32,20 +32,28 @@ public class ListServiceMockTest extends BaseUnitTest {
     @Mock
     private FilmServiceImpl filmServiceMock;
 
+//    @Autowired
+//    private FilmService filmService;
+//
+//    @Mock
+//    private JdbcFilmDAO filmMock;
+
     private Film film = new Film("Babel", 2006);
     private User user = new User("hulk", "Bruce Banner", "bbanner@avenger.com", "natasha");
     private List<Film> films = new ArrayList<>();
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         MockitoAnnotations.initMocks(this);
         ReflectionTestUtils.setField(listService, "listDao", listMock);
         ReflectionTestUtils.setField(listService, "filmService", filmServiceMock);
+//        ReflectionTestUtils.setField(filmService, "filmDao", filmMock);
     }
 
     @Test
     public void addToWatchedExisting_Success() {
         when(filmServiceMock.getFilmById(film.getId())).thenReturn(film);
+//        when(filmMock.getFilmById(film.getId())).thenReturn(film);
         when(listMock.areRelated(film, user.getId())).thenReturn(false);
         when(listMock.insertWatched(film, user.getId(), true)).thenReturn(true);
         Assert.assertTrue(listService.addToWatched(film, true, user.getId()));

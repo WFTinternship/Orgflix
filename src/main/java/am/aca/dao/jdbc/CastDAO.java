@@ -1,7 +1,6 @@
 package am.aca.dao.jdbc;
 
 import am.aca.entity.Cast;
-import am.aca.entity.Film;
 
 import java.util.List;
 
@@ -11,7 +10,7 @@ import java.util.List;
 public interface CastDAO {
     // CREATE
     boolean addCast(Cast cast);
-    boolean addCastToFilm(Cast cast, Film film);
+
     boolean addCastToFilm(Cast cast, int filmId);
 
     // READ
@@ -24,6 +23,7 @@ public interface CastDAO {
     boolean remove(Cast cast);
 
     // Support methods
-    boolean isStarringIn (int actorId, int filmId);
+    boolean isStarringIn(int actorId, int filmId);
+
     boolean exists(Cast cast);
 }

@@ -18,7 +18,5 @@ public interface CastService {
 
     boolean editCast(Cast cast);
 
-    boolean addCastToFilm(Cast cast, Film film);
-
     boolean addCastToFilm(Cast cast, int filmId);
 }

@@ -13,7 +13,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 import static org.junit.Assert.assertTrue;
 
@@ -71,7 +70,7 @@ public class FilmDaoTest extends BaseIntegrationTest {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
         filmDAO.addFilm(film);
-        Assert.assertTrue(filmDAO.addGenreToFilm(Genre.COMEDY, film));
+        Assert.assertTrue(filmDAO.addGenreToFilm(Genre.COMEDY, film.getId()));
         Assert.assertEquals(1, filmDAO.getFilmsByGenre(Genre.COMEDY).size());
     }
 
@@ -80,26 +79,8 @@ public class FilmDaoTest extends BaseIntegrationTest {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
         filmDAO.addFilm(film);
-        filmDAO.addGenreToFilm(Genre.COMEDY, film);
+        filmDAO.addGenreToFilm(Genre.COMEDY, film.getId());
         Assert.assertEquals(film, filmDAO.getFilmsByGenre(Genre.COMEDY).get(0));
-    }
-
-    @Test
-    public void addGenreToFilmByIdBySize_Succeeded() {
-        film.setTitle("Captain Fantastic");
-        film.setProdYear(2016);
-        filmDAO.addFilm(film);
-        filmDAO.addGenreToFilm(Genre.DRAMA, film);
-        Assert.assertEquals(1, filmDAO.getFilmsByGenre(Genre.DRAMA).size());
-    }
-
-    @Test
-    public void addGenreToFilmByIdByFilm_Succeeded() {
-        film.setTitle("Captain Fantastic");
-        film.setProdYear(2016);
-        filmDAO.addFilm(film);
-        filmDAO.addGenreToFilm(Genre.DRAMA, film);
-        Assert.assertEquals(film, filmDAO.getFilmsByGenre(Genre.DRAMA).get(0));
     }
 
     @Test
@@ -171,11 +152,11 @@ public class FilmDaoTest extends BaseIntegrationTest {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
         filmDAO.addFilm(film);
-        filmDAO.addGenreToFilm(Genre.COMEDY, film);
+        filmDAO.addGenreToFilm(Genre.COMEDY, film.getId());
         film.setTitle("Deadpool");
         film.setProdYear(2016);
         filmDAO.addFilm(film);
-        filmDAO.addGenreToFilm(Genre.COMEDY, film);
+        filmDAO.addGenreToFilm(Genre.COMEDY, film.getId());
         Assert.assertEquals(2, filmDAO.getFilmsByGenre(Genre.COMEDY).size());
     }
 
@@ -193,7 +174,7 @@ public class FilmDaoTest extends BaseIntegrationTest {
         film.setProdYear(2016);
         filmDAO.addFilm(film);
 
-        castDAO.addCastToFilm(cast, film);
+        castDAO.addCastToFilm(cast, film.getId());
         Assert.assertEquals(film, filmDAO.getFilmsByCast(cast.getId()).get(0));
     }
 
@@ -212,7 +193,7 @@ public class FilmDaoTest extends BaseIntegrationTest {
         filmDAO.rateFilm(film.getId(), 4);
         filmDAO.rateFilm(film.getId(), 3);
         filmDAO.rateFilm(film.getId(), 5);
-        Assert.assertEquals(4.0, filmDAO.getRating(film), 0.01);
+        Assert.assertEquals(4.0, filmDAO.getRating(film.getId()), 0.01);
     }
 
     @Test
@@ -222,19 +203,11 @@ public class FilmDaoTest extends BaseIntegrationTest {
         filmDAO.addFilm(film);
         filmDAO.rateFilm(film.getId(), 4);
         filmDAO.rateFilm(film.getId(), 5);
-        Assert.assertEquals(4.5, filmDAO.getRating(film), 0.01);
+        Assert.assertEquals(4.5, filmDAO.getRating(film.getId()), 0.01);
     }
 
     @Test
     public void getRatingNaN_Failed() {
-        film.setTitle("Captain Fantastic");
-        film.setProdYear(2016);
-        filmDAO.addFilm(film);
-        Assert.assertEquals(0, filmDAO.getRating(film), 0.01);
-    }
-
-    @Test
-    public void getRatingNaNById_Failed() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
         filmDAO.addFilm(film);
@@ -291,7 +264,7 @@ public class FilmDaoTest extends BaseIntegrationTest {
         cast = new Cast("Viggo Mortensen");
         castDAO.addCast(cast);
 
-        castDAO.addCastToFilm(cast, film);
+        castDAO.addCastToFilm(cast, film.getId());
         Assert.assertTrue(filmDAO.resetRelationCasts(film));
     }
 
@@ -304,7 +277,7 @@ public class FilmDaoTest extends BaseIntegrationTest {
         cast = new Cast("Viggo Mortensen");
         castDAO.addCast(cast);
 
-        castDAO.addCastToFilm(cast, film);
+        castDAO.addCastToFilm(cast, film.getId());
         filmDAO.resetRelationCasts(film);
         Assert.assertEquals(0, filmDAO.getFilmsByCast(cast.getId()).size());
     }
@@ -317,7 +290,7 @@ public class FilmDaoTest extends BaseIntegrationTest {
 
         cast = new Cast("Viggo Mortensen", false);
         castDAO.addCast(cast);
-        castDAO.addCastToFilm(cast, film);
+        castDAO.addCastToFilm(cast, film.getId());
 
         filmDAO.resetRelationCasts(film);
 
@@ -327,7 +300,7 @@ public class FilmDaoTest extends BaseIntegrationTest {
 
         cast = new Cast("Alice Braga", false);
         castDAO.addCast(cast);
-        castDAO.addCastToFilm(cast, film);
+        castDAO.addCastToFilm(cast, film.getId());
 
         Assert.assertEquals(film, filmDAO.getFilmsByCast(cast.getId()).get(0));
     }
@@ -345,7 +318,7 @@ public class FilmDaoTest extends BaseIntegrationTest {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
         filmDAO.addFilm(film);
-        filmDAO.addGenreToFilm(Genre.DRAMA, film);
+        filmDAO.addGenreToFilm(Genre.DRAMA, film.getId());
         Assert.assertTrue(filmDAO.resetRelationGenres(film));
     }
 
@@ -354,7 +327,7 @@ public class FilmDaoTest extends BaseIntegrationTest {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
         filmDAO.addFilm(film);
-        filmDAO.addGenreToFilm(Genre.DRAMA, film);
+        filmDAO.addGenreToFilm(Genre.DRAMA, film.getId());
         filmDAO.resetRelationGenres(film);
         Assert.assertTrue(filmDAO.getFilmsByGenre(Genre.DRAMA).isEmpty());
     }
@@ -364,14 +337,14 @@ public class FilmDaoTest extends BaseIntegrationTest {
         film.setTitle("American History X");
         film.setProdYear(1998);
         filmDAO.addFilm(film);
-        filmDAO.addGenreToFilm(Genre.CRIME, film);
-        filmDAO.addGenreToFilm(Genre.DRAMA, film);
+        filmDAO.addGenreToFilm(Genre.CRIME, film.getId());
+        filmDAO.addGenreToFilm(Genre.DRAMA, film.getId());
         filmDAO.resetRelationGenres(film);
 
         film.setTitle("City of God");
         film.setProdYear(2002);
         filmDAO.addFilm(film);
-        filmDAO.addGenreToFilm(Genre.CRIME, film);
+        filmDAO.addGenreToFilm(Genre.CRIME, film.getId());
 
         Assert.assertEquals(film, filmDAO.getFilmsByGenre(Genre.CRIME).get(0));
     }

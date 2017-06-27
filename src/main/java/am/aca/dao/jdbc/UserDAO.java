@@ -11,15 +11,19 @@ public interface UserDAO {
 
     //Read
     User get(int id);
+
     User get(String email);
 
     //Update
     boolean edit(User user);
+
     boolean edit(int id, String nick, String name, String pass, String email);
+
     boolean edit(int id, String nick, String pass, String email);
 
     //Delete
     boolean remove(User user);
+
     boolean remove(int id);
 
 }

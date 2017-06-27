@@ -78,7 +78,7 @@ public class CastServiceIntegrationTest extends BaseIntegrationTest {
         castService.addCast(cast);
         film = new Film("Fight Club", 1997);
         filmService.addFilm(film);
-        Assert.assertTrue(castService.addCastToFilm(cast, film));
+        Assert.assertTrue(castService.addCastToFilm(cast, film.getId()));
         Assert.assertEquals(film.getId(), castService.listFilmsByCast(cast.getId()).get(0).getId());
     }
 
@@ -89,7 +89,7 @@ public class CastServiceIntegrationTest extends BaseIntegrationTest {
         film = new Film("Fight Club", 1997);
         filmService.addFilm(film);
         Assert.assertTrue(castService.addCastToFilm(cast, film.getId()));
-        Assert.assertFalse(castService.addCastToFilm(cast, film));
+        Assert.assertFalse(castService.addCastToFilm(cast, film.getId()));
         Assert.assertEquals(film.getId(), castService.listFilmsByCast(cast.getId()).get(0).getId());
     }
 
@@ -168,7 +168,7 @@ public class CastServiceIntegrationTest extends BaseIntegrationTest {
         castService.addCast(cast);
         film = new Film("Fight Club", 1997);
         filmService.addFilm(film);
-        castService.addCastToFilm(cast, film);
+        castService.addCastToFilm(cast, film.getId());
         Assert.assertEquals(1, castService.listFilmsByCast(cast.getId()).size());
     }
 
@@ -178,10 +178,10 @@ public class CastServiceIntegrationTest extends BaseIntegrationTest {
         castService.addCast(cast);
         film = new Film("Fight Club", 1997);
         filmService.addFilm(film);
-        castService.addCastToFilm(cast, film);
+        castService.addCastToFilm(cast, film.getId());
         film = new Film("Primal Fear", 1996);
         filmService.addFilm(film);
-        castService.addCastToFilm(cast, film);
+        castService.addCastToFilm(cast, film.getId());
         Assert.assertEquals(film.getId(), castService.listFilmsByCast(cast.getId()).get(1).getId());
     }
 

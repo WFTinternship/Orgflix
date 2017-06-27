@@ -23,7 +23,7 @@ import java.util.List;
  * DAO layer for Film entity
  *
  */
-@Repository
+//@Repository
 public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
 
     @Autowired

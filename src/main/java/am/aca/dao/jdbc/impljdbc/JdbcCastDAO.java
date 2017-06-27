@@ -21,7 +21,7 @@ import java.util.List;
  * DAO layer for Cast entity
  *
  */
-@Repository
+//@Repository
 public class JdbcCastDAO extends BaseDAO implements CastDAO {
 
     @Autowired

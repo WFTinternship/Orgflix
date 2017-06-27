@@ -12,23 +12,19 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
  * Test for DAO services
  */
-public class FilmTest extends BaseIntegrationTest{
+public class FilmServiceIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
-    @Qualifier("filmService")
     private FilmService filmService;
 
     @Autowired
-    @Qualifier("castService")
     private CastService castService;
 
     @Autowired
-    @Qualifier("testHelper")
     private TestHelper helper;
 
     private Film film;

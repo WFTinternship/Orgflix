@@ -1,13 +1,11 @@
 package am.aca.service.impl;
 
 import am.aca.dao.jdbc.ListDao;
-import am.aca.dao.jdbc.impljdbc.JdbcListDAO;
 import am.aca.entity.Film;
 import am.aca.service.FilmService;
 import am.aca.service.ListService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,20 +15,24 @@ import java.util.List;
  * Service layer for methods related to list of films
  */
 
+@Transactional(readOnly = true)
 @Service
 public class ListServiceImpl implements ListService {
-
     private static final Logger LOGGER = Logger.getLogger(ListServiceImpl.class);
-    private final FilmService filmService;
+    private FilmService filmService;
     private ListDao listDao;
 
     @Autowired
-    public ListServiceImpl(ApplicationContext ctx, FilmService filmService) {
-        this.filmService = ctx.getBean("filmService", FilmServiceImpl.class);
-        listDao = ctx.getBean("jdbcListDAO", JdbcListDAO.class);
+    public void setFilmService(FilmService filmService) {
+        this.filmService = filmService;
     }
 
-//    @Transactional
+    @Autowired
+    public void setListDao(ListDao listDao) {
+        this.listDao = listDao;
+    }
+
+    @Transactional
     @Override
     public boolean addToWatched(Film film, boolean isPublic, int userId) {
         boolean state = false;
@@ -51,7 +53,7 @@ public class ListServiceImpl implements ListService {
         return state;
     }
 
-//    @Transactional
+    @Transactional
     @Override
     public boolean addToPlanned(Film film, boolean isPublic, int userId) {
         boolean state = false;
@@ -71,7 +73,7 @@ public class ListServiceImpl implements ListService {
         return state;
     }
 
-//    @Transactional
+    @Transactional
     @Override
     public boolean removeFromWatched(Film film, int userId) {
         boolean state = false;
@@ -87,7 +89,7 @@ public class ListServiceImpl implements ListService {
         return state;
     }
 
-//    @Transactional
+    @Transactional
     @Override
     public boolean removeFromPlanned(Film film, int userId) {
         boolean state = false;
@@ -147,7 +149,7 @@ public class ListServiceImpl implements ListService {
         return list;
     }
 
-//    @Transactional
+    @Transactional
     @Override
     public boolean makePrivate(int userId, Film film) {
         boolean state = false;
@@ -161,7 +163,7 @@ public class ListServiceImpl implements ListService {
         return state;
     }
 
-//    @Transactional
+    @Transactional
     @Override
     public boolean makePublic(int userId, Film film) {
         boolean state = false;
@@ -174,4 +176,5 @@ public class ListServiceImpl implements ListService {
         }
         return state;
     }
+
 }

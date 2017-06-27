@@ -12,27 +12,22 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
  * Created by karine on 6/21/2017
  */
-public class ListTest extends BaseIntegrationTest{
+public class ListServiceIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
-    @Qualifier("listService")
     private ListService listService;
 
     @Autowired
-    @Qualifier("filmService")
     private FilmService filmService;
 
     @Autowired
-    @Qualifier("userService")
     private UserService userService;
 
     @Autowired
-    @Qualifier("testHelper")
     private TestHelper helper;
 
     private Film film;
@@ -50,8 +45,8 @@ public class ListTest extends BaseIntegrationTest{
 
     @After
     public void revert() {
-        helper.emptyTable(new String[] {
-            "lists", "films", "users"
+        helper.emptyTable(new String[]{
+                "lists", "films", "users"
         });
     }
 
@@ -91,7 +86,7 @@ public class ListTest extends BaseIntegrationTest{
         listService.addToPlanned(film, true, user.getId());
 
         Assert.assertTrue(listService.removeFromPlanned(film, user.getId()));
-        Assert.assertEquals(0,listService.showOwnPlanned(user.getId()).size());
+        Assert.assertEquals(0, listService.showOwnPlanned(user.getId()).size());
     }
 
     @Test
@@ -209,7 +204,7 @@ public class ListTest extends BaseIntegrationTest{
     public void makePrivate_Success() {
         listService.addToWatched(film, true, user.getId());
         Assert.assertTrue(listService.makePrivate(user.getId(), film));
-        Assert.assertTrue( listService.showOthersWatched(user.getId()).isEmpty());
+        Assert.assertTrue(listService.showOthersWatched(user.getId()).isEmpty());
     }
 
     @Test

@@ -17,18 +17,15 @@ import org.springframework.beans.factory.annotation.Qualifier;
 /**
  * Test for cast DAO methods
  */
-public class CastTest extends BaseIntegrationTest{
+public class CastDaoTest extends BaseIntegrationTest{
 
     @Autowired
-    @Qualifier("jdbcCastDAO")
     private CastDAO castDAO;
 
     @Autowired
-    @Qualifier("jdbcFilmDAO")
     private FilmDAO filmDAO;
 
     @Autowired
-    @Qualifier("testHelper")
     private TestHelper helper;
 
     private Cast cast;

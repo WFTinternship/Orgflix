@@ -11,23 +11,19 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
  * Test for Cast services
  */
-public class CastTest extends BaseIntegrationTest{
+public class CastServiceIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
-    @Qualifier("castService")
     private CastService castService;
 
     @Autowired
-    @Qualifier("filmService")
     private FilmService filmService;
 
     @Autowired
-    @Qualifier("testHelper")
     private TestHelper helper;
 
     private Cast cast;

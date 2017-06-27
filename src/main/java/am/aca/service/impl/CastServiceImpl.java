@@ -2,14 +2,11 @@ package am.aca.service.impl;
 
 import am.aca.dao.jdbc.CastDAO;
 import am.aca.dao.jdbc.FilmDAO;
-import am.aca.dao.jdbc.impljdbc.JdbcCastDAO;
-import am.aca.dao.jdbc.impljdbc.JdbcFilmDAO;
 import am.aca.entity.Cast;
 import am.aca.entity.Film;
 import am.aca.service.CastService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,19 +15,26 @@ import java.util.List;
 /**
  * Service layer for actor related methods
  */
+@Transactional(readOnly = true)
 @Service
 public class CastServiceImpl implements CastService {
 
     private static final Logger LOGGER = Logger.getLogger(CastServiceImpl.class);
+
     private CastDAO castDAO;
     private FilmDAO filmDAO;
 
     @Autowired
-    public CastServiceImpl(ApplicationContext ctx) {
-        castDAO = ctx.getBean("jdbcCastDAO", JdbcCastDAO.class);
-        filmDAO = ctx.getBean("jdbcFilmDAO", JdbcFilmDAO.class);
+    public void setCastDAO(CastDAO castDAO) {
+        this.castDAO = castDAO;
     }
 
+    @Autowired
+    public void setFilmDAO(FilmDAO filmDAO) {
+        this.filmDAO = filmDAO;
+    }
+
+    @Transactional
     @Override
     public boolean addCast(Cast cast) {
         boolean result = false;

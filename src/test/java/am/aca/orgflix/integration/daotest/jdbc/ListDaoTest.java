@@ -21,22 +21,18 @@ import java.sql.SQLException;
 /**
  * Test for List DAO methods
  */
-public class ListTest extends BaseIntegrationTest {
+public class ListDaoTest extends BaseIntegrationTest {
 
     @Autowired
-    @Qualifier("jdbcUserDAO")
     private UserDAO userDao;
 
     @Autowired
-    @Qualifier("jdbcFilmDAO")
     private FilmDAO filmDAO;
 
     @Autowired
-    @Qualifier("jdbcListDAO")
     private ListDao listDao;
 
     @Autowired
-    @Qualifier("testHelper")
     private TestHelper helper;
 
     private Film film;

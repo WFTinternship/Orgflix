@@ -11,11 +11,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,24 +24,25 @@ import static org.mockito.Mockito.when;
 /**
  * Created by karine on 6/25/2017
  */
-public class FilmTest extends BaseUnitTest {
+public class FilmServiceMockTest extends BaseUnitTest {
 
     @Autowired
-    @InjectMocks
-    @Qualifier("filmService")
     private FilmService filmService;
 
     @Mock
     private JdbcFilmDAO filmMock;
     @Mock
     private JdbcCastDAO castMock;
+
     private Cast cast = new Cast("Cate Blanchett", true);
     private Film film = new Film("Babel", 2006);
     private List<Film> films = new ArrayList<>();
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
+        ReflectionTestUtils.setField(filmService, "castDao", castMock);
+        ReflectionTestUtils.setField(filmService, "filmDao", filmMock);
     }
 
     @Test

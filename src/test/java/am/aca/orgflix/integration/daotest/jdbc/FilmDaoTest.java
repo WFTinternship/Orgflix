@@ -20,18 +20,15 @@ import static org.junit.Assert.assertTrue;
 /**
  * Test for film DAO methods
  */
-public class FilmTest extends BaseIntegrationTest {
+public class FilmDaoTest extends BaseIntegrationTest {
 
     @Autowired
-    @Qualifier("jdbcFilmDAO")
     private FilmDAO filmDAO;
 
     @Autowired
-    @Qualifier("jdbcCastDAO")
     private CastDAO castDAO;
 
     @Autowired
-    @Qualifier("testHelper")
     private TestHelper helper;
 
     private Film film;

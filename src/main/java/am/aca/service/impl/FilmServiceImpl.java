@@ -2,15 +2,12 @@ package am.aca.service.impl;
 
 import am.aca.dao.jdbc.CastDAO;
 import am.aca.dao.jdbc.FilmDAO;
-import am.aca.dao.jdbc.impljdbc.JdbcCastDAO;
-import am.aca.dao.jdbc.impljdbc.JdbcFilmDAO;
 import am.aca.entity.Cast;
 import am.aca.entity.Film;
 import am.aca.entity.Genre;
 import am.aca.service.FilmService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +16,7 @@ import java.util.List;
 /**
  * Service layer for film related methods
  */
+@Transactional(readOnly = true)
 @Service
 public class FilmServiceImpl implements FilmService {
 
@@ -27,12 +25,16 @@ public class FilmServiceImpl implements FilmService {
     private CastDAO castDao;
 
     @Autowired
-    public FilmServiceImpl(ApplicationContext ctx) {
-        filmDao = ctx.getBean("jdbcFilmDAO", JdbcFilmDAO.class);
-        castDao = ctx.getBean("jdbcCastDAO", JdbcCastDAO.class);
+    public void setFilmDao(FilmDAO filmDao) {
+        this.filmDao = filmDao;
     }
 
-//    @Transactional
+    @Autowired
+    public void setCastDao(CastDAO castDao) {
+        this.castDao = castDao;
+    }
+
+    @Transactional
     @Override
     public boolean addFilm(Film film) {
         try {
@@ -48,7 +50,7 @@ public class FilmServiceImpl implements FilmService {
 
     }
 
-//    @Transactional
+    @Transactional
     @Override
     public boolean editFilm(Film film) {
         try {
@@ -117,6 +119,7 @@ public class FilmServiceImpl implements FilmService {
         return list;
     }
 
+    @Transactional
     @Override
     public boolean rateFilm(int filmId, int starType) {
         boolean state = false;
@@ -128,6 +131,7 @@ public class FilmServiceImpl implements FilmService {
         return state;
     }
 
+    @Transactional
     @Override
     public boolean addGenreToFilm(Genre genre, int filmId) {
         boolean state = false;
@@ -139,6 +143,7 @@ public class FilmServiceImpl implements FilmService {
         return state;
     }
 
+    @Transactional
     @Override
     public boolean addGenreToFilm(Genre genre, Film film) {
         return addGenreToFilm(genre, film.getId());

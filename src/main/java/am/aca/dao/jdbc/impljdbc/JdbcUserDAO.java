@@ -20,7 +20,7 @@ import java.sql.Statement;
  *
  */
 
-@Repository
+//@Repository
 public class JdbcUserDAO extends BaseDAO implements UserDAO {
 
     @Autowired

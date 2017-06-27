@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * DAO layer for list of film related methods
  */
-@Repository
+//@Repository
 public class JdbcListDAO extends BaseDAO implements ListDao {
 
     @Autowired

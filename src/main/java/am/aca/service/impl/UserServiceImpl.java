@@ -6,7 +6,6 @@ import am.aca.entity.User;
 import am.aca.service.UserService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 /**
@@ -16,12 +15,11 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
 
     private static final Logger LOGGER = Logger.getLogger(UserServiceImpl.class.getName());
-
     private UserDAO userDao;
 
     @Autowired
-    public UserServiceImpl(@Qualifier("jdbcUserDAO") UserDAO userDAO) {
-        this.userDao = userDAO;
+    public void setUserDao(UserDAO userDao) {
+        this.userDao = userDao;
     }
 
     @Override

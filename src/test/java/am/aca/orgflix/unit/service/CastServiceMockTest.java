@@ -6,16 +6,12 @@ import am.aca.entity.Cast;
 import am.aca.entity.Film;
 import am.aca.orgflix.BaseUnitTest;
 import am.aca.service.CastService;
-import am.aca.service.impl.CastServiceImpl;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.aop.framework.Advised;
-import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.ArrayList;
@@ -26,11 +22,9 @@ import static org.mockito.Mockito.when;
 /**
  * Created by karine on 6/24/2017
  */
-public class CastTest extends BaseUnitTest {
+public class CastServiceMockTest extends BaseUnitTest {
 
     @Autowired
-    @Qualifier("castService")
-//    @InjectMocks
     private CastService castService;
 
     @Mock
@@ -44,25 +38,12 @@ public class CastTest extends BaseUnitTest {
     private Film film = new Film("Babel", 2006);
     private List<Film> films = new ArrayList<>();
 
-    public final Object unwrapProxy(Object bean) throws Exception {
-        if (AopUtils.isAopProxy(bean) && bean instanceof Advised) {
-
-            Advised advised = (Advised) bean;
-            bean = advised.getTargetSource().getTarget();
-        }
-
-        return bean;
-    }
-
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         MockitoAnnotations.initMocks(this);
-        castService = (CastServiceImpl) unwrapProxy(castService);
         ReflectionTestUtils.setField(castService, "castDAO", castMock);
         ReflectionTestUtils.setField(castService, "filmDAO", filmMock);
     }
-
-
 
     @Test
     public void addCast_Success() {

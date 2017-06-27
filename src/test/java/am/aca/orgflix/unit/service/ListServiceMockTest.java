@@ -1,5 +1,6 @@
 package am.aca.orgflix.unit.service;
 
+import am.aca.dao.DaoException;
 import am.aca.dao.jdbc.impljdbc.JdbcListDAO;
 import am.aca.entity.Film;
 import am.aca.entity.User;
@@ -139,7 +140,7 @@ public class ListServiceMockTest extends BaseUnitTest {
 
     @Test
     public void showOwnWatched_Fail() {
-        when(listMock.showOwnWatched(user.getId())).thenThrow(RuntimeException.class);
+        when(listMock.showOwnWatched(user.getId())).thenThrow(DaoException.class);
         Assert.assertEquals(null, listService.showOwnWatched(user.getId()));
     }
 
@@ -151,7 +152,7 @@ public class ListServiceMockTest extends BaseUnitTest {
 
     @Test
     public void showOwnPlanned_Fail() {
-        when(listMock.showOwnPlanned(user.getId())).thenThrow(RuntimeException.class);
+        when(listMock.showOwnPlanned(user.getId())).thenThrow(DaoException.class);
         Assert.assertEquals(null, listService.showOwnPlanned(user.getId()));
     }
 
@@ -163,7 +164,7 @@ public class ListServiceMockTest extends BaseUnitTest {
 
     @Test
     public void showOthersWatched_Fail() {
-        when(listMock.showOthersWatched(user.getId())).thenThrow(RuntimeException.class);
+        when(listMock.showOthersWatched(user.getId())).thenThrow(DaoException.class);
         Assert.assertEquals(null, listService.showOthersWatched(user.getId()));
     }
 
@@ -175,7 +176,7 @@ public class ListServiceMockTest extends BaseUnitTest {
 
     @Test
     public void showOthersPlanned_Fail() {
-        when(listMock.showOthersPlanned(user.getId())).thenThrow(RuntimeException.class);
+        when(listMock.showOthersPlanned(user.getId())).thenThrow(DaoException.class);
         Assert.assertEquals(null, listService.showOthersPlanned(user.getId()));
     }
 

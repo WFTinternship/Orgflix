@@ -1,5 +1,6 @@
 package am.aca.orgflix.unit.service;
 
+import am.aca.dao.DaoException;
 import am.aca.dao.jdbc.impljdbc.JdbcCastDAO;
 import am.aca.dao.jdbc.impljdbc.JdbcFilmDAO;
 import am.aca.entity.Cast;
@@ -53,7 +54,7 @@ public class CastServiceMockTest extends BaseUnitTest {
 
     @Test
     public void addCast_Fail() {
-        when(castMock.addCast(cast)).thenThrow(RuntimeException.class);
+        when(castMock.addCast(cast)).thenThrow(DaoException.class);
         Assert.assertFalse(castService.addCast(cast));
     }
 
@@ -106,7 +107,7 @@ public class CastServiceMockTest extends BaseUnitTest {
 
     @Test
     public void listCasts_Fail() {
-        when(castMock.listCast()).thenThrow(RuntimeException.class);
+        when(castMock.listCast()).thenThrow(DaoException.class);
         Assert.assertEquals(null, castService.listCasts());
     }
 
@@ -119,7 +120,7 @@ public class CastServiceMockTest extends BaseUnitTest {
 
     @Test
     public void listFilmsByCast_Fail() {
-        when(filmMock.getFilmsByCast(cast.getId())).thenThrow(RuntimeException.class);
+        when(filmMock.getFilmsByCast(cast.getId())).thenThrow(DaoException.class);
         Assert.assertEquals(null, castService.listFilmsByCast(cast.getId()));
     }
 }

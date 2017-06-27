@@ -1,6 +1,5 @@
 package am.aca.service.impl;
 
-import am.aca.dao.DaoException;
 import am.aca.dao.jdbc.UserDAO;
 import am.aca.entity.User;
 import am.aca.service.UserService;
@@ -29,7 +28,7 @@ public class UserServiceImpl implements UserService {
             id = userDao.add(user);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
-            throw new DaoException(e.getMessage());
+//            throw new DaoException(e.getMessage());
         }
         return id;
     }
@@ -41,7 +40,7 @@ public class UserServiceImpl implements UserService {
             user = userDao.get(id);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
-            throw new DaoException(e.getMessage());
+//            throw new DaoException(e.getMessage());
         }
         return user;
     }
@@ -54,7 +53,7 @@ public class UserServiceImpl implements UserService {
             System.out.println(user);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
-            throw new DaoException(e.getMessage());
+//            throw new DaoException(e.getMessage());
         }
         return user;
     }
@@ -66,7 +65,7 @@ public class UserServiceImpl implements UserService {
             state = userDao.edit(user);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
-            throw new DaoException(e.getMessage());
+//            throw new DaoException(e.getMessage());
         }
         return state;
     }

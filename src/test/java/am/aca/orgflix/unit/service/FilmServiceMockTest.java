@@ -1,5 +1,6 @@
 package am.aca.orgflix.unit.service;
 
+import am.aca.dao.DaoException;
 import am.aca.dao.jdbc.impljdbc.JdbcCastDAO;
 import am.aca.dao.jdbc.impljdbc.JdbcFilmDAO;
 import am.aca.entity.Cast;
@@ -9,7 +10,6 @@ import am.aca.orgflix.BaseUnitTest;
 import am.aca.service.FilmService;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -157,13 +157,6 @@ public class FilmServiceMockTest extends BaseUnitTest {
         Assert.assertFalse(filmService.addFilm(film));
     }
 
-    @Ignore
-    @Test
-    public void editFilmResetError_Fail() {
-        when(filmMock.editFilm(film)).thenReturn(true);
-//        when(filmMock.resetRelationCasts(film)).thenThrow()
-    }
-
     @Test
     public void getFilmById_Success() {
         when(filmMock.getFilmById(cast.getId())).thenReturn(film);
@@ -172,7 +165,7 @@ public class FilmServiceMockTest extends BaseUnitTest {
 
     @Test
     public void getFilmById_Fail() {
-        when(filmMock.getFilmsByCast(cast.getId())).thenThrow(RuntimeException.class);
+        when(filmMock.getFilmsByCast(cast.getId())).thenThrow(DaoException.class);
         Assert.assertEquals(null, filmService.getFilmById(cast.getId()));
     }
 
@@ -184,7 +177,7 @@ public class FilmServiceMockTest extends BaseUnitTest {
 
     @Test
     public void getFilmsByCast_Fail() {
-        when(filmMock.getFilmsByCast(cast.getId())).thenThrow(RuntimeException.class);
+        when(filmMock.getFilmsByCast(cast.getId())).thenThrow(DaoException.class);
         Assert.assertEquals(null, filmService.getFilmById(cast.getId()));
     }
 
@@ -197,7 +190,7 @@ public class FilmServiceMockTest extends BaseUnitTest {
 
     @Test
     public void getFilmsList_Fail() {
-        when(filmMock.getFilmsList(0)).thenThrow(RuntimeException.class);
+        when(filmMock.getFilmsList(0)).thenThrow(DaoException.class);
         Assert.assertEquals(null, filmService.getFilmsList(0));
     }
 
@@ -209,7 +202,7 @@ public class FilmServiceMockTest extends BaseUnitTest {
 
     @Test
     public void getFilmsByGenre_Fail() {
-        when(filmMock.getFilmsByGenre(Genre.MUSIC)).thenThrow(RuntimeException.class);
+        when(filmMock.getFilmsByGenre(Genre.MUSIC)).thenThrow(DaoException.class);
         Assert.assertEquals(null, filmService.getFilmsByGenre(Genre.MUSIC));
     }
 
@@ -221,7 +214,7 @@ public class FilmServiceMockTest extends BaseUnitTest {
 
     @Test
     public void rateFilm_Fail() {
-        when(filmMock.rateFilm(film.getId(), 0)).thenThrow(RuntimeException.class);
+        when(filmMock.rateFilm(film.getId(), 0)).thenThrow(DaoException.class);
         Assert.assertFalse(filmService.rateFilm(film.getId(), 0));
     }
 
@@ -233,7 +226,7 @@ public class FilmServiceMockTest extends BaseUnitTest {
 
     @Test
     public void addGenreToFilm_Fail() {
-        when(filmMock.addGenreToFilm(Genre.MUSICAL, film.getId())).thenThrow(RuntimeException.class);
+        when(filmMock.addGenreToFilm(Genre.MUSICAL, film.getId())).thenThrow(DaoException.class);
         Assert.assertFalse(filmService.addGenreToFilm(Genre.MUSICAL, film.getId()));
     }
 
@@ -245,7 +238,7 @@ public class FilmServiceMockTest extends BaseUnitTest {
 
     @Test
     public void getRating_Fail() {
-        when(filmMock.getRating(film.getId())).thenThrow(RuntimeException.class);
+        when(filmMock.getRating(film.getId())).thenThrow(DaoException.class);
         Assert.assertEquals(0.0, filmService.getRating(film.getId()), 0.01);
     }
 
@@ -257,7 +250,7 @@ public class FilmServiceMockTest extends BaseUnitTest {
 
     @Test
     public void totalNumber_Fail() {
-        when(filmMock.totalNumberOfFilms()).thenThrow(RuntimeException.class);
+        when(filmMock.totalNumberOfFilms()).thenThrow(DaoException.class);
         Assert.assertEquals(0, filmService.totalNumberOfFilms());
     }
 }

@@ -214,6 +214,42 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
         return getJdbcTemplate().queryForObject(query, Integer.class);
     }
 
+    /**
+     * Provide films filtered by user's desired parameters
+     *
+     * @param title a keyword in desired film's title
+     * @param startYear the lower bound of the desired film's release date
+     * @param finishYear the upper bound of the desired film's release date
+     * @param hasOscar indicator whether or not the desired film has Oscar for Best Picture
+     * @param director the full or partial name of the desired film's director
+     * @param castId the id of the desired film's cast member
+     * @param genreId the id of the desired film's genre
+     * @return list of all films satisfying all filter and search conditions given by the user
+     */
+    @Override
+    public List<Film> getFilteredFilms(String title, int startYear, int finishYear, String hasOscar, String director, String castId, String genreId) {
+        final String query = "SELECT films.ID, films.Title, films.Prod_Year, " +
+                "films.HasOscar, films.image_ref, films.Director, " +
+                "films.Rate_1star, films.Rate_2star, films.Rate_3star, " +
+                "films.Rate_4star, films.Rate_5star FROM films " +
+                "LEFT JOIN film_to_cast " +
+                "ON films.ID = film_to_cast.Film_ID " +
+                "LEFT JOIN genre_to_film " +
+                "ON genre_to_film.Film_ID = films.ID " +
+                "WHERE films.Title LIKE ? " +
+                "AND films.Prod_Year >= ? " +
+                "AND films.Prod_Year <= ? " +
+                "AND films.HasOscar LIKE ? " +
+                "AND (films.Director LIKE ? " +
+                "OR films.Director IS NULL) " +
+                "AND (film_to_cast.Actor_ID LIKE ? " +
+                "OR film_to_cast.Actor_ID IS NULL)" +
+                "AND (genre_to_film.Genre_ID LIKE ? OR genre_to_film.Genre_ID IS NULL) ";
+        return getJdbcTemplate().query(query, new Object[] {
+                "%"+title+"%", startYear, finishYear, hasOscar, director, castId, genreId
+        }, new FilmRowMapper());
+    }
+
 
     //UPDATE
 

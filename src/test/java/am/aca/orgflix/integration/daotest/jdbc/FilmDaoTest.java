@@ -230,6 +230,66 @@ public class FilmDaoTest extends BaseIntegrationTest {
     }
 
     @Test
+    public void searchTitle_Success() {
+        film.setTitle("Captain Fantastic");
+        film.setProdYear(2016);
+        filmDAO.addFilm(film);
+
+        film.setTitle("City of God");
+        film.setProdYear(2002);
+        filmDAO.addFilm(film);
+
+        Assert.assertEquals(1, filmDAO.getFilteredFilms("City of God", 1000, 3000, "%", "%", "%", "%").size());
+    }
+
+    @Test
+    public void searchTitleNotExisting_Empty() {
+        film.setTitle("City of God");
+        film.setProdYear(2002);
+        filmDAO.addFilm(film);
+
+        Assert.assertTrue(filmDAO.getFilteredFilms("City of Angels", 1000, 3000, "%", "%", "%", "%").isEmpty());
+    }
+
+    @Test
+    public void filterByCast_Success() {
+        film.setTitle("City of God");
+        film.setProdYear(2002);
+        filmDAO.addFilm(film);
+
+        cast = new Cast("Alice Braga", false);
+        castDAO.addCast(cast);
+        castDAO.addCastToFilm(cast, film.getId());
+
+        Assert.assertEquals(film, filmDAO.getFilteredFilms("", 1000, 3000, "%", "%", String.valueOf(cast.getId()), "%").get(0));
+    }
+
+    @Test
+    public void filterByCast_Empty() {
+        Assert.assertTrue(filmDAO.getFilteredFilms("", 1000, 3000, "%", "%", "8", "%").isEmpty());
+    }
+
+    @Test
+    public void filterByAllParameters_Success() {
+        film.setTitle("Captain Fantastic");
+        film.setProdYear(2016);
+        filmDAO.addFilm(film);
+        filmDAO.addGenreToFilm(Genre.COMEDY, film.getId());
+
+        film.setTitle("City of God");
+        film.setProdYear(2002);
+        filmDAO.addFilm(film);
+        filmDAO.addGenreToFilm(Genre.CRIME, film.getId());
+
+        cast = new Cast("Alice Braga", false);
+        castDAO.addCast(cast);
+        castDAO.addCastToFilm(cast, film.getId());
+
+        Assert.assertEquals(1, filmDAO.getFilteredFilms("City of God", 2002, 2002, String.valueOf(0), "%", String.valueOf(cast.getId()), String.valueOf(Genre.CRIME.getValue())).size());
+        Assert.assertEquals(film, filmDAO.getFilteredFilms("City of God", 2002, 2002, String.valueOf(0), "%", String.valueOf(cast.getId()), String.valueOf(Genre.CRIME.getValue())).get(0));
+    }
+
+    @Test
     public void editFilm_Succeeded() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);

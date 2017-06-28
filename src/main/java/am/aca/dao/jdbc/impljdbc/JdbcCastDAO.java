@@ -75,7 +75,7 @@ public class JdbcCastDAO extends BaseDAO implements CastDAO {
     @SuppressWarnings("unchecked")
     @Override
     public List<Cast> listCast() {
-        final String query = "SELECT ID, Actor_name AS Name, HasOscar FROM casts";
+        final String query = "SELECT ID, Actor_name AS Name, HasOscar FROM casts ORDER BY Name";
         return getJdbcTemplate().query(query, new BeanPropertyRowMapper(Cast.class));
     }
 

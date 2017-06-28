@@ -258,4 +258,55 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
         Assert.assertTrue(filmService.addGenreToFilm(Genre.MUSICAL, film.getId()));
         Assert.assertEquals(film, filmService.getFilmsByGenre(Genre.MUSICAL).get(0));
     }
+
+    @Test
+    public void searchTitle_Success() {
+        film = new Film("In Bruges", 2008);
+        filmService.addFilm(film);
+
+        film = new Film("Trainspotting", 1996);
+        filmService.addFilm(film);
+
+        Assert.assertEquals(1, filmService.getFilteredFilms("Trainspotting", 1000, 3000, false, "%", 0, Genre.ADVENTURE).size());
+    }
+
+    @Test
+    public void searchTitleNotExisting_Empty() {
+        film = new Film("In Bruges", 2008);
+        filmService.addFilm(film);
+        Assert.assertTrue(filmService.getFilteredFilms("City of Angels", 1000, 3000, true, "%", 0, Genre.BIOGRAPHY).isEmpty());
+    }
+
+    @Test
+    public void filterByCast_Success() {
+        cast = new Cast("Collin Farrell");
+        castService.addCast(cast);
+
+        film = new Film("In Bruges", 2008);
+        filmService.addFilm(film);
+
+        castService.addCastToFilm(cast, film.getId());
+
+        Assert.assertEquals(film, filmService.getFilteredFilms("", 1000, 3000, false, "%", cast.getId(), Genre.MYSTERY).get(0));
+    }
+
+    @Test
+    public void filterByCast_Empty() {
+        Assert.assertTrue(filmService.getFilteredFilms("Trainspotting", 1996, 1996, false, "Danny Boyle", 0, Genre.ANIMATION).isEmpty());
+    }
+
+    @Test
+    public void filterByAllParameters_Success() {
+        film = new Film("In Bruges", 2008);
+        filmService.addFilm(film);
+
+        film = new Film("Trainspotting", 1996);
+        cast = new Cast("Ewan McGregor");
+        film.addCast(cast);
+        film.setDirector("Danny Boyle");
+        film.addGeners(Genre.CRIME);
+        filmService.addFilm(film);
+        Assert.assertEquals(1, filmService.getFilteredFilms("Trainspotting", 1996, 1996, false, "Danny Boyle", cast.getId(), Genre.CRIME).size());
+        Assert.assertEquals(film, filmService.getFilteredFilms("Trainspotting", 1996, 1996, false, "Danny Boyle", cast.getId(), Genre.CRIME).get(0));
+    }
 }

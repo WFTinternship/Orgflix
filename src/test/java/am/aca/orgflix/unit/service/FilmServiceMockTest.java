@@ -63,13 +63,6 @@ public class FilmServiceMockTest extends BaseUnitTest {
     @Test
     public void addFilmWOGenresAndCasts_Success() {
         when(filmMock.addFilm(film)).thenReturn(true);
-        for (Genre genre : film.getGenres()) {
-            when(filmMock.addGenreToFilm(genre, film.getId())).thenReturn(true);
-        }
-        for (Cast cast : film.getCasts()) {
-            when(castMock.addCast(cast)).thenReturn(true);
-            when(castMock.addCastToFilm(cast, film.getId())).thenReturn(true);
-        }
         Assert.assertTrue(filmService.addFilm(film));
     }
 
@@ -119,13 +112,6 @@ public class FilmServiceMockTest extends BaseUnitTest {
     @Test
     public void editFilmWOGenresAndCasts_Success() {
         when(filmMock.editFilm(film)).thenReturn(true);
-        for (Genre genre : film.getGenres()) {
-            when(filmMock.addGenreToFilm(genre, film.getId())).thenReturn(true);
-        }
-        for (Cast cast : film.getCasts()) {
-            when(castMock.addCast(cast)).thenReturn(true);
-            when(castMock.addCastToFilm(cast, film.getId())).thenReturn(true);
-        }
         Assert.assertTrue(filmService.editFilm(film));
     }
 
@@ -252,5 +238,13 @@ public class FilmServiceMockTest extends BaseUnitTest {
     public void totalNumber_Fail() {
         when(filmMock.totalNumberOfFilms()).thenThrow(DaoException.class);
         Assert.assertEquals(0, filmService.totalNumberOfFilms());
+    }
+
+    @Test
+    public void filterByEverything_Success() {
+        films.add(film);
+        System.out.println(cast.getId());
+        when(filmMock.getFilteredFilms("test", 1000, 3000, "%", "testDir", "0", "1")).thenReturn(films);
+        Assert.assertEquals(films, filmService.getFilteredFilms("test", 1000, 3000, false, "testDir", cast.getId(), Genre.FAMILY));
     }
 }

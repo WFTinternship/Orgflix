@@ -160,6 +160,19 @@ public class FilmServiceImpl implements FilmService {
         return total;
     }
 
+    @Override
+    public List<Film> getFilteredFilms(String title, int startYear, int finishYear, boolean hasOscar, String director, int castId, Genre genre) {
+        List<Film> films = null;
+        try {
+            films = filmDao.getFilteredFilms(title, startYear, finishYear, hasOscar ? "1" : "%", director, String.valueOf(castId), String.valueOf(genre.getValue()));
+        }
+        catch (RuntimeException e) {
+            LOGGER.warn(e.toString());
+        }
+        return films;
+    }
+
+
     private boolean optimizeRelations(Film film) {
         try {
             for (Genre genre : film.getGenres()) {

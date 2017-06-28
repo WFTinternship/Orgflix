@@ -68,11 +68,14 @@ public class Film {
                 ", title='" + title + '\'' +
                 ", prodYear=" + prodYear +
                 ", hasOscar=" + hasOscar +
+                ", image='" + image + '\'' +
+                ", director='" + director + '\'' +
                 ", rate_1star=" + rate_1star +
                 ", rate_2star=" + rate_2star +
                 ", rate_3star=" + rate_3star +
                 ", rate_4star=" + rate_4star +
                 ", rate_5star=" + rate_5star +
+                ", casts=" + casts +
                 ", genres=" + genres +
                 '}';
     }

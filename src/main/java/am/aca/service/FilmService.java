@@ -6,7 +6,7 @@ import am.aca.entity.Genre;
 import java.util.List;
 
 /**
- * Interface for
+ * Interface for film service layer
  */
 public interface FilmService {
 
@@ -23,6 +23,8 @@ public interface FilmService {
     double getRating(int filmId);
 
     int totalNumberOfFilms();
+
+    List<Film> getFilteredFilms(String title, int startYear, int finishYear, boolean hasOscar, String director, int castId, Genre genre);
 
     boolean editFilm(Film film);
 

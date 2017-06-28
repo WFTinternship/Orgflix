@@ -29,6 +29,8 @@ public interface FilmDAO {
 
     int totalNumberOfFilms();
 
+    List<Film> getFilteredFilms(String title, int startYear, int finishYear, String hasOscar, String director, String castId, String genreId);
+
     // UPDATE
     boolean editFilm(Film film);
 

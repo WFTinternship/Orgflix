@@ -42,4 +42,10 @@ public enum Genre {
 
     private int value;
     private String title;
+
+    public static Genre getByTitle(String title) {
+        if ("Sci-Fi".equals(title))
+            return valueOf("SCI_FI");
+        else return valueOf(title.toUpperCase());
+    }
 }

@@ -31,11 +31,16 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
     <nav id="menu">
         <h2>Menu</h2>
         <ul>
-            <li><a href="/index">Home</a></li>
-            <li><a href="/watch_list">Watch list</a></li>
-            <li><a href="/wish_list">Wish List</a></li>
-            <li><a href="/loging">Login</a></li>
+            <li><a href="index">Home</a></li>
+            <li><a href="login">Login</a></li>
+            <li><a href="signup">Sign up</a></li>
         </ul>
+        <form id="navigator" method="POST" action="">
+            <input type="hidden" id="userId" name="userId" value="${userId}"'/>
+            <input type="hidden" id="userAuth" name="userAuth" value="${userAuth}"/>
+            <input type="hidden" id="currPage" name="currPage" value="${currPage}"/>
+            <input type="hidden" id="page" name="page" value="${page}"/>
+        </form>
     </nav>
 
     <!-- Main -->

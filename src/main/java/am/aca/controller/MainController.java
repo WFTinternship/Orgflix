@@ -3,6 +3,8 @@ package am.aca.controller;
 import am.aca.entity.User;
 import am.aca.servlet.BeanProvider;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -17,11 +19,37 @@ public class MainController {
     @RequestMapping("/")
     public ModelAndView index() {
         ModelAndView modelAndView = new ModelAndView("index");
-        modelAndView.addObject("films", BeanProvider.getFilmService().getFilmsList(0));
-        modelAndView.addObject("userId", -1);
-        modelAndView.addObject("userAuth", 0);
-        modelAndView.addObject("currPage", 0);
-        modelAndView.addObject("page", "main");
+        return getGuestMV(modelAndView);
+    }
+
+    @GetMapping("/signup")
+    public ModelAndView signup() {
+        ModelAndView modelAndView = new ModelAndView("signup");
+        return getGuestMV(modelAndView);
+    }
+
+    @PostMapping("/signup")
+    public ModelAndView signupResult(@RequestParam("nick") String nick,
+                                     @RequestParam("userName") String userName,
+                                     @RequestParam("email") String email,
+                                     @RequestParam("pass") String pass) {
+
+        ModelAndView modelAndView = null;
+        User user = new User(nick, userName, email, pass);
+
+        int userId = BeanProvider.getUserService().add(user);
+        if (userId != -1) {
+            modelAndView = new ModelAndView("index");
+            modelAndView.addObject("films", BeanProvider.getFilmService().getFilmsList(0));
+            modelAndView.addObject("userId", userId);
+            modelAndView.addObject("user", nick + " (" + email + ")");
+            modelAndView.addObject("userAuth", pass.hashCode() + email.hashCode());
+            modelAndView.addObject("currPage", 0);
+            modelAndView.addObject("page", "main");
+        } else{
+            modelAndView = new ModelAndView("error");
+        }
+
         return modelAndView;
     }
 
@@ -101,6 +129,15 @@ public class MainController {
         modelAndView.addObject("userAuth", userAuth);
         modelAndView.addObject("currPage", 0);
         modelAndView.addObject("page", "wish");
+        return modelAndView;
+    }
+
+    private ModelAndView getGuestMV(ModelAndView modelAndView){
+        modelAndView.addObject("films", BeanProvider.getFilmService().getFilmsList(0));
+        modelAndView.addObject("userId", -1);
+        modelAndView.addObject("userAuth", 0);
+        modelAndView.addObject("currPage", 0);
+        modelAndView.addObject("page", "main");
         return modelAndView;
     }
 }

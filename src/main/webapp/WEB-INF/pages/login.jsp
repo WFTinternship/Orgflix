@@ -29,6 +29,12 @@
             <li><a href="login">Login</a></li>
             <li><a href="signup">Sign up</a></li>
         </ul>
+        <form id="navigator" method="POST" action="">
+            <input type="hidden" id="userId" name="userId" value="${userId}"'/>
+            <input type="hidden" id="userAuth" name="userAuth" value="${userAuth}"/>
+            <input type="hidden" id="currPage" name="currPage" value="${currPage}"/>
+            <input type="hidden" id="page" name="page" value="${page}"/>
+        </form>
     </nav>
 
     <!-- Main -->

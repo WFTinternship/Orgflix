@@ -93,9 +93,21 @@ public class CastServiceImpl implements CastService {
     @SuppressWarnings("unchecked")
     @Override
     public List<Film> listFilmsByCast(int castId) {
-        List list = null;
+        List<Film> list = null;
         try {
             list = filmDAO.getFilmsByCast(castId);
+        } catch (RuntimeException e) {
+            LOGGER.warn(e.toString());
+        }
+        return list;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Cast> getCastsByFilm(int filmId){
+        List<Cast> list = null;
+        try {
+            list = castDAO.getCastsByFilm(filmId);
         } catch (RuntimeException e) {
             LOGGER.warn(e.toString());
         }

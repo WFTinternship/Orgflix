@@ -1,10 +1,12 @@
 package am.aca.service.impl;
 
+import am.aca.dao.jdbc.CastDAO;
 import am.aca.dao.jdbc.FilmDAO;
 import am.aca.dao.jdbc.ListDao;
 import am.aca.dao.jdbc.impljdbc.JdbcFilmDAO;
 import am.aca.dao.jdbc.impljdbc.JdbcListDAO;
 import am.aca.entity.Film;
+import am.aca.service.CastService;
 import am.aca.service.FilmService;
 import am.aca.service.ListService;
 import org.apache.log4j.Logger;
@@ -26,6 +28,7 @@ public class ListServiceImpl implements ListService {
     private static final Logger LOGGER = Logger.getLogger(ListServiceImpl.class);
     private ListDao listDao;
     private FilmService filmService;
+    private CastService castService;
 
     @Autowired
     public void setFilmService(FilmService filmService) {
@@ -35,6 +38,11 @@ public class ListServiceImpl implements ListService {
     @Autowired
     public void setListDao(ListDao listDao) {
         this.listDao = listDao;
+    }
+
+    @Autowired
+    public void setCastService(CastService castService) {
+        this.castService = castService;
     }
 
     @Transactional
@@ -103,44 +111,60 @@ public class ListServiceImpl implements ListService {
         return state;
     }
 
+    @Transactional
     @Override
-    public List showOwnWatched(int userId) {
-        List list = null;
+    public List<Film> showOwnWatched(int userId) {
+        List<Film> list = null;
         try {
             list = listDao.showOwnWatched(userId);
+            for(Film film : list){
+                film.setCasts(castService.getCastsByFilm(film.getId()));
+            }
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
         }
         return list;
     }
 
+    @Transactional
     @Override
-    public List showOwnPlanned(int userId) {
-        List list = null;
+    public List<Film> showOwnPlanned(int userId) {
+        List<Film> list = null;
         try {
             list = listDao.showOwnPlanned(userId);
+            for(Film film : list){
+                film.setCasts(castService.getCastsByFilm(film.getId()));
+            }
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
         }
         return list;
     }
 
+    @Transactional
     @Override
-    public List showOthersWatched(int userId) {
-        List list = null;
+    public List<Film> showOthersWatched(int userId) {
+        List<Film> list = null;
         try {
             list = listDao.showOthersWatched(userId);
+            for(Film film : list){
+                film.setCasts(castService.getCastsByFilm(film.getId()));
+            }
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
         }
         return list;
     }
 
+    @Transactional
     @Override
-    public List showOthersPlanned(int userId) {
-        List list = null;
+    public List<Film> showOthersPlanned(int userId) {
+        List<Film> list = null;
         try {
             list = listDao.showOthersPlanned(userId);
+            for(Film film : list){
+                film.setCasts(castService.getCastsByFilm(film.getId()));
+            }
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
         }

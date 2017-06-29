@@ -48,3 +48,15 @@ function submitLogin() {
         $("#loginForm").submit();
     }
 }
+$(document).ready(function() {
+    $("#contact_us").on("click", function () {
+        $("#touch-section").css("display", "none");
+        $("#contact-section").css("display", "table-cell");
+    });
+    $("#touch_us").on("click", function () {
+        $("#contact-section").css("display", "none");
+        $("#touch-section").css("display", "table-cell");
+
+    })
+
+});

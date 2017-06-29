@@ -3256,7 +3256,7 @@
 		@media screen and (max-width: 1280px) {
 
 			#footer {
-				padding: 5em 0 3em 0 ;
+				padding: 1em 0 5em 0 ;
 			}
 
 				#footer > .inner section:nth-child(1) {
@@ -3420,6 +3420,10 @@
 	color: white;
 	font-weight: bold;
 	padding:100px;
+}
+
+.hiddenElement{
+	display:none;
 }
 
 a.no_link:link,

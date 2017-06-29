@@ -29,4 +29,12 @@
             <!--<type>int</type>-->
         <!--</attribute>-->
     </tag>
+    <tag>
+        <name>pageHeader</name>
+        <tag-class>am.aca.servlet.taghandler.HeaderTagHandler</tag-class>
+    </tag>
+    <tag>
+        <name>pageFooter</name>
+        <tag-class>am.aca.servlet.taghandler.FooterTagHandler</tag-class>
+    </tag>
 </taglib>

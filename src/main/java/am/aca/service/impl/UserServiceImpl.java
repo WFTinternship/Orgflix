@@ -1,6 +1,8 @@
 package am.aca.service.impl;
 
+import am.aca.dao.DaoException;
 import am.aca.dao.jdbc.UserDAO;
+import am.aca.dao.jdbc.impljdbc.JdbcUserDAO;
 import am.aca.entity.User;
 import am.aca.service.UserService;
 import org.apache.log4j.Logger;
@@ -21,11 +23,18 @@ public class UserServiceImpl implements UserService {
         this.userDao = userDao;
     }
 
+    /**
+     * @param user the user object to be added to DB
+     * @return id of added new user in DB
+     * @see JdbcUserDAO#add(am.aca.entity.User)
+     * <p>
+     * Add new user to DB
+     */
     @Override
     public int add(User user) {
         int id = -1;
         try {
-            id = userDao.add(user);
+            return userDao.add(user);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
 //            throw new DaoException(e.getMessage());
@@ -33,6 +42,13 @@ public class UserServiceImpl implements UserService {
         return id;
     }
 
+    /**
+     * @param id the id of the user in DB
+     * @return user object with the matched id
+     * @see JdbcUserDAO#get(int)
+     * <p>
+     * Return user by user Id
+     */
     @Override
     public User get(int id) {
         User user = null;
@@ -45,18 +61,49 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+    /**
+     * @param email the email of the user in DB
+     * @return user object with the matched id
+     * @see JdbcUserDAO#get(java.lang.String)
+     * <p>
+     * Return user by user user's email
+     */
     @Override
     public User get(String email) {
         User user = null;
         try {
             user = userDao.get(email);
-            System.out.println(user);
+        } catch (org.springframework.dao.EmptyResultDataAccessException e) {
+            return null;
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
 //            throw new DaoException(e.getMessage());
         }
         return user;
     }
+
+    /**
+     * @param email the email of the user in DB
+     * @param pass  the password of the user in DB
+     * @return user object with the matched details, otherwise null
+     * @see JdbcUserDAO#authenticate(java.lang.String, java.lang.String)
+     * <p>
+     * Return user authenticated by user's email and password
+     */
+    @Override
+    public User authenticate(String email, String pass) {
+        User user;
+        try {
+            user = userDao.authenticate(email, pass);
+        } catch (org.springframework.dao.EmptyResultDataAccessException e) {
+            return null;
+        } catch (RuntimeException e) {
+            LOGGER.warn(e.getMessage());
+            throw new DaoException(e.getMessage());
+        }
+        return user;
+    }
+
 
     @Override
     public boolean edit(User user) {

@@ -55,81 +55,81 @@ public class ListServiceMockTest extends BaseUnitTest {
     public void addToWatchedExisting_Success() {
         when(filmServiceMock.getFilmById(film.getId())).thenReturn(film);
 //        when(filmMock.getFilmById(film.getId())).thenReturn(film);
-        when(listMock.areRelated(film, user.getId())).thenReturn(false);
-        when(listMock.insertWatched(film, user.getId(), true)).thenReturn(true);
-        Assert.assertTrue(listService.addToWatched(film, true, user.getId()));
+        when(listMock.areRelated(film.getId(), user.getId())).thenReturn(false);
+        when(listMock.insertWatched(film.getId(), user.getId(), true)).thenReturn(true);
+        Assert.assertTrue(listService.addToWatched(film.getId(), true, user.getId()));
     }
 
     @Test
     public void addToWatchedNew_Success() {
         when(filmServiceMock.getFilmById(film.getId())).thenReturn(null);
         when(filmServiceMock.addFilm(film)).thenReturn(true);
-        when(listMock.areRelated(film, user.getId())).thenReturn(false);
-        when(listMock.insertWatched(film, user.getId(), true)).thenReturn(true);
-        Assert.assertTrue(listService.addToWatched(film, true, user.getId()));
+        when(listMock.areRelated(film.getId(), user.getId())).thenReturn(false);
+        when(listMock.insertWatched(film.getId(), user.getId(), true)).thenReturn(true);
+        Assert.assertTrue(listService.addToWatched(film.getId(), true, user.getId()));
     }
 
     @Test
     public void addToWatchedWhenPlanned_Success() {
         when(filmServiceMock.getFilmById(film.getId())).thenReturn(film);
-        when(listMock.areRelated(film, user.getId())).thenReturn(true);
-        when(listMock.updateWatched(film, user.getId())).thenReturn(true);
-        Assert.assertTrue(listService.addToWatched(film, true, user.getId()));
+        when(listMock.areRelated(film.getId(), user.getId())).thenReturn(true);
+        when(listMock.updateWatched(film.getId(), user.getId())).thenReturn(true);
+        Assert.assertTrue(listService.addToWatched(film.getId(), true, user.getId()));
     }
 
     @Test
     public void addToWatchedWhenPlanned_Fail() {
         when(filmServiceMock.getFilmById(film.getId())).thenReturn(film);
-        when(listMock.areRelated(film, user.getId())).thenReturn(true);
-        when(listMock.updateWatched(film, user.getId())).thenReturn(false);
-        Assert.assertFalse(listService.addToWatched(film, true, user.getId()));
+        when(listMock.areRelated(film.getId(), user.getId())).thenReturn(true);
+        when(listMock.updateWatched(film.getId(), user.getId())).thenReturn(false);
+        Assert.assertFalse(listService.addToWatched(film.getId(), true, user.getId()));
     }
 
     @Test
     public void addToWatchedInsertionError_Fail() {
         when(filmServiceMock.getFilmById(film.getId())).thenReturn(null);
         when(filmServiceMock.addFilm(film)).thenReturn(false);
-        Assert.assertFalse(listService.addToWatched(film, true, user.getId()));
+        Assert.assertFalse(listService.addToWatched(film.getId(), true, user.getId()));
     }
 
     @Test
     public void addToPlannedExisting_Success() {
         when(filmServiceMock.getFilmById(film.getId())).thenReturn(film);
-        when(listMock.areRelated(film, user.getId())).thenReturn(false);
-        when(listMock.insertPlanned(film, user.getId(), true)).thenReturn(true);
-        Assert.assertTrue(listService.addToPlanned(film, true, user.getId()));
+        when(listMock.areRelated(film.getId(), user.getId())).thenReturn(false);
+        when(listMock.insertPlanned(film.getId(), user.getId(), true)).thenReturn(true);
+        Assert.assertTrue(listService.addToPlanned(film.getId(), true, user.getId()));
     }
 
     @Test
     public void addToPlannedNew_Success() {
         when(filmServiceMock.getFilmById(film.getId())).thenReturn(null);
         when(filmServiceMock.addFilm(film)).thenReturn(true);
-        when(listMock.areRelated(film, user.getId())).thenReturn(false);
-        when(listMock.insertPlanned(film, user.getId(), true)).thenReturn(true);
-        Assert.assertTrue(listService.addToPlanned(film, true, user.getId()));
+        when(listMock.areRelated(film.getId(), user.getId())).thenReturn(false);
+        when(listMock.insertPlanned(film.getId(), user.getId(), true)).thenReturn(true);
+        Assert.assertTrue(listService.addToPlanned(film.getId(), true, user.getId()));
     }
 
     @Test
     public void addToPlannedWhenWatched_Success() {
         when(filmServiceMock.getFilmById(film.getId())).thenReturn(film);
-        when(listMock.areRelated(film, user.getId())).thenReturn(true);
-        when(listMock.updatePlanned(film, user.getId())).thenReturn(true);
-        Assert.assertTrue(listService.addToPlanned(film, true, user.getId()));
+        when(listMock.areRelated(film.getId(), user.getId())).thenReturn(true);
+        when(listMock.updatePlanned(film.getId(), user.getId())).thenReturn(true);
+        Assert.assertTrue(listService.addToPlanned(film.getId(), true, user.getId()));
     }
 
     @Test
     public void addToPlannedWhenWatched_Fail() {
         when(filmServiceMock.getFilmById(film.getId())).thenReturn(film);
-        when(listMock.areRelated(film, user.getId())).thenReturn(true);
-        when(listMock.updatePlanned(film, user.getId())).thenReturn(false);
-        Assert.assertFalse(listService.addToPlanned(film, true, user.getId()));
+        when(listMock.areRelated(film.getId(), user.getId())).thenReturn(true);
+        when(listMock.updatePlanned(film.getId(), user.getId())).thenReturn(false);
+        Assert.assertFalse(listService.addToPlanned(film.getId(), true, user.getId()));
     }
 
     @Test
     public void addToPlannedInsertionError_Fail() {
         when(filmServiceMock.getFilmById(film.getId())).thenReturn(null);
         when(filmServiceMock.addFilm(film)).thenReturn(false);
-        Assert.assertFalse(listService.addToPlanned(film, true, user.getId()));
+        Assert.assertFalse(listService.addToPlanned(film.getId(), true, user.getId()));
     }
 
     @Test
@@ -226,42 +226,42 @@ public class ListServiceMockTest extends BaseUnitTest {
 
     @Test
     public void makePrivate_Success() {
-        when(listMock.areRelated(film, user.getId())).thenReturn(true);
+        when(listMock.areRelated(film.getId(), user.getId())).thenReturn(true);
         when(listMock.changePrivacy(film, user.getId(), false)).thenReturn(true);
         Assert.assertTrue(listService.makePrivate(user.getId(), film));
     }
 
     @Test
     public void makePrivateNotRelated_Fail() {
-        when(listMock.areRelated(film, user.getId())).thenReturn(false);
+        when(listMock.areRelated(film.getId(), user.getId())).thenReturn(false);
         when(listMock.changePrivacy(film, user.getId(), false)).thenReturn(true);
         Assert.assertFalse(listService.makePrivate(user.getId(), film));
     }
 
     @Test
     public void makePrivateUpdateError_Fail() {
-        when(listMock.areRelated(film, user.getId())).thenReturn(true);
+        when(listMock.areRelated(film.getId(), user.getId())).thenReturn(true);
         when(listMock.changePrivacy(film, user.getId(), false)).thenReturn(false);
         Assert.assertFalse(listService.makePrivate(user.getId(), film));
     }
 
     @Test
     public void makePublic_Success() {
-        when(listMock.areRelated(film, user.getId())).thenReturn(true);
+        when(listMock.areRelated(film.getId(), user.getId())).thenReturn(true);
         when(listMock.changePrivacy(film, user.getId(), true)).thenReturn(true);
         Assert.assertTrue(listService.makePublic(user.getId(), film));
     }
 
     @Test
     public void makePublicNotRelated_Fail() {
-        when(listMock.areRelated(film, user.getId())).thenReturn(false);
+        when(listMock.areRelated(film.getId(), user.getId())).thenReturn(false);
         when(listMock.changePrivacy(film, user.getId(), true)).thenReturn(true);
         Assert.assertFalse(listService.makePublic(user.getId(), film));
     }
 
     @Test
     public void makePublicUpdateError_Fail() {
-        when(listMock.areRelated(film, user.getId())).thenReturn(true);
+        when(listMock.areRelated(film.getId(), user.getId())).thenReturn(true);
         when(listMock.changePrivacy(film, user.getId(), true)).thenReturn(false);
         Assert.assertFalse(listService.makePublic(user.getId(), film));
     }

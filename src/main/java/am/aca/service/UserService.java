@@ -11,6 +11,8 @@ public interface UserService {
 
     User get(int id);
 
+    User authenticate(String email, String pass);
+
     User get(String email);
 
     boolean edit(User user);

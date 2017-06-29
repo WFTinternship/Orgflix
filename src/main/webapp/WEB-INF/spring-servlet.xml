@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
        http://www.springframework.org/schema/context
-       http://www.springframework.org/schema/context/spring-context-3.0.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+       http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+    <mvc:annotation-driven />
+    <context:component-scan base-package="am.aca" />
 
     <context:property-placeholder location="classpath:connection.properties"/>
 
@@ -23,8 +28,6 @@
     </bean>
 
 
-    <context:component-scan base-package="am.aca" />
-
     <bean id="jdbcUserDAO" class="am.aca.dao.jdbc.impljdbc.JdbcUserDAO" />
     <bean id="jdbcCastDAO" class="am.aca.dao.jdbc.impljdbc.JdbcCastDAO" />
     <bean id="jdbcFilmDAO" class="am.aca.dao.jdbc.impljdbc.JdbcFilmDAO" />
@@ -35,10 +38,9 @@
     <bean id="filmService" class="am.aca.service.impl.FilmServiceImpl" />
     <bean id="listService" class="am.aca.service.impl.ListServiceImpl" />
 
-    <tx:annotation-driven transaction-manager="txManager"/>
-    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager" >
-        <property name="dataSource" ref="dataSource"/>
-    </bean>
+    <mvc:resources mapping="/resources/**" location="/resources/"
+                   cache-period="31556926"/>
+
     <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver" >
         <property name="prefix" value="/WEB-INF/pages/" />
         <property name="suffix" value=".jsp" />

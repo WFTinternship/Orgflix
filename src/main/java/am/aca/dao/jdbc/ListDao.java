@@ -13,7 +13,11 @@ public interface ListDao {
 
     boolean insertWatched(Film film, int userId, boolean isPublic);
 
+    boolean insertWatched(int filmId, int userId, boolean isPublic);
+
     boolean insertPlanned(Film film, int userId, boolean isPublic);
+
+    boolean insertPlanned(int filmId, int userId, boolean isPublic);
 
     // RETRIEVE
 
@@ -27,9 +31,9 @@ public interface ListDao {
 
     // UPDATE
 
-    boolean updateWatched(Film film, int userId);
+    boolean updateWatched(int filmId, int userId);
 
-    boolean updatePlanned(Film film, int userId);
+    boolean updatePlanned(int filmId, int userId);
 
     boolean changePrivacy (Film film, int userId, boolean isPublic);
 
@@ -43,7 +47,7 @@ public interface ListDao {
 
     // SUPPORT METHODS
 
-    boolean areRelated(Film film, int userId);
+    boolean areRelated(int filmId, int userId);
 
     boolean isWatched(Film film, int userId);
 

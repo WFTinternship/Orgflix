@@ -113,6 +113,20 @@ public class UserDaoTest extends BaseIntegrationTest {
     }
 
     @Test
+    public void authenticate_succeeded(){
+        userDao.add(standardUser);
+        Assert.assertTrue(
+                standardUser.equals(userDao.authenticate(standardUser.getEmail(),standardUser.getPass()))
+        );
+    }
+
+    @Test(expected = org.springframework.dao.EmptyResultDataAccessException.class)
+    public void authenticate_fail_WrongPass(){
+        userDao.add(standardUser);
+        userDao.authenticate(standardUser.getEmail(),"xxx");
+    }
+
+    @Test
     public void editUser_Succed_Email() {
         user = new User("gago", "Gagik Petrosyan", "davit.abovyan@gmail.com", "pass");
         userDao.add(user);

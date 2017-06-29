@@ -8,9 +8,9 @@ import java.util.List;
  * Interface for film lists service layer
  */
 public interface ListService {
-    boolean addToWatched(Film film, boolean isPublic, int userId);
+    boolean addToWatched(int filmId, boolean isPublic, int userId);
 
-    boolean addToPlanned(Film film, boolean isPublic, int userId);
+    boolean addToPlanned(int filmId, boolean isPublic, int userId);
 
     boolean removeFromWatched(Film film, int userId);
 

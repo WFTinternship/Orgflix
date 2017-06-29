@@ -26,17 +26,26 @@ public class JdbcListDAO extends BaseDAO implements ListDao {
     // CREATE
 
     @Override
-    public boolean insertWatched(Film film, int userId, boolean isPublic) {
+    public boolean insertWatched(int filmId, int userId, boolean isPublic) {
         final String insertQuery = "INSERT INTO Lists(User_ID, Film_ID, Is_watched, Is_public) VALUES (?, ?, TRUE, ?)";
-        return (getJdbcTemplate().update(insertQuery, userId, film.getId(), isPublic) == 1);
+        return (getJdbcTemplate().update(insertQuery, userId, filmId, isPublic) == 1);
+    }
+
+    @Override
+    public boolean insertWatched(Film film, int userId, boolean isPublic) {
+        return insertWatched(film.getId(), userId, isPublic);
+    }
+
+    @Override
+    public boolean insertPlanned(int filmId, int userId, boolean isPublic) {
+        final String insertQuery = "INSERT INTO Lists(User_ID, Film_ID, Is_wished, Is_public) VALUES (?, ?, TRUE, ?)";
+        return (getJdbcTemplate().update(insertQuery, userId, filmId, isPublic) == 1);
     }
 
     @Override
     public boolean insertPlanned(Film film, int userId, boolean isPublic) {
-        final String insertQuery = "INSERT INTO Lists(User_ID, Film_ID, Is_wished, Is_public) VALUES (?, ?, TRUE, ?)";
-        return (getJdbcTemplate().update(insertQuery, userId, film.getId(), isPublic) == 1);
+        return insertPlanned(film.getId(),userId,isPublic);
     }
-
     // RETRIEVE
 
     @SuppressWarnings("unchecked")
@@ -78,17 +87,17 @@ public class JdbcListDAO extends BaseDAO implements ListDao {
     // UPDATE
 
     @Override
-    public boolean updateWatched(Film film, int userId) {
+    public boolean updateWatched(int filmId, int userId) {
         final String updateQuery = "UPDATE lists SET Is_watched = TRUE " +
                 "WHERE User_ID = ? AND Film_ID = ?";
-        return (getJdbcTemplate().update(updateQuery, userId, film.getId()) == 1);
+        return (getJdbcTemplate().update(updateQuery, userId, filmId) == 1);
     }
 
     @Override
-    public boolean updatePlanned(Film film, int userId) {
+    public boolean updatePlanned(int filmId, int userId) {
         final String updateQuery = "UPDATE lists SET Is_wished = TRUE " +
                 "WHERE User_ID = ? AND Film_ID = ?";
-        return (getJdbcTemplate().update(updateQuery, userId, film.getId()) == 1);
+        return (getJdbcTemplate().update(updateQuery, userId, filmId) == 1);
     }
 
     @Override
@@ -120,10 +129,10 @@ public class JdbcListDAO extends BaseDAO implements ListDao {
     // SUPPORT METHODS
 
     @Override
-    public boolean areRelated(Film film, int userId) {
+    public boolean areRelated(int filmId, int userId) {
         final String checkQuery = "SELECT COUNT(*) FROM lists WHERE User_ID = ? AND Film_ID = ?";
         int count = getJdbcTemplate().queryForObject(checkQuery, new Object[]{
-                userId, film.getId()
+                userId, filmId
         }, Integer.class);
         return (count == 1);
     }

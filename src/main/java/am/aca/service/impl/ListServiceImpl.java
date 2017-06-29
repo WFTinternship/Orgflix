@@ -1,11 +1,15 @@
 package am.aca.service.impl;
 
+import am.aca.dao.jdbc.FilmDAO;
 import am.aca.dao.jdbc.ListDao;
+import am.aca.dao.jdbc.impljdbc.JdbcFilmDAO;
+import am.aca.dao.jdbc.impljdbc.JdbcListDAO;
 import am.aca.entity.Film;
 import am.aca.service.FilmService;
 import am.aca.service.ListService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,9 +22,10 @@ import java.util.List;
 @Transactional(readOnly = true)
 @Service
 public class ListServiceImpl implements ListService {
+
     private static final Logger LOGGER = Logger.getLogger(ListServiceImpl.class);
-    private FilmService filmService;
     private ListDao listDao;
+    private FilmService filmService;
 
     @Autowired
     public void setFilmService(FilmService filmService) {
@@ -34,19 +39,17 @@ public class ListServiceImpl implements ListService {
 
     @Transactional
     @Override
-    public boolean addToWatched(Film film, boolean isPublic, int userId) {
+    public boolean addToWatched(int filmId, boolean isPublic, int userId) {
         boolean state = false;
         try {
-            //case: the film does not exist
-            if (filmService.getFilmById(film.getId()) == null) {
-                if (!filmService.addFilm(film))
-                    return false;
-            }
-
             //case: any
-            if (listDao.areRelated(film, userId)) {
-                state = listDao.updateWatched(film, userId);
-            } else state = listDao.insertWatched(film, userId, isPublic);
+            if (listDao.areRelated(filmId, userId)){
+                 state = listDao.updateWatched(filmId, userId);
+            }
+            else state =  listDao.insertWatched(filmId, userId, isPublic);
+            if (listDao.areRelated(filmId, userId)) {
+                state = listDao.updateWatched(filmId, userId);
+            } else state = listDao.insertWatched(filmId, userId, isPublic);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
         }
@@ -55,18 +58,13 @@ public class ListServiceImpl implements ListService {
 
     @Transactional
     @Override
-    public boolean addToPlanned(Film film, boolean isPublic, int userId) {
+    public boolean addToPlanned(int filmId, boolean isPublic, int userId) {
         boolean state = false;
         try {
-            //case: the film does not exist
-            if (filmService.getFilmById(film.getId()) == null) {
-                filmService.addFilm(film);
-            }
-
             //case: any
-            if (listDao.areRelated(film, userId))
-                state = listDao.updatePlanned(film, userId);
-            else state = listDao.insertPlanned(film, userId, isPublic);
+            if (listDao.areRelated(filmId, userId))
+                state = listDao.updatePlanned(filmId, userId);
+            else state = listDao.insertPlanned(filmId, userId, isPublic);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
         }
@@ -154,7 +152,7 @@ public class ListServiceImpl implements ListService {
     public boolean makePrivate(int userId, Film film) {
         boolean state = false;
         try {
-            if (!listDao.areRelated(film, userId))
+            if (!listDao.areRelated(film.getId(), userId))
                 return false;
             state = listDao.changePrivacy(film, userId, false);
         } catch (RuntimeException e) {
@@ -168,7 +166,7 @@ public class ListServiceImpl implements ListService {
     public boolean makePublic(int userId, Film film) {
         boolean state = false;
         try {
-            if (!listDao.areRelated(film, userId))
+            if (!listDao.areRelated(film.getId(), userId))
                 return false;
             state = listDao.changePrivacy(film, userId, true);
         } catch (RuntimeException e) {
@@ -176,5 +174,4 @@ public class ListServiceImpl implements ListService {
         }
         return state;
     }
-
 }

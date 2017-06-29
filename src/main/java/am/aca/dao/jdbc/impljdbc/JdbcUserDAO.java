@@ -7,7 +7,6 @@ import am.aca.dao.jdbc.impljdbc.mapper.UserRowMapper;
 import am.aca.entity.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
@@ -34,7 +33,7 @@ public class JdbcUserDAO extends BaseDAO implements UserDAO {
     /**
      * Add new user to DB
      *
-     * @param user
+     * @param user the user object to be added to DB
      * @return id of added new user in DB
      */
     @Override
@@ -92,6 +91,20 @@ public class JdbcUserDAO extends BaseDAO implements UserDAO {
     public User get(String email) {
         final String query = "SELECT * FROM users WHERE Email = ? LIMIT 1";
         return (User) getJdbcTemplate().queryForObject(query, new Object[]{email}, new UserRowMapper());
+    }
+
+    /**
+     * Return user authenticated by user's email and password
+     *
+     * @param email the email of the user in DB
+     * @param pass the password of the user in DB
+     * @return user object with the matched details
+     */
+    @Override
+    public User authenticate(String email, String pass){
+        final String query = "SELECT * FROM users WHERE Email = ? AND User_Pass = ? LIMIT 1";
+        Object obj = getJdbcTemplate().queryForObject(query, new Object[]{email, pass}, new UserRowMapper());
+        return (User) obj;
     }
 
     //UPDATE

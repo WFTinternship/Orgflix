@@ -5,30 +5,51 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import am.aca.service.impl.*;
 import am.aca.servlet.BeanProvider;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.apache.log4j.Logger;
+import org.springframework.context.annotation.Bean;
 
 /**
- * Created by David on 6/17/2017
+ *  Tag handler for pagination of films
  */
 public class PaginationTagHandler extends TagSupport {
 
+    private static final Logger LOGGER = Logger.getLogger(PaginationTagHandler.class.getName());
+
+//    private String pageType;
+//    private int userId;
+//
+//    public void setPageType(String pageType) {
+//        this.pageType = pageType;
+//    }
+//
+//    public void setUserId(int userId) {
+//        this.userId = userId;
+//    }
+
+
     public int doStartTag() throws JspException {
+
         JspWriter out = pageContext.getOut();//returns the instance of JspWriter
         try {
-
-            int filmnum = BeanProvider.getFilmService().totalNumberOfFilms();
-            if (filmnum > 12) {
-                out.print("<form class='pagintion_container' id='pageForm' method='POST' action='/home'><input type='hidden' id='currPage' name='currPage' value='0'>");
-                for (int i = 0; i <= filmnum / 12; ++i) {
+            int filmNum = 0;
+//            if(pageType == "all") {
+                filmNum = BeanProvider.getFilmService().totalNumberOfFilms();
+//            } else if(pageType == "watch"){
+//                filmNum = BeanProvider.getListService().showOwnWatched(userId).size();
+//            } else if(pageType == "wish"){
+//                filmNum = BeanProvider.getListService().showOwnPlanned(userId).size();
+//            }
+            if (filmNum > 12) {
+                out.print("<div class='pagintion_container'>");
+                for (int i = 0; i <= filmNum / 12; ++i) {
                     out.print("<div class='pagination' id='" + i + "' onclick='pagination(this.id)'>" + (i + 1) + "</div>");
                 }
-                out.print("</form>");
+                out.print("</div>");
             }
         } catch (Exception e) {
-            System.out.println(e);
+            LOGGER.warn(e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
         return SKIP_BODY;//will not evaluate the body content of the tag
     }

@@ -3,7 +3,8 @@
  */
 function pagination(page) {
     $("#currPage").val(page);
-    $("#pageForm").submit();
+    $('#navigator').attr('action', 'index');
+    $("#navigator").submit();
 }
 
 function filmControlMenu(state,id) {
@@ -15,10 +16,11 @@ function filmControlMenu(state,id) {
 }
 
 function AddToList(type,id) {
-    $.ajax({url: "demo_test.txt",type:"POST",data:{film:id,user:$("#userId").val()},success: function(result){
-        $("#pop-up-result").html(result);
-    }});
 
+    $.ajax({url: "/data/addFilmTo"+type,type:"POST",data:{film:id,user:$("#userId").val()},success: function(result){
+        $("#pop-up-result").html(result);
+        $("#pop-up-result").css("display", "block");
+    }});
 }
 
 function navigator(page){

@@ -2,20 +2,17 @@
   Custom error page
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
+<%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE HTML>
 <html>
 <head>
     <title>Orgflix 1.0</title>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <!--[if lte IE 8]>
-    <script src="assets/js/ie/html5shiv.js"></script><![endif]-->
-    <link rel="stylesheet" href="assets/css/main.css?v=103"/>
-    <!--[if lte IE 9]>
-    <link rel="stylesheet" href="assets/css/ie9.css"/><![endif]-->
-    <!--[if lte IE 8]>
-    <link rel="stylesheet" href="assets/css/ie8.css"/><![endif]-->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!--[if lte IE 8]><script src='<c:url value="../resources/js/ie/html5shiv.js" />' ></script><![endif]-->
+    <link rel="stylesheet" href='<c:url value="../resources/css/main.css" />' />
+    <!--[if lte IE 9]><link rel="stylesheet" href='<c:url value="../resources/css/ie9.css" />' /><![endif]-->
+    <!--[if lte IE 8]><link rel="stylesheet" href='<c:url value="../resources/css/ie8.css" />' /><![endif]-->
 </head>
 <body>
 <!-- Wrapper -->
@@ -27,7 +24,7 @@
 
             <!-- Logo -->
             <a href="home" class="logo">
-                <span class="symbol"><img src="images/logo.svg" alt=""/></span><span class="title">Orgflix</span>
+                <span class="symbol"><img src='<c:url value="../resources/images/logo.svg" />' alt="" /></span><span class="title">Orgflix</span>
             </a>
 
             <!-- Nav -->
@@ -44,7 +41,7 @@
     <nav id="menu">
         <h2>Menu</h2>
         <ul>
-            <li><a href="home">Home</a></li>
+            <li><a href="/">Home</a></li>
             <%--<li><a href="watch_list">Watch list</a></li>--%>
             <%--<li><a href="wish_list">Wish List</a></li>--%>
             <li><a href="login">Login</a></li>
@@ -104,13 +101,12 @@
 </div>
 
 <!-- Scripts -->
-<script src="assets/js/jquery.min.js"></script>
-<script src="assets/js/skel.min.js"></script>
-<script src="assets/js/util.js"></script>
-<!--[if lte IE 8]>
-<script src="assets/js/ie/respond.min.js"></script><![endif]-->
-<script src="assets/js/main.js"></script>
-<script src="assets/js/custom.js?v=102"></script>
+<script src='<c:url value="../resources/js/jquery.min.js" />' ></script>
+<script src='<c:url value="../resources/js/skel.min.js" />' ></script>
+<script src='<c:url value="../resources/js/util.js" />' ></script>
+<!--[if lte IE 8]><script src='<c:url value="../resources/js/ie/respond.min.js" />' ></script><![endif]-->
+<script src='<c:url value="../resources/js/main.js" />' ></script>
+<script src='<c:url value="../resources/js/custom.js?v=101" />' ></script>
 
 </body>
 </html>

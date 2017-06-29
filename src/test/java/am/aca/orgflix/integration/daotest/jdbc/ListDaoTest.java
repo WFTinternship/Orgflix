@@ -36,6 +36,7 @@ public class ListDaoTest extends BaseIntegrationTest {
     private TestHelper helper;
 
     private Film film;
+    private int filmId;
     private int userId;
 
     @Before
@@ -48,7 +49,7 @@ public class ListDaoTest extends BaseIntegrationTest {
         film.setProdYear(1983);
 
         filmDAO.addFilm(film);
-
+        filmId = film.getId();
         //setup User and User DAO
 
         userId = userDao.add(new User("MrSmith","John Smith","JhonSmith@gmail.com","pass"));
@@ -62,26 +63,26 @@ public class ListDaoTest extends BaseIntegrationTest {
 
     @Test
     public void insertWatched_Success() {
-        listDao.insertWatched(film, userId, true);
+        listDao.insertWatched(filmId, userId, true);
         Assert.assertEquals(true, listDao.isWatched(film, userId));
     }
 
     @Test
     public void insertPlanned_Success() {
-        listDao.insertPlanned(film, userId, true);
+        listDao.insertPlanned(filmId, userId, true);
         Assert.assertEquals(true, listDao.isPlanned(film, userId));
     }
 
     @Test
     public void showOwnWatched_Success() {
-        listDao.insertWatched(film, userId, false);
+        listDao.insertWatched(filmId, userId, false);
         Assert.assertEquals(film, listDao.showOwnWatched(userId).get(0));
     }
 
     @Test
     public void showOwnWatched_Partial() {
-        listDao.insertWatched(film, userId, false);
-        listDao.insertWatched(film, userId, true);
+        listDao.insertWatched(filmId, userId, false);
+        listDao.insertWatched(filmId, userId, true);
         Assert.assertEquals(2, listDao.showOwnWatched(userId).size());
     }
 
@@ -92,14 +93,14 @@ public class ListDaoTest extends BaseIntegrationTest {
 
     @Test
     public void showOwnPlanned_Success() {
-        listDao.insertPlanned(film, userId, false);
+        listDao.insertPlanned(filmId, userId, false);
         Assert.assertEquals(film, listDao.showOwnPlanned(userId).get(0));
     }
 
     @Test
     public void showOwnPlanned_Partial() {
-        listDao.insertPlanned(film, userId, false);
-        listDao.insertPlanned(film, userId, true);
+        listDao.insertPlanned(filmId, userId, false);
+        listDao.insertPlanned(filmId, userId, true);
         Assert.assertEquals(2, listDao.showOwnPlanned(userId).size());
     }
 
@@ -110,90 +111,90 @@ public class ListDaoTest extends BaseIntegrationTest {
 
     @Test
     public void showOthersWatched_Success() {
-        listDao.insertWatched(film, userId, true);
-        listDao.insertWatched(film, userId, true);
+        listDao.insertWatched(filmId, userId, true);
+        listDao.insertWatched(filmId, userId, true);
         Assert.assertEquals(2, listDao.showOthersWatched(userId).size());
     }
 
     @Test
     public void showOthersWatched_Partial() {
-        listDao.insertWatched(film, userId, true);
-        listDao.insertWatched(film, userId, false);
+        listDao.insertWatched(filmId, userId, true);
+        listDao.insertWatched(filmId, userId, false);
         Assert.assertEquals(1, listDao.showOthersWatched(userId).size());
     }
 
     @Test
     public void showOthersWatched_Fail() {
         //setup List
-        listDao.insertWatched(film, userId, false);
+        listDao.insertWatched(filmId, userId, false);
 
         Assert.assertEquals(0, listDao.showOthersWatched(userId).size());
     }
 
     @Test
     public void showOthersPlanned_Success() {
-        listDao.insertPlanned(film, userId, true);
-        listDao.insertPlanned(film, userId, true);
+        listDao.insertPlanned(filmId, userId, true);
+        listDao.insertPlanned(filmId, userId, true);
         Assert.assertEquals(2, listDao.showOthersPlanned(userId).size());
     }
 
     @Test
     public void showOthersPlanned_Partial() {
-        listDao.insertPlanned(film, userId, true);
-        listDao.insertPlanned(film, userId, false);
+        listDao.insertPlanned(filmId, userId, true);
+        listDao.insertPlanned(filmId, userId, false);
         Assert.assertEquals(1, listDao.showOthersPlanned(userId).size());
     }
 
     @Test
     public void showOthersPlanned_Fail() {
         //setup List
-        listDao.insertPlanned(film, userId, false);
+        listDao.insertPlanned(filmId, userId, false);
 
         Assert.assertEquals(0, listDao.showOthersPlanned(userId).size());
     }
 
     @Test
     public void updateWatched_Success() {
-        listDao.insertPlanned(film, userId, true);
-        listDao.updateWatched(film, userId);
+        listDao.insertPlanned(filmId, userId, true);
+        listDao.updateWatched(filmId, userId);
         Assert.assertEquals(true, listDao.isWatched(film, userId));
     }
 
     @Test
     public void updateWatched_Fail() {
-        listDao.updateWatched(film, userId);
+        listDao.updateWatched(filmId, userId);
         Assert.assertEquals(false, listDao.isWatched(film, userId));
     }
 
     @Test
     public void updatePlanned_Success() {
-        listDao.insertWatched(film, userId, true);
-        listDao.updatePlanned(film, userId);
+        listDao.insertWatched(filmId, userId, true);
+        listDao.updatePlanned(filmId, userId);
         Assert.assertEquals(true, listDao.isPlanned(film, userId));
     }
 
     @Test
     public void updatePlanned_Fail() {
-        listDao.updatePlanned(film, userId);
+        listDao.updatePlanned(filmId, userId);
         Assert.assertEquals(false, listDao.isPlanned(film, userId));
     }
 
     @Test
     public void changePrivacy_Success() {
-        listDao.insertPlanned(film, userId, true);
+        listDao.insertPlanned(filmId, userId, true);
         Assert.assertTrue(listDao.changePrivacy(film, userId, false));
     }
 
     @Test
     public void changePrivacyToPrivate_Success() {
-        listDao.insertWatched(film, userId, true);
+        listDao.insertWatched(filmId, userId, true);
         listDao.changePrivacy(film, userId, false);
         Assert.assertTrue(listDao.showOthersWatched(userId).isEmpty());
     }
 
     @Test
     public void changePrivacyToPublic_Success() {
-        listDao.insertWatched(film, userId, false);
+        listDao.insertWatched(filmId, userId, false);
         listDao.changePrivacy(film, userId, true);
         Assert.assertFalse(listDao.showOthersWatched(userId).isEmpty());
     }
@@ -212,40 +213,40 @@ public class ListDaoTest extends BaseIntegrationTest {
 
     @Test
     public void resetPlanned_Success() {
-        listDao.insertPlanned(film, userId, false);
+        listDao.insertPlanned(filmId, userId, false);
         listDao.resetPlanned(film, userId);
         Assert.assertEquals(false, listDao.isPlanned(film, userId));
     }
 
     @Test
     public void remove_Success() {
-        listDao.insertWatched(film, userId, true);
+        listDao.insertWatched(filmId, userId, true);
         listDao.removeFilm(film, userId);
         Assert.assertEquals(false, listDao.isWatched(film, userId));
     }
 
     @Test
     public void removeOne_Success() {
-        listDao.insertWatched(film, userId, true);
-        listDao.insertPlanned(film, userId, true);
+        listDao.insertWatched(filmId, userId, true);
+        listDao.insertPlanned(filmId, userId, true);
         listDao.removeFilm(film, userId);
         Assert.assertEquals(false, listDao.isWatched(film, userId));
     }
 
     @Test
     public void areRelated_Success() {
-        listDao.insertWatched(film, userId, true);
-        Assert.assertEquals(true, listDao.areRelated(film, userId));
+        listDao.insertWatched(filmId, userId, true);
+        Assert.assertEquals(true, listDao.areRelated(filmId, userId));
     }
 
     @Test
     public void areRelated_Fail() {
-        Assert.assertEquals(false, listDao.areRelated(film, userId));
+        Assert.assertEquals(false, listDao.areRelated(filmId, userId));
     }
 
     @Test
     public void isWatched_Success() {
-        listDao.insertWatched(film, userId, true);
+        listDao.insertWatched(filmId, userId, true);
         Assert.assertEquals(true, listDao.isWatched(film, userId));
     }
 
@@ -256,7 +257,7 @@ public class ListDaoTest extends BaseIntegrationTest {
 
     @Test
     public void isPlanned_Success() {
-        listDao.insertPlanned(film, userId, true);
+        listDao.insertPlanned(filmId, userId, true);
         Assert.assertEquals(true, listDao.isPlanned(film, userId));
     }
 

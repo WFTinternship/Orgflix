@@ -124,6 +124,20 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
+    public void authenticate_succeeded(){
+        userService.add(standardUser);
+        Assert.assertTrue(
+                standardUser.equals(userService.authenticate(standardUser.getEmail(),standardUser.getPass()))
+        );
+    }
+
+    @Test
+    public void authenticate_fail_WrongPass(){
+        userService.add(standardUser);
+        Assert.assertNull(userService.authenticate(standardUser.getEmail(),"xxx"));
+    }
+
+    @Test
     public void editUser_Succed_Email() {
         user = new User("gago1", "Gagik Petrosyan", "davit.abovyan@gmail.com", "pass");
         userService.add(user);

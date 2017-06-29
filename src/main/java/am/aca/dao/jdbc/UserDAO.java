@@ -14,6 +14,8 @@ public interface UserDAO {
 
     User get(String email);
 
+    User authenticate(String email, String pass);
+
     //Update
     boolean edit(User user);
 

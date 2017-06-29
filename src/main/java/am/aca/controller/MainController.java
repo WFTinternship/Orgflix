@@ -21,7 +21,7 @@ public class MainController {
         modelAndView.addObject("userId", -1);
         modelAndView.addObject("userAuth", 0);
         modelAndView.addObject("currPage", 0);
-        modelAndView.addObject("type", "all");
+        modelAndView.addObject("page", "main");
         return modelAndView;
     }
 
@@ -40,7 +40,7 @@ public class MainController {
         modelAndView.addObject("user", user);
         modelAndView.addObject("userAuth", userAuth);
         modelAndView.addObject("currPage", page);
-        modelAndView.addObject("type", "all");
+        modelAndView.addObject("page", "main");
         return modelAndView;
     }
 
@@ -65,7 +65,7 @@ public class MainController {
             modelAndView.addObject("user", user.getNick() + " (" + email + ")");
             modelAndView.addObject("userAuth", user.getPass().hashCode() + email.hashCode());
             modelAndView.addObject("currPage", 0);
-            modelAndView.addObject("types", "all");
+            modelAndView.addObject("page", "main");
         }
         return modelAndView;
     }
@@ -83,7 +83,7 @@ public class MainController {
         modelAndView.addObject("user", user);
         modelAndView.addObject("userAuth", userAuth);
         modelAndView.addObject("currPage", 0);
-//        modelAndView.addObject("type", "watch");
+        modelAndView.addObject("page", "watch");
         return modelAndView;
     }
 
@@ -100,7 +100,7 @@ public class MainController {
         modelAndView.addObject("user", user);
         modelAndView.addObject("userAuth", userAuth);
         modelAndView.addObject("currPage", 0);
-//        modelAndView.addObject("type", "watch");
+        modelAndView.addObject("page", "wish");
         return modelAndView;
     }
 }

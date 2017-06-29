@@ -20,7 +20,7 @@ public class DataController {
     public ResponseEntity addFilmToWatchList(@RequestParam("user") int userId, @RequestParam("film") int filmId) {
         boolean state = BeanProvider.getListService().addToWatched(filmId, true,userId );
         if (state)
-            return new ResponseEntity("Film added to list", HttpStatus.OK);
+            return new ResponseEntity("Film added to watch list", HttpStatus.OK);
         else
             return new ResponseEntity("Not succeeded", HttpStatus.BAD_REQUEST);
     }
@@ -29,9 +29,26 @@ public class DataController {
     public ResponseEntity addFilmToWishList(@RequestParam("user") int userId, @RequestParam("film") int filmId) {
         boolean state = BeanProvider.getListService().addToPlanned(filmId, true,userId );
         if (state)
-            return new ResponseEntity("Film added to list", HttpStatus.OK);
+            return new ResponseEntity("Film added to wish list", HttpStatus.OK);
         else
             return new ResponseEntity("Not succeeded", HttpStatus.BAD_REQUEST);
     }
 
+    @PostMapping("/removeFilmFromWishList")
+    public ResponseEntity removeFromWishList(@RequestParam("user") int userId, @RequestParam("film") int filmId) {
+        boolean state = BeanProvider.getListService().removeFromPlanned(filmId, userId );
+        if (state)
+            return new ResponseEntity("Film removed from wish list", HttpStatus.OK);
+        else
+            return new ResponseEntity("Not succeeded", HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping("/removeFilmFromWatchList")
+    public ResponseEntity removeFromWatchList(@RequestParam("user") int userId, @RequestParam("film") int filmId) {
+        boolean state = BeanProvider.getListService().removeFromWatched(filmId, userId );
+        if (state)
+            return new ResponseEntity("Film removed from watch list", HttpStatus.OK);
+        else
+            return new ResponseEntity("Not succeeded", HttpStatus.BAD_REQUEST);
+    }
 }

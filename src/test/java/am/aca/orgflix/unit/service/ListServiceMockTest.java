@@ -182,46 +182,46 @@ public class ListServiceMockTest extends BaseUnitTest {
 
     @Test
     public void removeFromWatchedNotWatched_Fail() {
-        when(listMock.isWatched(film, user.getId())).thenReturn(false);
-        Assert.assertFalse(listService.removeFromWatched(film, user.getId()));
+        when(listMock.isWatched(film.getId(), user.getId())).thenReturn(false);
+        Assert.assertFalse(listService.removeFromWatched(film.getId(), user.getId()));
     }
 
     @Test
     public void removeFromWatchedWhenPlanned_Success() {
-        when(listMock.isWatched(film, user.getId())).thenReturn(true);
-        when(listMock.isPlanned(film, user.getId())).thenReturn(true);
-        when(listMock.resetWatched(film, user.getId())).thenReturn(true);
-        Assert.assertTrue(listService.removeFromWatched(film, user.getId()));
+        when(listMock.isWatched(film.getId(), user.getId())).thenReturn(true);
+        when(listMock.isPlanned(film.getId(), user.getId())).thenReturn(true);
+        when(listMock.resetWatched(film.getId(), user.getId())).thenReturn(true);
+        Assert.assertTrue(listService.removeFromWatched(film.getId(), user.getId()));
     }
 
     @Test
     public void removeFromWatchedWhenNotPlanned_Success() {
-        when(listMock.isWatched(film, user.getId())).thenReturn(true);
-        when(listMock.isPlanned(film, user.getId())).thenReturn(false);
-        when(listMock.removeFilm(film, user.getId())).thenReturn(true);
-        Assert.assertTrue(listService.removeFromWatched(film, user.getId()));
+        when(listMock.isWatched(film.getId(), user.getId())).thenReturn(true);
+        when(listMock.isPlanned(film.getId(), user.getId())).thenReturn(false);
+        when(listMock.removeFilm(film.getId(), user.getId())).thenReturn(true);
+        Assert.assertTrue(listService.removeFromWatched(film.getId(), user.getId()));
     }
 
     @Test
     public void removeFromPlannedNotPlanned_Fail() {
-        when(listMock.isPlanned(film, user.getId())).thenReturn(false);
-        Assert.assertFalse(listService.removeFromPlanned(film, user.getId()));
+        when(listMock.isPlanned(film.getId(), user.getId())).thenReturn(false);
+        Assert.assertFalse(listService.removeFromPlanned(film.getId(), user.getId()));
     }
 
     @Test
     public void removeFromPlannedWhenWatched_Success() {
-        when(listMock.isPlanned(film, user.getId())).thenReturn(true);
-        when(listMock.isWatched(film, user.getId())).thenReturn(true);
-        when(listMock.resetPlanned(film, user.getId())).thenReturn(true);
-        Assert.assertTrue(listService.removeFromPlanned(film, user.getId()));
+        when(listMock.isPlanned(film.getId(), user.getId())).thenReturn(true);
+        when(listMock.isWatched(film.getId(), user.getId())).thenReturn(true);
+        when(listMock.resetPlanned(film.getId(), user.getId())).thenReturn(true);
+        Assert.assertTrue(listService.removeFromPlanned(film.getId(), user.getId()));
     }
 
     @Test
     public void removeFromPlannedWhenNotWatched_Success() {
-        when(listMock.isPlanned(film, user.getId())).thenReturn(true);
-        when(listMock.isWatched(film, user.getId())).thenReturn(false);
-        when(listMock.removeFilm(film, user.getId())).thenReturn(true);
-        Assert.assertTrue(listService.removeFromPlanned(film, user.getId()));
+        when(listMock.isPlanned(film.getId(), user.getId())).thenReturn(true);
+        when(listMock.isWatched(film.getId(), user.getId())).thenReturn(false);
+        when(listMock.removeFilm(film.getId(), user.getId())).thenReturn(true);
+        Assert.assertTrue(listService.removeFromPlanned(film.getId(), user.getId()));
     }
 
     @Test

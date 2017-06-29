@@ -109,21 +109,21 @@ public class JdbcListDAO extends BaseDAO implements ListDao {
     // DELETE
 
     @Override
-    public boolean resetWatched(Film film, int userId) {
+    public boolean resetWatched(int filmId, int userId) {
         final String updateQuery = "UPDATE lists SET Is_watched = FALSE WHERE User_ID = ? AND Film_ID = ?";
-        return (getJdbcTemplate().update(updateQuery, userId, film.getId()) == 1);
+        return (getJdbcTemplate().update(updateQuery, userId, filmId) == 1);
     }
 
     @Override
-    public boolean resetPlanned(Film film, int userId) {
+    public boolean resetPlanned(int filmId, int userId) {
         final String updateQuery = "UPDATE lists SET Is_wished = FALSE WHERE User_ID = ? AND Film_ID = ?";
-        return (getJdbcTemplate().update(updateQuery, userId, film.getId()) == 1);
+        return (getJdbcTemplate().update(updateQuery, userId, filmId) == 1);
     }
 
     @Override
-    public boolean removeFilm(Film film, int userId) {
+    public boolean removeFilm(int filmId, int userId) {
         final String deleteQuery = "DELETE FROM lists WHERE User_ID = ? AND Film_ID = ?";
-        return (getJdbcTemplate().update(deleteQuery, userId, film.getId()) == 1);
+        return (getJdbcTemplate().update(deleteQuery, userId, filmId) == 1);
     }
 
     // SUPPORT METHODS
@@ -138,19 +138,19 @@ public class JdbcListDAO extends BaseDAO implements ListDao {
     }
 
     @Override
-    public boolean isWatched(Film film, int userId) {
+    public boolean isWatched(int filmId, int userId) {
         final String watchedCheckQuery = "SELECT COUNT(*) FROM lists WHERE User_ID = ? AND Film_ID = ? AND Is_watched = TRUE";
         int watchedCount = getJdbcTemplate().queryForObject(watchedCheckQuery, new Object[]{
-                userId, film.getId()
+                userId, filmId
         }, Integer.class);
         return (watchedCount == 1);
     }
 
     @Override
-    public boolean isPlanned(Film film, int userId) {
+    public boolean isPlanned(int filmId, int userId) {
         final String plannedCheckQuery = "SELECT COUNT(*) FROM Lists WHERE User_ID = ? AND Film_ID = ? AND Is_wished = TRUE ";
         int plannedCount = getJdbcTemplate().queryForObject(plannedCheckQuery, new Object[]{
-                userId, film.getId()
+                userId, filmId
         }, Integer.class);
         return (plannedCount == 1);
     }

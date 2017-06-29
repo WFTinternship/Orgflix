@@ -73,14 +73,14 @@ public class ListServiceImpl implements ListService {
 
     @Transactional
     @Override
-    public boolean removeFromWatched(Film film, int userId) {
+    public boolean removeFromWatched(int filmId, int userId) {
         boolean state = false;
         try {
-            if (!listDao.isWatched(film, userId))
+            if (!listDao.isWatched(filmId, userId))
                 return false;
-            if (listDao.isPlanned(film, userId)) {
-                state = listDao.resetWatched(film, userId);
-            } else state = listDao.removeFilm(film, userId);
+            if (listDao.isPlanned(filmId, userId)) {
+                state = listDao.resetWatched(filmId, userId);
+            } else state = listDao.removeFilm(filmId, userId);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
         }
@@ -89,14 +89,14 @@ public class ListServiceImpl implements ListService {
 
     @Transactional
     @Override
-    public boolean removeFromPlanned(Film film, int userId) {
+    public boolean removeFromPlanned(int filmId, int userId) {
         boolean state = false;
         try {
-            if (!listDao.isPlanned(film, userId))
+            if (!listDao.isPlanned(filmId, userId))
                 return false;
-            if (listDao.isWatched(film, userId))
-                state = listDao.resetPlanned(film, userId);
-            else state = listDao.removeFilm(film, userId);
+            if (listDao.isWatched(filmId, userId))
+                state = listDao.resetPlanned(filmId, userId);
+            else state = listDao.removeFilm(filmId, userId);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
         }

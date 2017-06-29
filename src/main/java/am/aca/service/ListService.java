@@ -12,9 +12,9 @@ public interface ListService {
 
     boolean addToPlanned(int filmId, boolean isPublic, int userId);
 
-    boolean removeFromWatched(Film film, int userId);
+    boolean removeFromWatched(int filmId, int userId);
 
-    boolean removeFromPlanned(Film film, int userId);
+    boolean removeFromPlanned(int filmId, int userId);
 
     List showOwnWatched(int userId);
 

@@ -48,6 +48,7 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
             <input type="hidden" id="userId" name="userId" value="${userId}"'/>
             <input type="hidden" id="userAuth" name="userAuth" value="${userAuth}"/>
             <input type="hidden" id="currPage" name="currPage" value="${currPage}"/>
+            <input type="hidden" id="page" name="page" value="${page}"/>
         </form>
     </nav>
 
@@ -66,8 +67,16 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
                         </div>
                         <c:if test="${userId != -1}">
                             <div id="contr_${film.id}" class="film-buttons">
-                                <a href="#" class="no_link" onclick="AddToList('WatchList','${film.id}')"><i class="fa fa-wishList fa-fw"></i></a>
-                                <a href="#" class="no_link" onclick="AddToList('WishList','${film.id}')"><i class="fa fa-watchList fa-fw"></i></a>
+                                <c:if test="${page == 'page'}">
+                                    <a href="#" class="no_link" onclick="AddToList('WatchList','${film.id}')"><i class="fa fa-wishList fa-fw"></i></a>
+                                    <a href="#" class="no_link" onclick="AddToList('WishList','${film.id}')"><i class="fa fa-watchList fa-fw"></i></a>
+                                </c:if>
+                                <c:if test="${page == 'watch'}">
+                                    <a href="#" class="no_link" onclick="RemoveFromList('WatchList','${film.id}')"><i class="fa fa-trash-o fa-fw"></i></a>
+                                </c:if>
+                                <c:if test="${page == 'wish'}">
+                                    <a href="#" class="no_link" onclick="RemoveFromList('WishList','${film.id}')"><i class="fa fa-trash-o fa-fw"></i></a>
+                                </c:if>
                             </div>
                         </c:if>
                         <div class="film-ref">

@@ -23,6 +23,14 @@ function AddToList(type,id) {
     }});
 }
 
+function RemoveFromList(type,id) {
+
+    $.ajax({url: "/data/removeFilmFrom"+type,type:"POST",data:{film:id,user:$("#userId").val()},success: function(result){
+        $("#pop-up-result").html(result);
+        $("#pop-up-result").css("display", "block");
+    }});
+}
+
 function navigator(page){
     $('#navigator').attr('action', page);
     $("#navigator").submit();

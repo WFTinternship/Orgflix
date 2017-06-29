@@ -88,7 +88,7 @@ public class ListServiceIntegrationTest extends BaseIntegrationTest {
         //setup List
         listService.addToPlanned(filmId, true, user.getId());
 
-        Assert.assertTrue(listService.removeFromPlanned(film, user.getId()));
+        Assert.assertTrue(listService.removeFromPlanned(film.getId(), user.getId()));
         Assert.assertEquals(0, listService.showOwnPlanned(user.getId()).size());
     }
 
@@ -98,7 +98,7 @@ public class ListServiceIntegrationTest extends BaseIntegrationTest {
         listService.addToPlanned(filmId, true, user.getId());
         listService.addToWatched(filmId, true, user.getId());
 
-        Assert.assertTrue(listService.removeFromPlanned(film, user.getId()));
+        Assert.assertTrue(listService.removeFromPlanned(film.getId(), user.getId()));
         Assert.assertEquals(1, listService.showOwnWatched(user.getId()).size());
     }
 
@@ -107,7 +107,7 @@ public class ListServiceIntegrationTest extends BaseIntegrationTest {
         //setup List
         listService.addToWatched(filmId, true, user.getId());
 
-        Assert.assertTrue(listService.removeFromWatched(film, user.getId()));
+        Assert.assertTrue(listService.removeFromWatched(film.getId(), user.getId()));
         Assert.assertEquals(listService.showOwnWatched(user.getId()).size(), 0);
     }
 
@@ -117,13 +117,13 @@ public class ListServiceIntegrationTest extends BaseIntegrationTest {
         listService.addToPlanned(filmId, true, user.getId());
         listService.addToWatched(filmId, true, user.getId());
 
-        Assert.assertTrue(listService.removeFromWatched(film, user.getId()));
+        Assert.assertTrue(listService.removeFromWatched(film.getId(), user.getId()));
         Assert.assertEquals(listService.showOwnPlanned(user.getId()).size(), 1);
     }
 
     @Test
     public void removeFromPlannedWhenNotPlanned_Failed() {
-        Assert.assertFalse(listService.removeFromPlanned(film, user.getId()));
+        Assert.assertFalse(listService.removeFromPlanned(film.getId(), user.getId()));
     }
 
     @Test
@@ -131,14 +131,14 @@ public class ListServiceIntegrationTest extends BaseIntegrationTest {
         //setup List
         listService.addToWatched(filmId, true, user.getId());
 
-        Assert.assertFalse(listService.removeFromPlanned(film, user.getId()));
+        Assert.assertFalse(listService.removeFromPlanned(film.getId(), user.getId()));
     }
 
     @Test
     public void removeFromWatchedWhenNotPlanned_Failed() {
         //List setup, empty list
 
-        Assert.assertFalse(listService.removeFromWatched(film, user.getId()));
+        Assert.assertFalse(listService.removeFromWatched(film.getId(), user.getId()));
     }
 
     @Test
@@ -146,7 +146,7 @@ public class ListServiceIntegrationTest extends BaseIntegrationTest {
         //setup List
         listService.addToPlanned(filmId, true, user.getId());
 
-        Assert.assertFalse(listService.removeFromWatched(film, user.getId()));
+        Assert.assertFalse(listService.removeFromWatched(film.getId(), user.getId()));
     }
 
     @Test

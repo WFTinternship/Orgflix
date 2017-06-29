@@ -39,18 +39,18 @@ public interface ListDao {
 
     // DELETE
 
-    boolean resetWatched(Film film, int userId);
+    boolean resetWatched(int filmId, int userId);
 
-    boolean resetPlanned(Film film, int userId);
+    boolean resetPlanned(int filmId, int userId);
 
-    boolean removeFilm(Film film, int userId);
+    boolean removeFilm(int filmId, int userId);
 
     // SUPPORT METHODS
 
     boolean areRelated(int filmId, int userId);
 
-    boolean isWatched(Film film, int userId);
+    boolean isWatched(int filmId, int userId);
 
-    boolean isPlanned(Film film, int userId);
+    boolean isPlanned(int filmId, int userId);
 
 }

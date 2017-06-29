@@ -92,11 +92,15 @@ public class FilmServiceImpl implements FilmService {
         return list;
     }
 
+    @Transactional
     @Override
     public List<Film> getFilmsList(int startIndex) {
         List<Film> list = null;
         try {
             list = filmDao.getFilmsList(startIndex);
+            for(Film film : list){
+                film.setCasts(castDao.getCastsByFilm(film.getId()));
+            }
         } catch (RuntimeException e) {
             LOGGER.warn(e.toString());
         }

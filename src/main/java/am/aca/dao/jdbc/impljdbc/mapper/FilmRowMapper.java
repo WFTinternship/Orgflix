@@ -1,6 +1,8 @@
 package am.aca.dao.jdbc.impljdbc.mapper;
 
 
+import am.aca.dao.jdbc.CastDAO;
+import am.aca.dao.jdbc.impljdbc.JdbcCastDAO;
 import am.aca.entity.Film;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -24,7 +26,6 @@ public class FilmRowMapper implements RowMapper {
             film.setRate_3star(rs.getInt("Rate_3star"));
             film.setRate_4star(rs.getInt("Rate_4star"));
             film.setRate_5star(rs.getInt("Rate_5star"));
-
         return film;
     }
 }

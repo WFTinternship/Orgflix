@@ -14,6 +14,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  * Test for cast DAO methods
@@ -98,6 +99,28 @@ public class CastDaoTest extends BaseIntegrationTest {
         cast = new Cast("Woody Allen");
         castDAO.addCast(cast);
         Assert.assertEquals("Woody Allen", castDAO.listCast().get(0).getName());
+    }
+
+    @Test
+    public void getCastsByFilm_succeeded(){
+        cast = new Cast("Tom Henks");
+        castDAO.addCast(cast);
+        Film film = new Film("Forest Gump",1990);
+        ArrayList<Cast> list = new ArrayList<>();
+        list.add(cast);
+        film.setCasts(list);
+        filmDAO.addFilm(film);
+        castDAO.addCastToFilm(cast,film.getId());
+        Assert.assertEquals(1,castDAO.getCastsByFilm(film.getId()).size());
+    }
+
+    @Test
+    public void getCastsByFilm_fail_EmptyCastList(){
+        Film film = new Film("Forest Gump",1990);
+        ArrayList<Cast> list = new ArrayList<>();
+        film.setCasts(list);
+        filmDAO.addFilm(film);
+        Assert.assertNotEquals(1,castDAO.getCastsByFilm(film.getId()).size());
     }
 
     @Test

@@ -79,6 +79,25 @@ public class JdbcCastDAO extends BaseDAO implements CastDAO {
         return getJdbcTemplate().query(query, new BeanPropertyRowMapper(Cast.class));
     }
 
+    /**
+     * List all the casts assigned to the film with provided id
+     *
+     * @param filmId the id
+     * @return List of all casts assigned to the specific film
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Cast> getCastsByFilm(int filmId){
+        final String query = "SELECT ID, Actor_Name AS name, HasOscar FROM casts" +
+                " INNER JOIN (" +
+                "    SELECT Actor_ID" +
+                "    FROM film_to_cast" +
+                "    WHERE Film_ID = ? " +
+                "    ) as cast_id " +
+                "  on casts.ID = cast_id.Actor_ID";
+        return getJdbcTemplate().query(query, new Object[]{filmId}, new BeanPropertyRowMapper(Cast.class));
+    }
+
 
     // UPDATE
 

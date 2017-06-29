@@ -4,7 +4,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix = "m" uri = "/WEB-INF/taglib/customtags.tld" %>
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix = "fn" uri = "http://java.sun.com/jsp/jstl/functions" %>
 
 <!DOCTYPE HTML>
 <!--
@@ -18,13 +18,14 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!--[if lte IE 8]><script src='<c:url value="../resources/js/ie/html5shiv.js" />' ></script><![endif]-->
-    <link rel="stylesheet" href='<c:url value="../resources/css/main.css?v=3" />' />
+    <link rel="stylesheet" href='<c:url value="../resources/css/main.css?v=7" />' />
     <!--[if lte IE 9]><link rel="stylesheet" href='<c:url value="../resources/css/ie9.css" />' /><![endif]-->
     <!--[if lte IE 8]><link rel="stylesheet" href='<c:url value="../resources/css/ie8.css" />' /><![endif]-->
 </head>
 <body>
 <!-- Wrapper -->
 <div id="wrapper">
+
     <m:pageHeader />
 
     <!-- Menu -->
@@ -89,6 +90,9 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
                         </c:if>
                         <div class="film-ref">
                             <h2><c:out value="${film.title}" /></h2>
+                            <c:forEach items="${film.casts}" var="cast" >
+                                <div class="castStyle"><c:out value="${cast.name}"/></div>
+                            </c:forEach>
                         </div>
                     </article>
                 </c:forEach>

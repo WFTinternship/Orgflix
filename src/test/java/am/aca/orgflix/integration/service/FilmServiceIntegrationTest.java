@@ -13,6 +13,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
+
 /**
  * Test for DAO services
  */
@@ -64,9 +66,16 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
 
     @Test
     public void getFilmsList_Success() {
-        film = new Film("In Bruges", 2008);
+        cast = new Cast("Tom Henks");
+        ArrayList<Cast> list = new ArrayList<>();
+        list.add(cast);
+
+        Film film = new Film("Forest Gump",1990);
+        film.setCasts(list);
         filmService.addFilm(film);
-        Assert.assertEquals(film, filmService.getFilmsList(0).get(0));
+        Film film1 = filmService.getFilmsList(0).get(0);
+        Assert.assertEquals(filmService.getFilmsList(0).get(0),
+                film);
     }
 
     @Test

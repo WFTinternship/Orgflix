@@ -3398,8 +3398,8 @@
 	padding:10px;
 	margin:40px;
 	background-color: #c9c9c9;
-	opacity:0.4;
-	filter:alpha(opacity='40');
+	opacity:0.5;
+	filter:alpha(opacity='50');
 	text-align: center;
 	color:black;
 	font-size:16px;
@@ -3434,6 +3434,12 @@ a.no_link:visited{
 a.no_link:hover{
 	color:#e78800 !important;
 	text-decoration:none !important;
+}
+.castStyle{
+	color:#672050;
+	background-color: white;
+	font-weight: bold;
+	font-style: italic;
 }
 @font-face {
 	font-family: 'FontAwesome';

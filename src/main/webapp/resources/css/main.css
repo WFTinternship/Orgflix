@@ -3508,11 +3508,20 @@ a.no_link:hover{
 .fa-user:before {
 	content: "\f2bd";
 }
+.fa-home:before{
+	content: "\f015";
+}
 .fa-login:before {
 	content: "\f090";
+
+}.fa-star:before {
+	content: "\f005";
 }
 .fa-logout:before {
 	content: "\f011";
+}
+.fa-plus-square:before {
+	content: "\f0fe";
 }
 .fa-star:before {
 	content: "\f005";

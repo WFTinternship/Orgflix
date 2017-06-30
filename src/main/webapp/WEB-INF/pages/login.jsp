@@ -25,9 +25,9 @@
     <nav id="menu">
         <h2>Menu</h2>
         <ul>
-            <li><a href="index">Home</a></li>
-            <li><a href="login">Login</a></li>
-            <li><a href="signup">Sign up</a></li>
+            <li><a href="/"><i class="fa fa-home fa-fw"></i>Home</a></li>
+            <li><a href="login"><i class="fa fa-login fa-fw"></i> Login</a></li>
+            <li><a href="signup"><i class="fa fa-signUp fa-fw"></i> Sign up</a></li>
         </ul>
         <form id="navigator" method="POST" action="">
             <input type="hidden" id="userId" name="userId" value="${userId}"'/>

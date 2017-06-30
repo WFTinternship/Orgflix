@@ -14,7 +14,7 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
 -->
 <html>
 <head>
-    <title>Orgflix 1.0</title>
+    <title>Orgfllix 1.1</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!--[if lte IE 8]><script src='<c:url value="../resources/js/ie/html5shiv.js" />' ></script><![endif]-->
@@ -34,13 +34,14 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
         <ul>
             <c:if test="${userId != -1}">
                 <li><i class="fa fa-user fa-fw"></i> <c:out value="${user}"/></li>
-                <li><a onclick="navigator('index')">Home</a></li>
+                <li><a onclick="navigator('index')"><i class="fa fa-home fa-fw"></i>Home</a></li>
                 <li><a onclick="navigator('watch_list')"><i class="fa fa-watchList fa-fw"></i> Watch list</a></li>
                 <li><a onclick="navigator('wish_list')"><i class="fa fa-wishList fa-fw"></i> Wish List</a></li>
+                <li><a href="/uploadForm"><i class="fa fa-plus-square fa-fw"></i> Add Film</a></li>
                 <li><a href="/"><i class="fa fa-logout fa-fw"></i> Logout</a></li>
             </c:if>
             <c:if test="${userId == -1}">
-                <li><a href="/">Home</a></li>
+                <li><a href="/"><i class="fa fa-home fa-fw"></i>Home</a></li>
                 <li><a href="login"><i class="fa fa-login fa-fw"></i> Login</a></li>
                 <li><a href="signup"><i class="fa fa-signUp fa-fw"></i> Sign up</a></li>
             </c:if>

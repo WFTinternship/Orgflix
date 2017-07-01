@@ -14,7 +14,7 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
 -->
 <html>
 <head>
-    <title>Orgfllix 1.1</title>
+    <title>Orgflix 1.0</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!--[if lte IE 8]><script src='<c:url value="../resources/js/ie/html5shiv.js" />' ></script><![endif]-->
@@ -78,8 +78,8 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
                         <c:if test="${userId != -1}">
                             <div id="contr_${film.id}" class="film-buttons">
                                 <c:if test="${page == 'main'}">
-                                    <a href="#" class="no_link" onclick="AddToList('WatchList','${film.id}')"><i class="fa fa-wishList fa-fw"></i></a>
-                                    <a href="#" class="no_link" onclick="AddToList('WishList','${film.id}')"><i class="fa fa-watchList fa-fw"></i></a>
+                                    <a href="#" class="no_link" onclick="AddToList('WatchList','${film.id}')"><i class="fa fa-watchList fa-fw"></i></a>
+                                    <a href="#" class="no_link" onclick="AddToList('WishList','${film.id}')"><i class="fa fa-wishList fa-fw"></i></a>
                                 </c:if>
                                 <c:if test="${page == 'watch'}">
                                     <a href="#" class="no_link" onclick="RemoveFromList('WatchList','${film.id}')"><i class="fa fa-trash-o fa-fw"></i></a>
@@ -97,9 +97,9 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
                         </div>
                     </article>
                 </c:forEach>
-                <%--<c:if test="${fn:length(films) > 12}">--%>
-                <m:pagination />
-                <%--</c:if>--%>
+
+                <%--<m:pagination pageType="${page}" userId="${userId}"/>--%>
+
                 <div id="pop-up-result" class="pop-up-result"></div>
             </section>
         </div>
@@ -114,7 +114,7 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
 <script src='<c:url value="../resources/js/util.js" />' ></script>
 <!--[if lte IE 8]><script src='<c:url value="../resources/js/ie/respond.min.js" />' ></script><![endif]-->
 <script src='<c:url value="../resources/js/main.js" />' ></script>
-<script src='<c:url value="../resources/js/custom.js?v=107" />' ></script>
+<script src='<c:url value="../resources/js/custom.js?v=119" />' ></script>
 
 </body>
 </html>

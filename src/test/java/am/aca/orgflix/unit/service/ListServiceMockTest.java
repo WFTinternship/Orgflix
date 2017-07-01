@@ -134,50 +134,50 @@ public class ListServiceMockTest extends BaseUnitTest {
 
     @Test
     public void showOwnWatched_Success() {
-        when(listMock.showOwnWatched(user.getId())).thenReturn(films);
-        Assert.assertEquals(films, listService.showOwnWatched(user.getId()));
+        when(listMock.showOwnWatched(user.getId(),0)).thenReturn(films);
+        Assert.assertEquals(films, listService.showOwnWatched(user.getId(),0));
     }
 
     @Test
     public void showOwnWatched_Fail() {
-        when(listMock.showOwnWatched(user.getId())).thenThrow(DaoException.class);
-        Assert.assertEquals(null, listService.showOwnWatched(user.getId()));
+        when(listMock.showOwnWatched(user.getId(),0)).thenThrow(DaoException.class);
+        Assert.assertEquals(null, listService.showOwnWatched(user.getId(),0));
     }
 
     @Test
     public void showOwnPlanned_Success() {
-        when(listMock.showOwnPlanned(user.getId())).thenReturn(films);
-        Assert.assertEquals(films, listService.showOwnPlanned(user.getId()));
+        when(listMock.showOwnPlanned(user.getId(),0)).thenReturn(films);
+        Assert.assertEquals(films, listService.showOwnPlanned(user.getId(),0));
     }
 
     @Test
     public void showOwnPlanned_Fail() {
-        when(listMock.showOwnPlanned(user.getId())).thenThrow(DaoException.class);
-        Assert.assertEquals(null, listService.showOwnPlanned(user.getId()));
+        when(listMock.showOwnPlanned(user.getId(),0)).thenThrow(DaoException.class);
+        Assert.assertEquals(null, listService.showOwnPlanned(user.getId(),0));
     }
 
     @Test
     public void showOthersWatched_Success() {
-        when(listMock.showOthersWatched(user.getId())).thenReturn(films);
-        Assert.assertEquals(films, listService.showOthersWatched(user.getId()));
+        when(listMock.showOthersWatched(user.getId(),0)).thenReturn(films);
+        Assert.assertEquals(films, listService.showOthersWatched(user.getId(),0));
     }
 
     @Test
     public void showOthersWatched_Fail() {
-        when(listMock.showOthersWatched(user.getId())).thenThrow(DaoException.class);
-        Assert.assertEquals(null, listService.showOthersWatched(user.getId()));
+        when(listMock.showOthersWatched(user.getId(),0)).thenThrow(DaoException.class);
+        Assert.assertEquals(null, listService.showOthersWatched(user.getId(),0));
     }
 
     @Test
     public void showOthersPLanned_Success() {
-        when(listMock.showOthersPlanned(user.getId())).thenReturn(films);
-        Assert.assertEquals(films, listService.showOthersPlanned(user.getId()));
+        when(listMock.showOthersPlanned(user.getId(),0)).thenReturn(films);
+        Assert.assertEquals(films, listService.showOthersPlanned(user.getId(),0));
     }
 
     @Test
     public void showOthersPlanned_Fail() {
-        when(listMock.showOthersPlanned(user.getId())).thenThrow(DaoException.class);
-        Assert.assertEquals(null, listService.showOthersPlanned(user.getId()));
+        when(listMock.showOthersPlanned(user.getId(),0)).thenThrow(DaoException.class);
+        Assert.assertEquals(null, listService.showOthersPlanned(user.getId(),0));
     }
 
     @Test

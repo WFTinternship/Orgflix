@@ -20,8 +20,9 @@ import java.util.List;
 public class CastServiceImpl implements CastService {
 
     private static final Logger LOGGER = Logger.getLogger(CastServiceImpl.class);
-
+    @Autowired
     private CastDAO castDAO;
+    @Autowired
     private FilmDAO filmDAO;
 
     @Autowired

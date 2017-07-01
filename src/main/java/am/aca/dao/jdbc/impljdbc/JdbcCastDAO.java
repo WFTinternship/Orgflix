@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
@@ -17,7 +18,7 @@ import java.util.List;
 /**
  * DAO layer for Cast entity
  */
-//@Repository
+@Component
 public class JdbcCastDAO extends BaseDAO implements CastDAO {
 
     @Autowired

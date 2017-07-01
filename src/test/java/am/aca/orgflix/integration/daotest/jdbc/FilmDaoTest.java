@@ -22,10 +22,10 @@ import static org.junit.Assert.assertTrue;
 public class FilmDaoTest extends BaseIntegrationTest {
 
     @Autowired
-    private FilmDAO filmDAO;
+    private FilmDAO jdbcFilmDAO;
 
     @Autowired
-    private CastDAO castDAO;
+    private CastDAO jdbcCastDAO;
 
     @Autowired
     private TestHelper helper;
@@ -47,7 +47,7 @@ public class FilmDaoTest extends BaseIntegrationTest {
     public void addFilmGetId_Succeeded() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
-        filmDAO.addFilm(film);
+        jdbcFilmDAO.addFilm(film);
         Assert.assertTrue(film.getId() > 0);
     }
 
@@ -55,63 +55,63 @@ public class FilmDaoTest extends BaseIntegrationTest {
     public void addFilm_Succeeded() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
-        filmDAO.addFilm(film);
-        Assert.assertEquals(1, filmDAO.getFilmsList(0).size());
+        jdbcFilmDAO.addFilm(film);
+        Assert.assertEquals(1, jdbcFilmDAO.getFilmsList(0).size());
     }
 
 
     @Test(expected = DaoException.class)
     public void addFilm_Fail() {
-        filmDAO.addFilm(film);
+        jdbcFilmDAO.addFilm(film);
     }
 
     @Test
     public void addGenreToFilmBySize_Succeeded() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
-        filmDAO.addFilm(film);
-        Assert.assertTrue(filmDAO.addGenreToFilm(Genre.COMEDY, film.getId()));
-        Assert.assertEquals(1, filmDAO.getFilmsByGenre(Genre.COMEDY).size());
+        jdbcFilmDAO.addFilm(film);
+        Assert.assertTrue(jdbcFilmDAO.addGenreToFilm(Genre.COMEDY, film.getId()));
+        Assert.assertEquals(1, jdbcFilmDAO.getFilmsByGenre(Genre.COMEDY).size());
     }
 
     @Test
     public void addGenreToFilmByFilm_Succeeded() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
-        filmDAO.addFilm(film);
-        filmDAO.addGenreToFilm(Genre.COMEDY, film.getId());
-        Assert.assertEquals(film, filmDAO.getFilmsByGenre(Genre.COMEDY).get(0));
+        jdbcFilmDAO.addFilm(film);
+        jdbcFilmDAO.addGenreToFilm(Genre.COMEDY, film.getId());
+        Assert.assertEquals(film, jdbcFilmDAO.getFilmsByGenre(Genre.COMEDY).get(0));
     }
 
     @Test
     public void rateFilm_Succeeded() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
-        filmDAO.addFilm(film);
-        filmDAO.rateFilm(film.getId(), 5);
-        filmDAO.rateFilm(film.getId(), 5);
-        Assert.assertEquals(2, filmDAO.getFilmById(film.getId()).getRate_5star());
+        jdbcFilmDAO.addFilm(film);
+        jdbcFilmDAO.rateFilm(film.getId(), 5);
+        jdbcFilmDAO.rateFilm(film.getId(), 5);
+        Assert.assertEquals(2, jdbcFilmDAO.getFilmById(film.getId()).getRate_5star());
     }
 
     @Test(expected = DaoException.class)
     public void rateFilm_Fail() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
-        filmDAO.addFilm(film);
-        filmDAO.rateFilm(film.getId(), 9);
+        jdbcFilmDAO.addFilm(film);
+        jdbcFilmDAO.rateFilm(film.getId(), 9);
     }
 
     @Test
     public void getFilmById_Succeeded() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
-        filmDAO.addFilm(film);
-        Assert.assertEquals(film, filmDAO.getFilmById(film.getId()));
+        jdbcFilmDAO.addFilm(film);
+        Assert.assertEquals(film, jdbcFilmDAO.getFilmById(film.getId()));
     }
 
     @Test
     public void getFilmById_Failed() {
-        Assert.assertEquals(null, filmDAO.getFilmById(-1));
+        Assert.assertEquals(null, jdbcFilmDAO.getFilmById(-1));
     }
 
     @Test
@@ -119,9 +119,9 @@ public class FilmDaoTest extends BaseIntegrationTest {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
         for (int i = 0; i < 7; i++) {
-            filmDAO.addFilm(film);
+            jdbcFilmDAO.addFilm(film);
         }
-        Assert.assertEquals(7, filmDAO.getFilmsList(0).size());
+        Assert.assertEquals(7, jdbcFilmDAO.getFilmsList(0).size());
     }
 
     @Test
@@ -129,89 +129,89 @@ public class FilmDaoTest extends BaseIntegrationTest {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
         for (int i = 0; i < 20; i++) {
-            filmDAO.addFilm(film);
+            jdbcFilmDAO.addFilm(film);
         }
-        Assert.assertEquals(20 - 12, filmDAO.getFilmsList(12).size());
+        Assert.assertEquals(20 - 12, jdbcFilmDAO.getFilmsList(12).size());
     }
 
     @Test
     public void getFilmsList_EmptyList() {
-        Assert.assertEquals(0, filmDAO.getFilmsList(0).size());
+        Assert.assertEquals(0, jdbcFilmDAO.getFilmsList(0).size());
     }
 
     @Test
     public void getFilmsListIndex_Failed() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
-        filmDAO.addFilm(film);
-        Assert.assertEquals(0, filmDAO.getFilmsList(1).size());
+        jdbcFilmDAO.addFilm(film);
+        Assert.assertEquals(0, jdbcFilmDAO.getFilmsList(1).size());
     }
 
     @Test
     public void getFilmsByGenreSize_Succeeded() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
-        filmDAO.addFilm(film);
-        filmDAO.addGenreToFilm(Genre.COMEDY, film.getId());
+        jdbcFilmDAO.addFilm(film);
+        jdbcFilmDAO.addGenreToFilm(Genre.COMEDY, film.getId());
         film.setTitle("Deadpool");
         film.setProdYear(2016);
-        filmDAO.addFilm(film);
-        filmDAO.addGenreToFilm(Genre.COMEDY, film.getId());
-        Assert.assertEquals(2, filmDAO.getFilmsByGenre(Genre.COMEDY).size());
+        jdbcFilmDAO.addFilm(film);
+        jdbcFilmDAO.addGenreToFilm(Genre.COMEDY, film.getId());
+        Assert.assertEquals(2, jdbcFilmDAO.getFilmsByGenre(Genre.COMEDY).size());
     }
 
     @Test
     public void getFilmsByGenre_Fail() {
-        Assert.assertEquals(0, filmDAO.getFilmsByGenre(Genre.WAR).size());
+        Assert.assertEquals(0, jdbcFilmDAO.getFilmsByGenre(Genre.WAR).size());
     }
 
     @Test
     public void getFilmsByCast_Succeeded() {
         cast = new Cast("Viggo Mortensen", false);
-        castDAO.addCast(cast);
+        jdbcCastDAO.addCast(cast);
 
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
-        filmDAO.addFilm(film);
+        jdbcFilmDAO.addFilm(film);
 
-        castDAO.addCastToFilm(cast, film.getId());
-        Assert.assertEquals(film, filmDAO.getFilmsByCast(cast.getId()).get(0));
+        jdbcCastDAO.addCastToFilm(cast, film.getId());
+        Assert.assertEquals(film, jdbcFilmDAO.getFilmsByCast(cast.getId()).get(0));
     }
 
 
     @Test
     public void getFilmsByCast_Failed() {
-        Assert.assertEquals(0, filmDAO.getFilmsByCast(0).size());
+        Assert.assertEquals(0, jdbcFilmDAO.getFilmsByCast(0).size());
     }
 
     @Test
     public void getRatingInt_Succeeded() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
-        filmDAO.addFilm(film);
-        filmDAO.rateFilm(film.getId(), 4);
-        filmDAO.rateFilm(film.getId(), 4);
-        filmDAO.rateFilm(film.getId(), 3);
-        filmDAO.rateFilm(film.getId(), 5);
-        Assert.assertEquals(4.0, filmDAO.getRating(film.getId()), 0.01);
+        jdbcFilmDAO.addFilm(film);
+        jdbcFilmDAO.rateFilm(film.getId(), 4);
+        jdbcFilmDAO.rateFilm(film.getId(), 4);
+        jdbcFilmDAO.rateFilm(film.getId(), 3);
+        jdbcFilmDAO.rateFilm(film.getId(), 5);
+        Assert.assertEquals(4.0, jdbcFilmDAO.getRating(film.getId()), 0.01);
     }
 
     @Test
     public void getRatingDouble_Succeeded() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
-        filmDAO.addFilm(film);
-        filmDAO.rateFilm(film.getId(), 4);
-        filmDAO.rateFilm(film.getId(), 5);
-        Assert.assertEquals(4.5, filmDAO.getRating(film.getId()), 0.01);
+        jdbcFilmDAO.addFilm(film);
+        jdbcFilmDAO.rateFilm(film.getId(), 4);
+        jdbcFilmDAO.rateFilm(film.getId(), 5);
+        Assert.assertEquals(4.5, jdbcFilmDAO.getRating(film.getId()), 0.01);
     }
 
     @Test
     public void getRatingNaN_Failed() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
-        filmDAO.addFilm(film);
-        Assert.assertEquals(0, filmDAO.getRating(film.getId()), 0.01);
+        jdbcFilmDAO.addFilm(film);
+        Assert.assertEquals(0, jdbcFilmDAO.getRating(film.getId()), 0.01);
     }
 
     @Test
@@ -219,74 +219,74 @@ public class FilmDaoTest extends BaseIntegrationTest {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
         for (int i = 0; i < 6; i++) {
-            filmDAO.addFilm(film);
+            jdbcFilmDAO.addFilm(film);
         }
-        Assert.assertEquals(6, filmDAO.totalNumberOfFilms());
+        Assert.assertEquals(6, jdbcFilmDAO.totalNumberOfFilms());
     }
 
     @Test
     public void totalNumber_Failed() {
-        Assert.assertEquals(0, filmDAO.totalNumberOfFilms());
+        Assert.assertEquals(0, jdbcFilmDAO.totalNumberOfFilms());
     }
 
     @Test
     public void searchTitle_Success() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
-        filmDAO.addFilm(film);
+        jdbcFilmDAO.addFilm(film);
 
         film.setTitle("City of God");
         film.setProdYear(2002);
-        filmDAO.addFilm(film);
+        jdbcFilmDAO.addFilm(film);
 
-        Assert.assertEquals(1, filmDAO.getFilteredFilms("City of God", 1000, 3000, "%", "%", "%", "%").size());
+        Assert.assertEquals(1, jdbcFilmDAO.getFilteredFilms("City of God", 1000, 3000, "%", "%", "%", "%").size());
     }
 
     @Test
     public void searchTitleNotExisting_Empty() {
         film.setTitle("City of God");
         film.setProdYear(2002);
-        filmDAO.addFilm(film);
+        jdbcFilmDAO.addFilm(film);
 
-        Assert.assertTrue(filmDAO.getFilteredFilms("City of Angels", 1000, 3000, "%", "%", "%", "%").isEmpty());
+        Assert.assertTrue(jdbcFilmDAO.getFilteredFilms("City of Angels", 1000, 3000, "%", "%", "%", "%").isEmpty());
     }
 
     @Test
     public void filterByCast_Success() {
         film.setTitle("City of God");
         film.setProdYear(2002);
-        filmDAO.addFilm(film);
+        jdbcFilmDAO.addFilm(film);
 
         cast = new Cast("Alice Braga", false);
-        castDAO.addCast(cast);
-        castDAO.addCastToFilm(cast, film.getId());
+        jdbcCastDAO.addCast(cast);
+        jdbcCastDAO.addCastToFilm(cast, film.getId());
 
-        Assert.assertEquals(film, filmDAO.getFilteredFilms("", 1000, 3000, "%", "%", String.valueOf(cast.getId()), "%").get(0));
+        Assert.assertEquals(film, jdbcFilmDAO.getFilteredFilms("", 1000, 3000, "%", "%", String.valueOf(cast.getId()), "%").get(0));
     }
 
     @Test
     public void filterByCast_Empty() {
-        Assert.assertTrue(filmDAO.getFilteredFilms("", 1000, 3000, "%", "%", "8", "%").isEmpty());
+        Assert.assertTrue(jdbcFilmDAO.getFilteredFilms("", 1000, 3000, "%", "%", "8", "%").isEmpty());
     }
 
     @Test
     public void filterByAllParameters_Success() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
-        filmDAO.addFilm(film);
-        filmDAO.addGenreToFilm(Genre.COMEDY, film.getId());
+        jdbcFilmDAO.addFilm(film);
+        jdbcFilmDAO.addGenreToFilm(Genre.COMEDY, film.getId());
 
         film.setTitle("City of God");
         film.setProdYear(2002);
-        filmDAO.addFilm(film);
-        filmDAO.addGenreToFilm(Genre.CRIME, film.getId());
+        jdbcFilmDAO.addFilm(film);
+        jdbcFilmDAO.addGenreToFilm(Genre.CRIME, film.getId());
 
         cast = new Cast("Alice Braga", false);
-        castDAO.addCast(cast);
-        castDAO.addCastToFilm(cast, film.getId());
+        jdbcCastDAO.addCast(cast);
+        jdbcCastDAO.addCastToFilm(cast, film.getId());
 
-        Assert.assertEquals(1, filmDAO.getFilteredFilms("City of God", 2002, 2002, String.valueOf(0), "%", String.valueOf(cast.getId()), String.valueOf(Genre.CRIME.getValue())).size());
-        Assert.assertEquals(film, filmDAO.getFilteredFilms("City of God", 2002, 2002, String.valueOf(0), "%", String.valueOf(cast.getId()), String.valueOf(Genre.CRIME.getValue())).get(0));
+        Assert.assertEquals(1, jdbcFilmDAO.getFilteredFilms("City of God", 2002, 2002, String.valueOf(0), "%", String.valueOf(cast.getId()), String.valueOf(Genre.CRIME.getValue())).size());
+        Assert.assertEquals(film, jdbcFilmDAO.getFilteredFilms("City of God", 2002, 2002, String.valueOf(0), "%", String.valueOf(cast.getId()), String.valueOf(Genre.CRIME.getValue())).get(0));
     }
 
     @Test
@@ -294,9 +294,9 @@ public class FilmDaoTest extends BaseIntegrationTest {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
         film.setDirector("Matthew Ross");
-        filmDAO.addFilm(film);
+        jdbcFilmDAO.addFilm(film);
         film.setHasOscar(true);
-        assertTrue(filmDAO.editFilm(film));
+        assertTrue(jdbcFilmDAO.editFilm(film));
     }
 
     @Test
@@ -304,135 +304,135 @@ public class FilmDaoTest extends BaseIntegrationTest {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
         film.setDirector("Matthew Ross");
-        filmDAO.addFilm(film);
+        jdbcFilmDAO.addFilm(film);
         film.setDirector("Matt Ross");
-        filmDAO.editFilm(film);
-        Assert.assertEquals(1, filmDAO.totalNumberOfFilms());
+        jdbcFilmDAO.editFilm(film);
+        Assert.assertEquals(1, jdbcFilmDAO.totalNumberOfFilms());
     }
 
     @Test(expected = DaoException.class)
     public void editFilm_Fail() {
-        filmDAO.editFilm(film);
+        jdbcFilmDAO.editFilm(film);
     }
 
     @Test
     public void resetCastsByReturn_Success() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
-        filmDAO.addFilm(film);
+        jdbcFilmDAO.addFilm(film);
 
         cast = new Cast("Viggo Mortensen");
-        castDAO.addCast(cast);
+        jdbcCastDAO.addCast(cast);
 
-        castDAO.addCastToFilm(cast, film.getId());
-        Assert.assertTrue(filmDAO.resetRelationCasts(film));
+        jdbcCastDAO.addCastToFilm(cast, film.getId());
+        Assert.assertTrue(jdbcFilmDAO.resetRelationCasts(film));
     }
 
     @Test
     public void resetCastsByCheck_Success() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
-        filmDAO.addFilm(film);
+        jdbcFilmDAO.addFilm(film);
 
         cast = new Cast("Viggo Mortensen");
-        castDAO.addCast(cast);
+        jdbcCastDAO.addCast(cast);
 
-        castDAO.addCastToFilm(cast, film.getId());
-        filmDAO.resetRelationCasts(film);
-        Assert.assertEquals(0, filmDAO.getFilmsByCast(cast.getId()).size());
+        jdbcCastDAO.addCastToFilm(cast, film.getId());
+        jdbcFilmDAO.resetRelationCasts(film);
+        Assert.assertEquals(0, jdbcFilmDAO.getFilmsByCast(cast.getId()).size());
     }
 
     @Test
     public void resetCastsKeepOthers_Success() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
-        filmDAO.addFilm(film);
+        jdbcFilmDAO.addFilm(film);
 
         cast = new Cast("Viggo Mortensen", false);
-        castDAO.addCast(cast);
-        castDAO.addCastToFilm(cast, film.getId());
+        jdbcCastDAO.addCast(cast);
+        jdbcCastDAO.addCastToFilm(cast, film.getId());
 
-        filmDAO.resetRelationCasts(film);
+        jdbcFilmDAO.resetRelationCasts(film);
 
         film.setTitle("City of God");
         film.setProdYear(2002);
-        filmDAO.addFilm(film);
+        jdbcFilmDAO.addFilm(film);
 
         cast = new Cast("Alice Braga", false);
-        castDAO.addCast(cast);
-        castDAO.addCastToFilm(cast, film.getId());
+        jdbcCastDAO.addCast(cast);
+        jdbcCastDAO.addCastToFilm(cast, film.getId());
 
-        Assert.assertEquals(film, filmDAO.getFilmsByCast(cast.getId()).get(0));
+        Assert.assertEquals(film, jdbcFilmDAO.getFilmsByCast(cast.getId()).get(0));
     }
 
     @Test
     public void resetCasts_Fail() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
-        filmDAO.addFilm(film);
-        Assert.assertFalse(filmDAO.resetRelationCasts(film));
+        jdbcFilmDAO.addFilm(film);
+        Assert.assertFalse(jdbcFilmDAO.resetRelationCasts(film));
     }
 
     @Test
     public void resetGenresReturn_Success() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
-        filmDAO.addFilm(film);
-        filmDAO.addGenreToFilm(Genre.DRAMA, film.getId());
-        Assert.assertTrue(filmDAO.resetRelationGenres(film));
+        jdbcFilmDAO.addFilm(film);
+        jdbcFilmDAO.addGenreToFilm(Genre.DRAMA, film.getId());
+        Assert.assertTrue(jdbcFilmDAO.resetRelationGenres(film));
     }
 
     @Test
     public void resetGenresCheck_Success() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
-        filmDAO.addFilm(film);
-        filmDAO.addGenreToFilm(Genre.DRAMA, film.getId());
-        filmDAO.resetRelationGenres(film);
-        Assert.assertTrue(filmDAO.getFilmsByGenre(Genre.DRAMA).isEmpty());
+        jdbcFilmDAO.addFilm(film);
+        jdbcFilmDAO.addGenreToFilm(Genre.DRAMA, film.getId());
+        jdbcFilmDAO.resetRelationGenres(film);
+        Assert.assertTrue(jdbcFilmDAO.getFilmsByGenre(Genre.DRAMA).isEmpty());
     }
 
     @Test
     public void resetGenresKeepsOthers_Success() {
         film.setTitle("American History X");
         film.setProdYear(1998);
-        filmDAO.addFilm(film);
-        filmDAO.addGenreToFilm(Genre.CRIME, film.getId());
-        filmDAO.addGenreToFilm(Genre.DRAMA, film.getId());
-        filmDAO.resetRelationGenres(film);
+        jdbcFilmDAO.addFilm(film);
+        jdbcFilmDAO.addGenreToFilm(Genre.CRIME, film.getId());
+        jdbcFilmDAO.addGenreToFilm(Genre.DRAMA, film.getId());
+        jdbcFilmDAO.resetRelationGenres(film);
 
         film.setTitle("City of God");
         film.setProdYear(2002);
-        filmDAO.addFilm(film);
-        filmDAO.addGenreToFilm(Genre.CRIME, film.getId());
+        jdbcFilmDAO.addFilm(film);
+        jdbcFilmDAO.addGenreToFilm(Genre.CRIME, film.getId());
 
-        Assert.assertEquals(film, filmDAO.getFilmsByGenre(Genre.CRIME).get(0));
+        Assert.assertEquals(film, jdbcFilmDAO.getFilmsByGenre(Genre.CRIME).get(0));
     }
 
     @Test
     public void resetGenres_Fail() {
         film.setTitle("City of God");
         film.setProdYear(2002);
-        filmDAO.addFilm(film);
-        Assert.assertFalse(filmDAO.resetRelationGenres(film));
+        jdbcFilmDAO.addFilm(film);
+        Assert.assertFalse(jdbcFilmDAO.resetRelationGenres(film));
     }
 
     @Test
     public void remove_Success() {
         film.setTitle("City of God");
         film.setProdYear(2002);
-        filmDAO.addFilm(film);
-        filmDAO.remove(film);
-        Assert.assertEquals(0, filmDAO.totalNumberOfFilms());
+        jdbcFilmDAO.addFilm(film);
+        jdbcFilmDAO.remove(film);
+        Assert.assertEquals(0, jdbcFilmDAO.totalNumberOfFilms());
     }
 
     @Test
     public void remove_Fail() {
         film.setTitle("City of God");
         film.setProdYear(2002);
-        filmDAO.addFilm(film);
+        jdbcFilmDAO.addFilm(film);
         film = new Film();
-        filmDAO.remove(film);
-        Assert.assertEquals(1, filmDAO.totalNumberOfFilms());
+        jdbcFilmDAO.remove(film);
+        Assert.assertEquals(1, jdbcFilmDAO.totalNumberOfFilms());
     }
 }

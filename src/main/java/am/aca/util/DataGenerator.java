@@ -21,7 +21,7 @@ import java.util.List;
  * Created by karine on 6/27/2017
  */
 @Component
-@ContextConfiguration(locations = {"classpath:applicationContext.xml"})
+@ContextConfiguration(locations = {"classpath:applicationContext-test.xml"})
 public class DataGenerator {
     @Autowired
     FilmService filmService;

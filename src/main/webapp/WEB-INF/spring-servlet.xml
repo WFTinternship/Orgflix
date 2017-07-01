@@ -2,13 +2,13 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:mvc="http://www.springframework.org/schema/mvc"
-       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/mvc
        http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
        http://www.springframework.org/schema/context
-       http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+       http://www.springframework.org/schema/context/spring-context-3.2.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
     <mvc:annotation-driven />
     <context:component-scan base-package="am.aca" />
@@ -27,19 +27,12 @@
         <property name="minPoolSize" value="${MinPoolSize}" />
     </bean>
 
-
-    <bean id="jdbcUserDAO" class="am.aca.dao.jdbc.impljdbc.JdbcUserDAO" />
-    <bean id="jdbcCastDAO" class="am.aca.dao.jdbc.impljdbc.JdbcCastDAO" />
-    <bean id="jdbcFilmDAO" class="am.aca.dao.jdbc.impljdbc.JdbcFilmDAO" />
-    <bean id="listDaoJdbc" class="am.aca.dao.jdbc.impljdbc.JdbcListDAO" />
-
-    <bean id="userService" class="am.aca.service.impl.UserServiceImpl" />
-    <bean id="castService" class="am.aca.service.impl.CastServiceImpl" />
-    <bean id="filmService" class="am.aca.service.impl.FilmServiceImpl" />
-    <bean id="listService" class="am.aca.service.impl.ListServiceImpl" />
-
     <mvc:resources mapping="/resources/**" location="/resources/"
                    cache-period="31556926"/>
+    <tx:annotation-driven transaction-manager="txManager"/>
+    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager" >
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
 
     <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver" >
         <property name="prefix" value="/WEB-INF/pages/" />

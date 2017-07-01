@@ -16,18 +16,28 @@ function filmControlMenu(state,id) {
 }
 
 function AddToList(type,id) {
-
     $.ajax({url: "/data/addFilmTo"+type,type:"POST",data:{film:id,user:$("#userId").val()},success: function(result){
         $("#pop-up-result").html(result);
         $("#pop-up-result").css("display", "block");
+        setTimeout(function() {
+            timeOuter(id,false);
+        }, 900);
     }});
 }
 
-function RemoveFromList(type,id) {
+function timeOuter(id,isDel){
+    if(isDel){
+        $("#"+id).css("display", "none");
+    }
+    console.log(id+" done");
+    $("#pop-up-result").css("display", "none");
+}
 
+function RemoveFromList(type,id) {
     $.ajax({url: "/data/removeFilmFrom"+type,type:"POST",data:{film:id,user:$("#userId").val()},success: function(result){
         $("#pop-up-result").html(result);
         $("#pop-up-result").css("display", "block");
+        setTimeout(timeOuter(id,true), 3000);
     }});
 }
 

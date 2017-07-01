@@ -16,15 +16,18 @@ public interface ListService {
 
     boolean removeFromPlanned(int filmId, int userId);
 
-    List<Film> showOwnWatched(int userId);
+    List<Film> showOwnWatched(int userId, int page);
 
-    List<Film> showOwnPlanned(int userId);
+    List<Film> showOwnPlanned(int userId, int page);
 
-    List<Film> showOthersWatched(int userId);
+    List<Film> showOthersWatched(int userId, int page);
 
-    List<Film> showOthersPlanned(int userId);
+    List<Film> showOthersPlanned(int userId, int page);
 
     boolean makePrivate (int userId, Film film);
 
     boolean makePublic (int userId, Film film);
+
+    int totalNumberOfWatched(int userId, boolean isWatched);
+
 }

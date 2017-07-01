@@ -1,7 +1,11 @@
 package am.aca.controller;
 
 import am.aca.entity.User;
-import am.aca.servlet.BeanProvider;
+import am.aca.service.CastService;
+import am.aca.service.FilmService;
+import am.aca.service.ListService;
+import am.aca.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +28,27 @@ import java.io.FileOutputStream;
 @RequestMapping("/")
 public class MainController {
 
+    private UserService userService;
+    private ListService listService;
+    private FilmService filmService;
+    private CastService castService;
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+    @Autowired
+    public void setListService(ListService listService) {
+        this.listService = listService;
+    }
+    @Autowired
+    public void setFilmService(FilmService filmService) {
+        this.filmService = filmService;
+    }
+    @Autowired
+    public void setCastService(CastService castService) {
+        this.castService = castService;
+    }
+
     @RequestMapping("/")
     public ModelAndView index() {
         ModelAndView modelAndView = new ModelAndView("index");
@@ -45,10 +70,10 @@ public class MainController {
         ModelAndView modelAndView = null;
         User user = new User(nick, userName, email, pass);
 
-        int userId = BeanProvider.getUserService().add(user);
+        int userId = userService.add(user);
         if (userId != -1) {
             modelAndView = new ModelAndView("index");
-            modelAndView.addObject("films", BeanProvider.getFilmService().getFilmsList(0));
+            modelAndView.addObject("films", filmService.getFilmsList(0));
             modelAndView.addObject("userId", userId);
             modelAndView.addObject("user", nick + " (" + email + ")");
             modelAndView.addObject("userAuth", pass.hashCode() + email.hashCode());
@@ -67,11 +92,11 @@ public class MainController {
                                @RequestParam("userAuth") int userAuth) {
         String user = "";
         if (userId != -1) {
-            User selUser = BeanProvider.getUserService().get(userId);
+            User selUser = userService.get(userId);
             user = selUser.getNick() + " (" + selUser.getEmail() + ")";
         }
         ModelAndView modelAndView = new ModelAndView("index");
-        modelAndView.addObject("films", BeanProvider.getFilmService().getFilmsList(page * 12));
+        modelAndView.addObject("films", filmService.getFilmsList(page * 12));
         modelAndView.addObject("userId", userId);
         modelAndView.addObject("user", user);
         modelAndView.addObject("userAuth", userAuth);
@@ -91,12 +116,12 @@ public class MainController {
                                @RequestParam("pass") String pass) {
 
         ModelAndView modelAndView;
-        User user = BeanProvider.getUserService().authenticate(email, pass);
+        User user = userService.authenticate(email, pass);
         if (user == null) {
             modelAndView = new ModelAndView("error");
         } else {
             modelAndView = new ModelAndView("index");
-            modelAndView.addObject("films", BeanProvider.getFilmService().getFilmsList(0));
+            modelAndView.addObject("films", filmService.getFilmsList(0));
             modelAndView.addObject("userId", user.getId());
             modelAndView.addObject("user", user.getNick() + " (" + email + ")");
             modelAndView.addObject("userAuth", user.getPass().hashCode() + email.hashCode());
@@ -108,13 +133,14 @@ public class MainController {
 
     @RequestMapping("/watch_list")
     public ModelAndView watchList(@RequestParam("userId") int userId,
-                               @RequestParam("userAuth") int userAuth) {
+                               @RequestParam("userAuth") int userAuth,
+                                  @RequestParam("currPage") int currPage) {
 
-        User selUser = BeanProvider.getUserService().get(userId);
+        User selUser = userService.get(userId);
         String user = selUser.getNick() + " (" + selUser.getEmail() + ")";
 
         ModelAndView modelAndView = new ModelAndView("index");
-        modelAndView.addObject("films", BeanProvider.getListService().showOwnWatched(userId));
+        modelAndView.addObject("films", listService.showOwnWatched(userId,currPage));
         modelAndView.addObject("userId", userId);
         modelAndView.addObject("user", user);
         modelAndView.addObject("userAuth", userAuth);
@@ -125,13 +151,14 @@ public class MainController {
 
     @RequestMapping("/wish_list")
     public ModelAndView wishList(@RequestParam("userId") int userId,
-                               @RequestParam("userAuth") int userAuth) {
+                               @RequestParam("userAuth") int userAuth,
+                                 @RequestParam("currPage") int currPage) {
 
-        User selUser = BeanProvider.getUserService().get(userId);
+        User selUser = userService.get(userId);
         String user = selUser.getNick() + " (" + selUser.getEmail() + ")";
 
         ModelAndView modelAndView = new ModelAndView("index");
-        modelAndView.addObject("films", BeanProvider.getListService().showOwnPlanned(userId));
+        modelAndView.addObject("films", listService.showOwnPlanned(userId,currPage));
         modelAndView.addObject("userId", userId);
         modelAndView.addObject("user", user);
         modelAndView.addObject("userAuth", userAuth);
@@ -141,7 +168,7 @@ public class MainController {
     }
 
     private ModelAndView getGuestMV(ModelAndView modelAndView){
-        modelAndView.addObject("films", BeanProvider.getFilmService().getFilmsList(0));
+        modelAndView.addObject("films", filmService.getFilmsList(0));
         modelAndView.addObject("userId", -1);
         modelAndView.addObject("userAuth", 0);
         modelAndView.addObject("currPage", 0);

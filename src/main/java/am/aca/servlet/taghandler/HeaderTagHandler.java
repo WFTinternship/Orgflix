@@ -20,7 +20,7 @@ public class HeaderTagHandler extends TagSupport {
                 "<header id=\"header\">"+
                     "<div class=\"inner\">"+
                         "<!-- Logo -->"+
-                        "<a href=\"home\" class=\"logo\">"+
+                        "<a href=\"\" class=\"logo\">"+
                             "<span class=\"symbol\"><img src='../resources/images/logo.svg' /></span>" +
                             "<span class=\"title\">Orgflix</span>"+
                         "</a>"+

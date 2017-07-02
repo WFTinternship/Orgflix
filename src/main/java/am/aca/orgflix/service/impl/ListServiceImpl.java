@@ -3,7 +3,6 @@ package am.aca.orgflix.service.impl;
 import am.aca.orgflix.dao.ListDao;
 import am.aca.orgflix.entity.Film;
 import am.aca.orgflix.service.CastService;
-import am.aca.orgflix.service.FilmService;
 import am.aca.orgflix.service.ListService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,17 +20,10 @@ import java.util.List;
 public class ListServiceImpl implements ListService {
 
     private static final Logger LOGGER = Logger.getLogger(ListServiceImpl.class);
-    @Autowired
-    private ListDao listDao;
-    @Autowired
-    private FilmService filmService;
-    @Autowired
-    private CastService castService;
 
-    @Autowired
-    public void setFilmService(FilmService filmService) {
-        this.filmService = filmService;
-    }
+    private ListDao listDao;
+
+    private CastService castService;
 
     @Autowired
     public void setListDao(ListDao listDao) {
@@ -48,14 +40,12 @@ public class ListServiceImpl implements ListService {
     public boolean addToWatched(int filmId, boolean isPublic, int userId) {
         boolean state = false;
         try {
-            //case: any
-            if (listDao.areRelated(filmId, userId)){
-                 state = listDao.updateWatched(filmId, userId);
-            }
-            else state =  listDao.insertWatched(filmId, userId, isPublic);
+            //case: planned
             if (listDao.areRelated(filmId, userId)) {
                 state = listDao.updateWatched(filmId, userId);
-            } else state = listDao.insertWatched(filmId, userId, isPublic);
+            }
+            //case: not planned
+            else state = listDao.insertWatched(filmId, userId, isPublic);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
         }
@@ -67,9 +57,11 @@ public class ListServiceImpl implements ListService {
     public boolean addToPlanned(int filmId, boolean isPublic, int userId) {
         boolean state = false;
         try {
-            //case: any
+            //case: watched
             if (listDao.areRelated(filmId, userId))
                 state = listDao.updatePlanned(filmId, userId);
+
+                //case: not watched
             else state = listDao.insertPlanned(filmId, userId, isPublic);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
@@ -114,8 +106,8 @@ public class ListServiceImpl implements ListService {
     public List<Film> showOwnWatched(int userId, int page) {
         List<Film> list = null;
         try {
-            list = listDao.showOwnWatched(userId,page);
-            for(Film film : list){
+            list = listDao.showOwnWatched(userId, page);
+            for (Film film : list) {
                 film.setCasts(castService.getCastsByFilm(film.getId()));
             }
         } catch (RuntimeException e) {
@@ -126,11 +118,11 @@ public class ListServiceImpl implements ListService {
 
     @Transactional
     @Override
-    public List<Film> showOwnPlanned(int userId,int page) {
+    public List<Film> showOwnPlanned(int userId, int page) {
         List<Film> list = null;
         try {
-            list = listDao.showOwnPlanned(userId,page);
-            for(Film film : list){
+            list = listDao.showOwnPlanned(userId, page);
+            for (Film film : list) {
                 film.setCasts(castService.getCastsByFilm(film.getId()));
             }
         } catch (RuntimeException e) {
@@ -141,11 +133,11 @@ public class ListServiceImpl implements ListService {
 
     @Transactional
     @Override
-    public List<Film> showOthersWatched(int userId,int page) {
+    public List<Film> showOthersWatched(int userId, int page) {
         List<Film> list = null;
         try {
-            list = listDao.showOthersWatched(userId,page);
-            for(Film film : list){
+            list = listDao.showOthersWatched(userId, page);
+            for (Film film : list) {
                 film.setCasts(castService.getCastsByFilm(film.getId()));
             }
         } catch (RuntimeException e) {
@@ -160,7 +152,7 @@ public class ListServiceImpl implements ListService {
         List<Film> list = null;
         try {
             list = listDao.showOthersPlanned(userId, page);
-            for(Film film : list){
+            for (Film film : list) {
                 film.setCasts(castService.getCastsByFilm(film.getId()));
             }
         } catch (RuntimeException e) {
@@ -201,7 +193,7 @@ public class ListServiceImpl implements ListService {
     public int totalNumberOfWatched(int userId, boolean isWatched) {
         int total = 0;
         try {
-            if(isWatched) {
+            if (isWatched) {
                 total = listDao.totalNumberOfWatched(userId);
             } else {
                 total = listDao.totalNumberOfWished(userId);

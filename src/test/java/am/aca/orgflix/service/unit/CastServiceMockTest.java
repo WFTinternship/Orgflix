@@ -7,6 +7,7 @@ import am.aca.orgflix.dao.FilmDAO;
 import am.aca.orgflix.entity.Cast;
 import am.aca.orgflix.entity.Film;
 import am.aca.orgflix.service.CastService;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,6 +47,12 @@ public class CastServiceMockTest extends BaseUnitTest {
         ReflectionTestUtils.setField(castService, "filmDAO", filmDaoMock);
     }
 
+    @After
+    public void tearDown() {
+        verifyNoMoreInteractions(castDaoMock);
+        verifyNoMoreInteractions(filmDaoMock);
+    }
+
     @Test
     public void addCast_Success() {
         when(castDaoMock.addCast(cast)).thenReturn(true);
@@ -54,7 +61,6 @@ public class CastServiceMockTest extends BaseUnitTest {
         Assert.assertTrue(status);
 
         verify(castDaoMock, times(1)).addCast(cast);
-        verifyNoMoreInteractions(castDaoMock);
     }
 
     @Test
@@ -65,7 +71,6 @@ public class CastServiceMockTest extends BaseUnitTest {
         Assert.assertFalse(status);
 
         verify(castDaoMock, times(1)).addCast(cast);
-        verifyNoMoreInteractions(castDaoMock);
     }
 
     @Test
@@ -78,7 +83,6 @@ public class CastServiceMockTest extends BaseUnitTest {
 
         verify(castDaoMock, times(1)).isStarringIn(cast.getId(), film.getId());
         verify(castDaoMock, times(1)).addCastToFilm(cast, film.getId());
-        verifyNoMoreInteractions(castDaoMock);
     }
 
     @Test
@@ -89,7 +93,6 @@ public class CastServiceMockTest extends BaseUnitTest {
         Assert.assertFalse(status);
 
         verify(castDaoMock, times(1)).isStarringIn(cast.getId(), film.getId());
-        verifyNoMoreInteractions(castDaoMock);
     }
 
     @Test
@@ -102,7 +105,6 @@ public class CastServiceMockTest extends BaseUnitTest {
 
         verify(castDaoMock, times(1)).isStarringIn(cast.getId(), film.getId());
         verify(castDaoMock, times(1)).addCastToFilm(cast, film.getId());
-        verifyNoMoreInteractions(castDaoMock);
     }
 
     @Test
@@ -115,7 +117,6 @@ public class CastServiceMockTest extends BaseUnitTest {
 
         verify(castDaoMock, times(1)).exists(cast);
         verify(castDaoMock, times(1)).editCast(cast);
-        verifyNoMoreInteractions(castDaoMock);
     }
 
     @Test
@@ -126,7 +127,6 @@ public class CastServiceMockTest extends BaseUnitTest {
         Assert.assertFalse(status);
 
         verify(castDaoMock, times(1)).exists(cast);
-        verifyNoMoreInteractions(castDaoMock);
     }
 
     @Test
@@ -139,7 +139,6 @@ public class CastServiceMockTest extends BaseUnitTest {
 
         verify(castDaoMock, times(1)).exists(cast);
         verify(castDaoMock, times(1)).editCast(cast);
-        verifyNoMoreInteractions(castDaoMock);
     }
 
     @Test
@@ -150,7 +149,6 @@ public class CastServiceMockTest extends BaseUnitTest {
         Assert.assertEquals(casts, actualCasts);
 
         verify(castDaoMock, times(1)).listCast();
-        verifyNoMoreInteractions(castDaoMock);
     }
 
     @Test
@@ -161,7 +159,6 @@ public class CastServiceMockTest extends BaseUnitTest {
         Assert.assertEquals(null, actualCasts);
 
         verify(castDaoMock, times(1)).listCast();
-        verifyNoMoreInteractions(castDaoMock);
     }
 
     @Test
@@ -172,8 +169,6 @@ public class CastServiceMockTest extends BaseUnitTest {
         Assert.assertEquals(films, actualFilms);
 
         verify(filmDaoMock, times(1)).getFilmsByCast(cast.getId());
-        verifyNoMoreInteractions(filmDaoMock);
-        verifyNoMoreInteractions(castDaoMock);
     }
 
     @Test
@@ -184,7 +179,5 @@ public class CastServiceMockTest extends BaseUnitTest {
         Assert.assertEquals(null, actualFilms);
 
         verify(filmDaoMock, times(1)).getFilmsByCast(cast.getId());
-        verifyNoMoreInteractions(filmDaoMock);
-        verifyNoMoreInteractions(castDaoMock);
     }
 }

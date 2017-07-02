@@ -6,7 +6,6 @@ import am.aca.orgflix.service.UserService;
 import am.aca.orgflix.util.TestHelper;
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -21,8 +20,10 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
     private UserService userService;
+
     @Autowired
     private TestHelper testHelper;
+
     private User user;
 
     @After
@@ -32,106 +33,111 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void addUser_Successed() {
-        Assert.assertTrue(userService.add(standardUser) > 0);
+    public void addUser_Success() {
+        boolean status = userService.add(standardUser) > 0;
+        Assert.assertTrue(status);
     }
 
     @Test
-    public void addUser_Successed_EmptyUserName() {
+    public void addUser_EmptyUserName_Success() {
         user = new User("gago", "", "gagik1@gmail.com", "pass");
-        Assert.assertTrue(userService.add(user) > 0);
+        boolean status = userService.add(user) > 0;
+        Assert.assertTrue(status);
     }
 
-    //    @Test(expected = RuntimeException.class)
     @Test
-    public void addUser_Fail_EmptyNick() {
-//        userService.add(new User("", "Gagik Petrosyan", "gagik2@gmail.com", "pass"));
-        Assert.assertEquals(-1, userService.add(new User("", "Gagik Petrosyan", "gagik2@gmail.com", "pass")));
+    public void addUser_EmptyNick_Fail() {
+        int id = userService.add(new User("", "Gagik Petrosyan", "gagik2@gmail.com", "pass"));
+        Assert.assertEquals(-1, id);
     }
 
-    //    @Test(expected = DaoException.class)
     @Test
-    public void addUser_Fail_EmptyEmail() {
-//        userService.add(new User("gago", "Gagik Petrosyan", "", "pass"));
-        Assert.assertEquals(-1, userService.add(new User("gago", "Gagik Petrosyan", "", "pass")));
+    public void addUser_EmptyEmail_Fail() {
+        int id = userService.add(new User("gago", "Gagik Petrosyan", "", "pass"));
+        Assert.assertEquals(-1, id);
     }
 
-    //    @Test(expected = DaoException.class)
     @Test
-    public void addUser_Fail_EmptyPass() {
-//        userService.add(new User("gago", "Gagik Petrosyan", "gagik3@gmail.com", ""));
-        Assert.assertEquals(-1, userService.add(new User("gago", "Gagik Petrosyan", "gagik3@gmail.com", "")));
+    public void addUser_EmptyPass_Fail() {
+        int id = userService.add(new User("gago", "Gagik Petrosyan", "gagik3@gmail.com", ""));
+        Assert.assertEquals(-1, id);
     }
 
-    //    @Test(expected = DaoException.class)
     @Test
-    public void addUser_Fail_NullNick() {
-//        userService.add(new User(null, "Gagik Petrosyan", "gagik2@gmail.com", "pass"));
-        Assert.assertEquals(-1, userService.add(new User(null, "Gagik Petrosyan", "gagik2@gmail.com", "pass")));
+    public void addUser_NullNick_Fail() {
+        int id = userService.add(new User(null, "Gagik Petrosyan", "gagik2@gmail.com", "pass"));
+        Assert.assertEquals(-1, id);
     }
 
-    //    @Test(expected = DaoException.class)
     @Test
-    public void addUser_Fail_NullEmail() {
-//        userService.add(new User("gago", "Gagik Petrosyan", null, "pass"));
-        Assert.assertEquals(-1, userService.add(new User("gago", "Gagik Petrosyan", null, "pass")));
+    public void addUser_NullEmail_Fail() {
+        int id = userService.add(new User("gago", "Gagik Petrosyan", null, "pass"));
+        Assert.assertEquals(-1, id);
     }
 
-    //    @Test(expected = DaoException.class)
     @Test
-    public void addUser_Fail_NullPass() {
-//        userService.add(new User("gago", "Gagik Petrosyan", "gagik3@gmail.com", null));
-        Assert.assertEquals(-1, userService.add(new User("gago", "Gagik Petrosyan", "gagik3@gmail.com", null)));
+    public void addUser_NullPass_Fail() {
+        int id = userService.add(new User("gago", "Gagik Petrosyan", "gagik3@gmail.com", null));
+        Assert.assertEquals(-1, id);
     }
 
 
-    //    @Test(expected = DaoException.class) //org.springframework.dao.DuplicateKeyException
     @Test
-    public void addUser_Fail_EmailAlreadyExists() {
+    public void addUser_EmailAlreadyExists_Fail() {
         userService.add(standardUser);
-//        userService.add(new User("armen", "Armen Hakobyan", "davit.abovyan@gmail.com", "pass1"));
-        Assert.assertEquals(-1, userService.add(new User("armen", "Armen Hakobyan", "davit.abovyan@gmail.com", "pass1")));
+
+        int id = userService.add(new User("armen", "Armen Hakobyan", "davit.abovyan@gmail.com", "pass1"));
+        Assert.assertEquals(-1, id);
     }
 
     @Test
-    public void getUser_Succeed_ById() {
+    public void getUser_ById_Success() {
         int id = userService.add(standardUser);
         User gotUser = userService.get(id);
-        Assert.assertTrue(standardUser.equals(gotUser));
+
+        boolean status = standardUser.equals(gotUser);
+        Assert.assertTrue(status);
     }
 
     @Test
-    public void getUser_Fail_ByWrongId() {
+    public void getUser_ByWrongId_Fail() {
         userService.add(standardUser);
         int id = userService.add(new User("gago", "Gagik Petrosyan", "davit.abovyan1@gmail.com", "pass"));
-        Assert.assertFalse(standardUser.equals(userService.get(id)));
+
+        boolean status = standardUser.equals(userService.get(id));
+        Assert.assertFalse(status);
     }
 
     @Test
-    public void getUser_Succed_ByEmail() {
+    public void getUser_ByEmail_Success() {
         userService.add(standardUser);
-        Assert.assertTrue(standardUser.equals(userService.get("davit.abovyan@gmail.com")));
+
+        boolean status = standardUser.equals(userService.get("davit.abovyan@gmail.com"));
+        Assert.assertTrue(status);
     }
 
-    //    @Test(expected = DaoException.class) //org.springframework.dao.EmptyResultDataAccessException
     @Test(expected = RuntimeException.class)
-    public void getUser_Fail_ByWrongEmail() {
+    public void getUser_ByWrongEmail_Fail() {
         userService.add(standardUser);
-        Assert.assertFalse(user.equals(userService.get("davit.abovyan1@gmail.com")));
+
+        boolean status = user.equals(userService.get("davit.abovyan1@gmail.com"));
+        Assert.assertFalse(status);
     }
 
     @Test
-    public void authenticate_succeeded() {
+    public void authenticate_success() {
         userService.add(standardUser);
-        Assert.assertTrue(
-                standardUser.equals(userService.authenticate(standardUser.getEmail(), standardUser.getPass()))
-        );
+
+        boolean status = standardUser.equals(userService.authenticate(standardUser.getEmail(), standardUser.getPass()));
+        Assert.assertTrue(status);
     }
 
     @Test
-    public void authenticate_fail_WrongPass() {
+    public void authenticate_WrongPass_fail() {
         userService.add(standardUser);
-        Assert.assertNull(userService.authenticate(standardUser.getEmail(), "xxx"));
+
+        User actualUser = userService.authenticate(standardUser.getEmail(), "xxx");
+        Assert.assertNull(actualUser);
     }
 
     @Test
@@ -140,105 +146,121 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
         userService.add(user);
         final String newEmail = "gagik@gmail.com";
         user.setEmail(newEmail);
-        if (userService.edit(user)) {
-            Assert.assertEquals(newEmail, userService.get(newEmail).getEmail());
-        }
+        userService.edit(user);
+
+        String actualEmail = userService.get(newEmail).getEmail();
+        Assert.assertEquals(newEmail, actualEmail);
     }
 
     @Test
-    public void editUser_Succed_Nick() {
+    public void editUser_Nick_Success() {
         user = new User("gago1", "Gagik Petrosyan", "davit.abovyan@gmail.com", "pass");
         int id = userService.add(user);
+
         final String newNick = "davo";
         user.setNick(newNick);
-        if (userService.edit(user)) {
-            Assert.assertEquals(newNick, userService.get(id).getNick());
-        }
+        userService.edit(user);
+
+        String actualNick = userService.get(id).getNick();
+        Assert.assertEquals(newNick, actualNick);
+
     }
 
     @Test
-    public void editUser_Succed_UserName() {
+    public void editUser_UserName_Success() {
         user = new User("gago1", "Gagik Petrosyan", "davit.abovyan@gmail.com", "pass");
         int id = userService.add(user);
+
         final String newUserName = "Davit Abovyan";
         user.setUserName(newUserName);
-        if (userService.edit(user)) {
-            Assert.assertEquals(newUserName, userService.get(id).getUserName());
-        }
+        userService.edit(user);
+
+        String actualUserName = userService.get(id).getUserName();
+        Assert.assertEquals(newUserName, actualUserName);
     }
 
     @Test
-    public void editUser_Succed_Pass() {
+    public void editUser_Pass_Success() {
         user = new User("gago1", "Gagik Petrosyan", "davit.abovyan@gmail.com", "pass");
         int id = userService.add(user);
+
         final String newPass = "password";
         user.setPass(newPass);
-        if (userService.edit(user)) {
-            Assert.assertEquals(newPass, userService.get(id).getPass());
-        }
+        userService.edit(user);
+
+        String actualPass = userService.get(id).getPass();
+        Assert.assertEquals(newPass, actualPass);
     }
 
-    //    @Test(expected = DaoException.class)
     @Test
-    public void editUser_Fail_EmailNonUnic() {
+    public void editUser_EmailNonUnique_Fail() {
         userService.add(standardUser);
         User otherUser = new User("gago1", "Gagik Petrosyan", "gagik.petrosyan@gmail.com", "pass");
+
         userService.add(otherUser);
         otherUser.setEmail("davit.abovyan@gmail.com");
-        Assert.assertFalse(userService.edit(otherUser));
+
+        boolean status = userService.edit(otherUser);
+        Assert.assertFalse(status);
     }
 
-    //    @Test(expected = DaoException.class)
     @Test
-    public void editUser_Fail_EmailNULL() {
+    public void editUser_EmailNULL_Fail() {
         user = new User("davit", "Davit Abvoyan", "davit.abovyan@gmail.com", "pass");
         userService.add(user);
         user.setEmail(null);
-        Assert.assertFalse(userService.edit(user));
+
+        boolean status = userService.edit(user);
+        Assert.assertFalse(status);
     }
 
-    //    @Test(expected = DaoException.class)
     @Test
-    public void editUser_Fail_NickNULL() {
+    public void editUser_NickNULL_Fail() {
         user = new User("davit", "Davit Abvoyan", "davit.abovyan@gmail.com", "pass");
         userService.add(user);
         user.setNick(null);
-        Assert.assertFalse(userService.edit(user));
+
+        boolean status = userService.edit(user);
+        Assert.assertFalse(status);
     }
 
-    //    @Test(expected = DaoException.class)
     @Test
-    public void editUser_Fail_PassNULL() {
+    public void editUser_PassNULL_Fail() {
         user = new User("davit", "Davit Abvoyan", "davit.abovyan@gmail.com", "pass");
         userService.add(user);
         user.setPass(null);
-        Assert.assertFalse(userService.edit(user));
+
+        boolean status = userService.edit(user);
+        Assert.assertFalse(status);
     }
 
-    //    @Test(expected = DaoException.class)
     @Test
-    public void editUser_Fail_EmailEmpty() {
+    public void editUser_EmailEmpty_Fail() {
         user = new User("davit", "Davit Abvoyan", "davit.abovyan@gmail.com", "pass");
         userService.add(user);
         user.setEmail("");
-        Assert.assertFalse(userService.edit(user));
+
+        boolean status = userService.edit(user);
+        Assert.assertFalse(status);
     }
 
-    //    @Test(expected = DaoException.class)
     @Test
-    public void editUser_Fail_NickEmpty() {
+    public void editUser_NickEmpty_Fail() {
         user = new User("davit", "Davit Abvoyan", "davit.abovyan@gmail.com", "pass");
         userService.add(user);
         user.setNick("");
-        Assert.assertFalse(userService.edit(user));
+
+        boolean status = userService.edit(user);
+        Assert.assertFalse(status);
     }
 
-    //    @Test(expected = DaoException.class)
     @Test
-    public void editUser_Fail_PassEmpty() {
+    public void editUser_PassEmpty_Fail() {
         user = new User("davit", "Davit Abvoyan", "davit.abovyan@gmail.com", "pass");
         userService.add(user);
         user.setPass("");
-        Assert.assertFalse(userService.edit(user));
+
+        boolean status = userService.edit(user);
+        Assert.assertFalse(status);
     }
 }

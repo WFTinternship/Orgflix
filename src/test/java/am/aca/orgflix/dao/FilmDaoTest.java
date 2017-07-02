@@ -1,12 +1,9 @@
 package am.aca.orgflix.dao;
 
-import am.aca.orgflix.dao.DaoException;
-import am.aca.orgflix.dao.CastDAO;
-import am.aca.orgflix.dao.FilmDAO;
+import am.aca.orgflix.BaseIntegrationTest;
 import am.aca.orgflix.entity.Cast;
 import am.aca.orgflix.entity.Film;
 import am.aca.orgflix.entity.Genre;
-import am.aca.orgflix.BaseIntegrationTest;
 import am.aca.orgflix.util.TestHelper;
 import org.junit.After;
 import org.junit.Assert;
@@ -48,7 +45,9 @@ public class FilmDaoTest extends BaseIntegrationTest {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
         jdbcFilmDAO.addFilm(film);
-        Assert.assertTrue(film.getId() > 0);
+
+        boolean status = film.getId() > 0;
+        Assert.assertTrue(status);
     }
 
     @Test
@@ -56,7 +55,9 @@ public class FilmDaoTest extends BaseIntegrationTest {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
         jdbcFilmDAO.addFilm(film);
-        Assert.assertEquals(1, jdbcFilmDAO.getFilmsList(0).size());
+
+        int size = jdbcFilmDAO.getFilmsList(0).size();
+        Assert.assertEquals(1, size);
     }
 
 
@@ -70,8 +71,12 @@ public class FilmDaoTest extends BaseIntegrationTest {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
         jdbcFilmDAO.addFilm(film);
-        Assert.assertTrue(jdbcFilmDAO.addGenreToFilm(Genre.COMEDY, film.getId()));
-        Assert.assertEquals(1, jdbcFilmDAO.getFilmsByGenre(Genre.COMEDY).size());
+
+        boolean status = jdbcFilmDAO.addGenreToFilm(Genre.COMEDY, film.getId());
+        Assert.assertTrue(status);
+
+        int size = jdbcFilmDAO.getFilmsByGenre(Genre.COMEDY).size();
+        Assert.assertEquals(1, size);
     }
 
     @Test
@@ -80,7 +85,9 @@ public class FilmDaoTest extends BaseIntegrationTest {
         film.setProdYear(2016);
         jdbcFilmDAO.addFilm(film);
         jdbcFilmDAO.addGenreToFilm(Genre.COMEDY, film.getId());
-        Assert.assertEquals(film, jdbcFilmDAO.getFilmsByGenre(Genre.COMEDY).get(0));
+
+        Film actualFilm = jdbcFilmDAO.getFilmsByGenre(Genre.COMEDY).get(0);
+        Assert.assertEquals(film, actualFilm);
     }
 
     @Test
@@ -90,7 +97,9 @@ public class FilmDaoTest extends BaseIntegrationTest {
         jdbcFilmDAO.addFilm(film);
         jdbcFilmDAO.rateFilm(film.getId(), 5);
         jdbcFilmDAO.rateFilm(film.getId(), 5);
-        Assert.assertEquals(2, jdbcFilmDAO.getFilmById(film.getId()).getRate_5star());
+
+        int size = jdbcFilmDAO.getFilmById(film.getId()).getRate_5star();
+        Assert.assertEquals(2, size);
     }
 
     @Test(expected = DaoException.class)
@@ -106,37 +115,45 @@ public class FilmDaoTest extends BaseIntegrationTest {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
         jdbcFilmDAO.addFilm(film);
-        Assert.assertEquals(film, jdbcFilmDAO.getFilmById(film.getId()));
+
+        Film actualFilm = jdbcFilmDAO.getFilmById(film.getId());
+        Assert.assertEquals(film, actualFilm);
     }
 
     @Test
     public void getFilmById_Failed() {
-        Assert.assertEquals(null, jdbcFilmDAO.getFilmById(-1));
+        Film actualFilm = jdbcFilmDAO.getFilmById(-1);
+        Assert.assertEquals(null, actualFilm);
     }
 
     @Test
-    public void getFilmsList_Succeeded() {
+    public void getFilmsList_Success() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
         for (int i = 0; i < 7; i++) {
             jdbcFilmDAO.addFilm(film);
         }
-        Assert.assertEquals(7, jdbcFilmDAO.getFilmsList(0).size());
+
+        int size = jdbcFilmDAO.getFilmsList(0).size();
+        Assert.assertEquals(7, size);
     }
 
     @Test
-    public void getFilmsListPage2_Succeeded() {
+    public void getFilmsListPage2_Success() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
         for (int i = 0; i < 20; i++) {
             jdbcFilmDAO.addFilm(film);
         }
-        Assert.assertEquals(20 - 12, jdbcFilmDAO.getFilmsList(12).size());
+
+        int size = jdbcFilmDAO.getFilmsList(12).size();
+        Assert.assertEquals(20 - 12, size);
     }
 
     @Test
     public void getFilmsList_EmptyList() {
-        Assert.assertEquals(0, jdbcFilmDAO.getFilmsList(0).size());
+        int size = jdbcFilmDAO.getFilmsList(0).size();
+        Assert.assertEquals(0, size);
     }
 
     @Test
@@ -144,11 +161,13 @@ public class FilmDaoTest extends BaseIntegrationTest {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
         jdbcFilmDAO.addFilm(film);
-        Assert.assertEquals(0, jdbcFilmDAO.getFilmsList(1).size());
+
+        int size = jdbcFilmDAO.getFilmsList(1).size();
+        Assert.assertEquals(0, size);
     }
 
     @Test
-    public void getFilmsByGenreSize_Succeeded() {
+    public void getFilmsByGenreSize_Success() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
         jdbcFilmDAO.addFilm(film);
@@ -157,16 +176,19 @@ public class FilmDaoTest extends BaseIntegrationTest {
         film.setProdYear(2016);
         jdbcFilmDAO.addFilm(film);
         jdbcFilmDAO.addGenreToFilm(Genre.COMEDY, film.getId());
-        Assert.assertEquals(2, jdbcFilmDAO.getFilmsByGenre(Genre.COMEDY).size());
+
+        int size = jdbcFilmDAO.getFilmsByGenre(Genre.COMEDY).size();
+        Assert.assertEquals(2, size);
     }
 
     @Test
     public void getFilmsByGenre_Fail() {
-        Assert.assertEquals(0, jdbcFilmDAO.getFilmsByGenre(Genre.WAR).size());
+        int size = jdbcFilmDAO.getFilmsByGenre(Genre.WAR).size();
+        Assert.assertEquals(0, size);
     }
 
     @Test
-    public void getFilmsByCast_Succeeded() {
+    public void getFilmsByCast_Success() {
         cast = new Cast("Viggo Mortensen", false);
         jdbcCastDAO.addCast(cast);
 
@@ -175,13 +197,16 @@ public class FilmDaoTest extends BaseIntegrationTest {
         jdbcFilmDAO.addFilm(film);
 
         jdbcCastDAO.addCastToFilm(cast, film.getId());
-        Assert.assertEquals(film, jdbcFilmDAO.getFilmsByCast(cast.getId()).get(0));
+
+        Film actualFilm = jdbcFilmDAO.getFilmsByCast(cast.getId()).get(0);
+        Assert.assertEquals(film, actualFilm);
     }
 
 
     @Test
     public void getFilmsByCast_Failed() {
-        Assert.assertEquals(0, jdbcFilmDAO.getFilmsByCast(0).size());
+        int size = jdbcFilmDAO.getFilmsByCast(0).size();
+        Assert.assertEquals(0, size);
     }
 
     @Test
@@ -193,7 +218,9 @@ public class FilmDaoTest extends BaseIntegrationTest {
         jdbcFilmDAO.rateFilm(film.getId(), 4);
         jdbcFilmDAO.rateFilm(film.getId(), 3);
         jdbcFilmDAO.rateFilm(film.getId(), 5);
-        Assert.assertEquals(4.0, jdbcFilmDAO.getRating(film.getId()), 0.01);
+
+        double rating = jdbcFilmDAO.getRating(film.getId());
+        Assert.assertEquals(4.0, rating, 0.01);
     }
 
     @Test
@@ -203,7 +230,9 @@ public class FilmDaoTest extends BaseIntegrationTest {
         jdbcFilmDAO.addFilm(film);
         jdbcFilmDAO.rateFilm(film.getId(), 4);
         jdbcFilmDAO.rateFilm(film.getId(), 5);
-        Assert.assertEquals(4.5, jdbcFilmDAO.getRating(film.getId()), 0.01);
+
+        double rating = jdbcFilmDAO.getRating(film.getId());
+        Assert.assertEquals(4.5, rating, 0.01);
     }
 
     @Test
@@ -211,7 +240,9 @@ public class FilmDaoTest extends BaseIntegrationTest {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
         jdbcFilmDAO.addFilm(film);
-        Assert.assertEquals(0, jdbcFilmDAO.getRating(film.getId()), 0.01);
+
+        double rating = jdbcFilmDAO.getRating(film.getId());
+        Assert.assertEquals(0, rating, 0.01);
     }
 
     @Test
@@ -221,12 +252,15 @@ public class FilmDaoTest extends BaseIntegrationTest {
         for (int i = 0; i < 6; i++) {
             jdbcFilmDAO.addFilm(film);
         }
-        Assert.assertEquals(6, jdbcFilmDAO.totalNumberOfFilms());
+
+        int size = jdbcFilmDAO.totalNumberOfFilms();
+        Assert.assertEquals(6, size);
     }
 
     @Test
     public void totalNumber_Failed() {
-        Assert.assertEquals(0, jdbcFilmDAO.totalNumberOfFilms());
+        int size = jdbcFilmDAO.totalNumberOfFilms();
+        Assert.assertEquals(0, size);
     }
 
     @Test
@@ -239,7 +273,8 @@ public class FilmDaoTest extends BaseIntegrationTest {
         film.setProdYear(2002);
         jdbcFilmDAO.addFilm(film);
 
-        Assert.assertEquals(1, jdbcFilmDAO.getFilteredFilms("City of God", 1000, 3000, "%", "%", "%", "%").size());
+        int size = jdbcFilmDAO.getFilteredFilms("City of God", 1000, 3000, "%", "%", "%", "%").size();
+        Assert.assertEquals(1, size);
     }
 
     @Test
@@ -248,7 +283,8 @@ public class FilmDaoTest extends BaseIntegrationTest {
         film.setProdYear(2002);
         jdbcFilmDAO.addFilm(film);
 
-        Assert.assertTrue(jdbcFilmDAO.getFilteredFilms("City of Angels", 1000, 3000, "%", "%", "%", "%").isEmpty());
+        boolean status = jdbcFilmDAO.getFilteredFilms("City of Angels", 1000, 3000, "%", "%", "%", "%").isEmpty();
+        Assert.assertTrue(status);
     }
 
     @Test
@@ -261,12 +297,14 @@ public class FilmDaoTest extends BaseIntegrationTest {
         jdbcCastDAO.addCast(cast);
         jdbcCastDAO.addCastToFilm(cast, film.getId());
 
-        Assert.assertEquals(film, jdbcFilmDAO.getFilteredFilms("", 1000, 3000, "%", "%", String.valueOf(cast.getId()), "%").get(0));
+        Film actualFilm = jdbcFilmDAO.getFilteredFilms("", 1000, 3000, "%", "%", String.valueOf(cast.getId()), "%").get(0);
+        Assert.assertEquals(film, actualFilm);
     }
 
     @Test
     public void filterByCast_Empty() {
-        Assert.assertTrue(jdbcFilmDAO.getFilteredFilms("", 1000, 3000, "%", "%", "8", "%").isEmpty());
+        boolean status = jdbcFilmDAO.getFilteredFilms("", 1000, 3000, "%", "%", "8", "%").isEmpty();
+        Assert.assertTrue(status);
     }
 
     @Test
@@ -285,8 +323,11 @@ public class FilmDaoTest extends BaseIntegrationTest {
         jdbcCastDAO.addCast(cast);
         jdbcCastDAO.addCastToFilm(cast, film.getId());
 
-        Assert.assertEquals(1, jdbcFilmDAO.getFilteredFilms("City of God", 2002, 2002, String.valueOf(0), "%", String.valueOf(cast.getId()), String.valueOf(Genre.CRIME.getValue())).size());
-        Assert.assertEquals(film, jdbcFilmDAO.getFilteredFilms("City of God", 2002, 2002, String.valueOf(0), "%", String.valueOf(cast.getId()), String.valueOf(Genre.CRIME.getValue())).get(0));
+        int size = jdbcFilmDAO.getFilteredFilms("City of God", 2002, 2002, String.valueOf(0), "%", String.valueOf(cast.getId()), String.valueOf(Genre.CRIME.getValue())).size();
+        Assert.assertEquals(1, size);
+
+        Film actualFilm = jdbcFilmDAO.getFilteredFilms("City of God", 2002, 2002, String.valueOf(0), "%", String.valueOf(cast.getId()), String.valueOf(Genre.CRIME.getValue())).get(0);
+        Assert.assertEquals(film, actualFilm);
     }
 
     @Test
@@ -296,7 +337,9 @@ public class FilmDaoTest extends BaseIntegrationTest {
         film.setDirector("Matthew Ross");
         jdbcFilmDAO.addFilm(film);
         film.setHasOscar(true);
-        assertTrue(jdbcFilmDAO.editFilm(film));
+
+        boolean status = jdbcFilmDAO.editFilm(film);
+        assertTrue(status);
     }
 
     @Test
@@ -307,7 +350,9 @@ public class FilmDaoTest extends BaseIntegrationTest {
         jdbcFilmDAO.addFilm(film);
         film.setDirector("Matt Ross");
         jdbcFilmDAO.editFilm(film);
-        Assert.assertEquals(1, jdbcFilmDAO.totalNumberOfFilms());
+
+        int size = jdbcFilmDAO.totalNumberOfFilms();
+        Assert.assertEquals(1, size);
     }
 
     @Test(expected = DaoException.class)
@@ -325,7 +370,9 @@ public class FilmDaoTest extends BaseIntegrationTest {
         jdbcCastDAO.addCast(cast);
 
         jdbcCastDAO.addCastToFilm(cast, film.getId());
-        Assert.assertTrue(jdbcFilmDAO.resetRelationCasts(film));
+
+        boolean status = jdbcFilmDAO.resetRelationCasts(film);
+        Assert.assertTrue(status);
     }
 
     @Test
@@ -339,7 +386,9 @@ public class FilmDaoTest extends BaseIntegrationTest {
 
         jdbcCastDAO.addCastToFilm(cast, film.getId());
         jdbcFilmDAO.resetRelationCasts(film);
-        Assert.assertEquals(0, jdbcFilmDAO.getFilmsByCast(cast.getId()).size());
+
+        int size = jdbcFilmDAO.getFilmsByCast(cast.getId()).size();
+        Assert.assertEquals(0, size);
     }
 
     @Test
@@ -362,7 +411,8 @@ public class FilmDaoTest extends BaseIntegrationTest {
         jdbcCastDAO.addCast(cast);
         jdbcCastDAO.addCastToFilm(cast, film.getId());
 
-        Assert.assertEquals(film, jdbcFilmDAO.getFilmsByCast(cast.getId()).get(0));
+        Film actualFilm = jdbcFilmDAO.getFilmsByCast(cast.getId()).get(0);
+        Assert.assertEquals(film, actualFilm);
     }
 
     @Test
@@ -370,7 +420,9 @@ public class FilmDaoTest extends BaseIntegrationTest {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
         jdbcFilmDAO.addFilm(film);
-        Assert.assertFalse(jdbcFilmDAO.resetRelationCasts(film));
+
+        boolean status = jdbcFilmDAO.resetRelationCasts(film);
+        Assert.assertFalse(status);
     }
 
     @Test
@@ -379,7 +431,9 @@ public class FilmDaoTest extends BaseIntegrationTest {
         film.setProdYear(2016);
         jdbcFilmDAO.addFilm(film);
         jdbcFilmDAO.addGenreToFilm(Genre.DRAMA, film.getId());
-        Assert.assertTrue(jdbcFilmDAO.resetRelationGenres(film));
+
+        boolean status = jdbcFilmDAO.resetRelationGenres(film);
+        Assert.assertTrue(status);
     }
 
     @Test
@@ -389,7 +443,9 @@ public class FilmDaoTest extends BaseIntegrationTest {
         jdbcFilmDAO.addFilm(film);
         jdbcFilmDAO.addGenreToFilm(Genre.DRAMA, film.getId());
         jdbcFilmDAO.resetRelationGenres(film);
-        Assert.assertTrue(jdbcFilmDAO.getFilmsByGenre(Genre.DRAMA).isEmpty());
+
+        boolean status = jdbcFilmDAO.getFilmsByGenre(Genre.DRAMA).isEmpty();
+        Assert.assertTrue(status);
     }
 
     @Test
@@ -406,7 +462,8 @@ public class FilmDaoTest extends BaseIntegrationTest {
         jdbcFilmDAO.addFilm(film);
         jdbcFilmDAO.addGenreToFilm(Genre.CRIME, film.getId());
 
-        Assert.assertEquals(film, jdbcFilmDAO.getFilmsByGenre(Genre.CRIME).get(0));
+        Film actualFilm = jdbcFilmDAO.getFilmsByGenre(Genre.CRIME).get(0);
+        Assert.assertEquals(film, actualFilm);
     }
 
     @Test
@@ -414,7 +471,9 @@ public class FilmDaoTest extends BaseIntegrationTest {
         film.setTitle("City of God");
         film.setProdYear(2002);
         jdbcFilmDAO.addFilm(film);
-        Assert.assertFalse(jdbcFilmDAO.resetRelationGenres(film));
+
+        boolean status = jdbcFilmDAO.resetRelationGenres(film);
+        Assert.assertFalse(status);
     }
 
     @Test
@@ -423,7 +482,9 @@ public class FilmDaoTest extends BaseIntegrationTest {
         film.setProdYear(2002);
         jdbcFilmDAO.addFilm(film);
         jdbcFilmDAO.remove(film);
-        Assert.assertEquals(0, jdbcFilmDAO.totalNumberOfFilms());
+
+        int size = jdbcFilmDAO.totalNumberOfFilms();
+        Assert.assertEquals(0, size);
     }
 
     @Test
@@ -433,6 +494,8 @@ public class FilmDaoTest extends BaseIntegrationTest {
         jdbcFilmDAO.addFilm(film);
         film = new Film();
         jdbcFilmDAO.remove(film);
-        Assert.assertEquals(1, jdbcFilmDAO.totalNumberOfFilms());
+
+        int size = jdbcFilmDAO.totalNumberOfFilms();
+        Assert.assertEquals(1, size);
     }
 }

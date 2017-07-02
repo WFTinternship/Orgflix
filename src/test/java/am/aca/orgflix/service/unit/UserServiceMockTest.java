@@ -2,9 +2,10 @@ package am.aca.orgflix.service.unit;
 
 import am.aca.orgflix.BaseUnitTest;
 import am.aca.orgflix.dao.DaoException;
-import am.aca.orgflix.dao.impljdbc.JdbcUserDAO;
+import am.aca.orgflix.dao.UserDAO;
 import am.aca.orgflix.entity.User;
 import am.aca.orgflix.service.UserService;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,7 +14,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Created by karine on 6/27/2017
@@ -24,60 +25,97 @@ public class UserServiceMockTest extends BaseUnitTest {
     private UserService userService;
 
     @Mock
-    private JdbcUserDAO userMock;
+    private UserDAO userDaoMock;
     private User user = new User("hulk", "Bruce Banner", "bbanner@avenger.com", "natasha");
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        ReflectionTestUtils.setField(userService, "userDao", userMock);
+        ReflectionTestUtils.setField(userService, "userDao", userDaoMock);
+    }
+
+    @After
+    public void tearDown() {
+        verifyNoMoreInteractions(userDaoMock);
     }
 
     @Test
     public void addUser_Success() {
-        when(userMock.add(user)).thenReturn(1);
-        Assert.assertEquals(1, userService.add(user));
+        when(userDaoMock.add(user)).thenReturn(1);
+
+        int id = userService.add(user);
+        Assert.assertEquals(1, id);
+
+        verify(userDaoMock, times(1)).add(user);
     }
 
     @Test
     public void addUser_Fail() {
-        when(userMock.add(user)).thenThrow(DaoException.class);
-        Assert.assertEquals(-1, userService.add(user));
+        when(userDaoMock.add(user)).thenThrow(DaoException.class);
+
+        int id = userService.add(user);
+        Assert.assertEquals(-1, id);
+
+        verify(userDaoMock, times(1)).add(user);
     }
 
     @Test
     public void getUserById_Success() {
-        when(userMock.get(52)).thenReturn(user);
-        Assert.assertEquals(user, userService.get(52));
+        when(userDaoMock.get(52)).thenReturn(user);
+
+        User actualUser = userService.get(52);
+        Assert.assertEquals(user, actualUser);
+
+        verify(userDaoMock, times(1)).get(52);
     }
 
     @Test
     public void getUserById_Fail() {
-        when(userMock.get(-1)).thenThrow(DaoException.class);
-        Assert.assertEquals(null, userService.get(-1));
+        when(userDaoMock.get(-1)).thenThrow(DaoException.class);
+
+        User actualUser = userService.get(-1);
+        Assert.assertEquals(null, actualUser);
+
+        verify(userDaoMock, times(1)).get(-1);
     }
 
     @Test
     public void getUserByEmail_Success() {
-        when(userMock.get("bbanner@avengers.com")).thenReturn(user);
-        Assert.assertEquals(user, userService.get("bbanner@avengers.com"));
+        when(userDaoMock.get("bbanner@avengers.com")).thenReturn(user);
+
+        User actualUser = userService.get("bbanner@avengers.com");
+        Assert.assertEquals(user, actualUser);
+
+        verify(userDaoMock, times(1)).get("bbanner@avengers.com");
     }
 
     @Test
     public void getUserByEmail_Fail() {
-        when(userMock.get("bot@mail.ru")).thenThrow(DaoException.class);
-        Assert.assertEquals(null, userService.get("bot@mail.ru"));
+        when(userDaoMock.get("bot@mail.ru")).thenThrow(DaoException.class);
+
+        User actualUser = userService.get("bot@mail.ru");
+        Assert.assertEquals(null, actualUser);
+
+        verify(userDaoMock, times(1)).get("bot@mail.ru");
     }
 
     @Test
     public void editUser_Success() {
-        when(userMock.edit(user)).thenReturn(true);
-        Assert.assertTrue(userService.edit(user));
+        when(userDaoMock.edit(user)).thenReturn(true);
+
+        boolean status = userService.edit(user);
+        Assert.assertTrue(status);
+
+        verify(userDaoMock, times(1)).edit(user);
     }
 
     @Test
     public void editUser_Fail() {
-        when(userMock.edit(user)).thenThrow(DaoException.class);
-        Assert.assertFalse(userService.edit(user));
+        when(userDaoMock.edit(user)).thenThrow(DaoException.class);
+
+        boolean status = userService.edit(user);
+        Assert.assertFalse(status);
+
+        verify(userDaoMock, times(1)).edit(user);
     }
 }

@@ -1,13 +1,10 @@
 package am.aca.orgflix.dao;
 
-import am.aca.orgflix.dao.DaoException;
-import am.aca.orgflix.dao.UserDAO;
-import am.aca.orgflix.entity.User;
 import am.aca.orgflix.BaseIntegrationTest;
+import am.aca.orgflix.entity.User;
 import am.aca.orgflix.util.TestHelper;
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -18,18 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class UserDaoTest extends BaseIntegrationTest {
 
+    private final User standardUser = new User("gago", "Gagik Petrosyan", "davit.abovyan@gmail.com", "pass");
     @Autowired
     private UserDAO jdbcUserDAO;
-
     @Autowired
     private TestHelper testHelper;
-
     private User user;
-    private final User standardUser = new User("gago", "Gagik Petrosyan", "davit.abovyan@gmail.com", "pass");
-
-    @Before
-    public void setUp() {
-    }
 
     @After
     public void end() {
@@ -38,14 +29,16 @@ public class UserDaoTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void addUser_Successed() {
-        Assert.assertTrue(jdbcUserDAO.add(standardUser) > 0);
+    public void addUser_Success() {
+        boolean status = jdbcUserDAO.add(standardUser) > 0;
+        Assert.assertTrue(status);
     }
 
     @Test
-    public void addUser_Successed_EmptyUserName() {
+    public void addUser_EmptyUserName_Success() {
         user = new User("gago", "", "gagik1@gmail.com", "pass");
-        Assert.assertTrue(jdbcUserDAO.add(user) > 0);
+        boolean status = jdbcUserDAO.add(user) > 0;
+        Assert.assertTrue(status);
     }
 
     @Test(expected = DaoException.class)
@@ -89,20 +82,26 @@ public class UserDaoTest extends BaseIntegrationTest {
     public void getUser_Succeed_ById() {
         int id = jdbcUserDAO.add(standardUser);
         User gotUser = jdbcUserDAO.get(id);
-        Assert.assertTrue(standardUser.equals(gotUser));
+
+        boolean status = standardUser.equals(gotUser);
+        Assert.assertTrue(status);
     }
 
     @Test
     public void getUser_Fail_ByWrongId() {
         jdbcUserDAO.add(standardUser);
         int id = jdbcUserDAO.add(new User("gago", "Gagik Petrosyan", "davit.abovyan1@gmail.com", "pass"));
-        Assert.assertFalse(standardUser.equals(jdbcUserDAO.get(id)));
+
+        boolean status = standardUser.equals(jdbcUserDAO.get(id));
+        Assert.assertFalse(status);
     }
 
     @Test
-    public void getUser_Succed_ByEmail() {
+    public void getUser_ByEmail_Success() {
         jdbcUserDAO.add(standardUser);
-        Assert.assertTrue(standardUser.equals(jdbcUserDAO.get("davit.abovyan@gmail.com")));
+
+        boolean status = standardUser.equals(jdbcUserDAO.get("davit.abovyan@gmail.com"));
+        Assert.assertTrue(status);
     }
 
     @Test(expected = org.springframework.dao.EmptyResultDataAccessException.class)
@@ -112,61 +111,67 @@ public class UserDaoTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void authenticate_succeeded(){
+    public void authenticate_succeeded() {
         jdbcUserDAO.add(standardUser);
-        Assert.assertTrue(
-                standardUser.equals(jdbcUserDAO.authenticate(standardUser.getEmail(),standardUser.getPass()))
-        );
+
+        boolean status = standardUser.equals(jdbcUserDAO.authenticate(standardUser.getEmail(), standardUser.getPass()));
+        Assert.assertTrue(status);
     }
 
     @Test(expected = org.springframework.dao.EmptyResultDataAccessException.class)
-    public void authenticate_fail_WrongPass(){
+    public void authenticate_fail_WrongPass() {
         jdbcUserDAO.add(standardUser);
-        jdbcUserDAO.authenticate(standardUser.getEmail(),"xxx");
+        jdbcUserDAO.authenticate(standardUser.getEmail(), "xxx");
     }
 
     @Test
-    public void editUser_Succed_Email() {
+    public void editUser_Email_Succed() {
         user = new User("gago", "Gagik Petrosyan", "davit.abovyan@gmail.com", "pass");
         jdbcUserDAO.add(user);
         final String newEmail = "gagik@gmail.com";
         user.setEmail(newEmail);
-        if (jdbcUserDAO.edit(user)) {
-            Assert.assertEquals(newEmail, jdbcUserDAO.get(newEmail).getEmail());
-        }
+        jdbcUserDAO.edit(user);
+        String actualEmail = jdbcUserDAO.get(newEmail).getEmail();
+        Assert.assertEquals(newEmail, actualEmail);
     }
 
     @Test
-    public void editUser_Succed_Nick() {
+    public void editUser_Nick_Success() {
         user = new User("gago", "Gagik Petrosyan", "davit.abovyan@gmail.com", "pass");
         int id = jdbcUserDAO.add(user);
         final String newNick = "davo";
         user.setNick(newNick);
-        if (jdbcUserDAO.edit(user)) {
-            Assert.assertEquals(newNick, jdbcUserDAO.get(id).getNick());
-        }
+        jdbcUserDAO.edit(user);
+
+        String actualNick = jdbcUserDAO.get(id).getNick();
+        Assert.assertEquals(newNick, actualNick);
+
     }
 
     @Test
-    public void editUser_Succed_UserName() {
+    public void editUser_UserName_Success() {
         user = new User("gago", "Gagik Petrosyan", "davit.abovyan@gmail.com", "pass");
         int id = jdbcUserDAO.add(user);
         final String newUserName = "Davit Abovyan";
         user.setUserName(newUserName);
-        if (jdbcUserDAO.edit(user)) {
-            Assert.assertEquals(newUserName, jdbcUserDAO.get(id).getUserName());
-        }
+        jdbcUserDAO.edit(user);
+
+        String actualName = jdbcUserDAO.get(id).getUserName();
+        Assert.assertEquals(newUserName, actualName);
+
     }
 
     @Test
-    public void editUser_Succed_Pass() {
+    public void editUser_Pass_Success() {
         user = new User("gago", "Gagik Petrosyan", "davit.abovyan@gmail.com", "pass");
         int id = jdbcUserDAO.add(user);
         final String newPass = "password";
         user.setPass(newPass);
-        if (jdbcUserDAO.edit(user)) {
-            Assert.assertEquals(newPass, jdbcUserDAO.get(id).getPass());
-        }
+        jdbcUserDAO.edit(user);
+
+        String actualPass = jdbcUserDAO.get(id).getPass();
+        Assert.assertEquals(newPass, actualPass);
+
     }
 
     @Test(expected = RuntimeException.class)

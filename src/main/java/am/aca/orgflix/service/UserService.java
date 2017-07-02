@@ -1,0 +1,20 @@
+package am.aca.orgflix.service;
+
+import am.aca.orgflix.entity.User;
+
+/**
+ * Interface for user service layer
+ */
+public interface UserService {
+
+    int add(User user);
+
+    User get(int id);
+
+    User authenticate(String email, String pass);
+
+    User get(String email);
+
+    boolean edit(User user);
+
+}

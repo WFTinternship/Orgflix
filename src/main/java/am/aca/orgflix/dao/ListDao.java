@@ -11,11 +11,7 @@ import java.util.List;
 public interface ListDao {
     // CREATE
 
-    boolean insertWatched(Film film, int userId, boolean isPublic);
-
     boolean insertWatched(int filmId, int userId, boolean isPublic);
-
-    boolean insertPlanned(Film film, int userId, boolean isPublic);
 
     boolean insertPlanned(int filmId, int userId, boolean isPublic);
 
@@ -35,7 +31,7 @@ public interface ListDao {
 
     boolean updatePlanned(int filmId, int userId);
 
-    boolean changePrivacy (Film film, int userId, boolean isPublic);
+    boolean changePrivacy(Film film, int userId, boolean isPublic);
 
     // DELETE
 

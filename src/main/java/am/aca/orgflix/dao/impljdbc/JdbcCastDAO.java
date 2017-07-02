@@ -1,11 +1,11 @@
 package am.aca.orgflix.dao.impljdbc;
 
-import am.aca.orgflix.dao.DaoException;
 import am.aca.orgflix.dao.BaseDAO;
 import am.aca.orgflix.dao.CastDAO;
+import am.aca.orgflix.dao.DaoException;
+import am.aca.orgflix.dao.impljdbc.mapper.CastRowMapper;
 import am.aca.orgflix.entity.Cast;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
@@ -73,11 +73,10 @@ public class JdbcCastDAO extends BaseDAO implements CastDAO {
      *
      * @return List of all casts currently in DB
      */
-    @SuppressWarnings("unchecked")
     @Override
     public List<Cast> listCast() {
-        final String query = "SELECT ID, Actor_name AS Name, HasOscar FROM casts ORDER BY Name";
-        return getJdbcTemplate().query(query, new BeanPropertyRowMapper(Cast.class));
+        final String query = "SELECT ID, Actor_name, HasOscar FROM casts ORDER BY Actor_Name";
+        return getJdbcTemplate().query(query, new CastRowMapper());
     }
 
     /**
@@ -86,17 +85,16 @@ public class JdbcCastDAO extends BaseDAO implements CastDAO {
      * @param filmId the id
      * @return List of all casts assigned to the specific film
      */
-    @SuppressWarnings("unchecked")
     @Override
-    public List<Cast> getCastsByFilm(int filmId){
-        final String query = "SELECT ID, Actor_Name AS name, HasOscar FROM casts" +
+    public List<Cast> getCastsByFilm(int filmId) {
+        final String query = "SELECT casts.ID, casts.Actor_Name, casts.HasOscar FROM casts" +
                 " INNER JOIN (" +
                 "    SELECT Actor_ID" +
                 "    FROM film_to_cast" +
                 "    WHERE Film_ID = ? " +
-                "    ) as cast_id " +
-                "  on casts.ID = cast_id.Actor_ID";
-        return getJdbcTemplate().query(query, new Object[]{filmId}, new BeanPropertyRowMapper(Cast.class));
+                "    ) AS cast_id " +
+                "  ON casts.ID = cast_id.Actor_ID";
+        return getJdbcTemplate().query(query, new Object[]{filmId}, new CastRowMapper());
     }
 
 

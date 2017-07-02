@@ -33,13 +33,15 @@ public class Film {
         casts = new ArrayList<>();
         image = "00000";
     }
-    public Film(String title, int prodYear){
+
+    public Film(String title, int prodYear) {
         this();
         this.title = title;
         this.prodYear = prodYear;
     }
-    public Film(String title, int prodYear, String image){
-        this(title,prodYear);
+
+    public Film(String title, int prodYear, String image) {
+        this(title, prodYear);
         this.image = image;
     }
 
@@ -112,7 +114,9 @@ public class Film {
         this.prodYear = prodYear;
     }
 
-    public boolean isHasOscar() { return hasOscar;}
+    public boolean isHasOscar() {
+        return hasOscar;
+    }
 
     public void setHasOscar(boolean hasOscar) {
         this.hasOscar = hasOscar;
@@ -170,12 +174,12 @@ public class Film {
         return casts;
     }
 
-    public void addCast(Cast cast) {
-        this.casts.add(cast);
-    }
-
     public void setCasts(List<Cast> casts) {
         this.casts = casts;
+    }
+
+    public void addCast(Cast cast) {
+        this.casts.add(cast);
     }
 
     public List<Genre> getGenres() {

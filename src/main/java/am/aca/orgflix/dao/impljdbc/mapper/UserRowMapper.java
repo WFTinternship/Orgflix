@@ -8,11 +8,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Created by David on 6/20/2017
+ * RowMapper for User entity
  */
-public class UserRowMapper implements RowMapper {
+public class UserRowMapper implements RowMapper<User> {
     @Override
-    public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+    public User mapRow(ResultSet rs, int rowNum) throws SQLException {
         User user = new User();
         user.setId(rs.getInt("ID"));
         user.setNick(rs.getString("Nick"));

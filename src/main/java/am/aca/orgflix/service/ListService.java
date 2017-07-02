@@ -24,9 +24,9 @@ public interface ListService {
 
     List<Film> showOthersPlanned(int userId, int page);
 
-    boolean makePrivate (int userId, Film film);
+    boolean makePrivate(int userId, Film film);
 
-    boolean makePublic (int userId, Film film);
+    boolean makePublic(int userId, Film film);
 
     int totalNumberOfWatched(int userId, boolean isWatched);
 

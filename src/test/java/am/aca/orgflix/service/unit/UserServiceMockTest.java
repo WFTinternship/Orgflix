@@ -60,7 +60,7 @@ public class UserServiceMockTest extends BaseUnitTest {
     }
 
     @Test
-    public void getUserById_Success() {
+    public void getUser_ById_Success() {
         when(userDaoMock.get(52)).thenReturn(user);
 
         User actualUser = userService.get(52);
@@ -70,7 +70,7 @@ public class UserServiceMockTest extends BaseUnitTest {
     }
 
     @Test
-    public void getUserById_Fail() {
+    public void getUser_ById_Fail() {
         when(userDaoMock.get(-1)).thenThrow(DaoException.class);
 
         User actualUser = userService.get(-1);
@@ -80,7 +80,7 @@ public class UserServiceMockTest extends BaseUnitTest {
     }
 
     @Test
-    public void getUserByEmail_Success() {
+    public void getUser_ByEmail_Success() {
         when(userDaoMock.get("bbanner@avengers.com")).thenReturn(user);
 
         User actualUser = userService.get("bbanner@avengers.com");
@@ -90,7 +90,7 @@ public class UserServiceMockTest extends BaseUnitTest {
     }
 
     @Test
-    public void getUserByEmail_Fail() {
+    public void getUser_ByEmail_Fail() {
         when(userDaoMock.get("bot@mail.ru")).thenThrow(DaoException.class);
 
         User actualUser = userService.get("bot@mail.ru");

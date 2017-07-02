@@ -27,7 +27,7 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
     private User user;
 
     @After
-    public void end() {
+    public void tearDown() {
         testHelper.emptyTable(new String[]{"users"});
         user = null;
     }
@@ -125,7 +125,7 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void authenticate_success() {
+    public void authenticate_Success() {
         userService.add(standardUser);
 
         boolean status = standardUser.equals(userService.authenticate(standardUser.getEmail(), standardUser.getPass()));
@@ -133,7 +133,7 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void authenticate_WrongPass_fail() {
+    public void authenticate_WrongPass_Fail() {
         userService.add(standardUser);
 
         User actualUser = userService.authenticate(standardUser.getEmail(), "xxx");
@@ -141,7 +141,7 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void editUser_Succed_Email() {
+    public void editUser_Email_Success() {
         user = new User("gago1", "Gagik Petrosyan", "davit.abovyan@gmail.com", "pass");
         userService.add(user);
         final String newEmail = "gagik@gmail.com";

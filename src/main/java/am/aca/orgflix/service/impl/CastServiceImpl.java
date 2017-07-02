@@ -20,9 +20,7 @@ import java.util.List;
 public class CastServiceImpl implements CastService {
 
     private static final Logger LOGGER = Logger.getLogger(CastServiceImpl.class);
-    @Autowired
     private CastDAO castDAO;
-    @Autowired
     private FilmDAO filmDAO;
 
     @Autowired
@@ -79,7 +77,6 @@ public class CastServiceImpl implements CastService {
         return state;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public List<Cast> listCasts() {
         List<Cast> list = null;
@@ -91,7 +88,6 @@ public class CastServiceImpl implements CastService {
         return list;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public List<Film> listFilmsByCast(int castId) {
         List<Film> list = null;
@@ -103,9 +99,8 @@ public class CastServiceImpl implements CastService {
         return list;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public List<Cast> getCastsByFilm(int filmId){
+    public List<Cast> getCastsByFilm(int filmId) {
         List<Cast> list = null;
         try {
             list = castDAO.getCastsByFilm(filmId);

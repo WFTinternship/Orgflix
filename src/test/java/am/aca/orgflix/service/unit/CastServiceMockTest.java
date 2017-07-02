@@ -86,7 +86,7 @@ public class CastServiceMockTest extends BaseUnitTest {
     }
 
     @Test
-    public void addCastToFilmAlreadyStarring_Fail() {
+    public void addCastToFilm_AlreadyStarring_Fail() {
         when(castDaoMock.isStarringIn(cast.getId(), film.getId())).thenReturn(true);
 
         boolean status = castService.addCastToFilm(cast, film.getId());
@@ -96,7 +96,7 @@ public class CastServiceMockTest extends BaseUnitTest {
     }
 
     @Test
-    public void addCastToFilmInsertionError_Fail() {
+    public void addCastToFilm_InsertionError_Fail() {
         when(castDaoMock.isStarringIn(cast.getId(), film.getId())).thenReturn(false);
         when(castDaoMock.addCastToFilm(cast, film.getId())).thenReturn(false);
 
@@ -120,7 +120,7 @@ public class CastServiceMockTest extends BaseUnitTest {
     }
 
     @Test
-    public void editCastNonExisting_Fail() {
+    public void editCast_NonExisting_Fail() {
         when(castDaoMock.exists(cast)).thenReturn(false);
 
         boolean status = castService.editCast(cast);
@@ -130,7 +130,7 @@ public class CastServiceMockTest extends BaseUnitTest {
     }
 
     @Test
-    public void editCastUpdateError_Fail() {
+    public void editCast_UpdateError_Fail() {
         when(castDaoMock.exists(cast)).thenReturn(true);
         when(castDaoMock.editCast(cast)).thenReturn(false);
 

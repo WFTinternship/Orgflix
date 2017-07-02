@@ -29,7 +29,7 @@ public class CastDaoTest extends BaseIntegrationTest {
     private Cast cast;
 
     @After
-    public void end() {
+    public void tearDown() {
         helper.emptyTable(new String[]{"film_to_cast", "casts"});
         cast = null;
     }
@@ -99,7 +99,7 @@ public class CastDaoTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void listCastByName_Success() {
+    public void listCast_ByName_Success() {
         cast = new Cast("Woody Allen");
         jdbcCastDAO.addCast(cast);
 
@@ -108,7 +108,7 @@ public class CastDaoTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void getCastsByFilm_Success() {
+    public void getCasts_ByFilm_Success() {
         cast = new Cast("Tom Henks");
         jdbcCastDAO.addCast(cast);
         Film film = new Film("Forest Gump", 1990);
@@ -123,7 +123,7 @@ public class CastDaoTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void getCastsByFilm_EmptyCastList_Fail() {
+    public void getCasts_ByFilmEmptyCastList_Fail() {
         Film film = new Film("Forest Gump", 1990);
         ArrayList<Cast> list = new ArrayList<>();
         film.setCasts(list);
@@ -150,7 +150,7 @@ public class CastDaoTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void editCastBySize_Success() {
+    public void editCast_BySize_Success() {
         cast = new Cast("Woody Allen");
         jdbcCastDAO.addCast(cast);
         cast.setName("Christopher Nolan");
@@ -161,7 +161,7 @@ public class CastDaoTest extends BaseIntegrationTest {
     }
 
     @Test(expected = DaoException.class)
-    public void editCast_Fail_NameNull() {
+    public void editCast_NameNull_Fail() {
         cast = new Cast("Woody Allen");
         jdbcCastDAO.addCast(cast);
         cast.setName(null);
@@ -210,7 +210,7 @@ public class CastDaoTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void listFilmsIdByCast_EmptyList() throws SQLException {
+    public void listFilmsIdByCast_EmptyList_Fail() throws SQLException {
         cast = new Cast("Woody Allen");
         jdbcCastDAO.addCast(cast);
 

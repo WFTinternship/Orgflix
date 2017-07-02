@@ -29,21 +29,21 @@ public class CastServiceIntegrationTest extends BaseIntegrationTest {
     private Film film;
 
     @After
-    public void revert() {
+    public void tearDown() {
         helper.emptyTable(new String[]{
                 "film_to_cast", "casts", "films"
         });
     }
 
     @Test
-    public void addCastWOscar_Success() {
+    public void addCast_WOscar_Success() {
         castService.addCast(new Cast("Edward Norton", true));
         int size = castService.listCasts().size();
         Assert.assertEquals(1, size);
     }
 
     @Test
-    public void addCastWoOscar_Success() {
+    public void addCast_WoOscar_Success() {
         castService.addCast(new Cast("Edward Norton"));
         int size = castService.listCasts().size();
         Assert.assertEquals(1, size);
@@ -58,7 +58,7 @@ public class CastServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void addCastNoOscar_Success() {
+    public void addCast_NoOscar_Success() {
         cast = new Cast("Edward Norton");
         castService.addCast(cast);
         int size = castService.listCasts().size();
@@ -66,7 +66,7 @@ public class CastServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test()
-    public void addCastNoName_Fail() {
+    public void addCast_NoName_Fail() {
         cast = new Cast(null);
         boolean status = castService.addCast(cast);
         Assert.assertFalse(status);
@@ -85,7 +85,7 @@ public class CastServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void addCastToFilm_Failed() {
+    public void addCastToFilm_Fail() {
         cast = new Cast("Edward Norton");
         castService.addCast(cast);
         film = new Film("Fight Club", 1997);
@@ -99,7 +99,7 @@ public class CastServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void addCastToFilmById_Success() {
+    public void addCastToFilm_ById_Success() {
         cast = new Cast("Edward Norton");
         castService.addCast(cast);
         film = new Film("Fight Club", 1997);
@@ -110,7 +110,7 @@ public class CastServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void addCastToFilmById_Failed() {
+    public void addCastToFilm_ById_Fail() {
         cast = new Cast("Edward Norton");
         castService.addCast(cast);
         film = new Film("Fight Club", 1997);
@@ -132,7 +132,7 @@ public class CastServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void editCastBadName_Fail() {
+    public void editCast_BadName_Fail() {
         cast = new Cast("Edward Norton");
         castService.addCast(cast);
         cast.setName(null);
@@ -141,14 +141,14 @@ public class CastServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void editCastNotExisting_Fail() {
+    public void editCast_NotExisting_Fail() {
         cast = new Cast();
         boolean status = castService.editCast(cast);
         Assert.assertFalse(status);
     }
 
     @Test
-    public void listCastsBySize_Success() {
+    public void listCasts_BySize_Success() {
         cast = new Cast("Edward Norton");
         castService.addCast(cast);
         cast = new Cast("Emma Stone", true);
@@ -160,7 +160,7 @@ public class CastServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void listCastsById_Success() {
+    public void listCasts_ById_Success() {
         cast = new Cast("Edward Norton");
         castService.addCast(cast);
         cast = new Cast("Emma Stone", true);
@@ -170,13 +170,13 @@ public class CastServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void listCastsEmpty_Fail() {
+    public void listCasts_Empty_Fail() {
         int size = castService.listCasts().size();
         Assert.assertEquals(0, size);
     }
 
     @Test
-    public void listFilmsByCastBySize_Success() {
+    public void listFilmsByCast_BySize_Success() {
         cast = new Cast("Edward Norton");
         castService.addCast(cast);
         film = new Film("Fight Club", 1997);
@@ -187,7 +187,7 @@ public class CastServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void listFilmsByCastById_Success() {
+    public void listFilmsByCast_ById_Success() {
         cast = new Cast("Edward Norton");
         castService.addCast(cast);
         film = new Film("Fight Club", 1997);
@@ -201,7 +201,7 @@ public class CastServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void listFilmsByCastEmpty_Fail() {
+    public void listFilmsByCast_Empty_Fail() {
         cast = new Cast();
         boolean status = castService.listFilmsByCast(cast.getId()).isEmpty();
         Assert.assertTrue(status);

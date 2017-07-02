@@ -25,6 +25,7 @@ import java.util.List;
 public class DataGenerator {
     @Autowired
     FilmService filmService;
+
     public List<Film> generate() throws IOException {
         Document doc = Jsoup.connect("http://www.imdb.com/search/title?groups=top_250&sort=user_rating").get();
         Elements movieDivs = doc.getElementsByClass("lister-item");

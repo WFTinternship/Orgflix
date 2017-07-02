@@ -362,7 +362,7 @@ public class FilmServiceMockTest extends BaseUnitTest {
     }
 
     @Test
-    public void filterByEverything_Success() {
+    public void filter_ByEverything_Success() {
         films.add(film);
 
         when(filmDaoMock.getFilteredFilms("test", 1000, 3000, "%", "testDir", "0", "1")).thenReturn(films);

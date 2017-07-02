@@ -15,6 +15,7 @@ public interface CastService {
     List<Cast> listCasts();
 
     List<Film> listFilmsByCast(int castId);
+
     List<Cast> getCastsByFilm(int filmId);
 
     boolean editCast(Cast cast);

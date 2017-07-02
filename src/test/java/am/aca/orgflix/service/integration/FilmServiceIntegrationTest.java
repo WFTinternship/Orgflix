@@ -32,7 +32,7 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
     private Cast cast;
 
     @After
-    public void revert() {
+    public void tearDown() {
         helper.emptyTable(new String[]{"film_to_cast", "genre_to_film", "films", "casts"});
     }
 
@@ -48,7 +48,7 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void addFilmWithGenre_Success() {
+    public void addFilm_WithGenre_Success() {
         film = new Film("In Bruges", 2008);
         film.addGeners(Genre.ACTION);
 
@@ -60,7 +60,7 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void addFilmEmptyName_Fail() {
+    public void addFilm_EmptyName_Fail() {
         film = new Film(null, 2066);
 
         boolean status = filmService.addFilm(film);
@@ -81,7 +81,7 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void getFilmsListWIndex_Success() {
+    public void getFilmsList_WIndex_Success() {
         film = new Film("In Bruges", 2008);
         for (int i = 0; i < 5; i++) {
             filmService.addFilm(film);
@@ -98,7 +98,7 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void getFilmsListBadIndex_Fail() {
+    public void getFilmsList_BadIndex_Fail() {
         film = new Film("In Bruges", 2008);
         for (int i = 0; i < 5; i++) {
             filmService.addFilm(film);
@@ -109,7 +109,7 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void getFilmsListById_Success() {
+    public void getFilmsList_ById_Success() {
         film = new Film("In Bruges", 2008);
         filmService.addFilm(film);
         film = new Film("London Boulevard", 2010);
@@ -138,7 +138,7 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void getFilmsByCast_Succeeded() {
+    public void getFilmsByCast_Success() {
         cast = new Cast("Collin Farrell");
         castService.addCast(cast);
 
@@ -159,7 +159,7 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void getFilmsByGenreSize_Succeeded() {
+    public void getFilmsByGenre_Size_Success() {
         film = new Film("Fury", 2014);
         film.addGeners(Genre.WAR);
         filmService.addFilm(film);
@@ -179,7 +179,7 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void getRatingInt_Succeeded() {
+    public void getRating_Int_Success() {
         film = new Film("Fury", 2014);
         film.addGeners(Genre.WAR);
         film.setRate_4star(1);
@@ -190,7 +190,7 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void getRatingDouble_Succeeded() {
+    public void getRating_Double_Success() {
         film = new Film("Fury", 2014);
         film.addGeners(Genre.WAR);
         film.setRate_4star(1);
@@ -202,7 +202,7 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void getRatingNaN_Failed() {
+    public void getRating_NaN_Fail() {
         film = new Film("Fury", 2014);
         film.addGeners(Genre.WAR);
         filmService.addFilm(film);
@@ -212,7 +212,7 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void totalNumber_Succeeded() {
+    public void totalNumber_Success() {
         film = new Film("In Bruges", 2008);
         for (int i = 0; i < 6; i++) {
             filmService.addFilm(film);
@@ -223,13 +223,13 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void totalNumber_Failed() {
+    public void totalNumber_Fail() {
         int size = filmService.totalNumberOfFilms();
         Assert.assertEquals(0, size);
     }
 
     @Test
-    public void editFilm_Succeeded() {
+    public void editFilm_Success() {
         film = new Film("The Departed", 2004);
         filmService.addFilm(film);
         film.setHasOscar(true);
@@ -239,7 +239,7 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void editFilmSizeCheck_Succeeded() {
+    public void editFilm_SizeCheck_Success() {
         film = new Film("The Departed", 2004);
         filmService.addFilm(film);
         film.setHasOscar(true);
@@ -250,7 +250,7 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void editFilmObjCheck_Success() {
+    public void editFilm_ObjCheck_Success() {
         film = new Film("The Departed", 2004);
         film.setHasOscar(false);
         filmService.addFilm(film);
@@ -272,7 +272,7 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void rateFilm_Succeeded() {
+    public void rateFilm_Success() {
         film = new Film("The Departed", 2004);
         filmService.addFilm(film);
 
@@ -296,7 +296,7 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void addGenreToFilmBySize_Succeeded() {
+    public void addGenreToFilm_BySize_Success() {
         film = new Film("La La Land", 2016);
         filmService.addFilm(film);
 
@@ -305,7 +305,7 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void addGenreToFilmByIdByFilm_Succeeded() {
+    public void addGenreToFilm_ByIdByFilm_Success() {
         film = new Film("La La Land", 2016);
         filmService.addFilm(film);
 
@@ -329,7 +329,7 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void searchTitleNotExisting_Empty() {
+    public void searchTitle_NotExisting_Empty() {
         film = new Film("In Bruges", 2008);
         filmService.addFilm(film);
 
@@ -358,7 +358,7 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void filterByAllParameters_Success() {
+    public void filter_ByAllParameters_Success() {
         film = new Film("In Bruges", 2008);
         filmService.addFilm(film);
 

@@ -17,7 +17,9 @@ public class User {
         this.email = email;
         this.pass = pass;
     }
-    public User(){}
+
+    public User() {
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -47,16 +49,20 @@ public class User {
                 '}';
     }
 
-    public String getPass() { return pass; }
+    public String getPass() {
+        return pass;
+    }
 
-    public void setPass(String pass) { this.pass = pass; }
+    public void setPass(String pass) {
+        this.pass = pass;
+    }
 
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
-        if(id > 0) this.id = id;
+        if (id > 0) this.id = id;
     }
 
     public String getNick() {

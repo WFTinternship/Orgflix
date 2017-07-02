@@ -1,14 +1,13 @@
 package am.aca.orgflix.dao.impljdbc;
 
-import am.aca.orgflix.dao.DaoException;
 import am.aca.orgflix.dao.BaseDAO;
+import am.aca.orgflix.dao.DaoException;
 import am.aca.orgflix.dao.FilmDAO;
 import am.aca.orgflix.dao.impljdbc.mapper.FilmRowMapper;
 import am.aca.orgflix.entity.Film;
 import am.aca.orgflix.entity.Genre;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -108,12 +107,11 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
      * @param id the id of the requested film
      * @return the film matching the provided id
      */
-    @SuppressWarnings("unchecked")
     @Override
     public Film getFilmById(int id) {
         final String getQuery = "SELECT * FROM films WHERE ID = ? LIMIT 1";
         try {
-            return (Film) getJdbcTemplate().queryForObject(getQuery, new Object[]{id}, new FilmRowMapper());
+            return getJdbcTemplate().queryForObject(getQuery, new Object[]{id}, new FilmRowMapper());
         } catch (EmptyResultDataAccessException e) {
             // no film with such id exists in the DB
             return null;
@@ -127,7 +125,6 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
      * @param startIndex 0 based page index
      * @return a list of films (up to 12 films) for the requested page
      */
-    @SuppressWarnings("unchecked")
     @Override
     public List<Film> getFilmsList(int startIndex) {
         final String query = "SELECT * FROM films LIMIT ? , 12 ";
@@ -142,7 +139,6 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
      * @param genre the genre object which films should be returned
      * @return A list of all films associated to the provided genre
      */
-    @SuppressWarnings("unchecked")
     @Override
     public List<Film> getFilmsByGenre(Genre genre) {
         final String filmQuery = "SELECT films.ID, films.Title, films.Director, films.HasOscar, " +
@@ -159,10 +155,9 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
      * @param actorId the id of actor who's films should be returned
      * @return A list of all films associated to the actor with provided id
      */
-    @SuppressWarnings("unchecked")
     @Override
     public List<Film> getFilmsByCast(int actorId) {
-        final String query = "SELECT ID, Title, Prod_Year AS prodYear,HasOscar, image_ref AS image, Director, " +
+        final String query = "SELECT ID, Title, Prod_Year,HasOscar, image_ref, Director, " +
                 " Rate_1star, Rate_2star, Rate_3star, Rate_4star, Rate_5star " +
                 " FROM films INNER JOIN (" +
                 "   SELECT film_to_cast.Film_ID AS film " +
@@ -174,7 +169,7 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
                 " ON films.ID = sel_table.film";
 
         return getJdbcTemplate().query(query,
-                new BeanPropertyRowMapper(Film.class),
+                new FilmRowMapper(),
                 actorId);
     }
 
@@ -218,13 +213,13 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
     /**
      * Provide films filtered by user's desired parameters
      *
-     * @param title a keyword in desired film's title
-     * @param startYear the lower bound of the desired film's release date
+     * @param title      a keyword in desired film's title
+     * @param startYear  the lower bound of the desired film's release date
      * @param finishYear the upper bound of the desired film's release date
-     * @param hasOscar indicator whether or not the desired film has Oscar for Best Picture
-     * @param director the full or partial name of the desired film's director
-     * @param castId the id of the desired film's cast member
-     * @param genreId the id of the desired film's genre
+     * @param hasOscar   indicator whether or not the desired film has Oscar for Best Picture
+     * @param director   the full or partial name of the desired film's director
+     * @param castId     the id of the desired film's cast member
+     * @param genreId    the id of the desired film's genre
      * @return list of all films satisfying all filter and search conditions given by the user
      */
     @Override
@@ -246,8 +241,8 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
                 "AND (film_to_cast.Actor_ID LIKE ? " +
                 "OR film_to_cast.Actor_ID IS NULL)" +
                 "AND (genre_to_film.Genre_ID LIKE ? OR genre_to_film.Genre_ID IS NULL) ";
-        return getJdbcTemplate().query(query, new Object[] {
-                "%"+title+"%", startYear, finishYear, hasOscar, director, castId, genreId
+        return getJdbcTemplate().query(query, new Object[]{
+                "%" + title + "%", startYear, finishYear, hasOscar, director, castId, genreId
         }, new FilmRowMapper());
     }
 

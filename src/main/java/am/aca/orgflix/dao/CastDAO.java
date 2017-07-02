@@ -15,6 +15,7 @@ public interface CastDAO {
 
     // READ
     List<Cast> listCast();
+
     List<Cast> getCastsByFilm(int filmId);
 
     // UPDATE

@@ -4,7 +4,6 @@ import am.aca.orgflix.dao.BaseDAO;
 import am.aca.orgflix.dao.ListDao;
 import am.aca.orgflix.dao.impljdbc.mapper.FilmRowMapper;
 import am.aca.orgflix.entity.Film;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -32,41 +31,29 @@ public class JdbcListDAO extends BaseDAO implements ListDao {
     }
 
     @Override
-    public boolean insertWatched(Film film, int userId, boolean isPublic) {
-        return insertWatched(film.getId(), userId, isPublic);
-    }
-
-    @Override
     public boolean insertPlanned(int filmId, int userId, boolean isPublic) {
         final String insertQuery = "INSERT INTO Lists(User_ID, Film_ID, Is_wished, Is_public) VALUES (?, ?, TRUE, ?)";
         return (getJdbcTemplate().update(insertQuery, userId, filmId, isPublic) == 1);
     }
 
-    @Override
-    public boolean insertPlanned(Film film, int userId, boolean isPublic) {
-        return insertPlanned(film.getId(),userId,isPublic);
-    }
     // RETRIEVE
 
-    @SuppressWarnings("unchecked")
     @Override
     public List<Film> showOwnWatched(int userId, int page) {
         final String query = "SELECT films.ID, films.Title, films.Director, films.HasOscar, " +
                 "films.image_ref, films.Prod_Year, films.Rate_1star, films.Rate_2star, films.Rate_3star, films.Rate_4star, films.Rate_5star FROM lists INNER JOIN films " +
                 "ON lists.Film_ID = films.ID WHERE lists.User_ID = ? AND Is_watched = TRUE LIMIT ? , 12 ";
-        return getJdbcTemplate().query(query, new Object[]{userId,page}, new FilmRowMapper());
+        return getJdbcTemplate().query(query, new Object[]{userId, page}, new FilmRowMapper());
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public List<Film> showOwnPlanned(int userId, int page) {
         final String query = "SELECT films.ID, films.Title, films.Director, films.HasOscar, " +
                 "films.image_ref, films.Prod_Year, films.Rate_1star, films.Rate_2star, films.Rate_3star, films.Rate_4star, films.Rate_5star FROM lists INNER JOIN films " +
                 "ON lists.Film_ID = films.ID WHERE lists.User_ID = ? AND Is_wished = TRUE LIMIT ? , 12 ";
-        return getJdbcTemplate().query(query, new Object[]{userId,page}, new FilmRowMapper());
+        return getJdbcTemplate().query(query, new Object[]{userId, page}, new FilmRowMapper());
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public List<Film> showOthersWatched(int userId, int page) {
         final String query = "SELECT films.ID, films.Title, films.Director, films.HasOscar, " +
@@ -75,7 +62,6 @@ public class JdbcListDAO extends BaseDAO implements ListDao {
         return getJdbcTemplate().query(query, new Object[]{userId, page}, new FilmRowMapper());
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public List<Film> showOthersPlanned(int userId, int page) {
         final String query = "SELECT films.ID, films.Title, films.Director, films.HasOscar, " +
@@ -157,23 +143,25 @@ public class JdbcListDAO extends BaseDAO implements ListDao {
 
     /**
      * Provide the current total number of watched films of the selected user
+     *
      * @param userId id of the current user
      * @return the current total number of watched films
      */
     @Override
     public int totalNumberOfWatched(int userId) {
         final String query = "SELECT count(Film_ID) AS total FROM lists WHERE User_ID = ? AND Is_watched = TRUE";
-        return getJdbcTemplate().queryForObject(query,new Object[]{userId}, Integer.class);
+        return getJdbcTemplate().queryForObject(query, new Object[]{userId}, Integer.class);
     }
 
     /**
      * Provide the current total number of wished films of the selected user
+     *
      * @param userId id of the current user
      * @return the current total number of wished films
      */
     @Override
     public int totalNumberOfWished(int userId) {
         final String query = "SELECT count(Film_ID) AS total FROM lists WHERE User_ID = ? AND Is_wished = TRUE";
-        return getJdbcTemplate().queryForObject(query,new Object[]{userId}, Integer.class);
+        return getJdbcTemplate().queryForObject(query, new Object[]{userId}, Integer.class);
     }
 }

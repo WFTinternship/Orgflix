@@ -41,7 +41,7 @@ public class FilmDaoTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void addFilmGetId_Succeeded() {
+    public void addFilm_GetId_Success() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
         jdbcFilmDAO.addFilm(film);
@@ -51,7 +51,7 @@ public class FilmDaoTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void addFilm_Succeeded() {
+    public void addFilm_Success() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
         jdbcFilmDAO.addFilm(film);
@@ -67,7 +67,7 @@ public class FilmDaoTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void addGenreToFilmBySize_Succeeded() {
+    public void addGenreToFilm_BySize_Success() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
         jdbcFilmDAO.addFilm(film);
@@ -80,7 +80,7 @@ public class FilmDaoTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void addGenreToFilmByFilm_Succeeded() {
+    public void addGenreToFilm_ByFilm_Success() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
         jdbcFilmDAO.addFilm(film);
@@ -91,7 +91,7 @@ public class FilmDaoTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void rateFilm_Succeeded() {
+    public void rateFilm_Success() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
         jdbcFilmDAO.addFilm(film);
@@ -111,7 +111,7 @@ public class FilmDaoTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void getFilmById_Succeeded() {
+    public void getFilmById_Success() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
         jdbcFilmDAO.addFilm(film);
@@ -121,7 +121,7 @@ public class FilmDaoTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void getFilmById_Failed() {
+    public void getFilmById_Fail() {
         Film actualFilm = jdbcFilmDAO.getFilmById(-1);
         Assert.assertEquals(null, actualFilm);
     }
@@ -139,7 +139,7 @@ public class FilmDaoTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void getFilmsListPage2_Success() {
+    public void getFilmsList_Page2_Success() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
         for (int i = 0; i < 20; i++) {
@@ -151,13 +151,13 @@ public class FilmDaoTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void getFilmsList_EmptyList() {
+    public void getFilmsList_EmptyList_Fail() {
         int size = jdbcFilmDAO.getFilmsList(0).size();
         Assert.assertEquals(0, size);
     }
 
     @Test
-    public void getFilmsListIndex_Failed() {
+    public void getFilmsList_BadIndex_Fail() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
         jdbcFilmDAO.addFilm(film);
@@ -167,7 +167,7 @@ public class FilmDaoTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void getFilmsByGenreSize_Success() {
+    public void getFilmsByGenre_Size_Success() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
         jdbcFilmDAO.addFilm(film);
@@ -204,13 +204,13 @@ public class FilmDaoTest extends BaseIntegrationTest {
 
 
     @Test
-    public void getFilmsByCast_Failed() {
+    public void getFilmsByCast_Fail() {
         int size = jdbcFilmDAO.getFilmsByCast(0).size();
         Assert.assertEquals(0, size);
     }
 
     @Test
-    public void getRatingInt_Succeeded() {
+    public void getRating_Int_Success() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
         jdbcFilmDAO.addFilm(film);
@@ -224,7 +224,7 @@ public class FilmDaoTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void getRatingDouble_Succeeded() {
+    public void getRating_Double_Success() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
         jdbcFilmDAO.addFilm(film);
@@ -236,7 +236,7 @@ public class FilmDaoTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void getRatingNaN_Failed() {
+    public void getRating_NaN_Fail() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
         jdbcFilmDAO.addFilm(film);
@@ -246,7 +246,7 @@ public class FilmDaoTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void totalNumber_Succeeded() {
+    public void totalNumber_Success() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
         for (int i = 0; i < 6; i++) {
@@ -258,13 +258,13 @@ public class FilmDaoTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void totalNumber_Failed() {
+    public void totalNumber_Fail() {
         int size = jdbcFilmDAO.totalNumberOfFilms();
         Assert.assertEquals(0, size);
     }
 
     @Test
-    public void searchTitle_Success() {
+    public void searchFilter_Title_Success() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
         jdbcFilmDAO.addFilm(film);
@@ -278,7 +278,7 @@ public class FilmDaoTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void searchTitleNotExisting_Empty() {
+    public void search_TitleNotExisting_Empty() {
         film.setTitle("City of God");
         film.setProdYear(2002);
         jdbcFilmDAO.addFilm(film);
@@ -288,7 +288,7 @@ public class FilmDaoTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void filterByCast_Success() {
+    public void filter_ByCast_Success() {
         film.setTitle("City of God");
         film.setProdYear(2002);
         jdbcFilmDAO.addFilm(film);
@@ -302,13 +302,13 @@ public class FilmDaoTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void filterByCast_Empty() {
+    public void filter_ByCast_Empty() {
         boolean status = jdbcFilmDAO.getFilteredFilms("", 1000, 3000, "%", "%", "8", "%").isEmpty();
         Assert.assertTrue(status);
     }
 
     @Test
-    public void filterByAllParameters_Success() {
+    public void filter_ByAllParameters_Success() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
         jdbcFilmDAO.addFilm(film);
@@ -331,7 +331,7 @@ public class FilmDaoTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void editFilm_Succeeded() {
+    public void editFilm_Success() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
         film.setDirector("Matthew Ross");
@@ -343,7 +343,7 @@ public class FilmDaoTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void editFilmSizeCheck_Succeeded() {
+    public void editFilm_SizeCheck_Success() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
         film.setDirector("Matthew Ross");
@@ -361,7 +361,7 @@ public class FilmDaoTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void resetCastsByReturn_Success() {
+    public void resetCasts_ByStatus_Success() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
         jdbcFilmDAO.addFilm(film);
@@ -376,7 +376,7 @@ public class FilmDaoTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void resetCastsByCheck_Success() {
+    public void resetCasts_ByCheck_Success() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
         jdbcFilmDAO.addFilm(film);
@@ -392,7 +392,7 @@ public class FilmDaoTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void resetCastsKeepOthers_Success() {
+    public void resetCasts_KeepOthers_Success() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
         jdbcFilmDAO.addFilm(film);
@@ -426,7 +426,7 @@ public class FilmDaoTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void resetGenresReturn_Success() {
+    public void resetGenres_ByStatus_Success() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
         jdbcFilmDAO.addFilm(film);
@@ -437,7 +437,7 @@ public class FilmDaoTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void resetGenresCheck_Success() {
+    public void resetGenres_Check_Success() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
         jdbcFilmDAO.addFilm(film);
@@ -449,7 +449,7 @@ public class FilmDaoTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void resetGenresKeepsOthers_Success() {
+    public void resetGenres_KeepsOthers_Success() {
         film.setTitle("American History X");
         film.setProdYear(1998);
         jdbcFilmDAO.addFilm(film);

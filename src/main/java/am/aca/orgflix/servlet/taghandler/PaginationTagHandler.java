@@ -1,18 +1,18 @@
 package am.aca.orgflix.servlet.taghandler;
 
 
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.tagext.TagSupport;
-
 import am.aca.orgflix.service.FilmService;
 import am.aca.orgflix.service.ListService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.tagext.TagSupport;
+
 /**
- *  Tag handler for pagination of films
+ * Tag handler for pagination of films
  */
 @Component
 public class PaginationTagHandler extends TagSupport {
@@ -21,15 +21,14 @@ public class PaginationTagHandler extends TagSupport {
 
     private FilmService filmService;
     private ListService listService;
+    private String pageType;
+    private int userId;
 
     @Autowired
     public PaginationTagHandler(ListService listService, FilmService filmService) {
         this.listService = listService;
         this.filmService = filmService;
     }
-
-    private String pageType;
-    private int userId;
 
     public void setPageType(String pageType) {
         this.pageType = pageType;
@@ -45,12 +44,12 @@ public class PaginationTagHandler extends TagSupport {
         JspWriter out = pageContext.getOut();//returns the instance of JspWriter
         try {
             int filmNum = 0;
-            if(pageType.equals("main") ) {
+            if (pageType.equals("main")) {
                 filmNum = filmService.totalNumberOfFilms();
-            } else if(pageType.equals("watch") ){
-                filmNum = listService.totalNumberOfWatched(userId,true);
-            } else if(pageType.equals("wish") ){
-                filmNum = listService.totalNumberOfWatched(userId,false);
+            } else if (pageType.equals("watch")) {
+                filmNum = listService.totalNumberOfWatched(userId, true);
+            } else if (pageType.equals("wish")) {
+                filmNum = listService.totalNumberOfWatched(userId, false);
             }
             if (filmNum > 12) {
                 out.print("<div class='pagintion_container'>");

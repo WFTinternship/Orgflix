@@ -38,7 +38,7 @@ public class ListDaoTest extends BaseIntegrationTest {
     @Before
     public void setUp() {
 
-        //setup Cast
+        //setUp Cast
 
         film = new Film();
         film.setTitle("Scarface");
@@ -46,7 +46,7 @@ public class ListDaoTest extends BaseIntegrationTest {
 
         jdbcFilmDAO.addFilm(film);
         filmId = film.getId();
-        //setup User and User DAO
+        //setUp User and User DAO
 
         userId = jdbcUserDAO.add(new User("MrSmith", "John Smith", "JhonSmith@gmail.com", "pass"));
 
@@ -139,7 +139,7 @@ public class ListDaoTest extends BaseIntegrationTest {
 
     @Test
     public void showOthersWatched_Fail() {
-        //setup List
+        //setUp List
         listDaoJdbc.insertWatched(filmId, userId, false);
 
         int size = listDaoJdbc.showOthersWatched(userId, 0).size();
@@ -166,7 +166,7 @@ public class ListDaoTest extends BaseIntegrationTest {
 
     @Test
     public void showOthersPlanned_Fail() {
-        //setup List
+        //setUp List
         listDaoJdbc.insertPlanned(filmId, userId, false);
 
         int size = listDaoJdbc.showOthersPlanned(userId, 0).size();
@@ -216,7 +216,7 @@ public class ListDaoTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void changePrivacyToPrivate_Success() {
+    public void changePrivacy_ToPrivate_Success() {
         listDaoJdbc.insertWatched(filmId, userId, true);
         listDaoJdbc.changePrivacy(film, userId, false);
 
@@ -225,7 +225,7 @@ public class ListDaoTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void changePrivacyToPublic_Success() {
+    public void changePrivacy_ToPublic_Success() {
         listDaoJdbc.insertWatched(filmId, userId, false);
         listDaoJdbc.changePrivacy(film, userId, true);
 
@@ -241,7 +241,7 @@ public class ListDaoTest extends BaseIntegrationTest {
 
     @Test
     public void resetWatched_Success() {
-        listDaoJdbc.insertWatched(film, userId, true);
+        listDaoJdbc.insertWatched(film.getId(), userId, true);
         listDaoJdbc.resetWatched(filmId, userId);
 
         boolean status = listDaoJdbc.isWatched(filmId, userId);
@@ -267,7 +267,7 @@ public class ListDaoTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void removeOne_Success() {
+    public void remove_One_Success() {
         listDaoJdbc.insertWatched(filmId, userId, true);
         listDaoJdbc.insertPlanned(filmId, userId, true);
         listDaoJdbc.removeFilm(filmId, userId);

@@ -29,6 +29,7 @@ public class FilmServiceImpl implements FilmService {
     public void setFilmDao(FilmDAO filmDao) {
         this.filmDao = filmDao;
     }
+
     @Autowired
     public void setCastDao(CastDAO castDao) {
         this.castDao = castDao;
@@ -98,7 +99,7 @@ public class FilmServiceImpl implements FilmService {
         List<Film> list = null;
         try {
             list = filmDao.getFilmsList(startIndex);
-            for(Film film : list){
+            for (Film film : list) {
                 film.setCasts(castDao.getCastsByFilm(film.getId()));
             }
         } catch (RuntimeException e) {
@@ -169,8 +170,7 @@ public class FilmServiceImpl implements FilmService {
         List<Film> films = null;
         try {
             films = filmDao.getFilteredFilms(title, startYear, finishYear, hasOscar ? "1" : "%", director, String.valueOf(castId), String.valueOf(genre.getValue()));
-        }
-        catch (RuntimeException e) {
+        } catch (RuntimeException e) {
             LOGGER.warn(e.toString());
         }
         return films;

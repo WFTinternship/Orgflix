@@ -1,11 +1,10 @@
 package am.aca.orgflix.dao.impljdbc;
 
-import am.aca.orgflix.dao.DaoException;
 import am.aca.orgflix.dao.BaseDAO;
+import am.aca.orgflix.dao.DaoException;
 import am.aca.orgflix.dao.UserDAO;
 import am.aca.orgflix.dao.impljdbc.mapper.UserRowMapper;
 import am.aca.orgflix.entity.User;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -17,7 +16,6 @@ import java.sql.Statement;
 
 /**
  * DAO layer for User entity
- *
  */
 
 @Component
@@ -74,11 +72,10 @@ public class JdbcUserDAO extends BaseDAO implements UserDAO {
      * @param id the id of the user in DB
      * @return user object with the matched id
      */
-    @SuppressWarnings("unchecked")
     @Override
     public User get(int id) {
         final String query = "SELECT * FROM users WHERE ID = ? LIMIT 1";
-        return (User) getJdbcTemplate().queryForObject(query, new Object[]{id}, new UserRowMapper());
+        return getJdbcTemplate().queryForObject(query, new Object[]{id}, new UserRowMapper());
     }
 
     /**
@@ -87,22 +84,21 @@ public class JdbcUserDAO extends BaseDAO implements UserDAO {
      * @param email the email of the user in DB
      * @return user object with the matched id
      */
-    @SuppressWarnings("unchecked")
     @Override
     public User get(String email) {
         final String query = "SELECT * FROM users WHERE Email = ? LIMIT 1";
-        return (User) getJdbcTemplate().queryForObject(query, new Object[]{email}, new UserRowMapper());
+        return getJdbcTemplate().queryForObject(query, new Object[]{email}, new UserRowMapper());
     }
 
     /**
      * Return user authenticated by user's email and password
      *
      * @param email the email of the user in DB
-     * @param pass the password of the user in DB
+     * @param pass  the password of the user in DB
      * @return user object with the matched details
      */
     @Override
-    public User authenticate(String email, String pass){
+    public User authenticate(String email, String pass) {
         final String query = "SELECT * FROM users WHERE Email = ? AND User_Pass = ? LIMIT 1";
         Object obj = getJdbcTemplate().queryForObject(query, new Object[]{email, pass}, new UserRowMapper());
         return (User) obj;
@@ -132,12 +128,11 @@ public class JdbcUserDAO extends BaseDAO implements UserDAO {
     }
 
     /**
-     * @see am/aca/dao/jdbc/impljdbc/JdbcUserDAO.java:131
-     *
-     * Update the provided user's data in DB
-     *
      * @param user the user whos data should be updated according to its current field values
      * @return true if update was successful, otherwise false
+     * @see am/aca/dao/jdbc/impljdbc/JdbcUserDAO.java:131
+     * <p>
+     * Update the provided user's data in DB
      */
     @Override
     public boolean edit(User user) {
@@ -145,15 +140,14 @@ public class JdbcUserDAO extends BaseDAO implements UserDAO {
     }
 
     /**
-     * @see am/aca/dao/jdbc/impljdbc/JdbcUserDAO.java:131
-     *
-     * Update the user's data with selected id in DB based on the provided fields' data
-     *
      * @param id    user id to search for
      * @param nick  user's nick name to be updated to
      * @param pass  user's password to be updated to
      * @param email user's email to be updated to
      * @return true if update was successful, otherwise false
+     * @see am/aca/dao/jdbc/impljdbc/JdbcUserDAO.java:131
+     * <p>
+     * Update the user's data with selected id in DB based on the provided fields' data
      */
     @Override
     public boolean edit(int id, String nick, String pass, String email) {
@@ -175,12 +169,11 @@ public class JdbcUserDAO extends BaseDAO implements UserDAO {
     }
 
     /**
-     * @see am/aca/dao/jdbc/impljdbc/JdbcUserDAO.java:178
-     *
-     * Removed provided user from DB
-     *
      * @param user the user to be removed
      * @return true if the remove was successful, otherwise false
+     * @see am/aca/dao/jdbc/impljdbc/JdbcUserDAO.java:178
+     * <p>
+     * Removed provided user from DB
      */
     @Override
     public boolean remove(User user) {

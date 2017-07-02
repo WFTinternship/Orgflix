@@ -6,6 +6,7 @@ import am.aca.orgflix.entity.Cast;
 import am.aca.orgflix.entity.Film;
 import am.aca.orgflix.entity.Genre;
 import am.aca.orgflix.service.FilmService;
+import am.aca.orgflix.service.ServiceException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,8 +44,7 @@ public class FilmServiceImpl implements FilmService {
             if (!result)
                 return false;
         } catch (RuntimeException e) {
-            LOGGER.warn(e.toString());
-            return false;
+            throw new ServiceException(e.getMessage());
         }
 
         return optimizeRelations(film);
@@ -58,14 +58,13 @@ public class FilmServiceImpl implements FilmService {
             if (!filmDao.editFilm(film))
                 return false;
         } catch (RuntimeException e) {
-            LOGGER.warn(e.toString());
-            return false;
+            throw new ServiceException(e.getMessage());
         }
         try {
             filmDao.resetRelationGenres(film);
             filmDao.resetRelationCasts(film);
         } catch (RuntimeException e) {
-            LOGGER.warn(e.toString());
+            throw new ServiceException(e.getMessage());
         }
 
         return optimizeRelations(film);
@@ -73,22 +72,22 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public Film getFilmById(int id) {
-        Film film = null;
+        Film film;
         try {
             film = filmDao.getFilmById(id);
         } catch (RuntimeException e) {
-            LOGGER.warn(e.toString());
+            throw new ServiceException(e.getMessage());
         }
         return film;
     }
 
     @Override
     public List<Film> getFilmsByCast(int castId) {
-        List<Film> list = null;
+        List<Film> list;
         try {
             list = filmDao.getFilmsByCast(castId);
         } catch (RuntimeException e) {
-            LOGGER.warn(e.toString());
+            throw new ServiceException(e.getMessage());
         }
         return list;
     }
@@ -96,25 +95,30 @@ public class FilmServiceImpl implements FilmService {
     @Transactional
     @Override
     public List<Film> getFilmsList(int startIndex) {
-        List<Film> list = null;
+        List<Film> list;
         try {
             list = filmDao.getFilmsList(startIndex);
-            for (Film film : list) {
-                film.setCasts(castDao.getCastsByFilm(film.getId()));
-            }
         } catch (RuntimeException e) {
-            LOGGER.warn(e.toString());
+            throw new ServiceException(e.getMessage());
+        }
+        for (Film film : list) {
+            try {
+
+                film.setCasts(castDao.getCastsByFilm(film.getId()));
+            } catch (RuntimeException e) {
+                throw new ServiceException(e.getMessage());
+            }
         }
         return list;
     }
 
     @Override
     public List<Film> getFilmsByGenre(Genre genre) {
-        List<Film> list = null;
+        List<Film> list;
         try {
             list = filmDao.getFilmsByGenre(genre);
         } catch (RuntimeException e) {
-            LOGGER.warn(e.toString());
+            throw new ServiceException(e.getMessage());
         }
         return list;
     }
@@ -126,7 +130,7 @@ public class FilmServiceImpl implements FilmService {
         try {
             state = filmDao.rateFilm(filmId, starType);
         } catch (RuntimeException e) {
-            LOGGER.warn(e.toString());
+            LOGGER.warn(e.getMessage());
         }
         return state;
     }
@@ -134,11 +138,11 @@ public class FilmServiceImpl implements FilmService {
     @Transactional
     @Override
     public boolean addGenreToFilm(Genre genre, int filmId) {
-        boolean state = false;
+        boolean state;
         try {
             state = filmDao.addGenreToFilm(genre, filmId);
         } catch (RuntimeException e) {
-            LOGGER.warn(e.toString());
+            throw new ServiceException(e.getMessage());
         }
         return state;
     }
@@ -167,11 +171,11 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public List<Film> getFilteredFilms(String title, int startYear, int finishYear, boolean hasOscar, String director, int castId, Genre genre) {
-        List<Film> films = null;
+        List<Film> films;
         try {
             films = filmDao.getFilteredFilms(title, startYear, finishYear, hasOscar ? "1" : "%", director, String.valueOf(castId), String.valueOf(genre.getValue()));
         } catch (RuntimeException e) {
-            LOGGER.warn(e.toString());
+            throw new ServiceException(e.getMessage());
         }
         return films;
     }
@@ -184,7 +188,7 @@ public class FilmServiceImpl implements FilmService {
                     return false;
             }
         } catch (RuntimeException e) {
-            LOGGER.warn(e.toString());
+            throw new ServiceException(e.getMessage());
         }
 
         try {
@@ -193,7 +197,7 @@ public class FilmServiceImpl implements FilmService {
                     return false;
             }
         } catch (RuntimeException e) {
-            LOGGER.warn(e.toString());
+            throw new ServiceException(e.getMessage());
         }
 
         return true;

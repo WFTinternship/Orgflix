@@ -1,9 +1,9 @@
 package am.aca.orgflix.service.impl;
 
-import am.aca.orgflix.dao.DaoException;
 import am.aca.orgflix.dao.UserDAO;
 import am.aca.orgflix.dao.impljdbc.JdbcUserDAO;
 import am.aca.orgflix.entity.User;
+import am.aca.orgflix.service.ServiceException;
 import am.aca.orgflix.service.UserService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +14,6 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class UserServiceImpl implements UserService {
-
-    private static final Logger LOGGER = Logger.getLogger(UserServiceImpl.class.getName());
 
     private UserDAO userDao;
 
@@ -33,14 +31,11 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public int add(User user) {
-        int id = -1;
         try {
             return userDao.add(user);
         } catch (RuntimeException e) {
-            LOGGER.warn(e.getMessage());
-//            throw new DaoException(e.getMessage());
+            throw new ServiceException(e.getMessage());
         }
-        return id;
     }
 
     /**
@@ -52,12 +47,11 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public User get(int id) {
-        User user = null;
+        User user;
         try {
             user = userDao.get(id);
         } catch (RuntimeException e) {
-            LOGGER.warn(e.getMessage());
-//            throw new DaoException(e.getMessage());
+            throw new ServiceException(e.getMessage());
         }
         return user;
     }
@@ -71,14 +65,13 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public User get(String email) {
-        User user = null;
+        User user;
         try {
             user = userDao.get(email);
         } catch (org.springframework.dao.EmptyResultDataAccessException e) {
             return null;
         } catch (RuntimeException e) {
-            LOGGER.warn(e.getMessage());
-//            throw new DaoException(e.getMessage());
+            throw new ServiceException(e.getMessage());
         }
         return user;
     }
@@ -99,8 +92,7 @@ public class UserServiceImpl implements UserService {
         } catch (org.springframework.dao.EmptyResultDataAccessException e) {
             return null;
         } catch (RuntimeException e) {
-            LOGGER.warn(e.getMessage());
-            throw new DaoException(e.getMessage());
+            throw new ServiceException(e.getMessage());
         }
         return user;
     }
@@ -108,12 +100,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean edit(User user) {
-        boolean state = false;
+        boolean state;
         try {
             state = userDao.edit(user);
         } catch (RuntimeException e) {
-            LOGGER.warn(e.getMessage());
-//            throw new DaoException(e.getMessage());
+            throw new ServiceException(e.getMessage());
         }
         return state;
     }

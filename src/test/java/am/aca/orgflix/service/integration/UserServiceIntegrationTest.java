@@ -2,6 +2,7 @@ package am.aca.orgflix.service.integration;
 
 import am.aca.orgflix.BaseIntegrationTest;
 import am.aca.orgflix.entity.User;
+import am.aca.orgflix.service.ServiceException;
 import am.aca.orgflix.service.UserService;
 import am.aca.orgflix.util.TestHelper;
 import org.junit.After;
@@ -45,49 +46,42 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
         Assert.assertTrue(status);
     }
 
-    @Test
+    @Test (expected = ServiceException.class)
     public void addUser_EmptyNick_Fail() {
-        int id = userService.add(new User("", "Gagik Petrosyan", "gagik2@gmail.com", "pass"));
-        Assert.assertEquals(-1, id);
+        userService.add(new User("", "Gagik Petrosyan", "gagik2@gmail.com", "pass"));
     }
 
-    @Test
+    @Test (expected = ServiceException.class)
     public void addUser_EmptyEmail_Fail() {
-        int id = userService.add(new User("gago", "Gagik Petrosyan", "", "pass"));
-        Assert.assertEquals(-1, id);
+        userService.add(new User("gago", "Gagik Petrosyan", "", "pass"));
     }
 
-    @Test
+    @Test (expected = ServiceException.class)
     public void addUser_EmptyPass_Fail() {
-        int id = userService.add(new User("gago", "Gagik Petrosyan", "gagik3@gmail.com", ""));
-        Assert.assertEquals(-1, id);
+        userService.add(new User("gago", "Gagik Petrosyan", "gagik3@gmail.com", ""));
     }
 
-    @Test
+    @Test (expected = ServiceException.class)
     public void addUser_NullNick_Fail() {
-        int id = userService.add(new User(null, "Gagik Petrosyan", "gagik2@gmail.com", "pass"));
-        Assert.assertEquals(-1, id);
+        userService.add(new User(null, "Gagik Petrosyan", "gagik2@gmail.com", "pass"));
     }
 
-    @Test
+    @Test (expected = ServiceException.class)
     public void addUser_NullEmail_Fail() {
-        int id = userService.add(new User("gago", "Gagik Petrosyan", null, "pass"));
-        Assert.assertEquals(-1, id);
+        userService.add(new User("gago", "Gagik Petrosyan", null, "pass"));
     }
 
-    @Test
+    @Test (expected = ServiceException.class)
     public void addUser_NullPass_Fail() {
-        int id = userService.add(new User("gago", "Gagik Petrosyan", "gagik3@gmail.com", null));
-        Assert.assertEquals(-1, id);
+        userService.add(new User("gago", "Gagik Petrosyan", "gagik3@gmail.com", null));
     }
 
 
-    @Test
+    @Test (expected = ServiceException.class)
     public void addUser_EmailAlreadyExists_Fail() {
         userService.add(standardUser);
 
-        int id = userService.add(new User("armen", "Armen Hakobyan", "davit.abovyan@gmail.com", "pass1"));
-        Assert.assertEquals(-1, id);
+        userService.add(new User("armen", "Armen Hakobyan", "davit.abovyan@gmail.com", "pass1"));
     }
 
     @Test
@@ -192,7 +186,7 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
         Assert.assertEquals(newPass, actualPass);
     }
 
-    @Test
+    @Test (expected = ServiceException.class)
     public void editUser_EmailNonUnique_Fail() {
         userService.add(standardUser);
         User otherUser = new User("gago1", "Gagik Petrosyan", "gagik.petrosyan@gmail.com", "pass");
@@ -200,67 +194,60 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
         userService.add(otherUser);
         otherUser.setEmail("davit.abovyan@gmail.com");
 
-        boolean status = userService.edit(otherUser);
-        Assert.assertFalse(status);
+        userService.edit(otherUser);
     }
 
-    @Test
+    @Test (expected = ServiceException.class)
     public void editUser_EmailNULL_Fail() {
         user = new User("davit", "Davit Abvoyan", "davit.abovyan@gmail.com", "pass");
         userService.add(user);
         user.setEmail(null);
 
-        boolean status = userService.edit(user);
-        Assert.assertFalse(status);
+        userService.edit(user);
     }
 
-    @Test
+    @Test (expected = ServiceException.class)
     public void editUser_NickNULL_Fail() {
         user = new User("davit", "Davit Abvoyan", "davit.abovyan@gmail.com", "pass");
         userService.add(user);
         user.setNick(null);
 
-        boolean status = userService.edit(user);
-        Assert.assertFalse(status);
+        userService.edit(user);
     }
 
-    @Test
+    @Test (expected = ServiceException.class)
     public void editUser_PassNULL_Fail() {
         user = new User("davit", "Davit Abvoyan", "davit.abovyan@gmail.com", "pass");
         userService.add(user);
         user.setPass(null);
 
-        boolean status = userService.edit(user);
-        Assert.assertFalse(status);
+        userService.edit(user);
     }
 
-    @Test
+    @Test (expected = ServiceException.class)
     public void editUser_EmailEmpty_Fail() {
         user = new User("davit", "Davit Abvoyan", "davit.abovyan@gmail.com", "pass");
         userService.add(user);
         user.setEmail("");
 
-        boolean status = userService.edit(user);
-        Assert.assertFalse(status);
+        userService.edit(user);
     }
 
-    @Test
+    @Test (expected = ServiceException.class)
     public void editUser_NickEmpty_Fail() {
         user = new User("davit", "Davit Abvoyan", "davit.abovyan@gmail.com", "pass");
         userService.add(user);
         user.setNick("");
 
-        boolean status = userService.edit(user);
-        Assert.assertFalse(status);
+        userService.edit(user);
     }
 
-    @Test
+    @Test (expected = ServiceException.class)
     public void editUser_PassEmpty_Fail() {
         user = new User("davit", "Davit Abvoyan", "davit.abovyan@gmail.com", "pass");
         userService.add(user);
         user.setPass("");
 
-        boolean status = userService.edit(user);
-        Assert.assertFalse(status);
+        userService.edit(user);
     }
 }

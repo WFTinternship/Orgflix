@@ -4,6 +4,7 @@ import am.aca.orgflix.dao.ListDao;
 import am.aca.orgflix.entity.Film;
 import am.aca.orgflix.service.CastService;
 import am.aca.orgflix.service.ListService;
+import am.aca.orgflix.service.ServiceException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,7 +39,7 @@ public class ListServiceImpl implements ListService {
     @Transactional
     @Override
     public boolean addToWatched(int filmId, boolean isPublic, int userId) {
-        boolean state = false;
+        boolean state;
         try {
             //case: planned
             if (listDao.areRelated(filmId, userId)) {
@@ -47,7 +48,7 @@ public class ListServiceImpl implements ListService {
             //case: not planned
             else state = listDao.insertWatched(filmId, userId, isPublic);
         } catch (RuntimeException e) {
-            LOGGER.warn(e.getMessage());
+            throw new ServiceException(e.getMessage());
         }
         return state;
     }
@@ -55,7 +56,7 @@ public class ListServiceImpl implements ListService {
     @Transactional
     @Override
     public boolean addToPlanned(int filmId, boolean isPublic, int userId) {
-        boolean state = false;
+        boolean state;
         try {
             //case: watched
             if (listDao.areRelated(filmId, userId))
@@ -64,7 +65,7 @@ public class ListServiceImpl implements ListService {
                 //case: not watched
             else state = listDao.insertPlanned(filmId, userId, isPublic);
         } catch (RuntimeException e) {
-            LOGGER.warn(e.getMessage());
+            throw new ServiceException(e.getMessage());
         }
         return state;
     }
@@ -72,7 +73,7 @@ public class ListServiceImpl implements ListService {
     @Transactional
     @Override
     public boolean removeFromWatched(int filmId, int userId) {
-        boolean state = false;
+        boolean state;
         try {
             if (!listDao.isWatched(filmId, userId))
                 return false;
@@ -80,7 +81,7 @@ public class ListServiceImpl implements ListService {
                 state = listDao.resetWatched(filmId, userId);
             } else state = listDao.removeFilm(filmId, userId);
         } catch (RuntimeException e) {
-            LOGGER.warn(e.getMessage());
+            throw new ServiceException(e.getMessage());
         }
         return state;
     }
@@ -88,7 +89,7 @@ public class ListServiceImpl implements ListService {
     @Transactional
     @Override
     public boolean removeFromPlanned(int filmId, int userId) {
-        boolean state = false;
+        boolean state;
         try {
             if (!listDao.isPlanned(filmId, userId))
                 return false;
@@ -96,7 +97,7 @@ public class ListServiceImpl implements ListService {
                 state = listDao.resetPlanned(filmId, userId);
             else state = listDao.removeFilm(filmId, userId);
         } catch (RuntimeException e) {
-            LOGGER.warn(e.getMessage());
+            throw new ServiceException(e.getMessage());
         }
         return state;
     }
@@ -104,14 +105,14 @@ public class ListServiceImpl implements ListService {
     @Transactional
     @Override
     public List<Film> showOwnWatched(int userId, int page) {
-        List<Film> list = null;
+        List<Film> list;
         try {
             list = listDao.showOwnWatched(userId, page);
             for (Film film : list) {
                 film.setCasts(castService.getCastsByFilm(film.getId()));
             }
         } catch (RuntimeException e) {
-            LOGGER.warn(e.getMessage());
+            throw new ServiceException(e.getMessage());
         }
         return list;
     }
@@ -119,14 +120,14 @@ public class ListServiceImpl implements ListService {
     @Transactional
     @Override
     public List<Film> showOwnPlanned(int userId, int page) {
-        List<Film> list = null;
+        List<Film> list;
         try {
             list = listDao.showOwnPlanned(userId, page);
             for (Film film : list) {
                 film.setCasts(castService.getCastsByFilm(film.getId()));
             }
         } catch (RuntimeException e) {
-            LOGGER.warn(e.getMessage());
+            throw new ServiceException(e.getMessage());
         }
         return list;
     }
@@ -134,14 +135,14 @@ public class ListServiceImpl implements ListService {
     @Transactional
     @Override
     public List<Film> showOthersWatched(int userId, int page) {
-        List<Film> list = null;
+        List<Film> list;
         try {
             list = listDao.showOthersWatched(userId, page);
             for (Film film : list) {
                 film.setCasts(castService.getCastsByFilm(film.getId()));
             }
         } catch (RuntimeException e) {
-            LOGGER.warn(e.getMessage());
+            throw new ServiceException(e.getMessage());
         }
         return list;
     }
@@ -149,14 +150,14 @@ public class ListServiceImpl implements ListService {
     @Transactional
     @Override
     public List<Film> showOthersPlanned(int userId, int page) {
-        List<Film> list = null;
+        List<Film> list;
         try {
             list = listDao.showOthersPlanned(userId, page);
             for (Film film : list) {
                 film.setCasts(castService.getCastsByFilm(film.getId()));
             }
         } catch (RuntimeException e) {
-            LOGGER.warn(e.getMessage());
+            throw new ServiceException(e.getMessage());
         }
         return list;
     }
@@ -164,13 +165,13 @@ public class ListServiceImpl implements ListService {
     @Transactional
     @Override
     public boolean makePrivate(int userId, Film film) {
-        boolean state = false;
+        boolean state;
         try {
             if (!listDao.areRelated(film.getId(), userId))
                 return false;
             state = listDao.changePrivacy(film, userId, false);
         } catch (RuntimeException e) {
-            LOGGER.warn(e.getMessage());
+            throw new ServiceException(e.getMessage());
         }
         return state;
     }
@@ -178,13 +179,13 @@ public class ListServiceImpl implements ListService {
     @Transactional
     @Override
     public boolean makePublic(int userId, Film film) {
-        boolean state = false;
+        boolean state;
         try {
             if (!listDao.areRelated(film.getId(), userId))
                 return false;
             state = listDao.changePrivacy(film, userId, true);
         } catch (RuntimeException e) {
-            LOGGER.warn(e.getMessage());
+            throw new ServiceException(e.getMessage());
         }
         return state;
     }

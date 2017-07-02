@@ -5,6 +5,7 @@ import am.aca.orgflix.entity.Cast;
 import am.aca.orgflix.entity.Film;
 import am.aca.orgflix.service.CastService;
 import am.aca.orgflix.service.FilmService;
+import am.aca.orgflix.service.ServiceException;
 import am.aca.orgflix.util.TestHelper;
 import org.junit.After;
 import org.junit.Assert;
@@ -65,11 +66,10 @@ public class CastServiceIntegrationTest extends BaseIntegrationTest {
         Assert.assertEquals(1, size);
     }
 
-    @Test()
+    @Test(expected = ServiceException.class)
     public void addCast_NoName_Fail() {
         cast = new Cast(null);
-        boolean status = castService.addCast(cast);
-        Assert.assertFalse(status);
+        castService.addCast(cast);
     }
 
     @Test
@@ -131,13 +131,12 @@ public class CastServiceIntegrationTest extends BaseIntegrationTest {
         Assert.assertEquals(1, size);
     }
 
-    @Test
+    @Test(expected = ServiceException.class)
     public void editCast_BadName_Fail() {
         cast = new Cast("Edward Norton");
         castService.addCast(cast);
         cast.setName(null);
-        boolean status = castService.editCast(cast);
-        Assert.assertFalse(status);
+        castService.editCast(cast);
     }
 
     @Test
@@ -147,7 +146,7 @@ public class CastServiceIntegrationTest extends BaseIntegrationTest {
         Assert.assertFalse(status);
     }
 
-    @Test
+    @Test(expected = ServiceException.class)
     public void listCasts_BySize_Success() {
         cast = new Cast("Edward Norton");
         castService.addCast(cast);

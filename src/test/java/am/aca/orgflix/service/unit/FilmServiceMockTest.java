@@ -231,10 +231,12 @@ public class FilmServiceMockTest extends BaseUnitTest {
     public void getFilmsByCast_Fail() {
         when(filmDaoMock.getFilmsByCast(cast.getId())).thenThrow(DaoException.class);
 
-        List<Film> actualFilms = filmService.getFilmsByCast(cast.getId());
-        Assert.assertEquals(null, actualFilms);
+        try {
+            filmService.getFilmsByCast(cast.getId());
+        } catch (RuntimeException e) {
+            verify(filmDaoMock, times(1)).getFilmsByCast(cast.getId());
+        }
 
-        verify(filmDaoMock, times(1)).getFilmsByCast(cast.getId());
     }
 
     @Test
@@ -255,10 +257,11 @@ public class FilmServiceMockTest extends BaseUnitTest {
     public void getFilmsList_Fail() {
         when(filmDaoMock.getFilmsList(0)).thenThrow(DaoException.class);
 
-        List<Film> actualFilms = filmService.getFilmsList(0);
-        Assert.assertEquals(null, actualFilms);
-
-        verify(filmDaoMock, times(1)).getFilmsList(0);
+        try {
+            filmService.getFilmsList(0);
+        } catch (RuntimeException e) {
+            verify(filmDaoMock, times(1)).getFilmsList(0);
+        }
     }
 
     @Test
@@ -275,10 +278,11 @@ public class FilmServiceMockTest extends BaseUnitTest {
     public void getFilmsByGenre_Fail() {
         when(filmDaoMock.getFilmsByGenre(Genre.MUSIC)).thenThrow(DaoException.class);
 
-        List<Film> actualFilms = filmService.getFilmsByGenre(Genre.MUSIC);
-        Assert.assertEquals(null, actualFilms);
-
-        verify(filmDaoMock, times(1)).getFilmsByGenre(Genre.MUSIC);
+        try {
+            filmService.getFilmsByGenre(Genre.MUSIC);
+        } catch (RuntimeException e) {
+            verify(filmDaoMock, times(1)).getFilmsByGenre(Genre.MUSIC);
+        }
     }
 
     @Test

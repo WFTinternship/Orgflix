@@ -5,6 +5,7 @@ import am.aca.orgflix.dao.FilmDAO;
 import am.aca.orgflix.entity.Cast;
 import am.aca.orgflix.entity.Film;
 import am.aca.orgflix.service.CastService;
+import am.aca.orgflix.service.ServiceException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,6 @@ import java.util.List;
 @Service
 public class CastServiceImpl implements CastService {
 
-    private static final Logger LOGGER = Logger.getLogger(CastServiceImpl.class);
     private CastDAO castDAO;
     private FilmDAO filmDAO;
 
@@ -36,11 +36,11 @@ public class CastServiceImpl implements CastService {
     @Transactional
     @Override
     public boolean addCast(Cast cast) {
-        boolean result = false;
+        boolean result;
         try {
             result = castDAO.addCast(cast);
         } catch (RuntimeException e) {
-            LOGGER.warn(e.toString());
+            throw new ServiceException(e.toString());
         }
         return result;
     }
@@ -48,17 +48,17 @@ public class CastServiceImpl implements CastService {
     @Transactional
     @Override
     public boolean addCastToFilm(Cast cast, int filmId) {
-        boolean state = false;
+        boolean state;
         try {
             if (castDAO.isStarringIn(cast.getId(), filmId))
                 return false;
         } catch (RuntimeException e) {
-            LOGGER.warn(e.getMessage());
+            throw new ServiceException(e.getMessage());
         }
         try {
             state = castDAO.addCastToFilm(cast, filmId);
         } catch (RuntimeException e) {
-            LOGGER.warn(e.getMessage());
+            throw new ServiceException(e.getMessage());
         }
         return state;
     }
@@ -66,46 +66,51 @@ public class CastServiceImpl implements CastService {
     @Transactional
     @Override
     public boolean editCast(Cast cast) {
-        boolean state = false;
-        if (!castDAO.exists(cast))
-            return false;
+        boolean state;
+        try {
+            if (!castDAO.exists(cast))
+                return false;
+        }
+        catch (RuntimeException e) {
+            throw new ServiceException(e.getMessage());
+        }
         try {
             state = castDAO.editCast(cast);
         } catch (RuntimeException e) {
-            LOGGER.warn(e.toString());
+            throw new ServiceException(e.getMessage());
         }
         return state;
     }
 
     @Override
     public List<Cast> listCasts() {
-        List<Cast> list = null;
+        List<Cast> list;
         try {
             list = castDAO.listCast();
         } catch (RuntimeException e) {
-            LOGGER.warn(e.getMessage());
+            throw new ServiceException(e.getMessage());
         }
         return list;
     }
 
     @Override
     public List<Film> listFilmsByCast(int castId) {
-        List<Film> list = null;
+        List<Film> list;
         try {
             list = filmDAO.getFilmsByCast(castId);
         } catch (RuntimeException e) {
-            LOGGER.warn(e.toString());
+            throw new ServiceException(e.getMessage());
         }
         return list;
     }
 
     @Override
     public List<Cast> getCastsByFilm(int filmId) {
-        List<Cast> list = null;
+        List<Cast> list;
         try {
             list = castDAO.getCastsByFilm(filmId);
         } catch (RuntimeException e) {
-            LOGGER.warn(e.toString());
+            throw new ServiceException(e.getMessage());
         }
         return list;
     }

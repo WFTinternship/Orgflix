@@ -7,6 +7,7 @@ import am.aca.orgflix.dao.FilmDAO;
 import am.aca.orgflix.entity.Cast;
 import am.aca.orgflix.entity.Film;
 import am.aca.orgflix.service.CastService;
+import am.aca.orgflix.service.ServiceException;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -67,10 +68,12 @@ public class CastServiceMockTest extends BaseUnitTest {
     public void addCast_Fail() {
         when(castDaoMock.addCast(cast)).thenThrow(DaoException.class);
 
-        boolean status = castService.addCast(cast);
-        Assert.assertFalse(status);
+        try {
+            castService.addCast(cast);
+        } catch (ServiceException e) {
+            verify(castDaoMock, times(1)).addCast(cast);
+        }
 
-        verify(castDaoMock, times(1)).addCast(cast);
     }
 
     @Test
@@ -155,10 +158,12 @@ public class CastServiceMockTest extends BaseUnitTest {
     public void listCasts_Fail() {
         when(castDaoMock.listCast()).thenThrow(DaoException.class);
 
-        List<Cast> actualCasts = castService.listCasts();
-        Assert.assertEquals(null, actualCasts);
+        try {
+            castService.listCasts();
+        } catch (ServiceException e) {
+            verify(castDaoMock, times(1)).listCast();
+        }
 
-        verify(castDaoMock, times(1)).listCast();
     }
 
     @Test
@@ -175,9 +180,10 @@ public class CastServiceMockTest extends BaseUnitTest {
     public void listFilmsByCast_Fail() {
         when(filmDaoMock.getFilmsByCast(cast.getId())).thenThrow(DaoException.class);
 
-        List<Film> actualFilms = castService.listFilmsByCast(cast.getId());
-        Assert.assertEquals(null, actualFilms);
-
-        verify(filmDaoMock, times(1)).getFilmsByCast(cast.getId());
+        try {
+            castService.listFilmsByCast(cast.getId());
+        } catch (ServiceException e) {
+            verify(filmDaoMock, times(1)).getFilmsByCast(cast.getId());
+        }
     }
 }

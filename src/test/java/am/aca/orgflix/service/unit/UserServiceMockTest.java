@@ -4,6 +4,7 @@ import am.aca.orgflix.BaseUnitTest;
 import am.aca.orgflix.dao.DaoException;
 import am.aca.orgflix.dao.UserDAO;
 import am.aca.orgflix.entity.User;
+import am.aca.orgflix.service.ServiceException;
 import am.aca.orgflix.service.UserService;
 import org.junit.After;
 import org.junit.Assert;
@@ -53,10 +54,11 @@ public class UserServiceMockTest extends BaseUnitTest {
     public void addUser_Fail() {
         when(userDaoMock.add(user)).thenThrow(DaoException.class);
 
-        int id = userService.add(user);
-        Assert.assertEquals(-1, id);
-
-        verify(userDaoMock, times(1)).add(user);
+        try {
+            userService.add(user);
+        } catch (ServiceException e) {
+            verify(userDaoMock, times(1)).add(user);
+        }
     }
 
     @Test
@@ -73,10 +75,11 @@ public class UserServiceMockTest extends BaseUnitTest {
     public void getUser_ById_Fail() {
         when(userDaoMock.get(-1)).thenThrow(DaoException.class);
 
-        User actualUser = userService.get(-1);
-        Assert.assertEquals(null, actualUser);
-
-        verify(userDaoMock, times(1)).get(-1);
+        try {
+            userService.get(-1);
+        } catch (ServiceException e) {
+            verify(userDaoMock, times(1)).get(-1);
+        }
     }
 
     @Test
@@ -93,10 +96,11 @@ public class UserServiceMockTest extends BaseUnitTest {
     public void getUser_ByEmail_Fail() {
         when(userDaoMock.get("bot@mail.ru")).thenThrow(DaoException.class);
 
-        User actualUser = userService.get("bot@mail.ru");
-        Assert.assertEquals(null, actualUser);
-
-        verify(userDaoMock, times(1)).get("bot@mail.ru");
+        try {
+            userService.get("bot@mail.ru");
+        } catch (ServiceException e) {
+            verify(userDaoMock, times(1)).get("bot@mail.ru");
+        }
     }
 
     @Test
@@ -113,9 +117,10 @@ public class UserServiceMockTest extends BaseUnitTest {
     public void editUser_Fail() {
         when(userDaoMock.edit(user)).thenThrow(DaoException.class);
 
-        boolean status = userService.edit(user);
-        Assert.assertFalse(status);
-
-        verify(userDaoMock, times(1)).edit(user);
+        try {
+            userService.edit(user);
+        } catch (ServiceException e) {
+            verify(userDaoMock, times(1)).edit(user);
+        }
     }
 }

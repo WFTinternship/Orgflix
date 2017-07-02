@@ -6,6 +6,7 @@ import am.aca.orgflix.entity.Film;
 import am.aca.orgflix.entity.Genre;
 import am.aca.orgflix.service.CastService;
 import am.aca.orgflix.service.FilmService;
+import am.aca.orgflix.service.ServiceException;
 import am.aca.orgflix.util.TestHelper;
 import org.junit.After;
 import org.junit.Assert;
@@ -59,12 +60,10 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
         Assert.assertEquals(film, actualFilm);
     }
 
-    @Test
+    @Test(expected = ServiceException.class)
     public void addFilm_EmptyName_Fail() {
         film = new Film(null, 2066);
-
-        boolean status = filmService.addFilm(film);
-        Assert.assertFalse(status);
+        filmService.addFilm(film);
     }
 
     @Test
@@ -263,12 +262,11 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
         Assert.assertEquals(film, actualFilm);
     }
 
-    @Test
+    @Test(expected = ServiceException.class)
     public void editFilm_Fail() {
         film = new Film();
 
-        boolean status = filmService.editFilm(film);
-        Assert.assertFalse(status);
+        filmService.editFilm(film);
     }
 
     @Test

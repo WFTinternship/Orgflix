@@ -5,27 +5,40 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import am.aca.servlet.BeanProvider;
+import am.aca.service.FilmService;
+import am.aca.service.ListService;
 import org.apache.log4j.Logger;
-import org.springframework.context.annotation.Bean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 
 /**
  *  Tag handler for pagination of films
  */
+@Component
 public class PaginationTagHandler extends TagSupport {
 
     private static final Logger LOGGER = Logger.getLogger(PaginationTagHandler.class.getName());
 
-//    private String pageType;
-//    private int userId;
-//
-//    public void setPageType(String pageType) {
-//        this.pageType = pageType;
-//    }
-//
-//    public void setUserId(int userId) {
-//        this.userId = userId;
-//    }
+    private FilmService filmService;
+    private ListService listService;
+
+    @Autowired
+    public PaginationTagHandler(ListService listService, FilmService filmService) {
+        this.listService = listService;
+        this.filmService = filmService;
+    }
+
+    private String pageType;
+    private int userId;
+
+    public void setPageType(String pageType) {
+        this.pageType = pageType;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
 
 
     public int doStartTag() throws JspException {
@@ -33,13 +46,13 @@ public class PaginationTagHandler extends TagSupport {
         JspWriter out = pageContext.getOut();//returns the instance of JspWriter
         try {
             int filmNum = 0;
-//            if(pageType == "all") {
-                filmNum = BeanProvider.getFilmService().totalNumberOfFilms();
-//            } else if(pageType == "watch"){
-//                filmNum = BeanProvider.getListService().showOwnWatched(userId).size();
-//            } else if(pageType == "wish"){
-//                filmNum = BeanProvider.getListService().showOwnPlanned(userId).size();
-//            }
+            if(pageType.equals("main") ) {
+                filmNum = filmService.totalNumberOfFilms();
+            } else if(pageType.equals("watch") ){
+                filmNum = listService.totalNumberOfWatched(userId,true);
+            } else if(pageType.equals("wish") ){
+                filmNum = listService.totalNumberOfWatched(userId,false);
+            }
             if (filmNum > 12) {
                 out.print("<div class='pagintion_container'>");
                 for (int i = 0; i <= filmNum / 12; ++i) {

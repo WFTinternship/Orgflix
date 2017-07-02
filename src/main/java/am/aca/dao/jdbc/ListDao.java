@@ -21,13 +21,13 @@ public interface ListDao {
 
     // RETRIEVE
 
-    List<Film> showOwnWatched(int userId);
+    List<Film> showOwnWatched(int userId, int page);
 
-    List<Film> showOwnPlanned(int userId);
+    List<Film> showOwnPlanned(int userId, int page);
 
-    List<Film> showOthersWatched(int userId);
+    List<Film> showOthersWatched(int userId, int page);
 
-    List<Film> showOthersPlanned(int userId);
+    List<Film> showOthersPlanned(int userId, int page);
 
     // UPDATE
 
@@ -52,5 +52,9 @@ public interface ListDao {
     boolean isWatched(int filmId, int userId);
 
     boolean isPlanned(int filmId, int userId);
+
+    int totalNumberOfWatched(int userId);
+
+    int totalNumberOfWished(int userId);
 
 }

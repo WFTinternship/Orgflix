@@ -2,6 +2,7 @@ package am.aca.service;
 
 import am.aca.entity.Film;
 import am.aca.entity.Genre;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 

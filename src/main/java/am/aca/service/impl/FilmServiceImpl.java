@@ -21,6 +21,7 @@ import java.util.List;
 public class FilmServiceImpl implements FilmService {
 
     private static final Logger LOGGER = Logger.getLogger(FilmServiceImpl.class);
+
     private FilmDAO filmDao;
     private CastDAO castDao;
 
@@ -28,7 +29,6 @@ public class FilmServiceImpl implements FilmService {
     public void setFilmDao(FilmDAO filmDao) {
         this.filmDao = filmDao;
     }
-
     @Autowired
     public void setCastDao(CastDAO castDao) {
         this.castDao = castDao;

@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
+import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
@@ -21,7 +22,7 @@ import java.util.List;
 /**
  * DAO layer for Film entity
  */
-//@Repository
+@Component
 public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
 
     @Autowired

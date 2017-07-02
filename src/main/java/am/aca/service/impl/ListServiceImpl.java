@@ -26,8 +26,11 @@ import java.util.List;
 public class ListServiceImpl implements ListService {
 
     private static final Logger LOGGER = Logger.getLogger(ListServiceImpl.class);
+    @Autowired
     private ListDao listDao;
+    @Autowired
     private FilmService filmService;
+    @Autowired
     private CastService castService;
 
     @Autowired
@@ -113,10 +116,10 @@ public class ListServiceImpl implements ListService {
 
     @Transactional
     @Override
-    public List<Film> showOwnWatched(int userId) {
+    public List<Film> showOwnWatched(int userId, int page) {
         List<Film> list = null;
         try {
-            list = listDao.showOwnWatched(userId);
+            list = listDao.showOwnWatched(userId,page);
             for(Film film : list){
                 film.setCasts(castService.getCastsByFilm(film.getId()));
             }
@@ -128,10 +131,10 @@ public class ListServiceImpl implements ListService {
 
     @Transactional
     @Override
-    public List<Film> showOwnPlanned(int userId) {
+    public List<Film> showOwnPlanned(int userId,int page) {
         List<Film> list = null;
         try {
-            list = listDao.showOwnPlanned(userId);
+            list = listDao.showOwnPlanned(userId,page);
             for(Film film : list){
                 film.setCasts(castService.getCastsByFilm(film.getId()));
             }
@@ -143,10 +146,10 @@ public class ListServiceImpl implements ListService {
 
     @Transactional
     @Override
-    public List<Film> showOthersWatched(int userId) {
+    public List<Film> showOthersWatched(int userId,int page) {
         List<Film> list = null;
         try {
-            list = listDao.showOthersWatched(userId);
+            list = listDao.showOthersWatched(userId,page);
             for(Film film : list){
                 film.setCasts(castService.getCastsByFilm(film.getId()));
             }
@@ -158,10 +161,10 @@ public class ListServiceImpl implements ListService {
 
     @Transactional
     @Override
-    public List<Film> showOthersPlanned(int userId) {
+    public List<Film> showOthersPlanned(int userId, int page) {
         List<Film> list = null;
         try {
-            list = listDao.showOthersPlanned(userId);
+            list = listDao.showOthersPlanned(userId, page);
             for(Film film : list){
                 film.setCasts(castService.getCastsByFilm(film.getId()));
             }
@@ -197,5 +200,20 @@ public class ListServiceImpl implements ListService {
             LOGGER.warn(e.getMessage());
         }
         return state;
+    }
+
+    @Override
+    public int totalNumberOfWatched(int userId, boolean isWatched) {
+        int total = 0;
+        try {
+            if(isWatched) {
+                total = listDao.totalNumberOfWatched(userId);
+            } else {
+                total = listDao.totalNumberOfWished(userId);
+            }
+        } catch (RuntimeException e) {
+            LOGGER.warn(e.getMessage());
+        }
+        return total;
     }
 }

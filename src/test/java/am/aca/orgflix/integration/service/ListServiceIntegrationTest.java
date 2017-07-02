@@ -56,7 +56,7 @@ public class ListServiceIntegrationTest extends BaseIntegrationTest {
     @Test
     public void addToWatchedWhenNotPlanned_Succeeded() {
         Assert.assertTrue(listService.addToWatched(filmId, true, user.getId()));
-        Assert.assertEquals(1, listService.showOwnWatched(user.getId()).size());
+        Assert.assertEquals(1, listService.showOwnWatched(user.getId(),0).size());
     }
 
     @Test
@@ -65,13 +65,13 @@ public class ListServiceIntegrationTest extends BaseIntegrationTest {
         listService.addToPlanned(filmId, true, user.getId());
 
         Assert.assertTrue(listService.addToWatched(filmId, true, user.getId()));
-        Assert.assertEquals(1, listService.showOwnWatched(user.getId()).size());
+        Assert.assertEquals(1, listService.showOwnWatched(user.getId(),0).size());
     }
 
     @Test
     public void addToPlannedWhenNotWatched_Succeeded() {
         Assert.assertTrue(listService.addToPlanned(filmId, true, user.getId()));
-        Assert.assertEquals(1, listService.showOwnPlanned(user.getId()).size());
+        Assert.assertEquals(1, listService.showOwnPlanned(user.getId(),0).size());
     }
 
     @Test
@@ -80,7 +80,7 @@ public class ListServiceIntegrationTest extends BaseIntegrationTest {
         listService.addToWatched(filmId, true, user.getId());
 
         Assert.assertTrue(listService.addToPlanned(filmId, true, user.getId()));
-        Assert.assertEquals(1, listService.showOwnWatched(user.getId()).size());
+        Assert.assertEquals(1, listService.showOwnWatched(user.getId(),0).size());
     }
 
     @Test
@@ -89,7 +89,7 @@ public class ListServiceIntegrationTest extends BaseIntegrationTest {
         listService.addToPlanned(filmId, true, user.getId());
 
         Assert.assertTrue(listService.removeFromPlanned(film.getId(), user.getId()));
-        Assert.assertEquals(0, listService.showOwnPlanned(user.getId()).size());
+        Assert.assertEquals(0, listService.showOwnPlanned(user.getId(),0).size());
     }
 
     @Test
@@ -99,7 +99,7 @@ public class ListServiceIntegrationTest extends BaseIntegrationTest {
         listService.addToWatched(filmId, true, user.getId());
 
         Assert.assertTrue(listService.removeFromPlanned(film.getId(), user.getId()));
-        Assert.assertEquals(1, listService.showOwnWatched(user.getId()).size());
+        Assert.assertEquals(1, listService.showOwnWatched(user.getId(),0).size());
     }
 
     @Test
@@ -108,7 +108,7 @@ public class ListServiceIntegrationTest extends BaseIntegrationTest {
         listService.addToWatched(filmId, true, user.getId());
 
         Assert.assertTrue(listService.removeFromWatched(film.getId(), user.getId()));
-        Assert.assertEquals(listService.showOwnWatched(user.getId()).size(), 0);
+        Assert.assertEquals(listService.showOwnWatched(user.getId(),0).size(), 0);
     }
 
     @Test
@@ -118,7 +118,7 @@ public class ListServiceIntegrationTest extends BaseIntegrationTest {
         listService.addToWatched(filmId, true, user.getId());
 
         Assert.assertTrue(listService.removeFromWatched(film.getId(), user.getId()));
-        Assert.assertEquals(listService.showOwnPlanned(user.getId()).size(), 1);
+        Assert.assertEquals(listService.showOwnPlanned(user.getId(),0).size(), 1);
     }
 
     @Test
@@ -154,7 +154,7 @@ public class ListServiceIntegrationTest extends BaseIntegrationTest {
         listService.addToPlanned(filmId, true, user.getId());
         filmService.addFilm(film);
         listService.addToPlanned(filmId, false, user.getId());
-        Assert.assertEquals(1, listService.showOthersPlanned(user.getId()).size());
+        Assert.assertEquals(1, listService.showOthersPlanned(user.getId(),0).size());
     }
 
     @Test
@@ -162,7 +162,7 @@ public class ListServiceIntegrationTest extends BaseIntegrationTest {
         //setup List
         listService.addToPlanned(filmId, false, user.getId());
 
-        Assert.assertEquals(0, listService.showOthersPlanned(user.getId()).size());
+        Assert.assertEquals(0, listService.showOthersPlanned(user.getId(),0).size());
     }
 
     @Test
@@ -170,7 +170,7 @@ public class ListServiceIntegrationTest extends BaseIntegrationTest {
         listService.addToWatched(filmId, true, user.getId());
         filmService.addFilm(film);
         listService.addToWatched(filmId, false, user.getId());
-        Assert.assertEquals(1, listService.showOthersWatched(user.getId()).size());
+        Assert.assertEquals(1, listService.showOthersWatched(user.getId(),0).size());
     }
 
     @Test
@@ -178,42 +178,42 @@ public class ListServiceIntegrationTest extends BaseIntegrationTest {
         //setup List
         listService.addToWatched(filmId, false, user.getId());
 
-        Assert.assertEquals(0, listService.showOthersWatched(user.getId()).size());
+        Assert.assertEquals(0, listService.showOthersWatched(user.getId(),0).size());
     }
 
     @Test
     public void showOwnPlannedSuccess() {
         listService.addToPlanned(filmId, false, user.getId());
-        Assert.assertEquals(1, listService.showOwnPlanned(user.getId()).size());
+        Assert.assertEquals(1, listService.showOwnPlanned(user.getId(),0).size());
     }
 
     @Test
     public void showOwnPlanned_Empty() {
-        Assert.assertTrue(listService.showOwnPlanned(user.getId()).isEmpty());
+        Assert.assertTrue(listService.showOwnPlanned(user.getId(),0).isEmpty());
     }
 
     @Test
     public void showOwnWatched_Success() {
         listService.addToWatched(filmId, false, user.getId());
-        Assert.assertEquals(1, listService.showOwnWatched(user.getId()).size());
+        Assert.assertEquals(1, listService.showOwnWatched(user.getId(),0).size());
     }
 
     @Test
     public void showOwnWatched_Empty() {
-        Assert.assertTrue(listService.showOwnWatched(user.getId()).isEmpty());
+        Assert.assertTrue(listService.showOwnWatched(user.getId(),0).isEmpty());
     }
 
     @Test
     public void makePrivate_Success() {
         listService.addToWatched(filmId, true, user.getId());
         Assert.assertTrue(listService.makePrivate(user.getId(), film));
-        Assert.assertTrue(listService.showOthersWatched(user.getId()).isEmpty());
+        Assert.assertTrue(listService.showOthersWatched(user.getId(),0).isEmpty());
     }
 
     @Test
     public void makePublic_Success() {
         listService.addToWatched(filmId, false, user.getId());
         Assert.assertTrue(listService.makePublic(user.getId(), film));
-        Assert.assertEquals(1, listService.showOthersWatched(user.getId()).size());
+        Assert.assertEquals(1, listService.showOthersWatched(user.getId(),0).size());
     }
 }

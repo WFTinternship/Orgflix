@@ -6,6 +6,7 @@ import am.aca.dao.jdbc.impljdbc.mapper.FilmRowMapper;
 import am.aca.entity.Film;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -14,7 +15,7 @@ import java.util.List;
 /**
  * DAO layer for list of film related methods
  */
-//@Repository
+@Component
 public class JdbcListDAO extends BaseDAO implements ListDao {
 
     @Autowired
@@ -50,38 +51,38 @@ public class JdbcListDAO extends BaseDAO implements ListDao {
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<Film> showOwnWatched(int userId) {
+    public List<Film> showOwnWatched(int userId, int page) {
         final String query = "SELECT films.ID, films.Title, films.Director, films.HasOscar, " +
                 "films.image_ref, films.Prod_Year, films.Rate_1star, films.Rate_2star, films.Rate_3star, films.Rate_4star, films.Rate_5star FROM lists INNER JOIN films " +
-                "ON lists.Film_ID = films.ID WHERE lists.User_ID = ? AND Is_watched = TRUE ";
-        return getJdbcTemplate().query(query, new Object[]{userId}, new FilmRowMapper());
+                "ON lists.Film_ID = films.ID WHERE lists.User_ID = ? AND Is_watched = TRUE LIMIT ? , 12 ";
+        return getJdbcTemplate().query(query, new Object[]{userId,page}, new FilmRowMapper());
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<Film> showOwnPlanned(int userId) {
+    public List<Film> showOwnPlanned(int userId, int page) {
         final String query = "SELECT films.ID, films.Title, films.Director, films.HasOscar, " +
                 "films.image_ref, films.Prod_Year, films.Rate_1star, films.Rate_2star, films.Rate_3star, films.Rate_4star, films.Rate_5star FROM lists INNER JOIN films " +
-                "ON lists.Film_ID = films.ID WHERE lists.User_ID = ? AND Is_wished = TRUE ";
-        return getJdbcTemplate().query(query, new Object[]{userId}, new FilmRowMapper());
+                "ON lists.Film_ID = films.ID WHERE lists.User_ID = ? AND Is_wished = TRUE LIMIT ? , 12 ";
+        return getJdbcTemplate().query(query, new Object[]{userId,page}, new FilmRowMapper());
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<Film> showOthersWatched(int userId) {
+    public List<Film> showOthersWatched(int userId, int page) {
         final String query = "SELECT films.ID, films.Title, films.Director, films.HasOscar, " +
                 "films.image_ref, films.Prod_Year, films.Rate_1star, films.Rate_2star, films.Rate_3star, films.Rate_4star, films.Rate_5star FROM lists INNER JOIN films " +
-                "ON lists.Film_ID = films.ID WHERE lists.User_ID = ? AND Is_watched = TRUE AND Is_public = TRUE ";
-        return getJdbcTemplate().query(query, new Object[]{userId}, new FilmRowMapper());
+                "ON lists.Film_ID = films.ID WHERE lists.User_ID = ? AND Is_watched = TRUE AND Is_public = TRUE LIMIT ? , 12 ";
+        return getJdbcTemplate().query(query, new Object[]{userId, page}, new FilmRowMapper());
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<Film> showOthersPlanned(int userId) {
+    public List<Film> showOthersPlanned(int userId, int page) {
         final String query = "SELECT films.ID, films.Title, films.Director, films.HasOscar, " +
                 "films.image_ref, films.Prod_Year, films.Rate_1star, films.Rate_2star, films.Rate_3star, films.Rate_4star, films.Rate_5star FROM lists INNER JOIN films " +
-                "ON lists.Film_ID = films.ID WHERE lists.User_ID = ? AND Is_wished = TRUE AND Is_public = TRUE ";
-        return getJdbcTemplate().query(query, new Object[]{userId}, new FilmRowMapper());
+                "ON lists.Film_ID = films.ID WHERE lists.User_ID = ? AND Is_wished = TRUE AND Is_public = TRUE LIMIT ? , 12 ";
+        return getJdbcTemplate().query(query, new Object[]{userId, page}, new FilmRowMapper());
     }
 
     // UPDATE
@@ -153,5 +154,27 @@ public class JdbcListDAO extends BaseDAO implements ListDao {
                 userId, filmId
         }, Integer.class);
         return (plannedCount == 1);
+    }
+
+    /**
+     * Provide the current total number of watched films of the selected user
+     * @param userId id of the current user
+     * @return the current total number of watched films
+     */
+    @Override
+    public int totalNumberOfWatched(int userId) {
+        final String query = "SELECT count(Film_ID) AS total FROM lists WHERE User_ID = ? AND Is_watched = TRUE";
+        return getJdbcTemplate().queryForObject(query,new Object[]{userId}, Integer.class);
+    }
+
+    /**
+     * Provide the current total number of wished films of the selected user
+     * @param userId id of the current user
+     * @return the current total number of wished films
+     */
+    @Override
+    public int totalNumberOfWished(int userId) {
+        final String query = "SELECT count(Film_ID) AS total FROM lists WHERE User_ID = ? AND Is_wished = TRUE";
+        return getJdbcTemplate().queryForObject(query,new Object[]{userId}, Integer.class);
     }
 }

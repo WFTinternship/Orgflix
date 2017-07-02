@@ -26,13 +26,13 @@ public class JdbcListDAO extends BaseDAO implements ListDao {
 
     @Override
     public boolean insertWatched(int filmId, int userId, boolean isPublic) {
-        final String insertQuery = "INSERT INTO Lists(User_ID, Film_ID, Is_watched, Is_public) VALUES (?, ?, TRUE, ?)";
+        final String insertQuery = "INSERT INTO lists(User_ID, Film_ID, Is_watched, Is_public) VALUES (?, ?, TRUE, ?)";
         return (getJdbcTemplate().update(insertQuery, userId, filmId, isPublic) == 1);
     }
 
     @Override
     public boolean insertPlanned(int filmId, int userId, boolean isPublic) {
-        final String insertQuery = "INSERT INTO Lists(User_ID, Film_ID, Is_wished, Is_public) VALUES (?, ?, TRUE, ?)";
+        final String insertQuery = "INSERT INTO lists(User_ID, Film_ID, Is_wished, Is_public) VALUES (?, ?, TRUE, ?)";
         return (getJdbcTemplate().update(insertQuery, userId, filmId, isPublic) == 1);
     }
 
@@ -134,7 +134,7 @@ public class JdbcListDAO extends BaseDAO implements ListDao {
 
     @Override
     public boolean isPlanned(int filmId, int userId) {
-        final String plannedCheckQuery = "SELECT COUNT(*) FROM Lists WHERE User_ID = ? AND Film_ID = ? AND Is_wished = TRUE ";
+        final String plannedCheckQuery = "SELECT COUNT(*) FROM lists WHERE User_ID = ? AND Film_ID = ? AND Is_wished = TRUE ";
         int plannedCount = getJdbcTemplate().queryForObject(plannedCheckQuery, new Object[]{
                 userId, filmId
         }, Integer.class);

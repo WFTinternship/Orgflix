@@ -30,10 +30,7 @@ public class JdbcCastDAO extends BaseDAO implements CastDAO {
     // CREATE
 
     /**
-     * Add new actor to DB
-     *
-     * @param cast the actor object to be added
-     * @return true if actor is added, otherwise false
+     * @see CastDAO#addCast(am.aca.orgflix.entity.Cast)
      */
     @Override
     public boolean addCast(Cast cast) {
@@ -54,11 +51,7 @@ public class JdbcCastDAO extends BaseDAO implements CastDAO {
     }
 
     /**
-     * Add an association of actor with film in DB
-     *
-     * @param cast   the cast with which the provided film will be associated
-     * @param filmId the id of film which will be associated with provided cast
-     * @return true if the new association of cast to film was successful, otherwise false
+     * @see CastDAO#addCastToFilm(am.aca.orgflix.entity.Cast, int)
      */
     @Override
     public boolean addCastToFilm(Cast cast, int filmId) {
@@ -69,9 +62,7 @@ public class JdbcCastDAO extends BaseDAO implements CastDAO {
     // READ
 
     /**
-     * List all the casts currently in DB
-     *
-     * @return List of all casts currently in DB
+     * @see am.aca.orgflix.dao.CastDAO#listCast()
      */
     @Override
     public List<Cast> listCast() {
@@ -80,14 +71,12 @@ public class JdbcCastDAO extends BaseDAO implements CastDAO {
     }
 
     /**
-     * List all the casts assigned to the film with provided id
-     *
-     * @param filmId the id
-     * @return List of all casts assigned to the specific film
+     * @see CastDAO#getCastsByFilm(int)
      */
     @Override
     public List<Cast> getCastsByFilm(int filmId) {
-        final String query = "SELECT casts.ID, casts.Actor_Name, casts.HasOscar FROM casts" +
+        final String query = "SELECT casts.ID, casts.Actor_Name, casts.HasOscar " +
+                "FROM casts" +
                 " INNER JOIN (" +
                 "    SELECT Actor_ID" +
                 "    FROM film_to_cast" +
@@ -101,10 +90,7 @@ public class JdbcCastDAO extends BaseDAO implements CastDAO {
     // UPDATE
 
     /**
-     * Update the fileds of the provided actor object in DB
-     *
-     * @param cast the actor which fields will be updated in DB
-     * @return true if the update was successful, otherwise false
+     * @see CastDAO#editCast(am.aca.orgflix.entity.Cast)
      */
     @Override
     public boolean editCast(Cast cast) {
@@ -119,10 +105,7 @@ public class JdbcCastDAO extends BaseDAO implements CastDAO {
     // DELETE
 
     /**
-     * Remove the provided actor from DB
-     *
-     * @param cast the actor which are being removed
-     * @return true if the actor was removed, othrewise false
+     * @see CastDAO#remove(am.aca.orgflix.entity.Cast)
      */
     @Override
     public boolean remove(Cast cast) {
@@ -131,6 +114,10 @@ public class JdbcCastDAO extends BaseDAO implements CastDAO {
     }
 
     // Support methods
+
+    /**
+     * @see CastDAO#isStarringIn(int, int)
+     */
     @Override
     public boolean isStarringIn(int actorId, int filmId) {
         String query = "SELECT COUNT(*) FROM film_to_cast WHERE Film_ID = ? AND Actor_ID = ?";
@@ -140,6 +127,9 @@ public class JdbcCastDAO extends BaseDAO implements CastDAO {
         ) == 1;
     }
 
+    /**
+     * @see CastDAO#exists(am.aca.orgflix.entity.Cast)
+     */
     @Override
     public boolean exists(Cast cast) {
         String query = "SELECT COUNT(*) FROM casts WHERE ID = ?";

@@ -33,10 +33,7 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
     // CREATE
 
     /**
-     * Add new film to DB, the production year is expected to be later then 19000
-     *
-     * @param film the film object to be added
-     * @return true if the film was added, otherwise false
+     * @see FilmDAO#addFilm(am.aca.orgflix.entity.Film)
      */
     @Override
     public boolean addFilm(Film film) {
@@ -46,7 +43,8 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
 
         KeyHolder holder = new GeneratedKeyHolder();
 
-        final String query = "INSERT INTO films (Title, Prod_Year, HasOscar, Rate_1star, Rate_2star, Rate_3star, Rate_4star, Rate_5star, director) " +
+        final String query = "INSERT INTO films (Title, Prod_Year, HasOscar, " +
+                "Rate_1star, Rate_2star, Rate_3star, Rate_4star, Rate_5star, director) " +
                 " VALUES( ? , ? , ?, ?, ?, ?, ?, ?, ?) ";
 
         int result = getJdbcTemplate().update(connection -> {
@@ -69,11 +67,7 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
     }
 
     /**
-     * Add an association of genre with film in DB
-     *
-     * @param genre  the genre with which the provided film will be associated
-     * @param filmId the id of film which will be associated with provided genre
-     * @return true if the new association of genre to film was successful, otherwise false
+     * @see FilmDAO#addGenreToFilm(am.aca.orgflix.entity.Genre, int)
      */
     @Override
     public boolean addGenreToFilm(Genre genre, int filmId) {
@@ -82,11 +76,7 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
     }
 
     /**
-     * Increment by one the selected scale (from 1 to 5) of the film whitch id is provided
-     *
-     * @param filmId   the id of the film subject to be rated
-     * @param starType the selected scale of rates to be incremented by one
-     * @return true if the rating was successful, otherwise false
+     * @see FilmDAO#rateFilm(int, int)
      */
     @Override
     public boolean rateFilm(int filmId, int starType) {
@@ -102,10 +92,7 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
     // READ
 
     /**
-     * Finds and returns the film by provided id from DB
-     *
-     * @param id the id of the requested film
-     * @return the film matching the provided id
+     * @see FilmDAO#getFilmById(int)
      */
     @Override
     public Film getFilmById(int id) {
@@ -120,10 +107,7 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
 
 
     /**
-     * Get one page of lists of films from DB, each page contains 12 films
-     *
-     * @param startIndex 0 based page index
-     * @return a list of films (up to 12 films) for the requested page
+     * @see FilmDAO#getFilmsList(int)
      */
     @Override
     public List<Film> getFilmsList(int startIndex) {
@@ -134,15 +118,14 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
     }
 
     /**
-     * Return the list of all films associated with provided genre
-     *
-     * @param genre the genre object which films should be returned
-     * @return A list of all films associated to the provided genre
+     * @see FilmDAO#getFilmsByGenre(am.aca.orgflix.entity.Genre)
      */
     @Override
     public List<Film> getFilmsByGenre(Genre genre) {
         final String filmQuery = "SELECT films.ID, films.Title, films.Director, films.HasOscar, " +
-                "films.image_ref, films.Prod_Year, films.Rate_1star, films.Rate_2star, films.Rate_3star, films.Rate_4star, films.Rate_5star FROM genre_to_film" +
+                "films.image_ref, films.Prod_Year, films.Rate_1star, films.Rate_2star, " +
+                "films.Rate_3star, films.Rate_4star, films.Rate_5star " +
+                "FROM genre_to_film" +
                 " LEFT JOIN films ON genre_to_film.Film_ID = films.ID " +
                 " WHERE Genre_ID = ?";
 
@@ -150,10 +133,7 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
     }
 
     /**
-     * Return the list of all films associated with provided actors id
-     *
-     * @param actorId the id of actor who's films should be returned
-     * @return A list of all films associated to the actor with provided id
+     * @see FilmDAO#getFilmsByCast(int)
      */
     @Override
     public List<Film> getFilmsByCast(int actorId) {
@@ -174,11 +154,7 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
     }
 
     /**
-     * Get the overall current rating of the provided film, each scale of 1 to 5 has appropriate
-     * weight, for example one 5 star and two 4 stars give rate (1*5+2*4)/(1+2)
-     *
-     * @param filmId the id of film which rate is requested
-     * @return the current overall rate of the film
+     * @see FilmDAO#getRating(int)
      */
     @Override
     public double getRating(int filmId) {
@@ -200,9 +176,7 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
     }
 
     /**
-     * Provide the current total number of films in DB
-     *
-     * @return the current total number of films in DB
+     * @see FilmDAO#totalNumberOfFilms()
      */
     @Override
     public int totalNumberOfFilms() {
@@ -211,16 +185,8 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
     }
 
     /**
-     * Provide films filtered by user's desired parameters
-     *
-     * @param title      a keyword in desired film's title
-     * @param startYear  the lower bound of the desired film's release date
-     * @param finishYear the upper bound of the desired film's release date
-     * @param hasOscar   indicator whether or not the desired film has Oscar for Best Picture
-     * @param director   the full or partial name of the desired film's director
-     * @param castId     the id of the desired film's cast member
-     * @param genreId    the id of the desired film's genre
-     * @return list of all films satisfying all filter and search conditions given by the user
+     * @see FilmDAO#getFilteredFilms(java.lang.String, int, int, java.lang.String,
+     * java.lang.String, java.lang.String, java.lang.String)
      */
     @Override
     public List<Film> getFilteredFilms(String title, int startYear, int finishYear, String hasOscar, String director, String castId, String genreId) {
@@ -240,7 +206,8 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
                 "OR films.Director IS NULL) " +
                 "AND (film_to_cast.Actor_ID LIKE ? " +
                 "OR film_to_cast.Actor_ID IS NULL)" +
-                "AND (genre_to_film.Genre_ID LIKE ? OR genre_to_film.Genre_ID IS NULL) ";
+                "AND (genre_to_film.Genre_ID LIKE ? " +
+                "OR genre_to_film.Genre_ID IS NULL) ";
         return getJdbcTemplate().query(query, new Object[]{
                 "%" + title + "%", startYear, finishYear, hasOscar, director, castId, genreId
         }, new FilmRowMapper());
@@ -250,10 +217,7 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
     //UPDATE
 
     /**
-     * Update the fileds of the provided film in DB
-     *
-     * @param film the film which fields will be updated in DB
-     * @return true if the update was successful, otherwise false
+     * @see FilmDAO#editFilm(am.aca.orgflix.entity.Film)
      */
     @Override
     public boolean editFilm(Film film) {
@@ -283,10 +247,7 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
     // DELETE
 
     /**
-     * Remove the all relations of provided film with any actor
-     *
-     * @param film the film which relations with actors are being removed
-     * @return true if the relation was removed, otherwise false
+     * @see FilmDAO#resetRelationCasts(am.aca.orgflix.entity.Film)
      */
     @Override
     public boolean resetRelationCasts(Film film) {
@@ -295,10 +256,7 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
     }
 
     /**
-     * Remove the all relations of provided film with any genre
-     *
-     * @param film the film which relations with genres are being removed
-     * @return true if the relation was removed, otherwise false
+     * @see FilmDAO#resetRelationGenres(am.aca.orgflix.entity.Film)
      */
     @Override
     public boolean resetRelationGenres(Film film) {
@@ -307,10 +265,7 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
     }
 
     /**
-     * Remove the provided film from DB
-     *
-     * @param film the film which are being removed
-     * @return true if the film was removed, otherwise false
+     * @see FilmDAO#remove(am.aca.orgflix.entity.Film)
      */
     @Override
     public boolean remove(Film film) {

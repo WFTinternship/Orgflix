@@ -7,11 +7,11 @@ import am.aca.orgflix.service.ListService;
 import am.aca.orgflix.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -25,6 +25,7 @@ import java.io.FileOutputStream;
  * Main page mapper
  */
 @Component
+@Scope("session")
 @RequestMapping("/")
 public class MainController {
 
@@ -47,6 +48,11 @@ public class MainController {
     @Autowired
     public void setCastService(CastService castService) {
         this.castService = castService;
+    }
+
+    @ModelAttribute("User")
+    public User populateUser() {
+        return new User();
     }
 
     @RequestMapping("/")
@@ -213,5 +219,10 @@ public class MainController {
         stream.close();
 
         return new ModelAndView("uploadResult", "fileSuccess", "Film successfully saved!");
+    }
+
+    public static HttpSession session() {
+        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        return attr.getRequest().getSession(true);
     }
 }

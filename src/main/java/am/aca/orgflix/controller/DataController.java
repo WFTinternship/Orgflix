@@ -7,7 +7,10 @@ import am.aca.orgflix.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Controller for REST request
@@ -20,18 +23,22 @@ public class DataController {
     private ListService listService;
     private FilmService filmService;
     private CastService castService;
+
     @Autowired
     public void setUserService(UserService userService) {
         this.userService = userService;
     }
+
     @Autowired
     public void setListService(ListService listService) {
         this.listService = listService;
     }
+
     @Autowired
     public void setFilmService(FilmService filmService) {
         this.filmService = filmService;
     }
+
     @Autowired
     public void setCastService(CastService castService) {
         this.castService = castService;
@@ -40,7 +47,7 @@ public class DataController {
 
     @PostMapping("/addFilmToWatchList")
     public ResponseEntity addFilmToWatchList(@RequestParam("user") int userId, @RequestParam("film") int filmId) {
-        boolean state = listService.addToWatched(filmId, true,userId );
+        boolean state = listService.addToWatched(filmId, true, userId);
         if (state)
             return new ResponseEntity("Film added to watch list", HttpStatus.OK);
         else
@@ -49,7 +56,7 @@ public class DataController {
 
     @PostMapping("/addFilmToWishList")
     public ResponseEntity addFilmToWishList(@RequestParam("user") int userId, @RequestParam("film") int filmId) {
-        boolean state = listService.addToPlanned(filmId, true,userId );
+        boolean state = listService.addToPlanned(filmId, true, userId);
         if (state)
             return new ResponseEntity("Film added to wish list", HttpStatus.OK);
         else
@@ -58,7 +65,7 @@ public class DataController {
 
     @PostMapping("/removeFilmFromWishList")
     public ResponseEntity removeFromWishList(@RequestParam("user") int userId, @RequestParam("film") int filmId) {
-        boolean state = listService.removeFromPlanned(filmId, userId );
+        boolean state = listService.removeFromPlanned(filmId, userId);
         if (state)
             return new ResponseEntity("Film removed from wish list", HttpStatus.OK);
         else
@@ -67,7 +74,7 @@ public class DataController {
 
     @PostMapping("/removeFilmFromWatchList")
     public ResponseEntity removeFromWatchList(@RequestParam("user") int userId, @RequestParam("film") int filmId) {
-        boolean state = listService.removeFromWatched(filmId, userId );
+        boolean state = listService.removeFromWatched(filmId, userId);
         if (state)
             return new ResponseEntity("Film removed from watch list", HttpStatus.OK);
         else

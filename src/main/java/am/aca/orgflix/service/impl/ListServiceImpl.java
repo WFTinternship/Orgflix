@@ -197,7 +197,7 @@ public class ListServiceImpl implements ListService {
             if (isWatched) {
                 total = listDao.totalNumberOfWatched(userId);
             } else {
-                total = listDao.totalNumberOfWished(userId);
+                total = listDao.totalNumberOfPlanned(userId);
             }
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());

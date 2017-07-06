@@ -30,10 +30,7 @@ public class JdbcUserDAO extends BaseDAO implements UserDAO {
     // CREATE
 
     /**
-     * Add new user to DB
-     *
-     * @param user the user object to be added to DB
-     * @return id of added new user in DB
+     * @see UserDAO#add(am.aca.orgflix.entity.User)
      */
     @Override
     public int add(User user) {
@@ -67,10 +64,7 @@ public class JdbcUserDAO extends BaseDAO implements UserDAO {
     // READ
 
     /**
-     * Return user by user Id
-     *
-     * @param id the id of the user in DB
-     * @return user object with the matched id
+     * @see UserDAO#get(int)
      */
     @Override
     public User get(int id) {
@@ -79,10 +73,7 @@ public class JdbcUserDAO extends BaseDAO implements UserDAO {
     }
 
     /**
-     * Return user by user user's email
-     *
-     * @param email the email of the user in DB
-     * @return user object with the matched id
+     * @see UserDAO#get(java.lang.String)
      */
     @Override
     public User get(String email) {
@@ -91,11 +82,7 @@ public class JdbcUserDAO extends BaseDAO implements UserDAO {
     }
 
     /**
-     * Return user authenticated by user's email and password
-     *
-     * @param email the email of the user in DB
-     * @param pass  the password of the user in DB
-     * @return user object with the matched details
+     * @see UserDAO#authenticate(java.lang.String, java.lang.String)
      */
     @Override
     public User authenticate(String email, String pass) {
@@ -107,14 +94,7 @@ public class JdbcUserDAO extends BaseDAO implements UserDAO {
     //UPDATE
 
     /**
-     * Update the user's data with selected id in DB based on the provided fields' data
-     *
-     * @param id    user id to search for
-     * @param nick  user's nick name to be updated to
-     * @param name  user's name to be updated to (not required)
-     * @param pass  user's password to be updated to
-     * @param email user's email to be updated to
-     * @return true if update was successful, otherwise false
+     * @see UserDAO#edit(int, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
      */
     @Override
     public boolean edit(int id, String nick, String name, String pass, String email) {
@@ -128,11 +108,7 @@ public class JdbcUserDAO extends BaseDAO implements UserDAO {
     }
 
     /**
-     * @param user the user whos data should be updated according to its current field values
-     * @return true if update was successful, otherwise false
-     * @see am/aca/dao/jdbc/impljdbc/JdbcUserDAO.java:131
-     * <p>
-     * Update the provided user's data in DB
+     * @see UserDAO#edit(am.aca.orgflix.entity.User)
      */
     @Override
     public boolean edit(User user) {
@@ -140,14 +116,7 @@ public class JdbcUserDAO extends BaseDAO implements UserDAO {
     }
 
     /**
-     * @param id    user id to search for
-     * @param nick  user's nick name to be updated to
-     * @param pass  user's password to be updated to
-     * @param email user's email to be updated to
-     * @return true if update was successful, otherwise false
-     * @see am/aca/dao/jdbc/impljdbc/JdbcUserDAO.java:131
-     * <p>
-     * Update the user's data with selected id in DB based on the provided fields' data
+     * @see UserDAO#edit(int, java.lang.String, java.lang.String, java.lang.String)
      */
     @Override
     public boolean edit(int id, String nick, String pass, String email) {
@@ -157,10 +126,7 @@ public class JdbcUserDAO extends BaseDAO implements UserDAO {
     // DELETE
 
     /**
-     * Removed user with provided id from DB
-     *
-     * @param id of the user to be removed
-     * @return true if the remove was successful, otherwise false
+     * @see UserDAO#remove(int)
      */
     @Override
     public boolean remove(int id) {
@@ -169,11 +135,7 @@ public class JdbcUserDAO extends BaseDAO implements UserDAO {
     }
 
     /**
-     * @param user the user to be removed
-     * @return true if the remove was successful, otherwise false
-     * @see am/aca/dao/jdbc/impljdbc/JdbcUserDAO.java:178
-     * <p>
-     * Removed provided user from DB
+     * @see UserDAO#remove(am.aca.orgflix.entity.User)
      */
     @Override
     public boolean remove(User user) {

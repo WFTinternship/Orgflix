@@ -166,7 +166,7 @@
 
 						window.setTimeout(function() {
 							window.location.href = href;
-						}, 350);
+						}, 500);
 
 				})
 				.append('<a class="close" href="#menu">Close</a>');

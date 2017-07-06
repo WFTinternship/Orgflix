@@ -1,6 +1,4 @@
-/**
- * Created by David on 6/13/2017
- */
+
 function pagination(page) {
     $("#currPage").val(page);
     $('#navigator').attr('action', 'index');
@@ -41,6 +39,21 @@ function RemoveFromList(type,id) {
     }});
 }
 
+function getActorsList() {
+    $.ajax({url: "/data/getActorsList",type:"POST",success: function(result){
+        var obj = eval ("(" + result + ")");
+        var str = '<div>';
+        for(var i=0;i<obj.length;i++){
+            str=str+'<div id="act_'+'">'+obj[i].name+'</div>';
+        }
+        str=str+'</div>';
+        console.log(str);
+        // $("#pop-up-result").html(result);
+        // $("#pop-up-result").css("display", "block");
+        // setTimeout(timeOuter(id,true), 3000);
+    }});
+}
+
 function navigator(page){
     $('#navigator').attr('action', page);
     $("#navigator").submit();
@@ -55,6 +68,35 @@ function submitSignUp() {
     } else {
         $("#signUpForm").submit();
     }
+}
+
+function star(star, isClick) {
+    if(isClick){
+        $("#stars").val(star);
+        $("#stars").siblings("span:nth-of-type(2)").html("("+star+" star)");
+    } else {
+        if(star==0){
+            $("#stars").siblings("a").css("color","gray");
+            for (i = 1; i <= $("#stars").val(); i++) {
+                $("#stars").siblings("a:nth-of-type(" + i + ")").css("color", "#ffe415");
+            }
+        } else {
+            for (i = 1; i < star; i++) {
+                $("#stars").siblings("a:nth-of-type(" + i + ")").css("color", "red");
+            }
+        }
+
+    }
+}
+
+function hasOscar() {
+    if( $("#hasOscar").val() == 0){
+        var oscar = 1;
+    } else {
+        var oscar = 0;
+    }
+    $("#hasOscar").val(oscar);
+    $("#oscarCheck").toggleClass("fa-square-o fa-check-square-o");
 }
 
 function submitLogin() {

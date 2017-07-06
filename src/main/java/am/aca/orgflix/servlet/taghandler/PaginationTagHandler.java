@@ -24,6 +24,9 @@ public class PaginationTagHandler extends TagSupport {
     private String pageType;
     private int userId;
 
+    public PaginationTagHandler() {
+    }
+
     @Autowired
     public PaginationTagHandler(ListService listService, FilmService filmService) {
         this.listService = listService;

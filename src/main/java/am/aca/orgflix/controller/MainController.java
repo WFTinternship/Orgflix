@@ -6,7 +6,6 @@ import am.aca.orgflix.service.FilmService;
 import am.aca.orgflix.service.ListService;
 import am.aca.orgflix.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -28,24 +26,19 @@ import java.io.FileOutputStream;
 @RequestMapping("/")
 public class MainController {
 
+    private static final String UPLOAD_DIRECTORY = "resources/images";
+
     private UserService userService;
     private ListService listService;
     private FilmService filmService;
     private CastService castService;
+
     @Autowired
-    public void setUserService(UserService userService) {
+    public MainController(UserService userService, ListService listService,
+                          FilmService filmService, CastService castService){
         this.userService = userService;
-    }
-    @Autowired
-    public void setListService(ListService listService) {
         this.listService = listService;
-    }
-    @Autowired
-    public void setFilmService(FilmService filmService) {
         this.filmService = filmService;
-    }
-    @Autowired
-    public void setCastService(CastService castService) {
         this.castService = castService;
     }
 
@@ -167,36 +160,29 @@ public class MainController {
         return modelAndView;
     }
 
-    private ModelAndView getGuestMV(ModelAndView modelAndView){
-        modelAndView.addObject("films", filmService.getFilmsList(0));
-        modelAndView.addObject("userId", -1);
-        modelAndView.addObject("userAuth", 0);
-        modelAndView.addObject("currPage", 0);
-        modelAndView.addObject("page", "main");
+    //Upload
+    @RequestMapping("/newFilm")
+    public ModelAndView addFilm(@RequestParam("userId") int userId,
+                                   @RequestParam("userAuth") int userAuth) {
+
+        User selUser = userService.get(userId);
+        String user = selUser.getNick() + " (" + selUser.getEmail() + ")";
+
+        ModelAndView modelAndView = new ModelAndView("newFilm");
+        modelAndView.addObject("actors", castService.listCasts());
+        modelAndView.addObject("userId", userId);
+        modelAndView.addObject("user", user);
+        modelAndView.addObject("userAuth", userAuth);
         return modelAndView;
     }
-    //Upload
-    private static final String UPLOAD_DIRECTORY = "resources/images";
 
-    private static final String UPLOAD_FILE_DIRECTORY = UPLOAD_DIRECTORY + File.separator + "New Folder";
+    @RequestMapping("/newFilmResult")
+    public ModelAndView saveImage(@RequestParam CommonsMultipartFile file, HttpSession session)
+            throws Exception {
 
-    private ServletContext context;
+        final String UPLOAD_FILE_DIRECTORY = UPLOAD_DIRECTORY + File.separator + "New Folder";
 
-    @RequestMapping("uploadForm")
-    public ModelAndView uploadForm() {
-        return new ModelAndView("uploadForm");
-    }
-
-    @PostMapping(value = "filmSaved")
-    public ModelAndView saveImage(@RequestParam CommonsMultipartFile file, HttpSession session) throws Exception {
-        DiskFileItemFactory factory = new DiskFileItemFactory();
-        factory.setRepository(new File(System.getProperty("java.io.tmpdir")));
-
-
-        //ServletFileUpload upload = new ServletFileUpload(factory);
-        context = session.getServletContext();
-
-        String uploadPath = context.getRealPath("") + File.separator + UPLOAD_FILE_DIRECTORY;
+        String uploadPath = session.getServletContext().getRealPath("") + File.separator + UPLOAD_FILE_DIRECTORY;
 
         File uploadDir = new File(uploadPath);
         if (!uploadDir.exists()) {
@@ -205,13 +191,23 @@ public class MainController {
 
         byte[] bytes = file.getBytes();
 
-        BufferedOutputStream stream;
-        stream = new BufferedOutputStream(new FileOutputStream(new File(uploadPath + File.separator + 1 + ".jpg")));
+        BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(
+                new File(uploadPath + File.separator + 1 + ".jpg") ));
 
         stream.write(bytes);
         stream.flush();
         stream.close();
 
         return new ModelAndView("uploadResult", "fileSuccess", "Film successfully saved!");
+    }
+
+    // support method for guest modelAndView
+    private ModelAndView getGuestMV(ModelAndView modelAndView){
+        modelAndView.addObject("films", filmService.getFilmsList(0));
+        modelAndView.addObject("userId", -1);
+        modelAndView.addObject("userAuth", 0);
+        modelAndView.addObject("currPage", 0);
+        modelAndView.addObject("page", "main");
+        return modelAndView;
     }
 }

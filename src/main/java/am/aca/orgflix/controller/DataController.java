@@ -1,5 +1,6 @@
 package am.aca.orgflix.controller;
 
+import am.aca.orgflix.entity.Cast;
 import am.aca.orgflix.service.CastService;
 import am.aca.orgflix.service.FilmService;
 import am.aca.orgflix.service.ListService;
@@ -8,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * Controller for REST request
@@ -20,23 +23,36 @@ public class DataController {
     private ListService listService;
     private FilmService filmService;
     private CastService castService;
+
     @Autowired
-    public void setUserService(UserService userService) {
+    public DataController(UserService userService, ListService listService,
+                          FilmService filmService, CastService castService){
         this.userService = userService;
-    }
-    @Autowired
-    public void setListService(ListService listService) {
         this.listService = listService;
-    }
-    @Autowired
-    public void setFilmService(FilmService filmService) {
         this.filmService = filmService;
-    }
-    @Autowired
-    public void setCastService(CastService castService) {
         this.castService = castService;
     }
 
+    @PostMapping("/getActorsList")
+    public ResponseEntity getActorsList() {
+        List<Cast> actorsList = castService.listCasts();
+        int size = actorsList.size();
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        for(Cast cast : actorsList){
+            sb.append("{");
+            sb.append("\"id\":\"");
+            sb.append(cast.getId());
+            sb.append("\", \"name\":\"");
+            sb.append(cast.getName());
+            sb.append("\", \"oscar\":\"");
+            sb.append(cast.isHasOscar());
+            sb.append("\"}");
+            sb.append( --size > 0 ? "," : "" );
+        }
+        sb.append("]");
+        return new ResponseEntity(sb.toString(), HttpStatus.OK);
+    }
 
     @PostMapping("/addFilmToWatchList")
     public ResponseEntity addFilmToWatchList(@RequestParam("user") int userId, @RequestParam("film") int filmId) {

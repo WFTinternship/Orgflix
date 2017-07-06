@@ -23,6 +23,7 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
     <!--[if lte IE 8]><link rel="stylesheet" href='<c:url value="../resources/css/ie8.css" />' /><![endif]-->
 </head>
 <body>
+<%--<m:actorsList />--%>
 <!-- Wrapper -->
 <div id="wrapper">
 
@@ -37,16 +38,16 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
                 <li><a onclick="navigator('index')"><i class="fa fa-home fa-fw"></i>Home</a></li>
                 <li><a onclick="navigator('watch_list')"><i class="fa fa-watchList fa-fw"></i> Watch list</a></li>
                 <li><a onclick="navigator('wish_list')"><i class="fa fa-wishList fa-fw"></i> Wish List</a></li>
-                <li><a href="/uploadForm"><i class="fa fa-plus-square fa-fw"></i> Add Film</a></li>
+                <li><a onclick="navigator('newFilm')"><i class="fa fa-plus-square fa-fw"></i> Add Film</a></li>
                 <li><a href="/"><i class="fa fa-logout fa-fw"></i> Logout</a></li>
             </c:if>
             <c:if test="${userId == -1}">
                 <li><a href="/"><i class="fa fa-home fa-fw"></i>Home</a></li>
                 <li><a href="login"><i class="fa fa-login fa-fw"></i> Login</a></li>
-                <li><a href="signup"><i class="fa fa-signUp fa-fw"></i> Sign up</a></li>
+                <li><a href="signup"><i class="fa fa-logout fa-fw"></i> Sign up</a></li>
             </c:if>
         </ul>
-        <form id="navigator" method="POST" action="">
+        <form id="navigator" method="POST" action="0">
             <input type="hidden" id="userId" name="userId" value="${userId}"'/>
             <input type="hidden" id="userAuth" name="userAuth" value="${userAuth}"/>
             <input type="hidden" id="currPage" name="currPage" value="${currPage}"/>
@@ -58,7 +59,7 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
     <div id="main">
         <div class="inner">
             <header>
-                <c:if test="${ (page == 'page') || (userId==-1)}">
+                <c:if test="${ (page == 'main') || (userId==-1)}">
                     <h1>This is OrgFlix, a free film list organizer</h1>
                 </c:if>
                 <c:if test="${page == 'watch'}">

@@ -37,4 +37,9 @@
         <name>pageFooter</name>
         <tag-class>am.aca.orgflix.servlet.taghandler.FooterTagHandler</tag-class>
     </tag>
+    <tag>
+         <name>actorsList</name>
+         <tag-class>am.aca.orgflix.servlet.taghandler.ActorInnerTagHandler</tag-class>
+    </tag>
+
 </taglib>

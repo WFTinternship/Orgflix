@@ -188,13 +188,14 @@ public class MainController {
 
     private ServletContext context;
 
-    @RequestMapping("uploadForm")
+    @GetMapping("uploadForm")
     public ModelAndView uploadForm() {
         return new ModelAndView("uploadForm");
     }
 
     @PostMapping(value = "filmSaved")
     public ModelAndView saveImage(@RequestParam CommonsMultipartFile file, HttpSession session) throws Exception {
+
         DiskFileItemFactory factory = new DiskFileItemFactory();
         factory.setRepository(new File(System.getProperty("java.io.tmpdir")));
 

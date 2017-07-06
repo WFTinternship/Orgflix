@@ -17,7 +17,7 @@
 <body>
 <!-- Wrapper -->
 <div id="wrapper">
-    < <m:pageHeader/>
+    <m:pageHeader/>
     <!-- Menu -->
     <nav id="menu">
         <h2>Menu</h2>
@@ -29,11 +29,6 @@
                 <li><a onclick="navigator('wish_list')"><i class="fa fa-wishList fa-fw"></i> Wish List</a></li>
                 <li><a href="/uploadForm"><i class="fa fa-plus-square fa-fw"></i> Add Film</a></li>
                 <li><a href="/"><i class="fa fa-logout fa-fw"></i> Logout</a></li>
-            </c:if>
-            <c:if test="${userId == -1}">
-                <li><a href="/"><i class="fa fa-home fa-fw"></i>Home</a></li>
-                <li><a href="login"><i class="fa fa-login fa-fw"></i> Login</a></li>
-                <li><a href="signup"><i class="fa fa-signUp fa-fw"></i> Sign up</a></li>
             </c:if>
         </ul>
     </nav>

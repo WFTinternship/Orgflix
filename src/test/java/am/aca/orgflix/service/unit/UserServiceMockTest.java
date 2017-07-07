@@ -18,7 +18,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import static org.mockito.Mockito.*;
 
 /**
- * Created by karine on 6/27/2017
+ * Unit tests for User Service Layer
  */
 public class UserServiceMockTest extends BaseUnitTest {
 
@@ -29,12 +29,18 @@ public class UserServiceMockTest extends BaseUnitTest {
     private UserDAO userDaoMock;
     private User user = new User("hulk", "Bruce Banner", "bbanner@avenger.com", "natasha");
 
+    /**
+     * Configures Mockito
+     */
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         ReflectionTestUtils.setField(userService, "userDao", userDaoMock);
     }
 
+    /**
+     * Assures no more methods of DAO mocks are invoked
+     */
     @After
     public void tearDown() {
         verifyNoMoreInteractions(userDaoMock);

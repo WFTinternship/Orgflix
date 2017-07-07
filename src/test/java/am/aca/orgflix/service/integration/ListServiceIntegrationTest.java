@@ -14,7 +14,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * Created by karine on 6/21/2017
+ * Integration tests for List Service Layer
  */
 public class ListServiceIntegrationTest extends BaseIntegrationTest {
 
@@ -30,21 +30,23 @@ public class ListServiceIntegrationTest extends BaseIntegrationTest {
     @Autowired
     private TestHelper helper;
 
-    private Film film;
+    private Film film = new Film("Crash", 2004);
     private int filmId;
-    private User user;
+    private User user = new User("hulk", "Bruce Banner", "brucebanner@avengers.com", "natasha");
 
+    /**
+     * Sets up film and user for tests
+     */
     @Before
     public void setUp() {
-        film = new Film("Title", 1999);
         filmService.addFilm(film);
         filmId = film.getId();
-
-        user = new User("hulk", "Bruce Banner", "brucebanner@avengers.com", "natasha");
         userService.add(user);
-
     }
 
+    /**
+     * Rolls back all changes applied to the test DB resulted from tests
+     */
     @After
     public void tearDown() {
         helper.emptyTable(new String[]{

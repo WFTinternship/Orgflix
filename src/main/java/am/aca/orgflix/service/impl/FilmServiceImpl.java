@@ -36,6 +36,9 @@ public class FilmServiceImpl implements FilmService {
         this.castDao = castDao;
     }
 
+    /**
+     * @see FilmService#addFilm(am.aca.orgflix.entity.Film)
+     */
     @Transactional
     @Override
     public boolean addFilm(Film film) {
@@ -51,6 +54,9 @@ public class FilmServiceImpl implements FilmService {
 
     }
 
+    /**
+     * @see FilmService#getFilmsList(int)
+     */
     @Transactional
     @Override
     public boolean editFilm(Film film) {
@@ -70,6 +76,9 @@ public class FilmServiceImpl implements FilmService {
         return optimizeRelations(film);
     }
 
+    /**
+     * @see FilmService#getFilmById(int)
+     */
     @Override
     public Film getFilmById(int id) {
         Film film;
@@ -81,6 +90,9 @@ public class FilmServiceImpl implements FilmService {
         return film;
     }
 
+    /**
+     * @see FilmService#getFilmsByCast(int)
+     */
     @Override
     public List<Film> getFilmsByCast(int castId) {
         List<Film> list;
@@ -92,6 +104,9 @@ public class FilmServiceImpl implements FilmService {
         return list;
     }
 
+    /**
+     * @see FilmService#getFilmsByGenre(am.aca.orgflix.entity.Genre)
+     */
     @Transactional
     @Override
     public List<Film> getFilmsList(int startIndex) {
@@ -112,6 +127,9 @@ public class FilmServiceImpl implements FilmService {
         return list;
     }
 
+    /**
+     * @see FilmService#getRating(int)
+     */
     @Override
     public List<Film> getFilmsByGenre(Genre genre) {
         List<Film> list;
@@ -123,6 +141,9 @@ public class FilmServiceImpl implements FilmService {
         return list;
     }
 
+    /**
+     * @see FilmService#totalNumberOfFilms()
+     */
     @Transactional
     @Override
     public boolean rateFilm(int filmId, int starType) {
@@ -135,6 +156,10 @@ public class FilmServiceImpl implements FilmService {
         return state;
     }
 
+    /**
+     * @see FilmService#getFilteredFilms(java.lang.String, int, int,
+     * boolean, java.lang.String, int, am.aca.orgflix.entity.Genre)
+     */
     @Transactional
     @Override
     public boolean addGenreToFilm(Genre genre, int filmId) {
@@ -147,6 +172,9 @@ public class FilmServiceImpl implements FilmService {
         return state;
     }
 
+    /**
+     * @see FilmService#editFilm(am.aca.orgflix.entity.Film)
+     */
     @Override
     public double getRating(int filmId) {
         double rate = 0.0;
@@ -158,6 +186,9 @@ public class FilmServiceImpl implements FilmService {
         return rate;
     }
 
+    /**
+     * @see FilmService#rateFilm(int, int)
+     */
     @Override
     public int totalNumberOfFilms() {
         int total = 0;
@@ -169,6 +200,9 @@ public class FilmServiceImpl implements FilmService {
         return total;
     }
 
+    /**
+     * @see FilmService#addGenreToFilm(am.aca.orgflix.entity.Genre, int)
+     */
     @Override
     public List<Film> getFilteredFilms(String title, int startYear, int finishYear, boolean hasOscar, String director, int castId, Genre genre) {
         List<Film> films;
@@ -181,6 +215,12 @@ public class FilmServiceImpl implements FilmService {
     }
 
 
+    /**
+     * Creates associations of casts and genres of the given film
+     *
+     * @param film the film to be associated with its own cast and genres
+     * @return true if relations are successfully associated, false otherwise
+     */
     private boolean optimizeRelations(Film film) {
         try {
             for (Genre genre : film.getGenres()) {

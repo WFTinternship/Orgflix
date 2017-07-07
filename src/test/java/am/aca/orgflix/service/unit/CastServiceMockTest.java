@@ -8,6 +8,7 @@ import am.aca.orgflix.entity.Cast;
 import am.aca.orgflix.entity.Film;
 import am.aca.orgflix.service.CastService;
 import am.aca.orgflix.service.ServiceException;
+import am.aca.orgflix.service.impl.CastServiceImpl;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -23,7 +24,7 @@ import java.util.List;
 import static org.mockito.Mockito.*;
 
 /**
- * Created by karine on 6/24/2017
+ * Unit tests for Cast Service layer
  */
 public class CastServiceMockTest extends BaseUnitTest {
 
@@ -41,6 +42,9 @@ public class CastServiceMockTest extends BaseUnitTest {
     private Film film = new Film("Babel", 2006);
     private List<Film> films = new ArrayList<>();
 
+    /**
+     * Configures Mockito
+     */
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
@@ -48,12 +52,18 @@ public class CastServiceMockTest extends BaseUnitTest {
         ReflectionTestUtils.setField(castService, "filmDAO", filmDaoMock);
     }
 
+    /**
+     * Assures no more methods of DAO mocks are invoked
+     */
     @After
     public void tearDown() {
         verifyNoMoreInteractions(castDaoMock);
         verifyNoMoreInteractions(filmDaoMock);
     }
 
+    /**
+     * @see CastServiceImpl#addCast(am.aca.orgflix.entity.Cast)
+     */
     @Test
     public void addCast_Success() {
         when(castDaoMock.addCast(cast)).thenReturn(true);
@@ -64,6 +74,9 @@ public class CastServiceMockTest extends BaseUnitTest {
         verify(castDaoMock, times(1)).addCast(cast);
     }
 
+    /**
+     * @see CastServiceImpl#addCast(am.aca.orgflix.entity.Cast)
+     */
     @Test
     public void addCast_Fail() {
         when(castDaoMock.addCast(cast)).thenThrow(DaoException.class);
@@ -76,6 +89,9 @@ public class CastServiceMockTest extends BaseUnitTest {
 
     }
 
+    /**
+     * @see CastServiceImpl#addCastToFilm(am.aca.orgflix.entity.Cast, int)
+     */
     @Test
     public void addCastToFilm_Success() {
         when(castDaoMock.isStarringIn(cast.getId(), film.getId())).thenReturn(false);
@@ -88,6 +104,9 @@ public class CastServiceMockTest extends BaseUnitTest {
         verify(castDaoMock, times(1)).addCastToFilm(cast, film.getId());
     }
 
+    /**
+     * @see CastServiceImpl#addCastToFilm(am.aca.orgflix.entity.Cast, int)
+     */
     @Test
     public void addCastToFilm_AlreadyStarring_Fail() {
         when(castDaoMock.isStarringIn(cast.getId(), film.getId())).thenReturn(true);
@@ -98,6 +117,9 @@ public class CastServiceMockTest extends BaseUnitTest {
         verify(castDaoMock, times(1)).isStarringIn(cast.getId(), film.getId());
     }
 
+    /**
+     * @see CastServiceImpl#addCastToFilm(am.aca.orgflix.entity.Cast, int)
+     */
     @Test
     public void addCastToFilm_InsertionError_Fail() {
         when(castDaoMock.isStarringIn(cast.getId(), film.getId())).thenReturn(false);
@@ -110,6 +132,9 @@ public class CastServiceMockTest extends BaseUnitTest {
         verify(castDaoMock, times(1)).addCastToFilm(cast, film.getId());
     }
 
+    /**
+     * @see CastServiceImpl#editCast(am.aca.orgflix.entity.Cast)
+     */
     @Test
     public void editCast_Success() {
         when(castDaoMock.exists(cast)).thenReturn(true);
@@ -122,6 +147,9 @@ public class CastServiceMockTest extends BaseUnitTest {
         verify(castDaoMock, times(1)).editCast(cast);
     }
 
+    /**
+     * @see CastServiceImpl#editCast(am.aca.orgflix.entity.Cast)
+     */
     @Test
     public void editCast_NonExisting_Fail() {
         when(castDaoMock.exists(cast)).thenReturn(false);
@@ -132,6 +160,9 @@ public class CastServiceMockTest extends BaseUnitTest {
         verify(castDaoMock, times(1)).exists(cast);
     }
 
+    /**
+     * @see CastServiceImpl#editCast(am.aca.orgflix.entity.Cast)
+     */
     @Test
     public void editCast_UpdateError_Fail() {
         when(castDaoMock.exists(cast)).thenReturn(true);
@@ -144,6 +175,9 @@ public class CastServiceMockTest extends BaseUnitTest {
         verify(castDaoMock, times(1)).editCast(cast);
     }
 
+    /**
+     * @see CastServiceImpl#listCasts()
+     */
     @Test
     public void listCasts_Success() {
         when(castDaoMock.listCast()).thenReturn(casts);
@@ -154,6 +188,9 @@ public class CastServiceMockTest extends BaseUnitTest {
         verify(castDaoMock, times(1)).listCast();
     }
 
+    /**
+     * @see CastServiceImpl#listCasts()
+     */
     @Test
     public void listCasts_Fail() {
         when(castDaoMock.listCast()).thenThrow(DaoException.class);
@@ -166,6 +203,9 @@ public class CastServiceMockTest extends BaseUnitTest {
 
     }
 
+    /**
+     * @see CastServiceImpl#listFilmsByCast(int)
+     */
     @Test
     public void listFilmsByCast_Success() {
         when(filmDaoMock.getFilmsByCast(cast.getId())).thenReturn(films);
@@ -176,6 +216,9 @@ public class CastServiceMockTest extends BaseUnitTest {
         verify(filmDaoMock, times(1)).getFilmsByCast(cast.getId());
     }
 
+    /**
+     * @see CastServiceImpl#listFilmsByCast(int)
+     */
     @Test
     public void listFilmsByCast_Fail() {
         when(filmDaoMock.getFilmsByCast(cast.getId())).thenThrow(DaoException.class);
@@ -184,6 +227,33 @@ public class CastServiceMockTest extends BaseUnitTest {
             castService.listFilmsByCast(cast.getId());
         } catch (ServiceException e) {
             verify(filmDaoMock, times(1)).getFilmsByCast(cast.getId());
+        }
+    }
+
+    /**
+     * @see CastServiceImpl#getCastsByFilm(int)
+     */
+    @Test
+    public void getCastsByFilm_Success() {
+        when(castDaoMock.getCastsByFilm(film.getId())).thenReturn(casts);
+
+        List<Cast> actualCasts = castService.getCastsByFilm(film.getId());
+        Assert.assertEquals(casts, actualCasts);
+
+        verify(castDaoMock, times(1)).getCastsByFilm(film.getId());
+    }
+
+    /**
+     * @see CastServiceImpl#getCastsByFilm(int)
+     */
+    @Test
+    public void getCastsByFilm_Fail() {
+        when(castDaoMock.getCastsByFilm(film.getId())).thenThrow(DaoException.class);
+
+        try {
+            castService.getCastsByFilm(film.getId());
+        } catch (ServiceException e) {
+            verify(castDaoMock, times(1)).getCastsByFilm(film.getId());
         }
     }
 }

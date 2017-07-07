@@ -1,11 +1,9 @@
 package am.aca.orgflix.service.impl;
 
 import am.aca.orgflix.dao.UserDAO;
-import am.aca.orgflix.dao.impljdbc.JdbcUserDAO;
 import am.aca.orgflix.entity.User;
 import am.aca.orgflix.service.ServiceException;
 import am.aca.orgflix.service.UserService;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,11 +21,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * @param user the user object to be added to DB
-     * @return id of added new user in DB
-     * @see JdbcUserDAO#add(am.aca.orgflix.entity.User)
-     * <p>
-     * Add new user to DB
+     * @see UserService#add(am.aca.orgflix.entity.User)
      */
     @Override
     public int add(User user) {
@@ -39,11 +33,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * @param id the id of the user in DB
-     * @return user object with the matched id
-     * @see JdbcUserDAO#get(int)
-     * <p>
-     * Return user by user Id
+     * @see UserService#get(int)
      */
     @Override
     public User get(int id) {
@@ -57,11 +47,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * @param email the email of the user in DB
-     * @return user object with the matched id
-     * @see JdbcUserDAO#get(java.lang.String)
-     * <p>
-     * Return user by user user's email
+     * @see UserService#get(java.lang.String)
      */
     @Override
     public User get(String email) {
@@ -77,12 +63,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * @param email the email of the user in DB
-     * @param pass  the password of the user in DB
-     * @return user object with the matched details, otherwise null
-     * @see JdbcUserDAO#authenticate(java.lang.String, java.lang.String)
-     * <p>
-     * Return user authenticated by user's email and password
+     * @see UserService#authenticate(java.lang.String, java.lang.String)
      */
     @Override
     public User authenticate(String email, String pass) {
@@ -97,7 +78,9 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-
+    /**
+     * @see UserService#edit(am.aca.orgflix.entity.User)
+     */
     @Override
     public boolean edit(User user) {
         boolean state;

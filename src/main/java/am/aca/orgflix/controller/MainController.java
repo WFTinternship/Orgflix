@@ -6,16 +6,16 @@ import am.aca.orgflix.service.FilmService;
 import am.aca.orgflix.service.ListService;
 import am.aca.orgflix.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -25,7 +25,6 @@ import java.io.FileOutputStream;
  * Main page mapper
  */
 @Component
-@Scope("session")
 @RequestMapping("/")
 public class MainController {
 
@@ -36,18 +35,38 @@ public class MainController {
     private FilmService filmService;
     private CastService castService;
 
-    @Autowired
-    public MainController(UserService userService, ListService listService,
-                          FilmService filmService, CastService castService){
-        this.userService = userService;
-        this.listService = listService;
-        this.filmService = filmService;
-        this.castService = castService;
+//    @Autowired
+//    public MainController(UserService userService, ListService listService,
+//                          FilmService filmService, CastService castService) {
+//        this.userService = userService;
+//        this.listService = listService;
+//        this.filmService = filmService;
+//        this.castService = castService;
+//    }
+
+    public static HttpSession session() {
+        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        return attr.getRequest().getSession(true);
     }
 
-    @ModelAttribute("User")
-    public User populateUser() {
-        return new User();
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    @Autowired
+    public void setListService(ListService listService) {
+        this.listService = listService;
+    }
+
+    @Autowired
+    public void setFilmService(FilmService filmService) {
+        this.filmService = filmService;
+    }
+
+    @Autowired
+    public void setCastService(CastService castService) {
+        this.castService = castService;
     }
 
     @RequestMapping("/")
@@ -80,7 +99,7 @@ public class MainController {
             modelAndView.addObject("userAuth", pass.hashCode() + email.hashCode());
             modelAndView.addObject("currPage", 0);
             modelAndView.addObject("page", "main");
-        } else{
+        } else {
             modelAndView = new ModelAndView("error");
         }
 
@@ -111,7 +130,6 @@ public class MainController {
         return new ModelAndView("login");
     }
 
-
     @RequestMapping("/logedIn")
     public ModelAndView paging(@RequestParam("email") String email,
                                @RequestParam("pass") String pass) {
@@ -134,14 +152,14 @@ public class MainController {
 
     @RequestMapping("/watch_list")
     public ModelAndView watchList(@RequestParam("userId") int userId,
-                               @RequestParam("userAuth") int userAuth,
+                                  @RequestParam("userAuth") int userAuth,
                                   @RequestParam("currPage") int currPage) {
 
         User selUser = userService.get(userId);
         String user = selUser.getNick() + " (" + selUser.getEmail() + ")";
 
         ModelAndView modelAndView = new ModelAndView("index");
-        modelAndView.addObject("films", listService.showOwnWatched(userId,currPage));
+        modelAndView.addObject("films", listService.showOwnWatched(userId, currPage));
         modelAndView.addObject("userId", userId);
         modelAndView.addObject("user", user);
         modelAndView.addObject("userAuth", userAuth);
@@ -152,14 +170,14 @@ public class MainController {
 
     @RequestMapping("/wish_list")
     public ModelAndView wishList(@RequestParam("userId") int userId,
-                               @RequestParam("userAuth") int userAuth,
+                                 @RequestParam("userAuth") int userAuth,
                                  @RequestParam("currPage") int currPage) {
 
         User selUser = userService.get(userId);
         String user = selUser.getNick() + " (" + selUser.getEmail() + ")";
 
         ModelAndView modelAndView = new ModelAndView("index");
-        modelAndView.addObject("films", listService.showOwnPlanned(userId,currPage));
+        modelAndView.addObject("films", listService.showOwnPlanned(userId, currPage));
         modelAndView.addObject("userId", userId);
         modelAndView.addObject("user", user);
         modelAndView.addObject("userAuth", userAuth);
@@ -171,7 +189,7 @@ public class MainController {
     //Upload
     @RequestMapping("/newFilm")
     public ModelAndView addFilm(@RequestParam("userId") int userId,
-                                   @RequestParam("userAuth") int userAuth) {
+                                @RequestParam("userAuth") int userAuth) {
 
         User selUser = userService.get(userId);
         String user = selUser.getNick() + " (" + selUser.getEmail() + ")";
@@ -200,7 +218,7 @@ public class MainController {
         byte[] bytes = file.getBytes();
 
         BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(
-                new File(uploadPath + File.separator + 1 + ".jpg") ));
+                new File(uploadPath + File.separator + 1 + ".jpg")));
 
         stream.write(bytes);
         stream.flush();
@@ -210,17 +228,12 @@ public class MainController {
     }
 
     // support method for guest modelAndView
-    private ModelAndView getGuestMV(ModelAndView modelAndView){
+    private ModelAndView getGuestMV(ModelAndView modelAndView) {
         modelAndView.addObject("films", filmService.getFilmsList(0));
         modelAndView.addObject("userId", -1);
         modelAndView.addObject("userAuth", 0);
         modelAndView.addObject("currPage", 0);
         modelAndView.addObject("page", "main");
         return modelAndView;
-    }
-
-    public static HttpSession session() {
-        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-        return attr.getRequest().getSession(true);
     }
 }

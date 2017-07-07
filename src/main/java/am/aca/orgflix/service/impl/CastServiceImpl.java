@@ -6,7 +6,6 @@ import am.aca.orgflix.entity.Cast;
 import am.aca.orgflix.entity.Film;
 import am.aca.orgflix.service.CastService;
 import am.aca.orgflix.service.ServiceException;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +32,9 @@ public class CastServiceImpl implements CastService {
         this.filmDAO = filmDAO;
     }
 
+    /**
+     * @see CastService#addCast(am.aca.orgflix.entity.Cast)
+     */
     @Transactional
     @Override
     public boolean addCast(Cast cast) {
@@ -45,6 +47,9 @@ public class CastServiceImpl implements CastService {
         return result;
     }
 
+    /**
+     * @see CastService#listCasts()
+     */
     @Transactional
     @Override
     public boolean addCastToFilm(Cast cast, int filmId) {
@@ -63,6 +68,9 @@ public class CastServiceImpl implements CastService {
         return state;
     }
 
+    /**
+     * @see CastService#listFilmsByCast(int)
+     */
     @Transactional
     @Override
     public boolean editCast(Cast cast) {
@@ -70,8 +78,7 @@ public class CastServiceImpl implements CastService {
         try {
             if (!castDAO.exists(cast))
                 return false;
-        }
-        catch (RuntimeException e) {
+        } catch (RuntimeException e) {
             throw new ServiceException(e.getMessage());
         }
         try {
@@ -82,6 +89,9 @@ public class CastServiceImpl implements CastService {
         return state;
     }
 
+    /**
+     * @see CastService#getCastsByFilm(int)
+     */
     @Override
     public List<Cast> listCasts() {
         List<Cast> list;
@@ -93,6 +103,9 @@ public class CastServiceImpl implements CastService {
         return list;
     }
 
+    /**
+     * @see CastService#editCast(am.aca.orgflix.entity.Cast)
+     */
     @Override
     public List<Film> listFilmsByCast(int castId) {
         List<Film> list;
@@ -104,6 +117,9 @@ public class CastServiceImpl implements CastService {
         return list;
     }
 
+    /**
+     * @see CastService#getCastsByFilm(int)
+     */
     @Override
     public List<Cast> getCastsByFilm(int filmId) {
         List<Cast> list;

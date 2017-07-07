@@ -50,9 +50,9 @@ public class PaginationTagHandler extends TagSupport {
             if (pageType.equals("main")) {
                 filmNum = filmService.totalNumberOfFilms();
             } else if (pageType.equals("watch")) {
-                filmNum = listService.totalNumberOfWatched(userId, true);
+                filmNum = listService.totalNumberOfFilmsInAList(userId, true);
             } else if (pageType.equals("wish")) {
-                filmNum = listService.totalNumberOfWatched(userId, false);
+                filmNum = listService.totalNumberOfFilmsInAList(userId, false);
             }
             if (filmNum > 12) {
                 out.print("<div class='pagintion_container'>");

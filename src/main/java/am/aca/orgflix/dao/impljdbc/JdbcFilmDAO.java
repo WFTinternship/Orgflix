@@ -105,7 +105,6 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
         }
     }
 
-
     /**
      * @see FilmDAO#getFilmsList(int)
      */

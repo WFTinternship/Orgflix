@@ -13,8 +13,8 @@ function filmControlMenu(state,id) {
     }
 }
 
-function AddToList(type,id) {
-    $.ajax({url: "/data/addFilmTo"+type,type:"POST",data:{film:id,user:$("#userId").val()},success: function(result){
+function AddToList(type, id, isPublic) {
+    $.ajax({url: "/data/addFilmTo"+type,type:"POST",data:{film:id,user:$("#userId").val(),isPublic:isPublic},success: function(result){
         $("#pop-up-result").html(result);
         $("#pop-up-result").css("display", "block");
         setTimeout(function() {

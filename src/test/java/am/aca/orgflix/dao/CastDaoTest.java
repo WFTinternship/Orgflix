@@ -1,6 +1,7 @@
 package am.aca.orgflix.dao;
 
 import am.aca.orgflix.BaseIntegrationTest;
+import am.aca.orgflix.dao.impljdbc.JdbcCastDAO;
 import am.aca.orgflix.entity.Cast;
 import am.aca.orgflix.entity.Film;
 import am.aca.orgflix.util.TestHelper;
@@ -9,11 +10,10 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
- * Test for cast DAO methods
+ * Integration tests for cast DAO methods
  */
 public class CastDaoTest extends BaseIntegrationTest {
 
@@ -28,12 +28,18 @@ public class CastDaoTest extends BaseIntegrationTest {
 
     private Cast cast;
 
+    /**
+     * Rolls back all changes applied to the test DB resulted from tests
+     */
     @After
     public void tearDown() {
         helper.emptyTable(new String[]{"film_to_cast", "casts"});
         cast = null;
     }
 
+    /**
+     * @see JdbcCastDAO#addCast(am.aca.orgflix.entity.Cast)
+     */
     @Test
     public void addCast_Success() {
         cast = new Cast("Woody Allen", true);
@@ -43,6 +49,9 @@ public class CastDaoTest extends BaseIntegrationTest {
         Assert.assertTrue(status);
     }
 
+    /**
+     * @see JdbcCastDAO#addCast(am.aca.orgflix.entity.Cast)
+     */
     @Test
     public void addCast_EmptyOscar_Success() {
         cast = new Cast("Woody Allen");
@@ -52,12 +61,18 @@ public class CastDaoTest extends BaseIntegrationTest {
         Assert.assertTrue(status);
     }
 
+    /**
+     * @see JdbcCastDAO#addCast(am.aca.orgflix.entity.Cast)
+     */
     @Test(expected = DaoException.class)
     public void addCast_NameRequired_Fail() {
         cast = new Cast(null, false);
         jdbcCastDAO.addCast(cast);
     }
 
+    /**
+     * @see JdbcCastDAO#addCastToFilm(am.aca.orgflix.entity.Cast, int)
+     */
     @Test
     public void addCastToFilm_Success() {
         cast = new Cast("Edward Norton");
@@ -72,6 +87,9 @@ public class CastDaoTest extends BaseIntegrationTest {
         Assert.assertEquals(film.getId(), id);
     }
 
+    /**
+     * @see JdbcCastDAO#addCastToFilm(am.aca.orgflix.entity.Cast, int)
+     */
     @Test
     public void addCastToFilm_Fail() {
         cast = new Cast("Edward Norton");
@@ -85,6 +103,9 @@ public class CastDaoTest extends BaseIntegrationTest {
         Assert.assertEquals(film.getId(), id);
     }
 
+    /**
+     * @see JdbcCastDAO#listCast()
+     */
     @Test
     public void listCasts_Success() {
         cast = new Cast("Poghos");
@@ -98,6 +119,9 @@ public class CastDaoTest extends BaseIntegrationTest {
         Assert.assertEquals(3, size);
     }
 
+    /**
+     * @see JdbcCastDAO#listCast()
+     */
     @Test
     public void listCast_ByName_Success() {
         cast = new Cast("Woody Allen");
@@ -107,6 +131,18 @@ public class CastDaoTest extends BaseIntegrationTest {
         Assert.assertEquals("Woody Allen", actualName);
     }
 
+    /**
+     * @see JdbcCastDAO#listCast()
+     */
+    @Test
+    public void listCast_EmptyList_Fail() {
+        int size = jdbcCastDAO.listCast().size();
+        Assert.assertEquals(0, size);
+    }
+
+    /**
+     * @see JdbcCastDAO#getCastsByFilm(int)
+     */
     @Test
     public void getCasts_ByFilm_Success() {
         cast = new Cast("Tom Henks");
@@ -122,6 +158,9 @@ public class CastDaoTest extends BaseIntegrationTest {
         Assert.assertEquals(1, size);
     }
 
+    /**
+     * @see JdbcCastDAO#getCastsByFilm(int)
+     */
     @Test
     public void getCasts_ByFilmEmptyCastList_Fail() {
         Film film = new Film("Forest Gump", 1990);
@@ -133,12 +172,9 @@ public class CastDaoTest extends BaseIntegrationTest {
         Assert.assertNotEquals(1, size);
     }
 
-    @Test
-    public void listCast_EmptyList_Fail() {
-        int size = jdbcCastDAO.listCast().size();
-        Assert.assertEquals(0, size);
-    }
-
+    /**
+     * @see JdbcCastDAO#editCast(am.aca.orgflix.entity.Cast)
+     */
     @Test
     public void editCast_Success() {
         cast = new Cast("Woody Allen");
@@ -149,6 +185,9 @@ public class CastDaoTest extends BaseIntegrationTest {
         Assert.assertTrue(status);
     }
 
+    /**
+     * @see JdbcCastDAO#editCast(am.aca.orgflix.entity.Cast)
+     */
     @Test
     public void editCast_BySize_Success() {
         cast = new Cast("Woody Allen");
@@ -160,6 +199,9 @@ public class CastDaoTest extends BaseIntegrationTest {
         Assert.assertEquals(1, size);
     }
 
+    /**
+     * @see JdbcCastDAO#editCast(am.aca.orgflix.entity.Cast)
+     */
     @Test(expected = DaoException.class)
     public void editCast_NameNull_Fail() {
         cast = new Cast("Woody Allen");
@@ -168,6 +210,9 @@ public class CastDaoTest extends BaseIntegrationTest {
         jdbcCastDAO.editCast(cast);
     }
 
+    /**
+     * @see JdbcCastDAO#remove(am.aca.orgflix.entity.Cast)
+     */
     @Test
     public void remove_Success() {
         cast = new Cast("Woody Allen");
@@ -177,6 +222,9 @@ public class CastDaoTest extends BaseIntegrationTest {
         Assert.assertTrue(status);
     }
 
+    /**
+     * @see JdbcCastDAO#remove(am.aca.orgflix.entity.Cast)
+     */
     @Test
     public void remove_CheckBySize_Success() {
         cast = new Cast("Woody Allen");
@@ -187,6 +235,9 @@ public class CastDaoTest extends BaseIntegrationTest {
         Assert.assertTrue(status);
     }
 
+    /**
+     * @see JdbcCastDAO#remove(am.aca.orgflix.entity.Cast)
+     */
     @Test
     public void remove_Fail() {
         cast = new Cast("Woody Allen");
@@ -195,29 +246,9 @@ public class CastDaoTest extends BaseIntegrationTest {
         Assert.assertFalse(status);
     }
 
-    @Test
-    public void listFilmsByCast_Success() throws SQLException {
-        Film f1, f2;
-        jdbcFilmDAO.addFilm(f1 = new Film("Titanic", 1990));
-        jdbcFilmDAO.addFilm(f2 = new Film("Zoro", 1992));
-        cast = new Cast("Tarantino");
-        jdbcCastDAO.addCast(cast);
-        jdbcCastDAO.addCastToFilm(cast, f1.getId());
-        jdbcCastDAO.addCastToFilm(cast, f2.getId());
-
-        int size = jdbcFilmDAO.getFilmsByCast(cast.getId()).size();
-        Assert.assertEquals(2, size);
-    }
-
-    @Test
-    public void listFilmsIdByCast_EmptyList_Fail() throws SQLException {
-        cast = new Cast("Woody Allen");
-        jdbcCastDAO.addCast(cast);
-
-        int size = jdbcFilmDAO.getFilmsByCast(cast.getId()).size();
-        Assert.assertEquals(0, size);
-    }
-
+    /**
+     * @see JdbcCastDAO#isStarringIn(int, int)
+     */
     @Test
     public void isStarringIn_Success() {
         cast = new Cast("Woody Allen");
@@ -230,6 +261,9 @@ public class CastDaoTest extends BaseIntegrationTest {
         Assert.assertTrue(status);
     }
 
+    /**
+     * @see JdbcCastDAO#isStarringIn(int, int)
+     */
     @Test
     public void isStarringIn_Fail() {
         cast = new Cast("Woody Allen");
@@ -241,6 +275,9 @@ public class CastDaoTest extends BaseIntegrationTest {
         Assert.assertFalse(status);
     }
 
+    /**
+     * @see JdbcCastDAO#exists(am.aca.orgflix.entity.Cast)
+     */
     @Test
     public void exists_Success() {
         cast = new Cast("Woody Allen");
@@ -250,6 +287,9 @@ public class CastDaoTest extends BaseIntegrationTest {
         Assert.assertTrue(status);
     }
 
+    /**
+     * @see JdbcCastDAO#exists(am.aca.orgflix.entity.Cast)
+     */
     @Test
     public void exists_Fail() {
         cast = new Cast("Woody Allen");

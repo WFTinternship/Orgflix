@@ -8,6 +8,8 @@ import am.aca.orgflix.entity.Cast;
 import am.aca.orgflix.entity.Film;
 import am.aca.orgflix.entity.Genre;
 import am.aca.orgflix.service.FilmService;
+import am.aca.orgflix.service.ServiceException;
+import am.aca.orgflix.service.impl.FilmServiceImpl;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -23,7 +25,7 @@ import java.util.List;
 import static org.mockito.Mockito.*;
 
 /**
- * Created by karine on 6/25/2017
+ * Unit tests for Film Service layer
  */
 public class FilmServiceMockTest extends BaseUnitTest {
 
@@ -40,6 +42,9 @@ public class FilmServiceMockTest extends BaseUnitTest {
     private List<Film> films = new ArrayList<>();
     private List<Cast> casts = new ArrayList<>();
 
+    /**
+     * Configures Mockito
+     */
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
@@ -47,12 +52,18 @@ public class FilmServiceMockTest extends BaseUnitTest {
         ReflectionTestUtils.setField(filmService, "filmDao", filmDaoMock);
     }
 
+    /**
+     * Assures no more methods of DAO mocks are invoked
+     */
     @After
     public void tearDown() {
         verifyNoMoreInteractions(filmDaoMock);
         verifyNoMoreInteractions(castDaoMock);
     }
 
+    /**
+     * @see FilmServiceImpl#addFilm(am.aca.orgflix.entity.Film)
+     */
     @Test
     public void addFilm_WGenresAndCasts_Success() {
         film.addCast(cast);
@@ -78,6 +89,9 @@ public class FilmServiceMockTest extends BaseUnitTest {
         verify(castDaoMock, times(1)).addCastToFilm(cast, film.getId());
     }
 
+    /**
+     * @see FilmServiceImpl#addFilm(am.aca.orgflix.entity.Film)
+     */
     @Test
     public void addFilm_WOGenresAndCasts_Success() {
         when(filmDaoMock.addFilm(film)).thenReturn(true);
@@ -88,6 +102,9 @@ public class FilmServiceMockTest extends BaseUnitTest {
         verify(filmDaoMock, times(1)).addFilm(film);
     }
 
+    /**
+     * @see FilmServiceImpl#addFilm(am.aca.orgflix.entity.Film)
+     */
     @Test
     public void addFilm_InsertionError_Fail() {
         when(filmDaoMock.addFilm(film)).thenReturn(false);
@@ -98,6 +115,9 @@ public class FilmServiceMockTest extends BaseUnitTest {
         verify(filmDaoMock, times(1)).addFilm(film);
     }
 
+    /**
+     * @see FilmServiceImpl#addFilm(am.aca.orgflix.entity.Film)
+     */
     @Test
     public void addFilm_OptimizationError_Fail() {
         film.addCast(cast);
@@ -116,6 +136,9 @@ public class FilmServiceMockTest extends BaseUnitTest {
         verify(castDaoMock, times(1)).addCast(cast);
     }
 
+    /**
+     * @see FilmServiceImpl#editFilm(am.aca.orgflix.entity.Film)
+     */
     @Test
     public void editFilm_WGenresAndCasts_Success() {
         film.addCast(cast);
@@ -145,6 +168,9 @@ public class FilmServiceMockTest extends BaseUnitTest {
         verify(castDaoMock, times(1)).addCastToFilm(cast, film.getId());
     }
 
+    /**
+     * @see FilmServiceImpl#editFilm(am.aca.orgflix.entity.Film)
+     */
     @Test
     public void editFilm_WOGenresAndCasts_Success() {
         when(filmDaoMock.editFilm(film)).thenReturn(true);
@@ -159,6 +185,9 @@ public class FilmServiceMockTest extends BaseUnitTest {
         verify(filmDaoMock, times(1)).resetRelationCasts(film);
     }
 
+    /**
+     * @see FilmServiceImpl#editFilm(am.aca.orgflix.entity.Film)
+     */
     @Test
     public void editFilm_InsertionError_Fail() {
         when(filmDaoMock.editFilm(film)).thenReturn(false);
@@ -169,6 +198,9 @@ public class FilmServiceMockTest extends BaseUnitTest {
         verify(filmDaoMock, times(1)).editFilm(film);
     }
 
+    /**
+     * @see FilmServiceImpl#editFilm(am.aca.orgflix.entity.Film)
+     */
     @Test
     public void editFilm_OptimizationError_Fail() {
         film.addCast(cast);
@@ -197,6 +229,9 @@ public class FilmServiceMockTest extends BaseUnitTest {
         verify(castDaoMock, times(1)).addCast(cast);
     }
 
+    /**
+     * @see FilmServiceImpl#getFilmById(int)
+     */
     @Test
     public void getFilmById_Success() {
         when(filmDaoMock.getFilmById(film.getId())).thenReturn(film);
@@ -207,6 +242,9 @@ public class FilmServiceMockTest extends BaseUnitTest {
         verify(filmDaoMock, times(1)).getFilmById(film.getId());
     }
 
+    /**
+     * @see FilmServiceImpl#getFilmById(int)
+     */
     @Test
     public void getFilmById_Fail() {
         when(filmDaoMock.getFilmsByCast(film.getId())).thenThrow(DaoException.class);
@@ -217,6 +255,9 @@ public class FilmServiceMockTest extends BaseUnitTest {
         verify(filmDaoMock, times(1)).getFilmById(film.getId());
     }
 
+    /**
+     * @see FilmServiceImpl#getFilmsByCast(int)
+     */
     @Test
     public void getFilmsByCast_Success() {
         when(filmDaoMock.getFilmsByCast(cast.getId())).thenReturn(films);
@@ -227,6 +268,9 @@ public class FilmServiceMockTest extends BaseUnitTest {
         verify(filmDaoMock, times(1)).getFilmsByCast(cast.getId());
     }
 
+    /**
+     * @see FilmServiceImpl#getFilmsByCast(int)
+     */
     @Test
     public void getFilmsByCast_Fail() {
         when(filmDaoMock.getFilmsByCast(cast.getId())).thenThrow(DaoException.class);
@@ -239,6 +283,9 @@ public class FilmServiceMockTest extends BaseUnitTest {
 
     }
 
+    /**
+     * @see FilmServiceImpl#getFilmsList(int)
+     */
     @Test
     public void getFilmsList_Success() {
         films.add(film);
@@ -253,6 +300,9 @@ public class FilmServiceMockTest extends BaseUnitTest {
         verify(castDaoMock, times(1)).getCastsByFilm(film.getId());
     }
 
+    /**
+     * @see FilmServiceImpl#getFilmsList(int)
+     */
     @Test
     public void getFilmsList_Fail() {
         when(filmDaoMock.getFilmsList(0)).thenThrow(DaoException.class);
@@ -264,6 +314,9 @@ public class FilmServiceMockTest extends BaseUnitTest {
         }
     }
 
+    /**
+     * @see FilmServiceImpl#getFilmsByGenre(am.aca.orgflix.entity.Genre)
+     */
     @Test
     public void getFilmsByGenre_Success() {
         when(filmDaoMock.getFilmsByGenre(Genre.MUSIC)).thenReturn(films);
@@ -274,6 +327,9 @@ public class FilmServiceMockTest extends BaseUnitTest {
         verify(filmDaoMock, times(1)).getFilmsByGenre(Genre.MUSIC);
     }
 
+    /**
+     * @see FilmServiceImpl#getFilmsByGenre(am.aca.orgflix.entity.Genre)
+     */
     @Test
     public void getFilmsByGenre_Fail() {
         when(filmDaoMock.getFilmsByGenre(Genre.MUSIC)).thenThrow(DaoException.class);
@@ -285,6 +341,9 @@ public class FilmServiceMockTest extends BaseUnitTest {
         }
     }
 
+    /**
+     * @see FilmServiceImpl#rateFilm(int, int)
+     */
     @Test
     public void rateFilm_Success() {
         when(filmDaoMock.rateFilm(film.getId(), 5)).thenReturn(true);
@@ -295,6 +354,9 @@ public class FilmServiceMockTest extends BaseUnitTest {
         verify(filmDaoMock, times(1)).rateFilm(film.getId(), 5);
     }
 
+    /**
+     * @see FilmServiceImpl#rateFilm(int, int)
+     */
     @Test
     public void rateFilm_Fail() {
         when(filmDaoMock.rateFilm(film.getId(), 0)).thenThrow(DaoException.class);
@@ -305,6 +367,9 @@ public class FilmServiceMockTest extends BaseUnitTest {
         verify(filmDaoMock, times(1)).rateFilm(film.getId(), 5);
     }
 
+    /**
+     * @see FilmServiceImpl#addGenreToFilm(am.aca.orgflix.entity.Genre, int)
+     */
     @Test
     public void addGenreToFilm_Success() {
         when(filmDaoMock.addGenreToFilm(Genre.DRAMA, film.getId())).thenReturn(true);
@@ -315,6 +380,9 @@ public class FilmServiceMockTest extends BaseUnitTest {
         verify(filmDaoMock, times(1)).addGenreToFilm(Genre.DRAMA, film.getId());
     }
 
+    /**
+     * @see FilmServiceImpl#addGenreToFilm(am.aca.orgflix.entity.Genre, int)
+     */
     @Test
     public void addGenreToFilm_Fail() {
         when(filmDaoMock.addGenreToFilm(Genre.MUSICAL, film.getId())).thenThrow(DaoException.class);
@@ -325,6 +393,9 @@ public class FilmServiceMockTest extends BaseUnitTest {
         verify(filmDaoMock, times(1)).addGenreToFilm(Genre.DRAMA, film.getId());
     }
 
+    /**
+     * @see FilmServiceImpl#getRating(int)
+     */
     @Test
     public void getRating_Success() {
         when(filmDaoMock.getRating(film.getId())).thenReturn(4.3);
@@ -335,6 +406,9 @@ public class FilmServiceMockTest extends BaseUnitTest {
         verify(filmDaoMock, times(1)).getRating(film.getId());
     }
 
+    /**
+     * @see FilmServiceImpl#getRating(int)
+     */
     @Test
     public void getRating_Fail() {
         when(filmDaoMock.getRating(film.getId())).thenThrow(DaoException.class);
@@ -345,6 +419,9 @@ public class FilmServiceMockTest extends BaseUnitTest {
         verify(filmDaoMock, times(1)).getRating(film.getId());
     }
 
+    /**
+     * @see FilmServiceImpl#totalNumberOfFilms()
+     */
     @Test
     public void totalNumber_Success() {
         when(filmDaoMock.totalNumberOfFilms()).thenReturn(100);
@@ -355,6 +432,9 @@ public class FilmServiceMockTest extends BaseUnitTest {
         verify(filmDaoMock, times(1)).totalNumberOfFilms();
     }
 
+    /**
+     * @see FilmServiceImpl#totalNumberOfFilms()
+     */
     @Test
     public void totalNumber_Fail() {
         when(filmDaoMock.totalNumberOfFilms()).thenThrow(DaoException.class);
@@ -365,6 +445,9 @@ public class FilmServiceMockTest extends BaseUnitTest {
         verify(filmDaoMock, times(1)).totalNumberOfFilms();
     }
 
+    /**
+     * @see FilmServiceImpl#getFilteredFilms(java.lang.String, int, int, boolean, java.lang.String, int, am.aca.orgflix.entity.Genre)
+     */
     @Test
     public void filter_ByEverything_Success() {
         films.add(film);
@@ -375,5 +458,20 @@ public class FilmServiceMockTest extends BaseUnitTest {
         Assert.assertEquals(films, actualFilms);
 
         verify(filmDaoMock, times(1)).getFilteredFilms("test", 1000, 3000, "%", "testDir", "0", "1");
+    }
+
+    /**
+     * @see FilmServiceImpl#getFilteredFilms(java.lang.String, int, int, boolean, java.lang.String, int, am.aca.orgflix.entity.Genre)
+     */
+
+    @Test
+    public void filter_ByEverything_Fail() {
+        when(filmDaoMock.getFilteredFilms("test", 1000, 3000, "%", "testDir", "0", "1")).thenThrow(DaoException.class);
+
+        try {
+            List<Film> actualFilms = filmService.getFilteredFilms("test", 1000, 3000, false, "testDir", cast.getId(), Genre.FAMILY);
+        } catch (ServiceException e) {
+            verify(filmDaoMock, times(1)).getFilteredFilms("test", 1000, 3000, "%", "testDir", "0", "1");
+        }
     }
 }

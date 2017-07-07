@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 
 /**
- * Test for DAO services
+ * Integration tests for Film Service Layer
  */
 public class FilmServiceIntegrationTest extends BaseIntegrationTest {
 
@@ -32,6 +32,9 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
     private Film film;
     private Cast cast;
 
+    /**
+     * Rolls back all changes applied to the test DB resulted from tests
+     */
     @After
     public void tearDown() {
         helper.emptyTable(new String[]{"film_to_cast", "genre_to_film", "films", "casts"});

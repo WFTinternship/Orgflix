@@ -46,4 +46,14 @@ public class Cast {
     public void setHasOscar(boolean hasOscar) {
         this.hasOscar = hasOscar;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Cast)) return false;
+
+        Cast cast = (Cast) o;
+
+        return id == cast.id && hasOscar == cast.hasOscar && name.equals(cast.name);
+    }
 }

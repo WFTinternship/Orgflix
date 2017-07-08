@@ -6,6 +6,7 @@ import am.aca.orgflix.dao.UserDAO;
 import am.aca.orgflix.entity.User;
 import am.aca.orgflix.service.ServiceException;
 import am.aca.orgflix.service.UserService;
+import am.aca.orgflix.service.impl.UserServiceImpl;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -46,6 +47,9 @@ public class UserServiceMockTest extends BaseUnitTest {
         verifyNoMoreInteractions(userDaoMock);
     }
 
+    /**
+     * @see UserServiceImpl#add(am.aca.orgflix.entity.User)
+     */
     @Test
     public void addUser_Success() {
         when(userDaoMock.add(user)).thenReturn(1);
@@ -56,6 +60,9 @@ public class UserServiceMockTest extends BaseUnitTest {
         verify(userDaoMock, times(1)).add(user);
     }
 
+    /**
+     * @see UserServiceImpl#add(am.aca.orgflix.entity.User)
+     */
     @Test
     public void addUser_Fail() {
         when(userDaoMock.add(user)).thenThrow(DaoException.class);
@@ -67,6 +74,9 @@ public class UserServiceMockTest extends BaseUnitTest {
         }
     }
 
+    /**
+     * @see UserServiceImpl#get(int)
+     */
     @Test
     public void getUser_ById_Success() {
         when(userDaoMock.get(52)).thenReturn(user);
@@ -77,6 +87,9 @@ public class UserServiceMockTest extends BaseUnitTest {
         verify(userDaoMock, times(1)).get(52);
     }
 
+    /**
+     * @see UserServiceImpl#get(int)
+     */
     @Test
     public void getUser_ById_Fail() {
         when(userDaoMock.get(-1)).thenThrow(DaoException.class);
@@ -88,6 +101,9 @@ public class UserServiceMockTest extends BaseUnitTest {
         }
     }
 
+    /**
+     * @see UserServiceImpl#get(String)
+     */
     @Test
     public void getUser_ByEmail_Success() {
         when(userDaoMock.get("bbanner@avengers.com")).thenReturn(user);
@@ -98,6 +114,9 @@ public class UserServiceMockTest extends BaseUnitTest {
         verify(userDaoMock, times(1)).get("bbanner@avengers.com");
     }
 
+    /**
+     * @see UserServiceImpl#get(String)
+     */
     @Test
     public void getUser_ByEmail_Fail() {
         when(userDaoMock.get("bot@mail.ru")).thenThrow(DaoException.class);
@@ -109,6 +128,36 @@ public class UserServiceMockTest extends BaseUnitTest {
         }
     }
 
+    /**
+     * @see UserServiceImpl#getByNick(String)
+     */
+    @Test
+    public void getUser_ByNick_Success() {
+        when(userDaoMock.getByNick("hulk")).thenReturn(user);
+
+        User actualUser = userService.getByNick("hulk");
+        Assert.assertEquals(user, actualUser);
+
+        verify(userDaoMock, times(1)).getByNick("hulk");
+    }
+
+    /**
+     * @see UserServiceImpl#getByNick(String)
+     */
+    @Test
+    public void getUser_ByNick_Fail() {
+        when(userDaoMock.getByNick("bot")).thenThrow(DaoException.class);
+
+        try {
+            userService.getByNick("bot");
+        } catch (ServiceException e) {
+            verify(userDaoMock, times(1)).getByNick("bot");
+        }
+    }
+
+    /**
+     * @see UserServiceImpl#edit(User)
+     */
     @Test
     public void editUser_Success() {
         when(userDaoMock.edit(user)).thenReturn(true);
@@ -119,6 +168,9 @@ public class UserServiceMockTest extends BaseUnitTest {
         verify(userDaoMock, times(1)).edit(user);
     }
 
+    /**
+     * @see UserServiceImpl#edit(User)
+     */
     @Test
     public void editUser_Fail() {
         when(userDaoMock.edit(user)).thenThrow(DaoException.class);

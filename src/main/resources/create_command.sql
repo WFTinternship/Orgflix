@@ -20,7 +20,7 @@ drop table if exists users;
 # create tables
 create table users (
 	ID int not null auto_increment primary key,
-    Nick varchar(50) not null,
+    Nick varchar(50) not null UNIQUE ,
     User_Name varchar(250),
     User_Pass varchar(50) not null,
     Email varchar(50) not null unique

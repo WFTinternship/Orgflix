@@ -161,6 +161,26 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     /**
+     * @see UserServiceImpl#getByNick(String)
+     */
+    @Test
+    public void getByNick_Success() {
+        userService.add(standardUser);
+
+        User actualUser = userService.getByNick("dave");
+        Assert.assertEquals(standardUser, actualUser);
+    }
+
+    /**
+     * @see UserServiceImpl#getByNick(String)
+     */
+    @Test
+    public void getByNick_Empty_Fail() {
+        User actualUser = userService.getByNick("gabo");
+        Assert.assertNull(actualUser);
+    }
+
+    /**
      * @see UserServiceImpl#authenticate(java.lang.String, java.lang.String)
      */
     @Test

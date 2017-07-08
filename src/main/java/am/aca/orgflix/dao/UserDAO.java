@@ -35,6 +35,14 @@ public interface UserDAO {
     User get(String email);
 
     /**
+     * Return user by user user's nickname
+     *
+     * @param nick the nickname of the user in DB
+     * @return user object with the matched id
+     */
+    User getByNick(String nick);
+
+    /**
      * Return user authenticated by user's email and password
      *
      * @param email the email of the user in DB

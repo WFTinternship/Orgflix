@@ -14,7 +14,7 @@ function filmControlMenu(state,id) {
 }
 
 function AddToList(type, id, isPublic) {
-    $.ajax({url: "/data/addFilmTo"+type,type:"POST",data:{film:id,user:$("#userId").val(),isPublic:isPublic},success: function(result){
+    $.ajax({url: "/data/addFilmTo"+type,type:"POST",data:{film:id,user:$("#userId").val(),isPublic:public},success: function(result){
         $("#pop-up-result").html(result);
         $("#pop-up-result").css("display", "block");
         setTimeout(function() {
@@ -97,6 +97,16 @@ function hasOscar() {
     }
     $("#hasOscar").val(oscar);
     $("#oscarCheck").toggleClass("fa-square-o fa-check-square-o");
+}
+
+function isPublic() {
+    if( $("#isPublic").val() === 0){
+        var public = 1;
+    } else {
+        var public = 0;
+    }
+    $("#isPublic").val(public);
+    $("#publicCheck").toggleClass("fa-square-o fa-check-square-o");
 }
 
 function submitLogin() {

@@ -1,6 +1,7 @@
-package am.aca.orgflix.controller;
+package am.aca.orgflix.controller.unit;
 
 import am.aca.orgflix.BaseUnitTest;
+import am.aca.orgflix.controller.DataController;
 import am.aca.orgflix.entity.Cast;
 import am.aca.orgflix.service.*;
 import org.junit.After;

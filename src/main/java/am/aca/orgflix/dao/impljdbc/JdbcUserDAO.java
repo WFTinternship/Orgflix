@@ -82,6 +82,15 @@ public class JdbcUserDAO extends BaseDAO implements UserDAO {
     }
 
     /**
+     * @see UserDAO#getByNick(String)
+     */
+    @Override
+    public User getByNick(String nick) {
+        final String query = "SELECT * FROM users WHERE Nick = ? LIMIT 1";
+        return getJdbcTemplate().queryForObject(query, new Object[]{nick}, new UserRowMapper());
+    }
+
+    /**
      * @see UserDAO#authenticate(java.lang.String, java.lang.String)
      */
     @Override

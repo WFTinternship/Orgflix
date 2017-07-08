@@ -63,6 +63,22 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
+     * @see UserService#get(String)
+     */
+    @Override
+    public User getByNick(String nick) {
+        User user;
+        try {
+            user = userDao.getByNick(nick);
+        } catch (org.springframework.dao.EmptyResultDataAccessException e) {
+            return null;
+        } catch (RuntimeException e) {
+            throw new ServiceException(e.getMessage());
+        }
+        return user;
+    }
+
+    /**
      * @see UserService#authenticate(java.lang.String, java.lang.String)
      */
     @Override

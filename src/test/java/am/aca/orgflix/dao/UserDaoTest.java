@@ -152,7 +152,26 @@ public class UserDaoTest extends BaseIntegrationTest {
     @Test(expected = org.springframework.dao.EmptyResultDataAccessException.class)
     public void getUser_ByWrongEmail_Fail() {
         jdbcUserDAO.add(standardUser);
-        Assert.assertFalse(user.equals(jdbcUserDAO.get("davit.abovyan1@gmail.com")));
+        jdbcUserDAO.get("davit.abovyan1@gmail.com");
+//        Assert.assertFalse(user.equals(jdbcUserDAO.get("davit.abovyan1@gmail.com")));
+    }
+
+    /**
+     * @see JdbcUserDAO#getByNick(String)
+     */
+    @Test
+    public void getByNick_Success() {
+        jdbcUserDAO.add(standardUser);
+        User actualUser = jdbcUserDAO.getByNick("gago");
+        Assert.assertEquals(standardUser, actualUser);
+    }
+
+    /**
+     * @see JdbcUserDAO#getByNick(String)
+     */
+    @Test (expected = org.springframework.dao.EmptyResultDataAccessException.class)
+    public void getByNick_NotExisting_Fail() {
+        User actualUser = jdbcUserDAO.getByNick("gago");
     }
 
     /**

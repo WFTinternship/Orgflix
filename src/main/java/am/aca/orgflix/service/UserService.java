@@ -1,6 +1,5 @@
 package am.aca.orgflix.service;
 
-import am.aca.orgflix.dao.impljdbc.JdbcUserDAO;
 import am.aca.orgflix.entity.User;
 
 /**
@@ -41,6 +40,14 @@ public interface UserService {
      * @return the User object with the given email
      */
     User get(String email);
+
+    /**
+     * Retrieves the User object having the given nickname
+     *
+     * @param nick the email to filter the user by
+     * @return the User object with the given email
+     */
+    User getByNick(String nick);
 
     /**
      * Updates the current user to the given user

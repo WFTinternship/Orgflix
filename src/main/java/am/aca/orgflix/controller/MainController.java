@@ -7,10 +7,7 @@ import am.aca.orgflix.service.ListService;
 import am.aca.orgflix.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
@@ -87,19 +84,23 @@ public class MainController {
                                      @RequestParam("email") String email,
                                      @RequestParam("pass") String pass) {
 
-        ModelAndView modelAndView = null;
+        ModelAndView modelAndView;
         User user = new User(nick, userName, email, pass);
 
-        int userId = userService.add(user);
-        if (userId != -1) {
-            modelAndView = new ModelAndView("index");
-            modelAndView.addObject("films", filmService.getFilmsList(0));
-            modelAndView.addObject("userId", userId);
-            modelAndView.addObject("user", nick + " (" + email + ")");
-            modelAndView.addObject("userAuth", pass.hashCode() + email.hashCode());
-            modelAndView.addObject("currPage", 0);
-            modelAndView.addObject("page", "main");
-        } else {
+        try {
+            int userId = userService.add(user);
+            if (userId != -1) {
+                modelAndView = new ModelAndView("index");
+                modelAndView.addObject("films", filmService.getFilmsList(0));
+                modelAndView.addObject("userId", userId);
+                modelAndView.addObject("user", nick + " (" + email + ")");
+                modelAndView.addObject("userAuth", pass.hashCode() + email.hashCode());
+                modelAndView.addObject("currPage", 0);
+                modelAndView.addObject("page", "main");
+            } else {
+                modelAndView = new ModelAndView("error");
+            }
+        } catch (RuntimeException e) {
             modelAndView = new ModelAndView("error");
         }
 
@@ -110,18 +111,23 @@ public class MainController {
     public ModelAndView paging(@RequestParam("currPage") int page,
                                @RequestParam("userId") int userId,
                                @RequestParam("userAuth") int userAuth) {
-        String user = "";
-        if (userId != -1) {
-            User selUser = userService.get(userId);
-            user = selUser.getNick() + " (" + selUser.getEmail() + ")";
-        }
         ModelAndView modelAndView = new ModelAndView("index");
-        modelAndView.addObject("films", filmService.getFilmsList(page * 12));
-        modelAndView.addObject("userId", userId);
-        modelAndView.addObject("user", user);
-        modelAndView.addObject("userAuth", userAuth);
-        modelAndView.addObject("currPage", page);
-        modelAndView.addObject("page", "main");
+        String user = "";
+        try {
+            if (userId != -1) {
+                User selUser = userService.get(userId);
+                user = selUser.getNick() + " (" + selUser.getEmail() + ")";
+            }
+
+            modelAndView.addObject("films", filmService.getFilmsList(page * 12));
+            modelAndView.addObject("userId", userId);
+            modelAndView.addObject("user", user);
+            modelAndView.addObject("userAuth", userAuth);
+            modelAndView.addObject("currPage", page);
+            modelAndView.addObject("page", "main");
+        } catch (RuntimeException e) {
+            modelAndView = new ModelAndView("error");
+        }
         return modelAndView;
     }
 
@@ -135,17 +141,22 @@ public class MainController {
                                @RequestParam("pass") String pass) {
 
         ModelAndView modelAndView;
-        User user = userService.authenticate(email, pass);
-        if (user == null) {
+
+        try {
+            User user = userService.authenticate(email, pass);
+            if (user == null) {
+                modelAndView = new ModelAndView("error");
+            } else {
+                modelAndView = new ModelAndView("index");
+                modelAndView.addObject("films", filmService.getFilmsList(0));
+                modelAndView.addObject("userId", user.getId());
+                modelAndView.addObject("user", user.getNick() + " (" + email + ")");
+                modelAndView.addObject("userAuth", user.getPass().hashCode() + email.hashCode());
+                modelAndView.addObject("currPage", 0);
+                modelAndView.addObject("page", "main");
+            }
+        } catch (RuntimeException e) {
             modelAndView = new ModelAndView("error");
-        } else {
-            modelAndView = new ModelAndView("index");
-            modelAndView.addObject("films", filmService.getFilmsList(0));
-            modelAndView.addObject("userId", user.getId());
-            modelAndView.addObject("user", user.getNick() + " (" + email + ")");
-            modelAndView.addObject("userAuth", user.getPass().hashCode() + email.hashCode());
-            modelAndView.addObject("currPage", 0);
-            modelAndView.addObject("page", "main");
         }
         return modelAndView;
     }
@@ -155,16 +166,21 @@ public class MainController {
                                   @RequestParam("userAuth") int userAuth,
                                   @RequestParam("currPage") int currPage) {
 
-        User selUser = userService.get(userId);
-        String user = selUser.getNick() + " (" + selUser.getEmail() + ")";
-
         ModelAndView modelAndView = new ModelAndView("index");
-        modelAndView.addObject("films", listService.showOwnWatched(userId, currPage));
-        modelAndView.addObject("userId", userId);
-        modelAndView.addObject("user", user);
-        modelAndView.addObject("userAuth", userAuth);
-        modelAndView.addObject("currPage", 0);
-        modelAndView.addObject("page", "watch");
+
+        try {
+            User selUser = userService.get(userId);
+            String user = selUser.getNick() + " (" + selUser.getEmail() + ")";
+
+            modelAndView.addObject("films", listService.showOwnWatched(userId, currPage));
+            modelAndView.addObject("userId", userId);
+            modelAndView.addObject("user", user);
+            modelAndView.addObject("userAuth", userAuth);
+            modelAndView.addObject("currPage", 0);
+            modelAndView.addObject("page", "watch");
+        } catch (RuntimeException e) {
+            modelAndView = new ModelAndView("error");
+        }
         return modelAndView;
     }
 
@@ -173,16 +189,70 @@ public class MainController {
                                  @RequestParam("userAuth") int userAuth,
                                  @RequestParam("currPage") int currPage) {
 
-        User selUser = userService.get(userId);
-        String user = selUser.getNick() + " (" + selUser.getEmail() + ")";
-
         ModelAndView modelAndView = new ModelAndView("index");
-        modelAndView.addObject("films", listService.showOwnPlanned(userId, currPage));
-        modelAndView.addObject("userId", userId);
-        modelAndView.addObject("user", user);
-        modelAndView.addObject("userAuth", userAuth);
-        modelAndView.addObject("currPage", 0);
-        modelAndView.addObject("page", "wish");
+
+        try {
+            User selUser = userService.get(userId);
+            String user = selUser.getNick() + " (" + selUser.getEmail() + ")";
+
+            modelAndView.addObject("films", listService.showOwnPlanned(userId, currPage));
+            modelAndView.addObject("userId", userId);
+            modelAndView.addObject("user", user);
+            modelAndView.addObject("userAuth", userAuth);
+            modelAndView.addObject("currPage", 0);
+            modelAndView.addObject("page", "wish");
+        } catch (RuntimeException e) {
+            modelAndView = new ModelAndView("error");
+        }
+        return modelAndView;
+    }
+
+    @RequestMapping("/watch_list/getWatchedBy{nick}/{page}")
+    public ModelAndView getWatchedByOtherUser(@RequestParam("userId") int userId,
+                                              @RequestParam("userAuth") int userAuth,
+                                              @PathVariable("nick") String nick,
+                                              @PathVariable("page") int page) {
+        ModelAndView modelAndView = new ModelAndView("index");
+
+        try {
+
+            User selUser = userService.get(userId);
+            String user = selUser.getNick() + " (" + selUser.getEmail() + ")";
+
+            modelAndView.addObject("films", listService.showOthersWatched(userService.getByNick(nick).getId(), page));
+            modelAndView.addObject("userId", userId);
+            modelAndView.addObject("user", user);
+            modelAndView.addObject("userAuth", userAuth);
+            modelAndView.addObject("currPage", 0);
+            modelAndView.addObject("page", "OthersWatched");
+        } catch (RuntimeException e) {
+            modelAndView = new ModelAndView("error");
+        }
+
+        return modelAndView;
+    }
+
+    @RequestMapping("/wish_list/getPlannedBy{nick}/{page}")
+    public ModelAndView getPlannedByOtherUser(@RequestParam("userId") int userId,
+                                              @RequestParam("userAuth") int userAuth,
+                                              @PathVariable("nick") String nick,
+                                              @PathVariable("page") int page) {
+        ModelAndView modelAndView = new ModelAndView("index");
+
+        try {
+            User selUser = userService.get(userId);
+            String user = selUser.getNick() + " (" + selUser.getEmail() + ")";
+
+            modelAndView.addObject("films", listService.showOthersPlanned(userService.getByNick(nick).getId(), page));
+            modelAndView.addObject("userId", userId);
+            modelAndView.addObject("user", user);
+            modelAndView.addObject("userAuth", userAuth);
+            modelAndView.addObject("currPage", 0);
+            modelAndView.addObject("page", "OthersWatched");
+        } catch (RuntimeException e) {
+            modelAndView = new ModelAndView("error");
+        }
+
         return modelAndView;
     }
 
@@ -191,14 +261,19 @@ public class MainController {
     public ModelAndView addFilm(@RequestParam("userId") int userId,
                                 @RequestParam("userAuth") int userAuth) {
 
-        User selUser = userService.get(userId);
-        String user = selUser.getNick() + " (" + selUser.getEmail() + ")";
-
         ModelAndView modelAndView = new ModelAndView("newFilm");
-        modelAndView.addObject("actors", castService.listCasts());
-        modelAndView.addObject("userId", userId);
-        modelAndView.addObject("user", user);
-        modelAndView.addObject("userAuth", userAuth);
+
+        try {
+            User selUser = userService.get(userId);
+            String user = selUser.getNick() + " (" + selUser.getEmail() + ")";
+
+            modelAndView.addObject("actors", castService.listCasts());
+            modelAndView.addObject("userId", userId);
+            modelAndView.addObject("user", user);
+            modelAndView.addObject("userAuth", userAuth);
+        } catch (RuntimeException e) {
+            modelAndView = new ModelAndView("error");
+        }
         return modelAndView;
     }
 
@@ -229,11 +304,16 @@ public class MainController {
 
     // support method for guest modelAndView
     private ModelAndView getGuestMV(ModelAndView modelAndView) {
-        modelAndView.addObject("films", filmService.getFilmsList(0));
-        modelAndView.addObject("userId", -1);
-        modelAndView.addObject("userAuth", 0);
-        modelAndView.addObject("currPage", 0);
-        modelAndView.addObject("page", "main");
+        try {
+
+            modelAndView.addObject("films", filmService.getFilmsList(0));
+            modelAndView.addObject("userId", -1);
+            modelAndView.addObject("userAuth", 0);
+            modelAndView.addObject("currPage", 0);
+            modelAndView.addObject("page", "main");
+        } catch (RuntimeException e) {
+            modelAndView = new ModelAndView("error");
+        }
         return modelAndView;
     }
 }

@@ -32,13 +32,4 @@ public class TestHelper extends BaseDAO {
         }
     }
 
-    public final Object unwrapProxy(Object bean) throws Exception {
-        if (AopUtils.isAopProxy(bean) && bean instanceof Advised) {
-
-            Advised advised = (Advised) bean;
-            bean = advised.getTargetSource().getTarget();
-        }
-
-        return bean;
-    }
 }

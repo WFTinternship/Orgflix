@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -58,6 +59,7 @@ public class DataController {
 
     @PostMapping("/getActorsList")
     public ResponseEntity getActorsList() {
+//        request.getSession().setAttribute("user", );
         try {
             List<Cast> actorsList = castService.listCasts();
             int size = actorsList.size();
@@ -95,7 +97,8 @@ public class DataController {
     }
 
     @PostMapping("/addFilmToWishList")
-    public ResponseEntity addFilmToWishList(@RequestParam("user") int userId, @RequestParam("film") int filmId, @RequestParam("isPublic") boolean isPublic) {
+    public ResponseEntity addFilmToWishList(@RequestParam("user") int userId, @RequestParam("film") int filmId) {
+//    public ResponseEntity addFilmToWishList(@RequestParam("user") int userId, @RequestParam("film") int filmId, @RequestParam("isPublic") boolean isPublic) {
         try {
             boolean state = listService.addToPlanned(filmId, true, userId);
             if (state)

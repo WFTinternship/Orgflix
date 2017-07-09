@@ -11,14 +11,10 @@ import am.aca.orgflix.service.UserService;
 import am.aca.orgflix.util.TestHelper;
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Integration tests for Data controller
@@ -41,13 +37,7 @@ public class DataControllerIntegrationTest extends BaseIntegrationTest {
 
     private Cast cast = new Cast("Thandie Newton");
     private Film film = new Film("Rocknrolla", 2008);
-    private List<Cast> casts = new ArrayList<>();
     private User user = new User("IronMan", "Tony Stark", "tstark@avengers.com", "pepper<3");
-
-    @Before
-    public void setUp() {
-
-    }
 
     /**
      * Rolls back all changes applied to the test DB resulted from tests
@@ -130,36 +120,36 @@ public class DataControllerIntegrationTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see DataController#addFilmToWishList(int, int, boolean) (int, int, boolean)
+     * @see DataController#addFilmToWishList(int, int) շ
      */
     @Test
     public void addToPlanned_Success() {
         filmService.addFilm(film);
         userService.add(user);
 
-        ResponseEntity actualRE = dataController.addFilmToWishList(user.getId(), film.getId(), true);
+        ResponseEntity actualRE = dataController.addFilmToWishList(user.getId(), film.getId());
 
         Assert.assertEquals(new ResponseEntity("Film added to wish list", HttpStatus.OK), actualRE);
     }
 
     /**
-     * @see DataController#addFilmToWishList(int, int, boolean) (int, int, boolean)
+     * @see DataController#addFilmToWishList(int, int)
      */
     @Test
     public void addToPlanned_Fail() {
-        ResponseEntity actualRE = dataController.addFilmToWishList(user.getId(), film.getId(), true);
+        ResponseEntity actualRE = dataController.addFilmToWishList(user.getId(), film.getId());
 
         Assert.assertEquals(new ResponseEntity(HttpStatus.BAD_REQUEST), actualRE);
     }
 
     /**
      * @see DataController#removeFromWishList(int, int)
-     * */
+     */
     @Test
     public void removePlanned_Success() {
         filmService.addFilm(film);
         userService.add(user);
-        dataController.addFilmToWishList(user.getId(), film.getId(), true);
+        dataController.addFilmToWishList(user.getId(), film.getId());
 
         ResponseEntity actualRE = dataController.removeFromWishList(user.getId(), film.getId());
 
@@ -168,7 +158,7 @@ public class DataControllerIntegrationTest extends BaseIntegrationTest {
 
     /**
      * @see DataController#removeFromWishList(int, int)
-     * */
+     */
     @Test
     public void removePlanned_NotExisting_Fail() {
         ResponseEntity actualRE = dataController.removeFromWishList(user.getId(), film.getId());
@@ -178,7 +168,7 @@ public class DataControllerIntegrationTest extends BaseIntegrationTest {
 
     /**
      * @see DataController#removeFromWishList(int, int) (int, int)
-     * */
+     */
     @Test
     public void removeWatched_Success() {
         filmService.addFilm(film);
@@ -192,7 +182,7 @@ public class DataControllerIntegrationTest extends BaseIntegrationTest {
 
     /**
      * @see DataController#removeFromWatchList(int, int) (int, int) (int, int)
-     * */
+     */
     @Test
     public void removeWatched_NotExisting_Fail() {
         ResponseEntity actualRE = dataController.removeFromWishList(user.getId(), film.getId());

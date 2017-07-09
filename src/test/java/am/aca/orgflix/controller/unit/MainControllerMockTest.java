@@ -63,27 +63,18 @@ public class MainControllerMockTest extends BaseUnitTest {
     /**
      * @see MainController#index()
      * */
-    @Ignore
     @Test
     public void index_Success() {
         when(filmServiceMock.getFilmsList(0)).thenReturn(films);
 
         ModelAndView actualMV = mainController.index();
 
-        ModelAndView otherMV = new ModelAndView("index");
-        otherMV.addObject("films", films);
-        otherMV.addObject("userId", -1);
-        otherMV.addObject("userAuth", 0);
-        otherMV.addObject("currPage", 0);
-        otherMV.addObject("page", "main");
-
-        ModelAndView expectedMV = new ModelAndView("index");
-        expectedMV.addObject("films", films);
-        expectedMV.addObject("userId", -1);
-        expectedMV.addObject("userAuth", 0);
-        expectedMV.addObject("currPage", 0);
-        expectedMV.addObject("page", "main");
-        Assert.assertEquals(expectedMV, otherMV );
+        Assert.assertEquals("index", actualMV.getViewName());
+        Assert.assertEquals(films, actualMV.getModel().get("films"));
+        Assert.assertEquals(-1, actualMV.getModel().get("userId"));
+        Assert.assertEquals(0, actualMV.getModel().get("userAuth"));
+        Assert.assertEquals(0, actualMV.getModel().get("currPage"));
+        Assert.assertEquals("main", actualMV.getModel().get("page"));
 
         verify(filmServiceMock, times(1)).getFilmsList(0);
     }

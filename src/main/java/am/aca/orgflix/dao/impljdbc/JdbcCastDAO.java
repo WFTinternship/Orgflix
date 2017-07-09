@@ -39,7 +39,7 @@ public class JdbcCastDAO extends BaseDAO implements CastDAO {
             throw new DaoException("Name is required");
         }
         KeyHolder holder = new GeneratedKeyHolder();
-        final String query = "INSERT INTO casts (Actor_Name, HasOscar) VALUES (?, ?)";
+        final String query = "INSERT INTO CASTS (ACTOR_NAME, HAS_OSCAR) VALUES (?, ?)";
         int result = getJdbcTemplate().update(connection -> {
             PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, cast.getName());
@@ -55,7 +55,7 @@ public class JdbcCastDAO extends BaseDAO implements CastDAO {
      */
     @Override
     public boolean addCastToFilm(Cast cast, int filmId) {
-        final String query = "INSERT INTO film_to_cast(Actor_ID,Film_ID) VALUES (? , ? ) ";
+        final String query = "INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES (? , ? ) ";
         return getJdbcTemplate().update(query, cast.getId(), filmId) == 1;
     }
 
@@ -66,7 +66,7 @@ public class JdbcCastDAO extends BaseDAO implements CastDAO {
      */
     @Override
     public List<Cast> listCast() {
-        final String query = "SELECT ID, Actor_name, HasOscar FROM casts ORDER BY Actor_Name";
+        final String query = "SELECT ID, ACTOR_NAME, HAS_OSCAR FROM CASTS ORDER BY ACTOR_NAME";
         return getJdbcTemplate().query(query, new CastRowMapper());
     }
 
@@ -75,14 +75,14 @@ public class JdbcCastDAO extends BaseDAO implements CastDAO {
      */
     @Override
     public List<Cast> getCastsByFilm(int filmId) {
-        final String query = "SELECT casts.ID, casts.Actor_Name, casts.HasOscar " +
-                "FROM casts" +
+        final String query = "SELECT CASTS.ID, CASTS.ACTOR_NAME, CASTS.HAS_OSCAR " +
+                "FROM CASTS" +
                 " INNER JOIN (" +
-                "    SELECT Actor_ID" +
-                "    FROM film_to_cast" +
-                "    WHERE Film_ID = ? " +
-                "    ) AS cast_id " +
-                "  ON casts.ID = cast_id.Actor_ID";
+                "    SELECT ACTOR_ID" +
+                "    FROM FILM_TO_CAST" +
+                "    WHERE FILM_ID = ? " +
+                "    ) AS CAST_ID " +
+                "  ON CASTS.ID = CAST_ID.ACTOR_ID";
         return getJdbcTemplate().query(query, new Object[]{filmId}, new CastRowMapper());
     }
 
@@ -98,7 +98,7 @@ public class JdbcCastDAO extends BaseDAO implements CastDAO {
         if (!checkRequiredFields(cast.getName()))
             throw new DaoException("Illegal argument");
 
-        final String query = "UPDATE casts SET Actor_Name = ?, HasOscar = ? WHERE ID = ?";
+        final String query = "UPDATE CASTS SET ACTOR_NAME = ?, HAS_OSCAR = ? WHERE ID = ?";
         return getJdbcTemplate().update(query, cast.getName(), cast.isHasOscar(), cast.getId()) == 1;
     }
 
@@ -109,7 +109,7 @@ public class JdbcCastDAO extends BaseDAO implements CastDAO {
      */
     @Override
     public boolean remove(Cast cast) {
-        final String query = "DELETE FROM casts WHERE ID = ?";
+        final String query = "DELETE FROM CASTS WHERE ID = ?";
         return getJdbcTemplate().update(query, cast.getId()) == 1;
     }
 
@@ -120,7 +120,7 @@ public class JdbcCastDAO extends BaseDAO implements CastDAO {
      */
     @Override
     public boolean isStarringIn(int actorId, int filmId) {
-        String query = "SELECT COUNT(*) FROM film_to_cast WHERE Film_ID = ? AND Actor_ID = ?";
+        String query = "SELECT COUNT(*) FROM FILM_TO_CAST WHERE FILM_ID = ? AND ACTOR_ID = ?";
         return getJdbcTemplate().queryForObject(query,
                 new Object[]{filmId, actorId},
                 Integer.class
@@ -132,7 +132,7 @@ public class JdbcCastDAO extends BaseDAO implements CastDAO {
      */
     @Override
     public boolean exists(Cast cast) {
-        String query = "SELECT COUNT(*) FROM casts WHERE ID = ?";
+        String query = "SELECT COUNT(*) FROM CASTS WHERE ID = ?";
         return getJdbcTemplate().queryForObject(query,
                 new Object[]{cast.getId()},
                 Integer.class

@@ -43,8 +43,8 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
 
         KeyHolder holder = new GeneratedKeyHolder();
 
-        final String query = "INSERT INTO films (Title, Prod_Year, HasOscar, " +
-                "Rate_1star, Rate_2star, Rate_3star, Rate_4star, Rate_5star, director) " +
+        final String query = "INSERT INTO FILMS (TITLE, PROD_YEAR, HAS_OSCAR, " +
+                "RATE_1STAR, RATE_2STAR, RATE_3STAR, RATE_4STAR, RATE_5STAR, DIRECTOR) " +
                 " VALUES( ? , ? , ?, ?, ?, ?, ?, ?, ?) ";
 
         int result = getJdbcTemplate().update(connection -> {
@@ -71,7 +71,7 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
      */
     @Override
     public boolean addGenreToFilm(Genre genre, int filmId) {
-        final String query = "INSERT INTO genre_to_film(Genre_ID,Film_ID) VALUES (? , ? ) ";
+        final String query = "INSERT INTO GENRE_TO_FILM(GENRE_ID,FILM_ID) VALUES (? , ? ) ";
         return getJdbcTemplate().update(query, genre.getValue(), filmId) == 1;
     }
 
@@ -84,8 +84,8 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
         if (starType > 5 || starType < 1)
             throw new DaoException("Illegal argument");
 
-        final String sratType = "Rate_" + starType + "star";
-        final String query = "UPDATE films set " + sratType + " = " + sratType + " + 1 WHERE ID = ? ";
+        final String sratType = "RATE_" + starType + "STAR";
+        final String query = "UPDATE FILMS SET " + sratType + " = " + sratType + " + 1 WHERE ID = ? ";
         return getJdbcTemplate().update(query, filmId) == 1;
     }
 
@@ -96,7 +96,7 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
      */
     @Override
     public Film getFilmById(int id) {
-        final String getQuery = "SELECT * FROM films WHERE ID = ? LIMIT 1";
+        final String getQuery = "SELECT * FROM FILMS WHERE ID = ? LIMIT 1";
         try {
             return getJdbcTemplate().queryForObject(getQuery, new Object[]{id}, new FilmRowMapper());
         } catch (EmptyResultDataAccessException e) {
@@ -110,7 +110,7 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
      */
     @Override
     public List<Film> getFilmsList(int startIndex) {
-        final String query = "SELECT * FROM films LIMIT ? , 12 ";
+        final String query = "SELECT * FROM FILMS LIMIT ? , 12 ";
         return getJdbcTemplate().query(query,
                 new Object[]{startIndex},
                 new FilmRowMapper());
@@ -121,12 +121,12 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
      */
     @Override
     public List<Film> getFilmsByGenre(Genre genre) {
-        final String filmQuery = "SELECT films.ID, films.Title, films.Director, films.HasOscar, " +
-                "films.image_ref, films.Prod_Year, films.Rate_1star, films.Rate_2star, " +
-                "films.Rate_3star, films.Rate_4star, films.Rate_5star " +
-                "FROM genre_to_film" +
-                " LEFT JOIN films ON genre_to_film.Film_ID = films.ID " +
-                " WHERE Genre_ID = ?";
+        final String filmQuery = "SELECT FILMS.ID, FILMS.TITLE, FILMS.DIRECTOR, FILMS.HAS_OSCAR, " +
+                "FILMS.image_ref, FILMS.PROD_YEAR, FILMS.RATE_1STAR, FILMS.RATE_2STAR, " +
+                "FILMS.RATE_3STAR, FILMS.RATE_4STAR, FILMS.RATE_5STAR " +
+                "FROM GENRE_TO_FILM" +
+                " LEFT JOIN FILMS ON GENRE_TO_FILM.FILM_ID = FILMS.ID " +
+                " WHERE GENRE_ID = ?";
 
         return getJdbcTemplate().query(filmQuery, new Object[]{genre.getValue()}, new FilmRowMapper());
     }
@@ -136,16 +136,16 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
      */
     @Override
     public List<Film> getFilmsByCast(int actorId) {
-        final String query = "SELECT ID, Title, Prod_Year,HasOscar, image_ref, Director, " +
-                " Rate_1star, Rate_2star, Rate_3star, Rate_4star, Rate_5star " +
-                " FROM films INNER JOIN (" +
-                "   SELECT film_to_cast.Film_ID AS film " +
-                "   FROM casts JOIN film_to_cast " +
-                "   ON casts.ID = film_to_cast.Actor_ID " +
+        final String query = "SELECT ID, TITLE, PROD_YEAR,HAS_OSCAR, image_ref, DIRECTOR, " +
+                " RATE_1STAR, RATE_2STAR, RATE_3STAR, RATE_4STAR, RATE_5STAR " +
+                " FROM FILMS INNER JOIN (" +
+                "   SELECT FILM_TO_CAST.FILM_ID AS film " +
+                "   FROM casts JOIN FILM_TO_CAST " +
+                "   ON casts.ID = FILM_TO_CAST.Actor_ID " +
                 "   WHERE casts.ID = ? " +
-                "   ORDER BY film_to_cast.Film_ID DESC " +
+                "   ORDER BY FILM_TO_CAST.FILM_ID DESC " +
                 ") AS sel_table " +
-                " ON films.ID = sel_table.film";
+                " ON FILMS.ID = sel_table.film";
 
         return getJdbcTemplate().query(query,
                 new FilmRowMapper(),
@@ -157,14 +157,14 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
      */
     @Override
     public double getRating(int filmId) {
-        final String ratingQuery = "SELECT * FROM films WHERE ID = ?";
+        final String ratingQuery = "SELECT * FROM FILMS WHERE ID = ?";
         int ratingSum = 0;
         int ratingCount = 0;
         SqlRowSet sqlRowSet = getJdbcTemplate().queryForRowSet(ratingQuery, filmId);
         while (sqlRowSet.next()) {
             for (int i = 1; i <= 5; i++) {
-                ratingSum += sqlRowSet.getInt("Rate_" + i + "star") * i;
-                ratingCount += sqlRowSet.getInt("Rate_" + i + "star");
+                ratingSum += sqlRowSet.getInt("RATE_" + i + "STAR") * i;
+                ratingCount += sqlRowSet.getInt("RATE_" + i + "STAR");
             }
         }
         // for the case when the film is not rated yet
@@ -179,7 +179,7 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
      */
     @Override
     public int totalNumberOfFilms() {
-        final String query = "SELECT count(ID) AS total FROM films ";
+        final String query = "SELECT COUNT(ID) AS total FROM FILMS ";
         return getJdbcTemplate().queryForObject(query, Integer.class);
     }
 
@@ -189,24 +189,24 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
      */
     @Override
     public List<Film> getFilteredFilms(String title, int startYear, int finishYear, String hasOscar, String director, String castId, String genreId) {
-        final String query = "SELECT films.ID, films.Title, films.Prod_Year, " +
-                "films.HasOscar, films.image_ref, films.Director, " +
-                "films.Rate_1star, films.Rate_2star, films.Rate_3star, " +
-                "films.Rate_4star, films.Rate_5star FROM films " +
-                "LEFT JOIN film_to_cast " +
-                "ON films.ID = film_to_cast.Film_ID " +
-                "LEFT JOIN genre_to_film " +
-                "ON genre_to_film.Film_ID = films.ID " +
-                "WHERE films.Title LIKE ? " +
-                "AND films.Prod_Year >= ? " +
-                "AND films.Prod_Year <= ? " +
-                "AND films.HasOscar LIKE ? " +
-                "AND (films.Director LIKE ? " +
-                "OR films.Director IS NULL) " +
-                "AND (film_to_cast.Actor_ID LIKE ? " +
-                "OR film_to_cast.Actor_ID IS NULL)" +
-                "AND (genre_to_film.Genre_ID LIKE ? " +
-                "OR genre_to_film.Genre_ID IS NULL) ";
+        final String query = "SELECT FILMS.ID, FILMS.TITLE, FILMS.PROD_YEAR, " +
+                "FILMS.HAS_OSCAR, FILMS.image_ref, FILMS.DIRECTOR, " +
+                "FILMS.RATE_1STAR, FILMS.RATE_2STAR, FILMS.RATE_3STAR, " +
+                "FILMS.RATE_4STAR, FILMS.RATE_5STAR FROM FILMS " +
+                "LEFT JOIN FILM_TO_CAST " +
+                "ON FILMS.ID = FILM_TO_CAST.FILM_ID " +
+                "LEFT JOIN GENRE_TO_FILM " +
+                "ON GENRE_TO_FILM.FILM_ID = FILMS.ID " +
+                "WHERE FILMS.TITLE LIKE ? " +
+                "AND FILMS.PROD_YEAR >= ? " +
+                "AND FILMS.PROD_YEAR <= ? " +
+                "AND FILMS.HAS_OSCAR LIKE ? " +
+                "AND (FILMS.DIRECTOR LIKE ? " +
+                "OR FILMS.DIRECTOR IS NULL) " +
+                "AND (FILM_TO_CAST.Actor_ID LIKE ? " +
+                "OR FILM_TO_CAST.Actor_ID IS NULL)" +
+                "AND (GENRE_TO_FILM.GENRE_ID LIKE ? " +
+                "OR GENRE_TO_FILM.GENRE_ID IS NULL) ";
         return getJdbcTemplate().query(query, new Object[]{
                 "%" + title + "%", startYear, finishYear, hasOscar, director, castId, genreId
         }, new FilmRowMapper());
@@ -224,9 +224,9 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
         if (!checkRequiredFields(film.getTitle()) || film.getProdYear() < 1900)
             throw new DaoException("Illegal argument");
 
-        final String query = "UPDATE films SET Title = ?,Prod_Year = ?,HasOscar = ?,Rate_1star = ? " +
-                ",Rate_2star = ?, Rate_3star = ?,Rate_4star = ?,Rate_5star = ?, director = ? " +
-                " WHERE id = ? ";
+        final String query = "UPDATE FILMS SET TITLE = ?,PROD_YEAR = ?,HAS_OSCAR = ?,RATE_1STAR = ? " +
+                ",RATE_2STAR = ?, RATE_3STAR = ?,RATE_4STAR = ?,RATE_5STAR = ?, DIRECTOR = ? " +
+                " WHERE ID = ? ";
 
         return getJdbcTemplate().update(query,
                 film.getTitle(),
@@ -250,7 +250,7 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
      */
     @Override
     public boolean resetRelationCasts(Film film) {
-        final String query = "DELETE FROM film_to_cast WHERE Film_ID = ?";
+        final String query = "DELETE FROM FILM_TO_CAST WHERE FILM_ID = ?";
         return getJdbcTemplate().update(query, film.getId()) >= 1;
     }
 
@@ -259,7 +259,7 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
      */
     @Override
     public boolean resetRelationGenres(Film film) {
-        final String query = "DELETE FROM genre_to_film WHERE Film_ID = ?";
+        final String query = "DELETE FROM GENRE_TO_FILM WHERE FILM_ID = ?";
         return getJdbcTemplate().update(query, film.getId()) >= 1;
     }
 
@@ -268,7 +268,7 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
      */
     @Override
     public boolean remove(Film film) {
-        final String query = "DELETE FROM films WHERE ID = ?";
+        final String query = "DELETE FROM FILMS WHERE ID = ?";
         return getJdbcTemplate().update(query, film.getId()) == 1;
     }
 

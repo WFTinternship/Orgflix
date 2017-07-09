@@ -1,230 +1,230 @@
-# For TEST DB
-# clear database
-create database if NOT EXISTS orgflixtest;
-use orgflixtest;
+# FOR TEST DB
+# CLEAR DATABASE
+CREATE DATABASE IF NOT EXISTS ORGFLIXTEST;
+USE ORGFLIXTEST;
 
-# For REAL DB
-# clear database
-create database if NOT EXISTS orgflix;
-use orgflix;
-drop table if exists lists;
-drop table if exists film_to_cast;
-drop table if exists casts;
-drop table if exists genre_to_film;
-drop table if exists genre;
-drop table if exists films;
-drop table if exists users;
-
-
-# Genreal part - run twice
-# create tables
-create table users (
-	ID int not null auto_increment primary key,
-    Nick varchar(50) not null UNIQUE ,
-    User_Name varchar(250),
-    User_Pass varchar(50) not null,
-    Email varchar(50) not null unique
-) engine = InnoDB;
-
-create table films (
-	ID int not null auto_increment primary key,
-    Title varchar(250) not null,
-    Prod_Year smallint not NULL ,
-    HasOscar boolean not null default false,
-    image_ref varchar(250),
-    Director VARCHAR(250),
-    Rate_1star int default 0,
-    Rate_2star int default 0,
-    Rate_3star int default 0,
-    Rate_4star int default 0,
-    Rate_5star int default 0
-) engine = InnoDB;
-
-create table genre (
-  ID int not null PRIMARY key,
-  genre varchar(50) not null
-) engine = InnoDB;
-
-create table genre_to_film (
-	  Genre_ID int not null,
-    Film_ID int not null,
-    foreign key (Genre_ID) references genre(ID),
-    foreign key (Film_ID) references films(ID)
-) engine = InnoDB;
-
-create table casts(
-	ID int not null primary key auto_increment,
-    Actor_Name varchar(250) not null,
-    HasOscar boolean not null default false
-) engine = InnoDB;
-
-create table film_to_cast(
-	Actor_ID int not null,
-    Film_ID int not null,
-    foreign key (Actor_ID) references casts(ID),
-    foreign key (Film_ID) references films(ID)
-) engine = InnoDB;
-
-create table lists(
-	User_ID int not null,
-    Film_ID int not null,
-    Is_watched boolean not null default false,
-    Is_wished boolean not null default false,
-    Is_public boolean not null default true,
-    foreign key (User_ID) references users(ID),
-    foreign key (Film_ID) references films(ID)
-) engine = InnoDB;
+# FOR REAL DB
+# CLEAR DATABASE
+CREATE DATABASE IF NOT EXISTS ORGFLIX;
+USE ORGFLIX;
+DROP TABLE IF EXISTS LISTS;
+DROP TABLE IF EXISTS FILM_TO_CAST;
+DROP TABLE IF EXISTS CASTS;
+DROP TABLE IF EXISTS GENRE_TO_FILM;
+DROP TABLE IF EXISTS GENRE;
+DROP TABLE IF EXISTS FILMS;
+DROP TABLE IF EXISTS USERS;
 
 
+# GENERAL PART - RUN TWICE
+# CREATE TABLES
+CREATE TABLE USERS (
+  ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  NICK VARCHAR(50) NOT NULL UNIQUE ,
+  USER_NAME VARCHAR(250),
+  USER_PASS VARCHAR(50) NOT NULL,
+  EMAIL VARCHAR(50) NOT NULL UNIQUE
+) ENGINE = INNODB;
 
-# populating test data
+CREATE TABLE FILMS (
+  ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  TITLE VARCHAR(250) NOT NULL,
+  PROD_YEAR SMALLINT NOT NULL ,
+  HAS_OSCAR BOOLEAN NOT NULL DEFAULT FALSE,
+  IMAGE_REF VARCHAR(250),
+  DIRECTOR VARCHAR(250),
+  RATE_1STAR INT DEFAULT 0,
+  RATE_2STAR INT DEFAULT 0,
+  RATE_3STAR INT DEFAULT 0,
+  RATE_4STAR INT DEFAULT 0,
+  RATE_5STAR INT DEFAULT 0
+) ENGINE = INNODB;
 
-# 2 films
-insert into films(Title,Prod_Year,HasOscar,image_ref)
-   values('The Shawshank Redemption',1994,true,'images/12345.jpg');
-insert into casts(Actor_Name,HasOscar)
-  values('Tim Robbins',true);
-insert into casts(Actor_Name,HasOscar)
-  values('Morgan Freeman',false);
-insert into film_to_cast(Actor_ID,Film_ID) values(1,1);
-insert into film_to_cast(Actor_ID,Film_ID) values(2,1);
+CREATE TABLE GENRE (
+  ID INT NOT NULL PRIMARY KEY,
+  GENRE VARCHAR(50) NOT NULL
+) ENGINE = INNODB;
 
-insert into films(Title,Prod_Year,HasOscar,image_ref)
-   values('The Godfather',1972,true,'images/23452.jpg');
-insert into casts(Actor_Name,HasOscar)
-  values('Marlon Brando',true);
-insert into casts(Actor_Name,HasOscar)
-  values('Al Pacino',false);
-insert into film_to_cast(Actor_ID,Film_ID) values(3,2);
-insert into film_to_cast(Actor_ID,Film_ID) values(4,2);
+CREATE TABLE GENRE_TO_FILM (
+  GENRE_ID INT NOT NULL,
+  FILM_ID INT NOT NULL,
+  FOREIGN KEY (GENRE_ID) REFERENCES GENRE(ID),
+  FOREIGN KEY (FILM_ID) REFERENCES FILMS(ID)
+) ENGINE = INNODB;
 
+CREATE TABLE CASTS(
+  ID INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  ACTOR_NAME VARCHAR(250) NOT NULL,
+  HAS_OSCAR BOOLEAN NOT NULL DEFAULT FALSE
+) ENGINE = INNODB;
 
-insert into films(Title,Prod_Year,HasOscar,image_ref)
-  values('The Godfather: Part II',1974,true,'images/34555.jpg');
-insert into casts(Actor_Name,HasOscar)
-  values('Robert De Niro',true);
-insert into film_to_cast(Actor_ID,Film_ID) values(4,3);
-insert into film_to_cast(Actor_ID,Film_ID) values(5,3);
+CREATE TABLE FILM_TO_CAST(
+  ACTOR_ID INT NOT NULL,
+  FILM_ID INT NOT NULL,
+  FOREIGN KEY (ACTOR_ID) REFERENCES CASTS(ID),
+  FOREIGN KEY (FILM_ID) REFERENCES FILMS(ID)
+) ENGINE = INNODB;
 
-
-insert into films(Title,Prod_Year,HasOscar,image_ref)
-  values('The Dark Knight',2008,false,'images/72623.jpg');
-insert into casts(Actor_Name,HasOscar)
-  values('Christian Bale',true);
-insert into casts(Actor_Name,HasOscar)
-  values('Heath Ledger',false);
-insert into film_to_cast(Actor_ID,Film_ID) values(6,4);
-insert into film_to_cast(Actor_ID,Film_ID) values(7,4);
-
-
-insert into films(Title,Prod_Year,HasOscar,image_ref)
-  values('12 Angry Men',1957,false,'images/53234.jpg');
-insert into casts(Actor_Name,HasOscar)
-  values('Henry Fonda',true);
-insert into casts(Actor_Name,HasOscar)
-  values('Lee J. Cobb',false);
-insert into film_to_cast(Actor_ID,Film_ID) values(8,5);
-insert into film_to_cast(Actor_ID,Film_ID) values(9,5);
-
-insert into films(Title,Prod_Year,HasOscar,image_ref)
-  values('Schindlers List',1993,true,'images/86523.jpg');
-insert into casts(Actor_Name,HasOscar)
-  values('Liam Neeson',true);
-insert into casts(Actor_Name,HasOscar)
-  values('Ralph Fiennes',false);
-insert into film_to_cast(Actor_ID,Film_ID) values(10,6);
-insert into film_to_cast(Actor_ID,Film_ID) values(11,6);
-
-insert into films(Title,Prod_Year,HasOscar,image_ref)
-  values('Pulp Fiction',1994,true,'images/45352.jpg');
-insert into casts(Actor_Name,HasOscar)
-  values('John Travolta',true);
-insert into casts(Actor_Name,HasOscar)
-  values('Samuel L. Jackson',false);
-insert into film_to_cast(Actor_ID,Film_ID) values(12,7);
-insert into film_to_cast(Actor_ID,Film_ID) values(13,7);
-
-insert into films(Title,Prod_Year,HasOscar,image_ref)
-  values('The Lord of the Rings: The Return of the King',2003,true,'images/98343.jpg');
-insert into casts(Actor_Name,HasOscar)
-  values('Elijah Wood',true);
-insert into casts(Actor_Name,HasOscar)
-  values('Viggo Mortensen',false);
-insert into film_to_cast(Actor_ID,Film_ID) values(14,8);
-insert into film_to_cast(Actor_ID,Film_ID) values(15,8);
-
-insert into films(Title,Prod_Year,HasOscar,image_ref)
-  values('The Good, the Bad and the Ugly',1996,false,'images/12923.jpg');
-insert into casts(Actor_Name,HasOscar)
-  values('Clint Eastwood',true);
-insert into casts(Actor_Name,HasOscar)
-  values('Eli Wallach',false);
-insert into film_to_cast(Actor_ID,Film_ID) values(16,9);
-insert into film_to_cast(Actor_ID,Film_ID) values(17,9);
-
-insert into films(Title,Prod_Year,HasOscar,image_ref)
-  values('Fight Club',1999,false,'images/76765.jpg');
-insert into casts(Actor_Name,HasOscar)
-  values('Brad Pitt',true);
-insert into casts(Actor_Name,HasOscar)
-  values('Edward Norton',false);
-insert into film_to_cast(Actor_ID,Film_ID) values(18,10);
-insert into film_to_cast(Actor_ID,Film_ID) values(19,10);
-
-insert into films(Title,Prod_Year,HasOscar,image_ref)
-  values('The Lord of the Rings: The Fellowship of the Ring',2001,true,'images/89733.jpg');
-insert into casts(Actor_Name,HasOscar)
-  values('Ian McKellen',true);
-insert into film_to_cast(Actor_ID,Film_ID) values(14,11);
-insert into film_to_cast(Actor_ID,Film_ID) values(19,11);
-
-insert into films(Title,Prod_Year,HasOscar,image_ref)
-values('Forrest Gump',1994,true,'images/54545.jpg');
-insert into casts(Actor_Name,HasOscar)
-values('Tom Hanks',true);
-insert into casts(Actor_Name,HasOscar)
-values('Robin Wright',false);
-insert into film_to_cast(Actor_ID,Film_ID) values(20,12);
-insert into film_to_cast(Actor_ID,Film_ID) values(21,12);
-
-insert into films(Title,Prod_Year,HasOscar,image_ref)
-  values('Star Wars: Episode V - The Empire Strikes Back',1980,true,'images/99778.jpg');
-insert into casts(Actor_Name,HasOscar)
-  values('Mark Hamill',true);
-insert into casts(Actor_Name,HasOscar)
-  values('Harrison Ford',false);
-insert into film_to_cast(Actor_ID,Film_ID) values(22,13);
-insert into film_to_cast(Actor_ID,Film_ID) values(23,13);
+CREATE TABLE LISTS(
+  USER_ID INT NOT NULL,
+  FILM_ID INT NOT NULL,
+  IS_WATCHED BOOLEAN NOT NULL DEFAULT FALSE,
+  IS_WISHED BOOLEAN NOT NULL DEFAULT FALSE,
+  IS_PUBLIC BOOLEAN NOT NULL DEFAULT TRUE,
+  FOREIGN KEY (USER_ID) REFERENCES USERS(ID),
+  FOREIGN KEY (FILM_ID) REFERENCES FILMS(ID)
+) ENGINE = INNODB;
 
 
 
-# 3 genre
-INSERT INTO genre(id, genre) VALUES (1, 'FAMILY');
-INSERT INTO genre(id, genre) VALUES (2, 'HISTORY');
-INSERT INTO genre(id, genre) VALUES (3, 'MUSIC');
-INSERT INTO genre(id, genre) VALUES (4, 'MYSTERY');
-INSERT INTO genre(id, genre) VALUES (5, 'SCI_FI');
-INSERT INTO genre(id, genre) VALUES (6, 'THRILLER');
-INSERT INTO genre(id, genre) VALUES (7, 'WESTERN');
-INSERT INTO genre(id, genre) VALUES (8, 'ACTION');
-INSERT INTO genre(id, genre) VALUES (9, 'ANIMATION');
-INSERT INTO genre(id, genre) VALUES (10, 'COMEDY');
-INSERT INTO genre(id, genre) VALUES (11, 'DOCUMENTARY');
-INSERT INTO genre(id, genre) VALUES (12, 'ADVENTURE');
-INSERT INTO genre(id, genre) VALUES (13, 'BIOGRAPHY');
-INSERT INTO genre(id, genre) VALUES (14, 'CRIME');
-INSERT INTO genre(id, genre) VALUES (15, 'DRAMA');
-INSERT INTO genre(id, genre) VALUES (16, 'FANTASY');
-INSERT INTO genre(id, genre) VALUES (17, 'HORROR');
-INSERT INTO genre(id, genre) VALUES (18, 'MUSICAL');
-INSERT INTO genre(id, genre) VALUES (19, 'ROMANCE');
-INSERT INTO genre(id, genre) VALUES (20, 'SPORT');
-INSERT INTO genre(id, genre) VALUES (21, 'WAR');
+# POPULATING TEST DATA
+
+# 2 FILMS
+INSERT INTO FILMS(TITLE,PROD_YEAR,HAS_OSCAR,IMAGE_REF)
+VALUES('THE SHAWSHANK REDEMPTION',1994,TRUE,'IMAGES/12345.JPG');
+INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
+VALUES('TIM ROBBINS',TRUE);
+INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
+VALUES('MORGAN FREEMAN',FALSE);
+INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(1,1);
+INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(2,1);
+
+INSERT INTO FILMS(TITLE,PROD_YEAR,HAS_OSCAR,IMAGE_REF)
+VALUES('THE GODFATHER',1972,TRUE,'IMAGES/23452.JPG');
+INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
+VALUES('MARLON BRANDO',TRUE);
+INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
+VALUES('AL PACINO',FALSE);
+INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(3,2);
+INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(4,2);
 
 
-# # 2 genre to 2 films
-# insert into genre_to_film(Genre_ID,Film_ID) values(1,1);
-# insert into genre_to_film(Genre_ID,Film_ID) values(1,2);
-# insert into genre_to_film(Genre_ID,Film_ID) values(2,2);
-# insert into genre_to_film(Genre_ID,Film_ID) values(3,2);
+INSERT INTO FILMS(TITLE,PROD_YEAR,HAS_OSCAR,IMAGE_REF)
+VALUES('THE GODFATHER: PART II',1974,TRUE,'IMAGES/34555.JPG');
+INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
+VALUES('ROBERT DE NIRO',TRUE);
+INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(4,3);
+INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(5,3);
+
+
+INSERT INTO FILMS(TITLE,PROD_YEAR,HAS_OSCAR,IMAGE_REF)
+VALUES('THE DARK KNIGHT',2008,FALSE,'IMAGES/72623.JPG');
+INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
+VALUES('CHRISTIAN BALE',TRUE);
+INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
+VALUES('HEATH LEDGER',FALSE);
+INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(6,4);
+INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(7,4);
+
+
+INSERT INTO FILMS(TITLE,PROD_YEAR,HAS_OSCAR,IMAGE_REF)
+VALUES('12 ANGRY MEN',1957,FALSE,'IMAGES/53234.JPG');
+INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
+VALUES('HENRY FONDA',TRUE);
+INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
+VALUES('LEE J. COBB',FALSE);
+INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(8,5);
+INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(9,5);
+
+INSERT INTO FILMS(TITLE,PROD_YEAR,HAS_OSCAR,IMAGE_REF)
+VALUES('SCHINDLERS LIST',1993,TRUE,'IMAGES/86523.JPG');
+INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
+VALUES('LIAM NEESON',TRUE);
+INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
+VALUES('RALPH FIENNES',FALSE);
+INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(10,6);
+INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(11,6);
+
+INSERT INTO FILMS(TITLE,PROD_YEAR,HAS_OSCAR,IMAGE_REF)
+VALUES('PULP FICTION',1994,TRUE,'IMAGES/45352.JPG');
+INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
+VALUES('JOHN TRAVOLTA',TRUE);
+INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
+VALUES('SAMUEL L. JACKSON',FALSE);
+INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(12,7);
+INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(13,7);
+
+INSERT INTO FILMS(TITLE,PROD_YEAR,HAS_OSCAR,IMAGE_REF)
+VALUES('THE LORD OF THE RINGS: THE RETURN OF THE KING',2003,TRUE,'IMAGES/98343.JPG');
+INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
+VALUES('ELIJAH WOOD',TRUE);
+INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
+VALUES('VIGGO MORTENSEN',FALSE);
+INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(14,8);
+INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(15,8);
+
+INSERT INTO FILMS(TITLE,PROD_YEAR,HAS_OSCAR,IMAGE_REF)
+VALUES('THE GOOD, THE BAD AND THE UGLY',1996,FALSE,'IMAGES/12923.JPG');
+INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
+VALUES('CLINT EASTWOOD',TRUE);
+INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
+VALUES('ELI WALLACH',FALSE);
+INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(16,9);
+INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(17,9);
+
+INSERT INTO FILMS(TITLE,PROD_YEAR,HAS_OSCAR,IMAGE_REF)
+VALUES('FIGHT CLUB',1999,FALSE,'IMAGES/76765.JPG');
+INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
+VALUES('BRAD PITT',TRUE);
+INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
+VALUES('EDWARD NORTON',FALSE);
+INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(18,10);
+INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(19,10);
+
+INSERT INTO FILMS(TITLE,PROD_YEAR,HAS_OSCAR,IMAGE_REF)
+VALUES('THE LORD OF THE RINGS: THE FELLOWSHIP OF THE RING',2001,TRUE,'IMAGES/89733.JPG');
+INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
+VALUES('IAN MCKELLEN',TRUE);
+INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(14,11);
+INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(19,11);
+
+INSERT INTO FILMS(TITLE,PROD_YEAR,HAS_OSCAR,IMAGE_REF)
+VALUES('FORREST GUMP',1994,TRUE,'IMAGES/54545.JPG');
+INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
+VALUES('TOM HANKS',TRUE);
+INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
+VALUES('ROBIN WRIGHT',FALSE);
+INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(20,12);
+INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(21,12);
+
+INSERT INTO FILMS(TITLE,PROD_YEAR,HAS_OSCAR,IMAGE_REF)
+VALUES('STAR WARS: EPISODE V - THE EMPIRE STRIKES BACK',1980,TRUE,'IMAGES/99778.JPG');
+INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
+VALUES('MARK HAMILL',TRUE);
+INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
+VALUES('HARRISON FORD',FALSE);
+INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(22,13);
+INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(23,13);
+
+
+
+# 3 GENRE
+INSERT INTO GENRE(ID, GENRE) VALUES (1, 'FAMILY');
+INSERT INTO GENRE(ID, GENRE) VALUES (2, 'HISTORY');
+INSERT INTO GENRE(ID, GENRE) VALUES (3, 'MUSIC');
+INSERT INTO GENRE(ID, GENRE) VALUES (4, 'MYSTERY');
+INSERT INTO GENRE(ID, GENRE) VALUES (5, 'SCI_FI');
+INSERT INTO GENRE(ID, GENRE) VALUES (6, 'THRILLER');
+INSERT INTO GENRE(ID, GENRE) VALUES (7, 'WESTERN');
+INSERT INTO GENRE(ID, GENRE) VALUES (8, 'ACTION');
+INSERT INTO GENRE(ID, GENRE) VALUES (9, 'ANIMATION');
+INSERT INTO GENRE(ID, GENRE) VALUES (10, 'COMEDY');
+INSERT INTO GENRE(ID, GENRE) VALUES (11, 'DOCUMENTARY');
+INSERT INTO GENRE(ID, GENRE) VALUES (12, 'ADVENTURE');
+INSERT INTO GENRE(ID, GENRE) VALUES (13, 'BIOGRAPHY');
+INSERT INTO GENRE(ID, GENRE) VALUES (14, 'CRIME');
+INSERT INTO GENRE(ID, GENRE) VALUES (15, 'DRAMA');
+INSERT INTO GENRE(ID, GENRE) VALUES (16, 'FANTASY');
+INSERT INTO GENRE(ID, GENRE) VALUES (17, 'HORROR');
+INSERT INTO GENRE(ID, GENRE) VALUES (18, 'MUSICAL');
+INSERT INTO GENRE(ID, GENRE) VALUES (19, 'ROMANCE');
+INSERT INTO GENRE(ID, GENRE) VALUES (20, 'SPORT');
+INSERT INTO GENRE(ID, GENRE) VALUES (21, 'WAR');
+
+
+# # 2 GENRE TO 2 FILMS
+# INSERT INTO GENRE_TO_FILM(GENRE_ID,FILM_ID) VALUES(1,1);
+# INSERT INTO GENRE_TO_FILM(GENRE_ID,FILM_ID) VALUES(1,2);
+# INSERT INTO GENRE_TO_FILM(GENRE_ID,FILM_ID) VALUES(2,2);
+# INSERT INTO GENRE_TO_FILM(GENRE_ID,FILM_ID) VALUES(3,2);
 #

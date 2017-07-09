@@ -15,15 +15,15 @@ public class FilmRowMapper implements RowMapper<Film> {
     public Film mapRow(ResultSet rs, int rowNum) throws SQLException {
         Film film = new Film();
         film.setId(rs.getInt("ID"));
-        film.setTitle(rs.getString("Title"));
-        film.setProdYear(rs.getInt("Prod_Year"));
-        film.setImage(rs.getString("image_ref"));
-        film.setDirector(rs.getString("Director"));
-        film.setRate_1star(rs.getInt("Rate_1star"));
-        film.setRate_2star(rs.getInt("Rate_2star"));
-        film.setRate_3star(rs.getInt("Rate_3star"));
-        film.setRate_4star(rs.getInt("Rate_4star"));
-        film.setRate_5star(rs.getInt("Rate_5star"));
+        film.setTitle(rs.getString("TITLE"));
+        film.setProdYear(rs.getInt("PROD_YEAR"));
+        film.setImage(rs.getString("IMAGE_REF"));
+        film.setDirector(rs.getString("DIRECTOR"));
+        film.setRate_1star(rs.getInt("RATE_1STAR"));
+        film.setRate_2star(rs.getInt("RATE_2STAR"));
+        film.setRate_3star(rs.getInt("RATE_3STAR"));
+        film.setRate_4star(rs.getInt("RATE_4STAR"));
+        film.setRate_5star(rs.getInt("RATE_5STAR"));
         return film;
     }
 }

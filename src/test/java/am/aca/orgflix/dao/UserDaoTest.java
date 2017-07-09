@@ -126,12 +126,11 @@ public class UserDaoTest extends BaseIntegrationTest {
     /**
      * @see JdbcUserDAO#get(int)
      */
-    @Test
+    @Test(expected = org.springframework.dao.EmptyResultDataAccessException.class)
     public void getUser_ByWrongId_Fail() {
         jdbcUserDAO.add(standardUser);
-        int id = jdbcUserDAO.add(new User("gago", "Gagik Petrosyan", "davit.abovyan1@gmail.com", "pass"));
 
-        boolean status = standardUser.equals(jdbcUserDAO.get(id));
+        boolean status = standardUser.equals(jdbcUserDAO.get(-1));
         Assert.assertFalse(status);
     }
 
@@ -171,7 +170,7 @@ public class UserDaoTest extends BaseIntegrationTest {
      */
     @Test (expected = org.springframework.dao.EmptyResultDataAccessException.class)
     public void getByNick_NotExisting_Fail() {
-        User actualUser = jdbcUserDAO.getByNick("gago");
+        jdbcUserDAO.getByNick("gago");
     }
 
     /**

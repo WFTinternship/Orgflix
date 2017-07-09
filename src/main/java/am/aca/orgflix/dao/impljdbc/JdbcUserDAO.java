@@ -40,7 +40,7 @@ public class JdbcUserDAO extends BaseDAO implements UserDAO {
         if (!checkRequiredFields(user.getNick(), user.getPass(), user.getEmail()))
             throw new DaoException("Nick, password and Email are required!");
 
-        final String query = "INSERT INTO users (Nick,User_Name,Email,User_Pass) " +
+        final String query = "INSERT INTO USERS (NICK,USER_NAME,EMAIL,USER_PASS) " +
                 " VALUES( ? , ? , ? , ? ) ";
 
         KeyHolder holder = new GeneratedKeyHolder();
@@ -68,7 +68,7 @@ public class JdbcUserDAO extends BaseDAO implements UserDAO {
      */
     @Override
     public User get(int id) {
-        final String query = "SELECT * FROM users WHERE ID = ? LIMIT 1";
+        final String query = "SELECT * FROM USERS WHERE ID = ? LIMIT 1";
         return getJdbcTemplate().queryForObject(query, new Object[]{id}, new UserRowMapper());
     }
 
@@ -77,7 +77,7 @@ public class JdbcUserDAO extends BaseDAO implements UserDAO {
      */
     @Override
     public User get(String email) {
-        final String query = "SELECT * FROM users WHERE Email = ? LIMIT 1";
+        final String query = "SELECT * FROM USERS WHERE EMAIL = ? LIMIT 1";
         return getJdbcTemplate().queryForObject(query, new Object[]{email}, new UserRowMapper());
     }
 
@@ -86,7 +86,7 @@ public class JdbcUserDAO extends BaseDAO implements UserDAO {
      */
     @Override
     public User getByNick(String nick) {
-        final String query = "SELECT * FROM users WHERE Nick = ? LIMIT 1";
+        final String query = "SELECT * FROM USERS WHERE NICK = ? LIMIT 1";
         return getJdbcTemplate().queryForObject(query, new Object[]{nick}, new UserRowMapper());
     }
 
@@ -95,7 +95,7 @@ public class JdbcUserDAO extends BaseDAO implements UserDAO {
      */
     @Override
     public User authenticate(String email, String pass) {
-        final String query = "SELECT * FROM users WHERE Email = ? AND User_Pass = ? LIMIT 1";
+        final String query = "SELECT * FROM USERS WHERE EMAIL = ? AND USER_PASS = ? LIMIT 1";
         Object obj = getJdbcTemplate().queryForObject(query, new Object[]{email, pass}, new UserRowMapper());
         return (User) obj;
     }
@@ -111,7 +111,7 @@ public class JdbcUserDAO extends BaseDAO implements UserDAO {
         if (!checkRequiredFields(nick, pass, email))
             throw new DaoException("Illegal argument");
 
-        final String query = "UPDATE users SET Nick = ?,User_Name = ?,Email = ?, User_Pass = ? " +
+        final String query = "UPDATE USERS SET NICK = ?,USER_NAME = ?,EMAIL = ?, USER_PASS = ? " +
                 " WHERE ID = ? ";
         return getJdbcTemplate().update(query, nick, name, email, pass, id) == 1;
     }
@@ -139,7 +139,7 @@ public class JdbcUserDAO extends BaseDAO implements UserDAO {
      */
     @Override
     public boolean remove(int id) {
-        final String query = "DELETE FROM users WHERE ID = ? ";
+        final String query = "DELETE FROM USERS WHERE ID = ? ";
         return getJdbcTemplate().update(query, id) == 1;
     }
 

@@ -66,7 +66,7 @@ public interface UserDAO {
     boolean edit(int id, String nick, String name, String pass, String email);
 
     /**
-     * @param user the user whos data should be updated according to its current field values
+     * @param user the user whose data should be updated according to its current field values
      * @return true if update was successful, otherwise false
      * @see am/aca/dao/jdbc/impljdbc/JdbcUserDAO.java:131
      * <p>

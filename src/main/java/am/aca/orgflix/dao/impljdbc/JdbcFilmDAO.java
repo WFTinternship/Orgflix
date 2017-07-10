@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -38,7 +39,8 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
     @Override
     public boolean addFilm(Film film) {
         // ensure that all required fields are properly assigned
-        if (!checkRequiredFields(film.getTitle()) || film.getProdYear() < 1900)
+        if (!checkRequiredFields(film.getTitle()) || 1888 > film.getProdYear()
+                || Calendar.getInstance().get(Calendar.YEAR) + 7 < film.getProdYear())
             throw new DaoException("Illegal argument");
 
         KeyHolder holder = new GeneratedKeyHolder();
@@ -221,7 +223,8 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
     @Override
     public boolean editFilm(Film film) {
         // ensure that all required fields are properly assigned
-        if (!checkRequiredFields(film.getTitle()) || film.getProdYear() < 1900)
+        if (!checkRequiredFields(film.getTitle()) || 1888 > film.getProdYear()
+                || Calendar.getInstance().get(Calendar.YEAR) + 7 < film.getProdYear())
             throw new DaoException("Illegal argument");
 
         final String query = "UPDATE FILMS SET TITLE = ?,PROD_YEAR = ?,HAS_OSCAR = ?,RATE_1STAR = ? " +

@@ -1,14 +1,27 @@
 package am.aca.orgflix.entity;
 
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
 /**
  * User entity class
  */
+@Entity(name = "users")
 public class User {
+    @Id
+    @GeneratedValue
+    @Column(name = "ID", nullable = false)
     private int id = -1;
+    @Column(name = "NICK", columnDefinition = "VARCHAR(50)", nullable = false, unique = true)
     private String nick = "";
+    @Column(name = "USER_NAME", columnDefinition = "VARCHAR(250)")
     private String userName = "";
+    @Column(name = "USER_PASS", columnDefinition = "VARCHAR(50)", nullable = false)
     private String email = "";
+    @Column(name = "EMAIL", columnDefinition = "VARCHAR(50)", nullable = false, unique = true)
     private String pass = "";
 
     public User(String nick, String userName, String email, String pass) {

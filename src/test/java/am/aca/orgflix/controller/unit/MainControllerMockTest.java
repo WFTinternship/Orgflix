@@ -41,6 +41,7 @@ public class MainControllerMockTest extends BaseUnitTest {
      * Configures Mockito
      */
     @Before
+    @SuppressWarnings("Duplicates")
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         ReflectionTestUtils.setField(mainController, "userService", userServiceMock);

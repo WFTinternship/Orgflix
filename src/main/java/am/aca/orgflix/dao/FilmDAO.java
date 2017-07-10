@@ -12,7 +12,8 @@ public interface FilmDAO {
     // Create
 
     /**
-     * Add new film to DB, the production year is expected to be later then 19000
+     * Add new film to DB, the production year is expected to be
+     * after 1888 and and before 7 years ahead of current time
      *
      * @param film the film object to be added
      * @return true if the film was added, otherwise false

@@ -26,12 +26,22 @@
     <context:component-scan base-package="am.aca.orgflix.dao.impljdbc"/>
     <context:component-scan base-package="am.aca.orgflix.service.impl"/>
     <context:component-scan base-package="am.aca.orgflix.controller"/>
+    <!--<context:component-scan base-package="am.aca.orgflix.dao.implHibernate"/>-->
 
     <bean id="testHelper" class="am.aca.orgflix.util.TestHelper"/>
 
+    <!--Spring JDBC @Transactional-->
+
     <tx:annotation-driven transaction-manager="txManager"/>
     <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="dataSource"/>
+    <property name="dataSource" ref="dataSource"/>
     </bean>
+
+    <!--JPA Hibernate @Transactional-->
+    <!--<tx:annotation-driven proxy-target-class="true" transaction-manager="hibernateTransactionManager"/>-->
+    <!--<bean id="hibernateTransactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">-->
+        <!--<property name="dataSource" ref="dataSource"/>-->
+        <!--<property name="entityManagerFactory" ref="entityManagerFactory"/>-->
+    <!--</bean>-->
 
 </beans>

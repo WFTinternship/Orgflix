@@ -13,7 +13,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -139,15 +138,12 @@ public class MainController {
 
     @RequestMapping("/logedIn")
     public ModelAndView paging(@RequestParam("email") String email,
-                               @RequestParam("pass") String pass,
-                               HttpServletRequest request) {
+                               @RequestParam("pass") String pass) {
 
         ModelAndView modelAndView;
 
         try {
-//            User user = request.getSession().getAttribute("user");
             User user = userService.authenticate(email, pass);
-            request.getSession().setAttribute("user", user);
             if (user == null) {
                 modelAndView = new ModelAndView("error");
             } else {
@@ -168,14 +164,12 @@ public class MainController {
     @RequestMapping("/watch_list")
     public ModelAndView watchList(@RequestParam("userId") int userId,
                                   @RequestParam("userAuth") int userAuth,
-                                  @RequestParam("currPage") int currPage,
-                                  HttpServletRequest request) {
+                                  @RequestParam("currPage") int currPage) {
 
         ModelAndView modelAndView = new ModelAndView("index");
 
         try {
-            User selUser = (User) request.getSession().getAttribute("user");
-//            User selUser = userService.get(userId);
+            User selUser = userService.get(userId);
             String user = selUser.getNick() + " (" + selUser.getEmail() + ")";
 
             modelAndView.addObject("films", listService.showOwnWatched(userId, currPage));
@@ -193,14 +187,12 @@ public class MainController {
     @RequestMapping("/wish_list")
     public ModelAndView wishList(@RequestParam("userId") int userId,
                                  @RequestParam("userAuth") int userAuth,
-                                 @RequestParam("currPage") int currPage,
-                                 HttpServletRequest request) {
+                                 @RequestParam("currPage") int currPage) {
 
         ModelAndView modelAndView = new ModelAndView("index");
 
         try {
-//            User selUser = userService.get(userId);
-            User selUser = (User) request.getSession().getAttribute("user");
+            User selUser = userService.get(userId);
             String user = selUser.getNick() + " (" + selUser.getEmail() + ")";
 
             modelAndView.addObject("films", listService.showOwnPlanned(userId, currPage));
@@ -231,7 +223,7 @@ public class MainController {
             modelAndView.addObject("userId", userId);
             modelAndView.addObject("user", user);
             modelAndView.addObject("userAuth", userAuth);
-            modelAndView.addObject("currPage", 0);
+            modelAndView.addObject("currPage", page);
             modelAndView.addObject("page", "OthersWatched");
         } catch (RuntimeException e) {
             modelAndView = new ModelAndView("error");
@@ -255,8 +247,8 @@ public class MainController {
             modelAndView.addObject("userId", userId);
             modelAndView.addObject("user", user);
             modelAndView.addObject("userAuth", userAuth);
-            modelAndView.addObject("currPage", 0);
-            modelAndView.addObject("page", "OthersWatched");
+            modelAndView.addObject("currPage", page);
+            modelAndView.addObject("page", "OthersPlanned");
         } catch (RuntimeException e) {
             modelAndView = new ModelAndView("error");
         }

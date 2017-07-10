@@ -2,6 +2,7 @@ package am.aca.orgflix.controller.integration;
 
 import am.aca.orgflix.BaseIntegrationTest;
 import am.aca.orgflix.controller.DataController;
+import am.aca.orgflix.controller.MainController;
 import am.aca.orgflix.entity.Cast;
 import am.aca.orgflix.entity.Film;
 import am.aca.orgflix.entity.User;
@@ -54,6 +55,10 @@ public class MainControllerIntegrationTest extends BaseIntegrationTest{
                 "casts",
                 "films"});
     }
+
+    /**
+     * @see MainController#index()
+     * */
     @Test
     public void asncjadkm(){
         Assert.assertTrue(true);

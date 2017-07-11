@@ -2,6 +2,7 @@ package am.aca.orgflix.controller.unit;
 
 import am.aca.orgflix.BaseUnitTest;
 import am.aca.orgflix.controller.MainController;
+import am.aca.orgflix.controller.UserController;
 import am.aca.orgflix.entity.Film;
 import am.aca.orgflix.entity.User;
 import am.aca.orgflix.service.*;
@@ -26,6 +27,8 @@ import static org.mockito.Mockito.*;
 public class MainControllerMockTest extends BaseUnitTest {
     @Autowired
     private MainController mainController;
+    @Autowired
+    private UserController userController;
 
     @Mock
     private UserService userServiceMock;
@@ -101,92 +104,6 @@ public class MainControllerMockTest extends BaseUnitTest {
         verify(filmServiceMock, times(1)).getFilmsList(0);
     }
 
-    /**
-     * @see MainController#signup()
-     */
-    @Test
-    public void signUp_Success() {
-        when(filmServiceMock.getFilmsList(0)).thenReturn(films);
-        when(filmServiceMock.totalNumberOfFilms()).thenReturn(0);
-
-        ModelAndView actualMV = mainController.signup();
-
-        Assert.assertEquals("signup", actualMV.getViewName());
-        Assert.assertEquals(films, actualMV.getModel().get("films"));
-        Assert.assertEquals(-1, actualMV.getModel().get("userId"));
-        Assert.assertEquals(0, actualMV.getModel().get("userAuth"));
-        Assert.assertEquals(0, actualMV.getModel().get("currPage"));
-        Assert.assertEquals("index", actualMV.getModel().get("page"));
-
-        verify(filmServiceMock, times(1)).getFilmsList(0);
-        verify(filmServiceMock, times(1)).totalNumberOfFilms();
-    }
-
-    /**
-     * @see MainController#signup()
-     */
-    @Test
-    public void signUp_Exception_Fail() {
-        when(filmServiceMock.getFilmsList(0)).thenThrow(ServiceException.class);
-
-        ModelAndView actualMV = mainController.signup();
-
-        Assert.assertEquals("error", actualMV.getViewName());
-
-        verify(filmServiceMock, times(1)).getFilmsList(0);
-    }
-
-    /**
-     * @see MainController#signupResult(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
-     */
-    @Test
-    public void signUpResult_Success() {
-        when(userServiceMock.add(user)).thenReturn(2);
-        when(filmServiceMock.getFilmsList(0)).thenReturn(films);
-
-        ModelAndView actualMV = mainController.signupResult
-                (user.getNick(), user.getUserName(), user.getEmail(), user.getPass());
-
-        Assert.assertEquals("index", actualMV.getViewName());
-        Assert.assertEquals(films, actualMV.getModel().get("films"));
-        Assert.assertEquals(2, actualMV.getModel().get("userId"));
-        Assert.assertEquals("hulk (bbanner@avengers.com)", actualMV.getModel().get("user"));
-        Assert.assertEquals(user.getPass().hashCode() + user.getEmail().hashCode(), actualMV.getModel().get("userAuth"));
-        Assert.assertEquals(0, actualMV.getModel().get("currPage"));
-        Assert.assertEquals("index", actualMV.getModel().get("page"));
-
-        verify(filmServiceMock, times(1)).getFilmsList(0);
-        verify(userServiceMock, times(1)).add(user);
-    }
-
-    /**
-     * @see MainController#signupResult(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
-     */
-    @Test
-    public void signUpResult_AuthenticationError_Fail() {
-        when(userServiceMock.add(user)).thenReturn(-1);
-
-        ModelAndView actualMV = mainController.signupResult
-                (user.getNick(), user.getUserName(), user.getEmail(), user.getPass());
-        Assert.assertEquals("error", actualMV.getViewName());
-
-        verify(userServiceMock, times(1)).add(user);
-
-    }
-
-    /**
-     * @see MainController#signupResult(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
-     */
-    @Test
-    public void signUpResult_InternalError_Fail() {
-        when(userServiceMock.add(user)).thenThrow(ServiceException.class);
-
-        ModelAndView actualMV = mainController.signupResult
-                (user.getNick(), user.getUserName(), user.getEmail(), user.getPass());
-        Assert.assertEquals("error", actualMV.getViewName());
-
-        verify(userServiceMock, times(1)).add(user);
-    }
 
     /**
      * @see MainController#paging(int, int, int)
@@ -250,22 +167,13 @@ public class MainControllerMockTest extends BaseUnitTest {
     }
 
     /**
-     * @see MainController#login()
-     */
-    @Test
-    public void login_Success() {
-        ModelAndView actualMV = mainController.login();
-        Assert.assertEquals(("login"), actualMV.getViewName());
-    }
-
-    /**
-     * @see MainController#paging(java.lang.String, java.lang.String)
+     * @see MainController#paging(int, int, int)
      */
     @Test
     public void pagingWAuth_Success() {
         when(userServiceMock.authenticate(user.getEmail(), user.getPass())).thenReturn(user);
 
-        ModelAndView actualMV = mainController.paging(user.getEmail(), user.getPass());
+        ModelAndView actualMV = mainController.paging(0,1, user.getPass().hashCode() + user.getEmail().hashCode());
 
         Assert.assertEquals("index", actualMV.getViewName());
         Assert.assertEquals(films, actualMV.getModel().get("films"));
@@ -281,13 +189,13 @@ public class MainControllerMockTest extends BaseUnitTest {
     }
 
     /**
-     * @see MainController#paging(java.lang.String, java.lang.String)
+     * @see MainController#paging(int, int, int)
      */
     @Test
     public void pagingWAuth_AuthenticationError_Fail() {
         when(userServiceMock.authenticate(user.getEmail(), user.getPass())).thenReturn(null);
 
-        ModelAndView actualMV = mainController.paging(user.getEmail(), user.getPass());
+        ModelAndView actualMV = mainController.paging(0,1, 0);
 
         Assert.assertEquals("error", actualMV.getViewName());
 
@@ -295,14 +203,14 @@ public class MainControllerMockTest extends BaseUnitTest {
     }
 
     /**
-     * @see MainController#paging(java.lang.String, java.lang.String)
+     * @see MainController#paging(int, int, int)
      */
     @Test
     public void pagingWAuth_InternalError_Fail() {
         when(userServiceMock.authenticate(user.getEmail(), user.getPass())).thenReturn(user);
         when(filmServiceMock.getFilmsList(0)).thenThrow(ServiceException.class);
 
-        ModelAndView actualMV = mainController.paging(user.getEmail(), user.getPass());
+        ModelAndView actualMV = mainController.paging(0,1, 100);
 
         Assert.assertEquals("error", actualMV.getViewName());
 

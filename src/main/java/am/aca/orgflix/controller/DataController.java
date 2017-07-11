@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -27,15 +26,6 @@ public class DataController {
     private ListService listService;
     private FilmService filmService;
     private CastService castService;
-
-//    @Autowired
-//    public DataController(UserService userService, ListService listService,
-//                          FilmService filmService, CastService castService){
-//        this.userService = userService;
-//        this.listService = listService;
-//        this.filmService = filmService;
-//        this.castService = castService;
-//    }
 
     @Autowired
     public void setUserService(UserService userService) {
@@ -59,7 +49,6 @@ public class DataController {
 
     @PostMapping("/getActorsList")
     public ResponseEntity getActorsList() {
-//        request.getSession().setAttribute("user", );
         try {
             List<Cast> actorsList = castService.listCasts();
             int size = actorsList.size();

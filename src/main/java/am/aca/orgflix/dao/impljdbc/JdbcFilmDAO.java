@@ -143,9 +143,9 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
                 " RATE_1STAR, RATE_2STAR, RATE_3STAR, RATE_4STAR, RATE_5STAR " +
                 " FROM FILMS INNER JOIN (" +
                 "   SELECT FILM_TO_CAST.FILM_ID AS film " +
-                "   FROM casts JOIN FILM_TO_CAST " +
-                "   ON casts.ID = FILM_TO_CAST.Actor_ID " +
-                "   WHERE casts.ID = ? " +
+                "   FROM CASTS JOIN FILM_TO_CAST " +
+                "   ON CASTS.ID = FILM_TO_CAST.Actor_ID " +
+                "   WHERE CASTS.ID = ? " +
                 "   ORDER BY FILM_TO_CAST.FILM_ID DESC " +
                 ") AS sel_table " +
                 " ON FILMS.ID = sel_table.film";

@@ -90,7 +90,7 @@ public class JdbcCastDAO extends BaseDAO implements CastDAO {
      * @see CastDAO#getCastById(int)
      */
     public Cast getCastById(int castId){
-        final String query ="SELECT * from casts WHERE ID = ?";
+        final String query ="SELECT * FROM CASTS WHERE ID = ?";
         return getJdbcTemplate().queryForObject(query, new Object[]{castId}, new CastRowMapper());
     }
 

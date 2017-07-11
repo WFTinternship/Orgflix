@@ -119,18 +119,22 @@ public class MainController {
                                @RequestParam("userId") int userId,
                                @RequestParam("userAuth") int userAuth) {
         ModelAndView modelAndView = new ModelAndView("index");
-        String user = "";
-        if (userId != -1) {
-            User selUser = userService.get(userId);
-            user = selUser.getNick() + " (" + selUser.getEmail() + ")";
+        try {
+            String user = "";
+            if (userId != -1) {
+                User selUser = userService.get(userId);
+                user = selUser.getNick() + " (" + selUser.getEmail() + ")";
+            }
+            modelAndView.addObject("films", filmService.getFilmsList(page * 12));
+            modelAndView.addObject("numOfPages", filmService.totalNumberOfFilms() / 12);
+            modelAndView.addObject("userId", userId);
+            modelAndView.addObject("user", user);
+            modelAndView.addObject("userAuth", userAuth);
+            modelAndView.addObject("currPage", page);
+            modelAndView.addObject("page", "index");
+        }catch (RuntimeException e){
+            modelAndView = new ModelAndView("error");
         }
-        modelAndView.addObject("films", filmService.getFilmsList(page * 12));
-        modelAndView.addObject("numOfPages", filmService.totalNumberOfFilms()/12);
-        modelAndView.addObject("userId", userId);
-        modelAndView.addObject("user", user);
-        modelAndView.addObject("userAuth", userAuth);
-        modelAndView.addObject("currPage", page);
-        modelAndView.addObject("page", "index");
         return modelAndView;
     }
 
@@ -144,18 +148,22 @@ public class MainController {
                                @RequestParam("pass") String pass) {
 
         ModelAndView modelAndView;
-        User user = userService.authenticate(email, pass);
-        if (user == null) {
+        try {
+            User user = userService.authenticate(email, pass);
+            if (user == null) {
+                modelAndView = new ModelAndView("error");
+            } else {
+                modelAndView = new ModelAndView("index");
+                modelAndView.addObject("films", filmService.getFilmsList(0));
+                modelAndView.addObject("numOfPages", filmService.totalNumberOfFilms() / 12);
+                modelAndView.addObject("userId", user.getId());
+                modelAndView.addObject("user", user.getNick() + " (" + email + ")");
+                modelAndView.addObject("userAuth", user.getPass().hashCode() + email.hashCode());
+                modelAndView.addObject("currPage", 0);
+                modelAndView.addObject("page", "index");
+            }
+        }catch (RuntimeException e){
             modelAndView = new ModelAndView("error");
-        } else {
-            modelAndView = new ModelAndView("index");
-            modelAndView.addObject("films", filmService.getFilmsList(0));
-            modelAndView.addObject("numOfPages", filmService.totalNumberOfFilms()/12);
-            modelAndView.addObject("userId", user.getId());
-            modelAndView.addObject("user", user.getNick() + " (" + email + ")");
-            modelAndView.addObject("userAuth", user.getPass().hashCode() + email.hashCode());
-            modelAndView.addObject("currPage", 0);
-            modelAndView.addObject("page", "index");
         }
         return modelAndView;
     }
@@ -165,10 +173,12 @@ public class MainController {
                                   @RequestParam("userAuth") int userAuth,
                                   @RequestParam("currPage") int currPage) {
 
-        User selUser = userService.get(userId);
+        ModelAndView modelAndView;
+        try{
+            User selUser = userService.get(userId);
         String user = selUser.getNick() + " (" + selUser.getEmail() + ")";
 
-        ModelAndView modelAndView = new ModelAndView("index");
+        modelAndView = new ModelAndView("index");
         modelAndView.addObject("films", listService.showOwnWatched(userId,currPage*12));
         modelAndView.addObject("numOfPages", listService.totalNumberOfFilmsInAList(userId,true)/12);
         modelAndView.addObject("userId", userId);
@@ -176,6 +186,10 @@ public class MainController {
         modelAndView.addObject("userAuth", userAuth);
         modelAndView.addObject("currPage", currPage);
         modelAndView.addObject("page", "watch_list");
+        }catch (RuntimeException
+                e) {
+            modelAndView = new ModelAndView("error");
+        }
         return modelAndView;
     }
 

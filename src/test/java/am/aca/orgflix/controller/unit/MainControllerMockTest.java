@@ -194,6 +194,7 @@ public class MainControllerMockTest extends BaseUnitTest {
     @Test
     public void paging_Authenticated_Success() {
         when(filmServiceMock.getFilmsList(12)).thenReturn(films);
+        when(filmServiceMock.totalNumberOfFilms()).thenReturn(0);
         when(userServiceMock.get(1)).thenReturn(user);
 
         ModelAndView actualMV = mainController.paging(1, 1, 100);
@@ -207,6 +208,7 @@ public class MainControllerMockTest extends BaseUnitTest {
         Assert.assertEquals("index", actualMV.getModel().get("page"));
 
         verify(filmServiceMock, times(1)).getFilmsList(12);
+        verify(filmServiceMock, times(1)).totalNumberOfFilms();
         verify(userServiceMock, times(1)).get(1);
     }
 
@@ -216,6 +218,7 @@ public class MainControllerMockTest extends BaseUnitTest {
     @Test
     public void paging_UnAuthenticated_Success() {
         when(filmServiceMock.getFilmsList(24)).thenReturn(films);
+        when(filmServiceMock.totalNumberOfFilms()).thenReturn(0);
         when(userServiceMock.get(1)).thenReturn(user);
 
         ModelAndView actualMV = mainController.paging(2, -1, 100);
@@ -229,6 +232,7 @@ public class MainControllerMockTest extends BaseUnitTest {
         Assert.assertEquals("index", actualMV.getModel().get("page"));
 
         verify(filmServiceMock, times(1)).getFilmsList(24);
+        verify(filmServiceMock, times(1)).totalNumberOfFilms();
     }
 
     /**
@@ -272,6 +276,7 @@ public class MainControllerMockTest extends BaseUnitTest {
         Assert.assertEquals("index", actualMV.getModel().get("page"));
 
         verify(filmServiceMock, times(1)).getFilmsList(0);
+        verify(filmServiceMock, times(1)).totalNumberOfFilms();
         verify(userServiceMock, times(1)).authenticate(user.getEmail(), user.getPass());
     }
 
@@ -347,7 +352,7 @@ public class MainControllerMockTest extends BaseUnitTest {
      * */
     @Test
     public void wishList_Success() {
-        when(listServiceMock.showOwnPlanned(1, 1)).thenReturn(films);
+        when(listServiceMock.showOwnPlanned(1, 12)).thenReturn(films);
         when(userServiceMock.get(1)).thenReturn(user);
 
         ModelAndView actualMV = mainController.wishList(1, 100, 1);
@@ -357,10 +362,11 @@ public class MainControllerMockTest extends BaseUnitTest {
         Assert.assertEquals(1, actualMV.getModel().get("userId"));
         Assert.assertEquals("hulk (bbanner@avengers.com)", actualMV.getModel().get("user"));
         Assert.assertEquals(100, actualMV.getModel().get("userAuth"));
-        Assert.assertEquals(0, actualMV.getModel().get("currPage"));
-        Assert.assertEquals("wish", actualMV.getModel().get("page"));
+        Assert.assertEquals(1, actualMV.getModel().get("currPage"));
+        Assert.assertEquals("wish_list", actualMV.getModel().get("page"));
 
-        verify(listServiceMock, times(1)).showOwnPlanned(1, 1);
+        verify(listServiceMock, times(1)).showOwnPlanned(1, 12);
+        verify(listServiceMock, times(1)).totalNumberOfFilmsInAList(1, false);
         verify(userServiceMock, times(1)).get(1);
     }
 

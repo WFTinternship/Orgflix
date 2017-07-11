@@ -9,7 +9,7 @@ import java.sql.SQLException;
 /**
  * RowMapper for Cast entity
  */
-public class CastRowMapper implements RowMapper {
+public class CastRowMapper implements RowMapper<Cast> {
     @Override
     public Cast mapRow(ResultSet resultSet, int i) throws SQLException {
         Cast cast = new Cast();

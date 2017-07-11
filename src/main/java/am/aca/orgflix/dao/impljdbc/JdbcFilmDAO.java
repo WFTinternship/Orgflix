@@ -45,21 +45,22 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
 
         KeyHolder holder = new GeneratedKeyHolder();
 
-        final String query = "INSERT INTO FILMS (TITLE, PROD_YEAR, HAS_OSCAR, " +
-                "RATE_1STAR, RATE_2STAR, RATE_3STAR, RATE_4STAR, RATE_5STAR, DIRECTOR) " +
-                " VALUES( ? , ? , ?, ?, ?, ?, ?, ?, ?) ";
+        final String query = "INSERT INTO FILMS (TITLE, PROD_YEAR, HAS_OSCAR, image_ref, " +
+                " RATE_1STAR, RATE_2STAR, RATE_3STAR, RATE_4STAR, RATE_5STAR, DIRECTOR) " +
+                " VALUES( ? , ? , ?, ?, ?, ?, ?, ?, ?, ?) ";
 
         int result = getJdbcTemplate().update(connection -> {
             PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, film.getTitle());
             statement.setInt(2, film.getProdYear());
             statement.setBoolean(3, film.isHasOscar());
-            statement.setInt(4, film.getRate_1star());
-            statement.setInt(5, film.getRate_2star());
-            statement.setInt(6, film.getRate_3star());
-            statement.setInt(7, film.getRate_4star());
-            statement.setInt(8, film.getRate_5star());
-            statement.setString(9, film.getDirector());
+            statement.setString(4, film.getImage());
+            statement.setInt(5, film.getRate_1star());
+            statement.setInt(6, film.getRate_2star());
+            statement.setInt(7, film.getRate_3star());
+            statement.setInt(8, film.getRate_4star());
+            statement.setInt(9, film.getRate_5star());
+            statement.setString(10, film.getDirector());
             return statement;
         }, holder);
         // set new added film's id to its entity object
@@ -227,14 +228,18 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
                 || Calendar.getInstance().get(Calendar.YEAR) + 7 < film.getProdYear())
             throw new DaoException("Illegal argument");
 
-        final String query = "UPDATE FILMS SET TITLE = ?,PROD_YEAR = ?,HAS_OSCAR = ?,RATE_1STAR = ? " +
+        final String query = "UPDATE FILMS SET TITLE = ?,PROD_YEAR = ?,HAS_OSCAR = ?, image_ref = ?, RATE_1STAR = ? " +
                 ",RATE_2STAR = ?, RATE_3STAR = ?,RATE_4STAR = ?,RATE_5STAR = ?, DIRECTOR = ? " +
                 " WHERE ID = ? ";
+//        final String query = "UPDATE films SET Title = ?,Prod_Year = ?,HasOscar = ?, image_ref = ?, Rate_1star = ? " +
+//                ",Rate_2star = ?, Rate_3star = ?,Rate_4star = ?,Rate_5star = ?, director = ? " +
+//                " WHERE id = ? ";
 
         return getJdbcTemplate().update(query,
                 film.getTitle(),
                 film.getProdYear(),
                 film.isHasOscar(),
+                film.getImage(),
                 film.getRate_1star(),
                 film.getRate_2star(),
                 film.getRate_3star(),

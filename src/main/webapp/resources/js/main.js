@@ -152,10 +152,10 @@
 				})
 				.on('click', 'a', function(event) {
 
-					var href = $(this).attr('href');
+					// var href = $(this).attr('href');
 
-					event.preventDefault();
-					event.stopPropagation();
+					// event.preventDefault();
+					// event.stopPropagation();
 
 					// Hide.
 						$menu._hide();
@@ -164,9 +164,9 @@
 						if (href == '#menu')
 							return;
 
-						window.setTimeout(function() {
-							window.location.href = href;
-						}, 500);
+						// window.setTimeout(function() {
+						// 	window.location.href = href;
+						// }, 500);
 
 				})
 				.append('<a class="close" href="#menu">Close</a>');

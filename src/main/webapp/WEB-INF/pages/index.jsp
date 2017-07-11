@@ -23,7 +23,6 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
     <!--[if lte IE 8]><link rel="stylesheet" href='<c:url value="../resources/css/ie8.css" />' /><![endif]-->
 </head>
 <body>
-<%--<m:actorsList />--%>
 <!-- Wrapper -->
 <div id="wrapper">
 
@@ -39,12 +38,12 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
                 <li><a onclick="navigator('watch_list')"><i class="fa fa-watchList fa-fw"></i> Watch list</a></li>
                 <li><a onclick="navigator('wish_list')"><i class="fa fa-wishList fa-fw"></i> Wish List</a></li>
                 <li><a onclick="navigator('newFilm')"><i class="fa fa-plus-square fa-fw"></i> Add Film</a></li>
-                <li><a href="/"><i class="fa fa-logout fa-fw"></i> Logout</a></li>
+                <li><a onclick="navigator('/')"><i class="fa fa-logout fa-fw"></i> Logout</a></li>
             </c:if>
             <c:if test="${userId == -1}">
-                <li><a href="/"><i class="fa fa-home fa-fw"></i>Home</a></li>
-                <li><a href="login"><i class="fa fa-login fa-fw"></i> Login</a></li>
-                <li><a href="signup"><i class="fa fa-logout fa-fw"></i> Sign up</a></li>
+                <li><a onclick="navigator('/')"><i class="fa fa-home fa-fw"></i>Home</a></li>
+                <li><a onclick="navigator('login')"><i class="fa fa-login fa-fw"></i> Login</a></li>
+                <li><a onclick="navigator('signup')"><i class="fa fa-logout fa-fw"></i> Sign up</a></li>
             </c:if>
         </ul>
         <form id="navigator" method="POST" action="0">
@@ -59,7 +58,7 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
     <div id="main">
         <div class="inner">
             <header>
-                <c:if test="${ (page == 'main') || (userId==-1)}">
+                <c:if test="${ (page == 'index') || (userId==-1)}">
                     <h1>This is OrgFlix, a free film list organizer</h1>
                 </c:if>
                 <c:if test="${page == 'watch'}">
@@ -73,21 +72,21 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
                 <c:forEach items="${films}" var="film" >
                     <article class='style1' id="${film.id}" onmouseout='filmControlMenu(false,this.id)' onmouseover='filmControlMenu(true,this.id)'>
                         <div class='image' >
-                            <img src='<c:url value="../resources/${film.image}" />' />
+                            <img src='<c:url value="../resources/images/${film.image}" />' />
 
                         </div>
                         <c:if test="${userId != -1}">
                             <div id="contr_${film.id}" class="film-buttons">
-                                <c:if test="${page == 'main'}">
+                                <c:if test="${page == 'index'}">
                                     <a href="#" class="no_link" onclick="AddToList('WatchList','${film.id}')"><i class="fa fa-watchList fa-fw"></i></a>
                                     <a href="#" class="no_link" onclick="AddToList('WishList','${film.id}')"><i class="fa fa-wishList fa-fw"></i></a>
                                     <a onclick="isPublic()"><i id="publicCheck" class="fa fa-square-o fa-fw"></i> Public </a>
                                     <input type="hidden" id="isPublic" name="isPublic" value="0" class="pointerA"/>
                                 </c:if>
-                                <c:if test="${page == 'watch'}">
+                                <c:if test="${page == 'watch_list'}">
                                     <a href="#" class="no_link" onclick="RemoveFromList('WatchList','${film.id}')"><i class="fa fa-trash-o fa-fw"></i></a>
                                 </c:if>
-                                <c:if test="${page == 'wish'}">
+                                <c:if test="${page == 'wish_list'}">
                                     <a href="#" class="no_link" onclick="RemoveFromList('WishList','${film.id}')"><i class="fa fa-trash-o fa-fw"></i></a>
                                 </c:if>
                             </div>
@@ -100,8 +99,13 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
                         </div>
                     </article>
                 </c:forEach>
-
-                <%--<m:pagination pageType="${page}" userId="${userId}"/>--%>
+                <c:if test="${numOfPages != 0}">
+                    <div class="pagintion_container">
+                        <c:forEach var = "i" begin = "0" end = "${numOfPages}" >
+                            <div class="pagination" id="goTo_${i}" onclick='pagination(this.id,"${page}")'>${i+1}</div>
+                        </c:forEach>
+                    </div>
+                </c:if>
 
                 <div id="pop-up-result" class="pop-up-result"></div>
             </section>

@@ -43,15 +43,13 @@ public class FilmServiceImpl implements FilmService {
     @Override
     public boolean addFilm(Film film) {
         try {
-            boolean result = filmDao.addFilm(film);
-            if (!result)
+            if (!filmDao.addFilm(film))
                 return false;
+            else
+                return  optimizeRelations(film);
         } catch (RuntimeException e) {
             throw new ServiceException(e.getMessage());
         }
-
-        return optimizeRelations(film);
-
     }
 
     /**

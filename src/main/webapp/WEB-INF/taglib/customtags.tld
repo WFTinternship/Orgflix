@@ -6,7 +6,7 @@
 <taglib>
 
     <tlib-version>1.0</tlib-version>
-    <jsp-version>1.2</jsp-version>
+    <jsp-version>2.0</jsp-version>
     <short-name>simple</short-name>
     <uri>example-taglib</uri>
     <description>
@@ -14,32 +14,12 @@
         useful for displaying film lists for HTML.
     </description>
     <tag>
-        <name>pagination</name>
-        <tag-class>am.aca.orgflix.servlet.taghandler.PaginationTagHandler</tag-class>
-        <attribute>
-            <name>pageType</name>
-            <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>java.lang.String</type>
-        </attribute>
-        <attribute>
-            <name>userId</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>int</type>
-        </attribute>
-    </tag>
-    <tag>
         <name>pageHeader</name>
         <tag-class>am.aca.orgflix.servlet.taghandler.HeaderTagHandler</tag-class>
     </tag>
     <tag>
         <name>pageFooter</name>
         <tag-class>am.aca.orgflix.servlet.taghandler.FooterTagHandler</tag-class>
-    </tag>
-    <tag>
-         <name>actorsList</name>
-         <tag-class>am.aca.orgflix.servlet.taghandler.ActorInnerTagHandler</tag-class>
     </tag>
 
 </taglib>

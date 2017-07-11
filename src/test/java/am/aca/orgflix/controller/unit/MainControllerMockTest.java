@@ -71,6 +71,7 @@ public class MainControllerMockTest extends BaseUnitTest {
     @Test
     public void index_Success() {
         when(filmServiceMock.getFilmsList(0)).thenReturn(films);
+        when(filmServiceMock.totalNumberOfFilms()).thenReturn(0);
 
         ModelAndView actualMV = mainController.index();
 
@@ -79,9 +80,11 @@ public class MainControllerMockTest extends BaseUnitTest {
         Assert.assertEquals(-1, actualMV.getModel().get("userId"));
         Assert.assertEquals(0, actualMV.getModel().get("userAuth"));
         Assert.assertEquals(0, actualMV.getModel().get("currPage"));
-        Assert.assertEquals("main", actualMV.getModel().get("page"));
+        Assert.assertEquals("index", actualMV.getModel().get("page"));
+        Assert.assertEquals(0, actualMV.getModel().get("numOfPages"));
 
         verify(filmServiceMock, times(1)).getFilmsList(0);
+        verify(filmServiceMock, times(1)).totalNumberOfFilms();
     }
 
     /**
@@ -104,6 +107,7 @@ public class MainControllerMockTest extends BaseUnitTest {
     @Test
     public void signUp_Success() {
         when(filmServiceMock.getFilmsList(0)).thenReturn(films);
+        when(filmServiceMock.totalNumberOfFilms()).thenReturn(0);
 
         ModelAndView actualMV = mainController.signup();
 
@@ -112,9 +116,10 @@ public class MainControllerMockTest extends BaseUnitTest {
         Assert.assertEquals(-1, actualMV.getModel().get("userId"));
         Assert.assertEquals(0, actualMV.getModel().get("userAuth"));
         Assert.assertEquals(0, actualMV.getModel().get("currPage"));
-        Assert.assertEquals("main", actualMV.getModel().get("page"));
+        Assert.assertEquals("index", actualMV.getModel().get("page"));
 
         verify(filmServiceMock, times(1)).getFilmsList(0);
+        verify(filmServiceMock, times(1)).totalNumberOfFilms();
     }
 
     /**
@@ -148,7 +153,7 @@ public class MainControllerMockTest extends BaseUnitTest {
         Assert.assertEquals("hulk (bbanner@avengers.com)", actualMV.getModel().get("user"));
         Assert.assertEquals(user.getPass().hashCode() + user.getEmail().hashCode(), actualMV.getModel().get("userAuth"));
         Assert.assertEquals(0, actualMV.getModel().get("currPage"));
-        Assert.assertEquals("main", actualMV.getModel().get("page"));
+        Assert.assertEquals("index", actualMV.getModel().get("page"));
 
         verify(filmServiceMock, times(1)).getFilmsList(0);
         verify(userServiceMock, times(1)).add(user);
@@ -199,7 +204,7 @@ public class MainControllerMockTest extends BaseUnitTest {
         Assert.assertEquals("hulk (bbanner@avengers.com)", actualMV.getModel().get("user"));
         Assert.assertEquals(100, actualMV.getModel().get("userAuth"));
         Assert.assertEquals(1, actualMV.getModel().get("currPage"));
-        Assert.assertEquals("main", actualMV.getModel().get("page"));
+        Assert.assertEquals("index", actualMV.getModel().get("page"));
 
         verify(filmServiceMock, times(1)).getFilmsList(12);
         verify(userServiceMock, times(1)).get(1);
@@ -221,7 +226,7 @@ public class MainControllerMockTest extends BaseUnitTest {
         Assert.assertEquals("", actualMV.getModel().get("user"));
         Assert.assertEquals(100, actualMV.getModel().get("userAuth"));
         Assert.assertEquals(2, actualMV.getModel().get("currPage"));
-        Assert.assertEquals("main", actualMV.getModel().get("page"));
+        Assert.assertEquals("index", actualMV.getModel().get("page"));
 
         verify(filmServiceMock, times(1)).getFilmsList(24);
     }
@@ -264,7 +269,7 @@ public class MainControllerMockTest extends BaseUnitTest {
         Assert.assertEquals("hulk (bbanner@avengers.com)", actualMV.getModel().get("user"));
         Assert.assertEquals(user.getPass().hashCode() + user.getEmail().hashCode(), actualMV.getModel().get("userAuth"));
         Assert.assertEquals(0, actualMV.getModel().get("currPage"));
-        Assert.assertEquals("main", actualMV.getModel().get("page"));
+        Assert.assertEquals("index", actualMV.getModel().get("page"));
 
         verify(filmServiceMock, times(1)).getFilmsList(0);
         verify(userServiceMock, times(1)).authenticate(user.getEmail(), user.getPass());
@@ -305,7 +310,8 @@ public class MainControllerMockTest extends BaseUnitTest {
      * */
     @Test
     public void watchList_Success() {
-        when(listServiceMock.showOwnWatched(1, 1)).thenReturn(films);
+        when(listServiceMock.showOwnWatched(1, 12)).thenReturn(films);
+        when(listServiceMock.totalNumberOfFilmsInAList(1, true)).thenReturn(0);
         when(userServiceMock.get(1)).thenReturn(user);
 
         ModelAndView actualMV = mainController.watchList(1, 100, 1);
@@ -315,10 +321,11 @@ public class MainControllerMockTest extends BaseUnitTest {
         Assert.assertEquals(1, actualMV.getModel().get("userId"));
         Assert.assertEquals("hulk (bbanner@avengers.com)", actualMV.getModel().get("user"));
         Assert.assertEquals(100, actualMV.getModel().get("userAuth"));
-        Assert.assertEquals(0, actualMV.getModel().get("currPage"));
-        Assert.assertEquals("watch", actualMV.getModel().get("page"));
+        Assert.assertEquals(1, actualMV.getModel().get("currPage"));
+        Assert.assertEquals("watch_list", actualMV.getModel().get("page"));
 
-        verify(listServiceMock, times(1)).showOwnWatched(1, 1);
+        verify(listServiceMock, times(1)).showOwnWatched(1, 12);
+        verify(listServiceMock, times(1)).totalNumberOfFilmsInAList(1, true);
         verify(userServiceMock, times(1)).get(1);
     }
 

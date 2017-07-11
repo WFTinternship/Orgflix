@@ -79,122 +79,122 @@ CREATE TABLE LISTS(
 
 # POPULATING TEST DATA
 
-# 2 FILMS
-INSERT INTO FILMS(TITLE,PROD_YEAR,HAS_OSCAR,IMAGE_REF)
-VALUES('The Shawshank Redemption',1994,TRUE,'images/12345.jpg');
-INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
-VALUES('Tim Robbins',TRUE);
-INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
-VALUES('Morgan Freeman',FALSE);
-INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(1,1);
-INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(2,1);
+# 2 films
+insert into films(Title,Prod_Year,Has_Oscar,image_ref)
+   values('The Shawshank Redemption',1994,true,'1/1.jpg');
+insert into casts(Actor_Name,Has_Oscar)
+  values('Tim Robbins',true);
+insert into casts(Actor_Name,Has_Oscar)
+  values('Morgan Freeman',false);
+insert into film_to_cast(Actor_ID,Film_ID) values(1,1);
+insert into film_to_cast(Actor_ID,Film_ID) values(2,1);
 
-INSERT INTO FILMS(TITLE,PROD_YEAR,HAS_OSCAR,IMAGE_REF)
-VALUES('The Godfather',1972,TRUE,'images/23452.jpg');
-INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
-VALUES('Marlon Brando',TRUE);
-INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
-VALUES('Al Pacino',FALSE);
-INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(3,2);
-INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(4,2);
-
-
-INSERT INTO FILMS(TITLE,PROD_YEAR,HAS_OSCAR,IMAGE_REF)
-VALUES('The Godfather: Part II',1974,TRUE,'images/34555.jpg');
-INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
-VALUES('Robert De Niro',TRUE);
-INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(4,3);
-INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(5,3);
+insert into films(Title,Prod_Year,Has_Oscar,image_ref)
+   values('The Godfather',1972,true,'2/2.jpg');
+insert into casts(Actor_Name,Has_Oscar)
+  values('Marlon Brando',true);
+insert into casts(Actor_Name,Has_Oscar)
+  values('Al Pacino',false);
+insert into film_to_cast(Actor_ID,Film_ID) values(3,2);
+insert into film_to_cast(Actor_ID,Film_ID) values(4,2);
 
 
-INSERT INTO FILMS(TITLE,PROD_YEAR,HAS_OSCAR,IMAGE_REF)
-VALUES('The Dark Knight',2008,FALSE,'images/72623.jpg');
-INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
-VALUES('Christian Bale',TRUE);
-INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
-VALUES('Heath Ledger',FALSE);
-INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(6,4);
-INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(7,4);
+insert into films(Title,Prod_Year,Has_Oscar,image_ref)
+  values('The Godfather: Part II',1974,true,'3/3.jpg');
+insert into casts(Actor_Name,Has_Oscar)
+  values('Robert De Niro',true);
+insert into film_to_cast(Actor_ID,Film_ID) values(4,3);
+insert into film_to_cast(Actor_ID,Film_ID) values(5,3);
 
 
-INSERT INTO FILMS(TITLE,PROD_YEAR,HAS_OSCAR,IMAGE_REF)
-VALUES('12 Angry Men',1957,FALSE,'images/53234.jpg');
-INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
-VALUES('Henry Fonda',TRUE);
-INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
-VALUES('Lee J. Cobb',FALSE);
-INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(8,5);
-INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(9,5);
+insert into films(Title,Prod_Year,Has_Oscar,image_ref)
+  values('The Dark Knight',2008,false,'4/4.jpg');
+insert into casts(Actor_Name,Has_Oscar)
+  values('Christian Bale',true);
+insert into casts(Actor_Name,Has_Oscar)
+  values('Heath Ledger',false);
+insert into film_to_cast(Actor_ID,Film_ID) values(6,4);
+insert into film_to_cast(Actor_ID,Film_ID) values(7,4);
 
-INSERT INTO FILMS(TITLE,PROD_YEAR,HAS_OSCAR,IMAGE_REF)
-VALUES('Schindlers List',1993,TRUE,'images/86523.jpg');
-INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
-VALUES('Liam Neeson',TRUE);
-INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
-VALUES('Ralph Fiennes',FALSE);
-INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(10,6);
-INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(11,6);
 
-INSERT INTO FILMS(TITLE,PROD_YEAR,HAS_OSCAR,IMAGE_REF)
-VALUES('Pulp Fiction',1994,TRUE,'images/45352.jpg');
-INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
-VALUES('John Travolta',TRUE);
-INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
-VALUES('Samuel L. Jackson',FALSE);
-INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(12,7);
-INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(13,7);
+insert into films(Title,Prod_Year,Has_Oscar,image_ref)
+  values('12 Angry Men',1957,false,'5/5.jpg');
+insert into casts(Actor_Name,Has_Oscar)
+  values('Henry Fonda',true);
+insert into casts(Actor_Name,Has_Oscar)
+  values('Lee J. Cobb',false);
+insert into film_to_cast(Actor_ID,Film_ID) values(8,5);
+insert into film_to_cast(Actor_ID,Film_ID) values(9,5);
 
-INSERT INTO FILMS(TITLE,PROD_YEAR,HAS_OSCAR,IMAGE_REF)
-VALUES('The Lord Of The Rings: The Return Of The King',2003,TRUE,'images/98343.jpg');
-INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
-VALUES('Elijah Wood',TRUE);
-INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
-VALUES('Viggo Mortensen',FALSE);
-INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(14,8);
-INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(15,8);
+insert into films(Title,Prod_Year,Has_Oscar,image_ref)
+  values('Schindlers List',1993,true,'6/6.jpg');
+insert into casts(Actor_Name,Has_Oscar)
+  values('Liam Neeson',true);
+insert into casts(Actor_Name,Has_Oscar)
+  values('Ralph Fiennes',false);
+insert into film_to_cast(Actor_ID,Film_ID) values(10,6);
+insert into film_to_cast(Actor_ID,Film_ID) values(11,6);
 
-INSERT INTO FILMS(TITLE,PROD_YEAR,HAS_OSCAR,IMAGE_REF)
-VALUES('The Good, The Bad And The Ugly',1996,FALSE,'images/12923.jpg');
-INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
-VALUES('Clint Eastwood',TRUE);
-INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
-VALUES('Eli Wallach',FALSE);
-INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(16,9);
-INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(17,9);
+insert into films(Title,Prod_Year,Has_Oscar,image_ref)
+  values('Pulp Fiction',1994,true,'7/7.jpg');
+insert into casts(Actor_Name,Has_Oscar)
+  values('John Travolta',true);
+insert into casts(Actor_Name,Has_Oscar)
+  values('Samuel L. Jackson',false);
+insert into film_to_cast(Actor_ID,Film_ID) values(12,7);
+insert into film_to_cast(Actor_ID,Film_ID) values(13,7);
 
-INSERT INTO FILMS(TITLE,PROD_YEAR,HAS_OSCAR,IMAGE_REF)
-VALUES('Fight Club',1999,FALSE,'images/76765.jpg');
-INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
-VALUES('Brad Pitt',TRUE);
-INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
-VALUES('Edward Norton',FALSE);
-INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(18,10);
-INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(19,10);
+insert into films(Title,Prod_Year,Has_Oscar,image_ref)
+  values('The Lord of the Rings: The Return of the King',2003,true,'8/8.jpg');
+insert into casts(Actor_Name,Has_Oscar)
+  values('Elijah Wood',true);
+insert into casts(Actor_Name,Has_Oscar)
+  values('Viggo Mortensen',false);
+insert into film_to_cast(Actor_ID,Film_ID) values(14,8);
+insert into film_to_cast(Actor_ID,Film_ID) values(15,8);
 
-INSERT INTO FILMS(TITLE,PROD_YEAR,HAS_OSCAR,IMAGE_REF)
-VALUES('The Lord Of The Rings: The Fellowship Of The Ring',2001,TRUE,'images/89733.jpg');
-INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
-VALUES('Ian Mckellen',TRUE);
-INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(14,11);
-INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(19,11);
+insert into films(Title,Prod_Year,Has_Oscar,image_ref)
+  values('The Good, the Bad and the Ugly',1996,false,'9/9.jpg');
+insert into casts(Actor_Name,Has_Oscar)
+  values('Clint Eastwood',true);
+insert into casts(Actor_Name,Has_Oscar)
+  values('Eli Wallach',false);
+insert into film_to_cast(Actor_ID,Film_ID) values(16,9);
+insert into film_to_cast(Actor_ID,Film_ID) values(17,9);
 
-INSERT INTO FILMS(TITLE,PROD_YEAR,HAS_OSCAR,IMAGE_REF)
-VALUES('Forrest Gump',1994,TRUE,'images/54545.jpg');
-INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
-VALUES('Tom Hanks',TRUE);
-INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
-VALUES('Robin Wright',FALSE);
-INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(20,12);
-INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(21,12);
+insert into films(Title,Prod_Year,Has_Oscar,image_ref)
+  values('Fight Club',1999,false,'10/10.jpg');
+insert into casts(Actor_Name,Has_Oscar)
+  values('Brad Pitt',true);
+insert into casts(Actor_Name,Has_Oscar)
+  values('Edward Norton',false);
+insert into film_to_cast(Actor_ID,Film_ID) values(18,10);
+insert into film_to_cast(Actor_ID,Film_ID) values(19,10);
 
-INSERT INTO FILMS(TITLE,PROD_YEAR,HAS_OSCAR,IMAGE_REF)
-VALUES('Star Wars: Episode V - The Empire Strikes Back',1980,TRUE,'images/99778.jpg');
-INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
-VALUES('Mark Hamill',TRUE);
-INSERT INTO CASTS(ACTOR_NAME,HAS_OSCAR)
-VALUES('Harrison Ford',FALSE);
-INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(22,13);
-INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES(23,13);
+insert into films(Title,Prod_Year,Has_Oscar,image_ref)
+  values('The Lord of the Rings: The Fellowship of the Ring',2001,true,'11/11.jpg');
+insert into casts(Actor_Name,Has_Oscar)
+  values('Ian McKellen',true);
+insert into film_to_cast(Actor_ID,Film_ID) values(14,11);
+insert into film_to_cast(Actor_ID,Film_ID) values(19,11);
+
+insert into films(Title,Prod_Year,Has_Oscar,image_ref)
+values('Forrest Gump',1994,true,'12/12.jpg');
+insert into casts(Actor_Name,Has_Oscar)
+values('Tom Hanks',true);
+insert into casts(Actor_Name,Has_Oscar)
+values('Robin Wright',false);
+insert into film_to_cast(Actor_ID,Film_ID) values(20,12);
+insert into film_to_cast(Actor_ID,Film_ID) values(21,12);
+
+insert into films(Title,Prod_Year,Has_Oscar,image_ref)
+  values('Star Wars: Episode V - The Empire Strikes Back',1980,true,'13/13.jpg');
+insert into casts(Actor_Name,Has_Oscar)
+  values('Mark Hamill',true);
+insert into casts(Actor_Name,Has_Oscar)
+  values('Harrison Ford',false);
+insert into film_to_cast(Actor_ID,Film_ID) values(22,13);
+insert into film_to_cast(Actor_ID,Film_ID) values(23,13);
 
 
 

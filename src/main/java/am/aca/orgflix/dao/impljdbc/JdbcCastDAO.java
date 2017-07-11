@@ -76,7 +76,7 @@ public class JdbcCastDAO extends BaseDAO implements CastDAO {
     @Override
     public List<Cast> getCastsByFilm(int filmId) {
         final String query = "SELECT CASTS.ID, CASTS.ACTOR_NAME, CASTS.HAS_OSCAR " +
-                "FROM CASTS" +
+                " FROM CASTS " +
                 " INNER JOIN (" +
                 "    SELECT ACTOR_ID" +
                 "    FROM FILM_TO_CAST" +
@@ -86,6 +86,13 @@ public class JdbcCastDAO extends BaseDAO implements CastDAO {
         return getJdbcTemplate().query(query, new Object[]{filmId}, new CastRowMapper());
     }
 
+    /**
+     * @see CastDAO#getCastById(int)
+     */
+    public Cast getCastById(int castId){
+        final String query ="SELECT * from casts WHERE ID = ?";
+        return getJdbcTemplate().queryForObject(query, new Object[]{castId}, new CastRowMapper());
+    }
 
     // UPDATE
 

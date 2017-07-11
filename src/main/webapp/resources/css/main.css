@@ -3455,6 +3455,21 @@ a.starSelect:hover{
 .hiddenElem{
     display: none;
 }
+.row1{
+    background-color: white;
+}
+.row0{
+    background-color: #F0FFFF;
+}
+.continer{
+    overflow: hidden;
+}
+.elem{
+    float: left;
+}
+.longElem{
+    width:80%;
+}
 /* END Custom properties*/
 
 a.no_link:link,

@@ -48,6 +48,8 @@ public interface CastService {
      * @param cast the object to replace the previous version
      * @return true if successfully updated, false otherwise
      */
+    Cast getCastById(int castId);
+
     boolean editCast(Cast cast);
 
     /**

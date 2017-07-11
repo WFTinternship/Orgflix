@@ -52,7 +52,7 @@
             </header>
             <section>
                 <h3 style="color:#4581ff">${filesuccess}</h3>
-                <form id="" method="POST" action="/newFilm" enctype="multipart/form-data">
+                <form id="newFilm" method="POST" action="/newFilmResult" enctype="multipart/form-data">
                     <div>
                         <span>Film Title</span>
                         <input type="text" id="title" name="title" class="inputField"/>
@@ -93,13 +93,24 @@
                     </div>
                     <div>
                         <span>Mian actors</span>
-                        <input type="text" id="actor" name="actor" onclick="getActorsList()" class="inputField"/>
-                        <%--<c:forEach items="${actors}" var="cast" >--%>
-                            <%--<div class="castStyle"><c:out value="${cast.id}"/> - <c:out value="${cast.name}"/></div>--%>
-                        <%--</c:forEach>--%>
-
+                        <div class="container">
+                            <div class="elem longElem">
+                                <input type="text" onclick="getActorsList(this,true)" onkeyup="getActorsList(this,false)" class="inputField" style="margin-bottom: 0px"/>
+                                <input type="hidden" name="actorId" class="actorId" value="-1">
+                                <div></div>
+                            </div>
+                            <div class="elem">
+                                <a onclick="addActor()"><i id="addActor" class="fa fa-plus-square fa-2x"></i></a>
+                            </div>
+                        </div>
+                        <input type="hidden" id="buffer" />
+                        <input type="hidden" id="numOfActors" name="numOfActors" value="1"/>
+                        <input type="hidden" name="userId" value="${userId}"'/>
+                        <input type="hidden" name="userAuth" value="${userAuth}"/>
                     </div>
+                    <input type="button" onclick="submitNewFilm()" value="Submit"/>
                 </form>
+                <div id="error" class="error"></div>
             </section>
         </div>
     </div>

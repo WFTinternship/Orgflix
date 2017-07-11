@@ -51,6 +51,13 @@ public class HibernateCastDAO extends HibernateBaseDAO implements CastDAO {
         return film.getCasts();
     }
 
+    /**
+     * @see CastDAO#getCastById(int)
+     */
+    public Cast getCastById(int castId){
+        return new Cast();
+    }
+
     @Override
     @Transactional
     public boolean editCast(Cast cast) {

@@ -44,6 +44,13 @@ public interface CastDAO {
      */
     List<Cast> getCastsByFilm(int filmId);
 
+    /**
+     * Return Cast object with corresponding Id
+     * @param castId the id of the actor in DB
+     * @return the Cast object
+     */
+    Cast getCastById(int castId);
+
     // UPDATE
 
     /**

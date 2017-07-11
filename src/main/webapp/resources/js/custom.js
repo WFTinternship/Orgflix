@@ -1,7 +1,8 @@
 
-function pagination(page) {
-    $("#currPage").val(page);
-    $('#navigator').attr('action', 'index');
+function pagination(page, type) {
+    var id = page.split("_");
+    $("#currPage").val(id[1]);
+    $('#navigator').attr('action', type);
     $("#navigator").submit();
 }
 
@@ -39,21 +40,55 @@ function RemoveFromList(type,id) {
     }});
 }
 
-function getActorsList() {
-    $.ajax({url: "/data/getActorsList",type:"POST",success: function(result){
-        var obj = eval ("(" + result + ")");
-        var str = '<div>';
-        for(var i=0;i<obj.length;i++){
-            str=str+'<div id="act_'+'">'+obj[i].name+'</div>';
-        }
-        str=str+'</div>';
-        console.log(str);
-        // $("#pop-up-result").html(result);
-        // $("#pop-up-result").css("display", "block");
-        // setTimeout(timeOuter(id,true), 3000);
-    }});
+function selActor(elem) {
+    var parent = $(elem).parent();
+    parent.siblings(".inputField").val( $("#"+elem.id).html() );
+    var idNumber = elem.id.split("_");
+    parent.siblings(".actorId").val( idNumber[1] );
+    parent.html("");
 }
 
+function getActorsList(elem, state) {
+    if(state){
+        $.ajax({url: "/data/getActorsList",type:"POST",success: function(result){ $("#buffer").val(result);}});
+    }
+    if( $("#buffer").val() != "" ) {
+        var obj = eval("(" + $("#buffer").val() + ")");
+        var str = '';
+        var input = $(elem).val();
+        var show = 0;
+        for (var i = 0; i < obj.length; i++) {
+            if (show > 10) return;
+            if (new RegExp(input, "i").test(obj[i].name)) { //
+                str = str + '<div onclick="selActor(this)" class="row' + show % 2 + ' pointerA" id="act_' + obj[i].id + '">' + obj[i].name + '</div>';
+                show++;
+            }
+        }
+        $(elem).siblings("div:nth-of-type(1)").html( str );
+    }
+}
+function addActor() {
+    var html = '<div class="container">'
+        +'<div class="elem longElem">'
+            +'<input type="text" name="actor" onclick="getActorsList(this,true)" onkeyup="getActorsList(this,false)" class="inputField" style="margin-bottom: 0px"/>'
+            +'<input type="hidden" name="actorId" class="actorId" value="-1">'
+            +'<div></div>'
+        +'</div><div class="elem">'
+            +'<a onclick="addActor()"><i id="addActor" class="fa fa-plus-square fa-2x"></i></a>'
+        +'</div></div>';
+    $("#buffer").before(html);
+    $("#numOfActors").val($("#numOfActors").val()+1);
+}
+function removeActor() {
+    $("#numOfActors").val($("#numOfActors").val()-1);
+
+}
+
+function submitNewFilm() {
+    $("#error").html(" ");
+    $("#newFilm").submit();
+
+}
 function navigator(page){
     $('#navigator').attr('action', page);
     $("#navigator").submit();

@@ -130,4 +130,14 @@ public class CastServiceImpl implements CastService {
         }
         return list;
     }
+    @Override
+    public Cast getCastById(int castId) {
+        Cast cast;
+        try {
+            cast = castDAO.getCastById(castId);
+        } catch (RuntimeException e) {
+            throw new ServiceException(e.getMessage());
+        }
+        return cast;
+    }
 }

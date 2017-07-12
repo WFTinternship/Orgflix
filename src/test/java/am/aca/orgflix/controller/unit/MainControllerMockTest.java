@@ -27,8 +27,6 @@ import static org.mockito.Mockito.*;
 public class MainControllerMockTest extends BaseUnitTest {
     @Autowired
     private MainController mainController;
-    @Autowired
-    private UserController userController;
 
     @Mock
     private UserService userServiceMock;
@@ -40,6 +38,7 @@ public class MainControllerMockTest extends BaseUnitTest {
     private ListService listServiceMock;
 
     private List<Film> films = new ArrayList<>();
+    private String[] ratings = new String[0];
     private User user = new User("hulk", "Bruce Banner", "bbanner@avengers.com", "natasha");
 
     /**
@@ -75,11 +74,13 @@ public class MainControllerMockTest extends BaseUnitTest {
     public void index_Success() {
         when(filmServiceMock.getFilmsList(0)).thenReturn(films);
         when(filmServiceMock.totalNumberOfFilms()).thenReturn(0);
+        when(filmServiceMock.getAllRatings(0)).thenReturn(ratings);
 
         ModelAndView actualMV = mainController.index();
 
         Assert.assertEquals("index", actualMV.getViewName());
         Assert.assertEquals(films, actualMV.getModel().get("films"));
+        Assert.assertEquals(ratings, actualMV.getModel().get("ratings"));
         Assert.assertEquals(-1, actualMV.getModel().get("userId"));
         Assert.assertEquals(0, actualMV.getModel().get("userAuth"));
         Assert.assertEquals(0, actualMV.getModel().get("currPage"));
@@ -88,6 +89,7 @@ public class MainControllerMockTest extends BaseUnitTest {
 
         verify(filmServiceMock, times(1)).getFilmsList(0);
         verify(filmServiceMock, times(1)).totalNumberOfFilms();
+        verify(filmServiceMock, times(1)).getAllRatings(0);
     }
 
     /**
@@ -172,14 +174,16 @@ public class MainControllerMockTest extends BaseUnitTest {
     @Test
     public void pagingWAuth_Success() {
         when(userServiceMock.authenticate(user.getEmail(), user.getPass())).thenReturn(user);
+        when(filmServiceMock.getFilmsList(0)).thenReturn(films);
+        when(filmServiceMock.totalNumberOfFilms()).thenReturn(0);
 
-        ModelAndView actualMV = mainController.paging(0,1, user.getPass().hashCode() + user.getEmail().hashCode());
+        ModelAndView actualMV = mainController.paging(0,user.getId(), 100);
 
         Assert.assertEquals("index", actualMV.getViewName());
         Assert.assertEquals(films, actualMV.getModel().get("films"));
         Assert.assertEquals(user.getId(), actualMV.getModel().get("userId"));
         Assert.assertEquals("hulk (bbanner@avengers.com)", actualMV.getModel().get("user"));
-        Assert.assertEquals(user.getPass().hashCode() + user.getEmail().hashCode(), actualMV.getModel().get("userAuth"));
+        Assert.assertEquals(100, actualMV.getModel().get("userAuth"));
         Assert.assertEquals(0, actualMV.getModel().get("currPage"));
         Assert.assertEquals("index", actualMV.getModel().get("page"));
 

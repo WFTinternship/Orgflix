@@ -185,6 +185,20 @@ public class FilmServiceImpl implements FilmService {
     }
 
     /**
+     *
+     * @see FilmService#getAllRatings(int)
+     */
+    @Override
+    public String[] getAllRatings(int startIndex) {
+        List<Film> filmList = getFilmsList(startIndex);
+        String[] ratings = new String[filmList.size()];
+        for(int i=0;i<filmList.size();++i){
+            ratings[i]=String.format("%.1f",getRating( filmList.get(i).getId()));
+        }
+        return ratings;
+    }
+
+    /**
      * @see FilmService#rateFilm(int, int)
      */
     @Override

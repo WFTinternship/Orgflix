@@ -69,19 +69,34 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
                 </c:if>
             </header>
             <section class="tiles">
-                <c:forEach items="${films}" var="film" >
+                <c:forEach items="${films}" var="film" varStatus="loop">
                     <article class='style1' id="${film.id}" onmouseout='filmControlMenu(false,this.id)' onmouseover='filmControlMenu(true,this.id)'>
                         <div class='image' >
                             <img src='<c:url value="../resources/images/${film.image}" />' />
 
                         </div>
+                        <c:if test="${userId == -1}">
+                            <div class="film-buttons average-star">
+                                <i class="fa fa-star fa-sm"></i> (<c:out value="${ratings[loop.index]}"/> )
+                            </div>
+                        </c:if>
                         <c:if test="${userId != -1}">
                             <div id="contr_${film.id}" class="film-buttons">
                                 <c:if test="${page == 'index'}">
-                                    <a href="#" class="no_link" onclick="AddToList('WatchList','${film.id}')"><i class="fa fa-watchList fa-fw"></i></a>
-                                    <a href="#" class="no_link" onclick="AddToList('WishList','${film.id}')"><i class="fa fa-wishList fa-fw"></i></a>
-                                    <a onclick="isPublic()"><i id="publicCheck" class="fa fa-square-o fa-fw"></i> Public </a>
-                                    <input type="hidden" id="isPublic" name="isPublic" value="0" class="pointerA"/>
+                                    <div class="tableCell">
+                                        <a href="#" class="no_link" onclick="AddToList('WatchList','${film.id}')"><i class="fa fa-watchList fa-fw"></i></a>
+                                        <a href="#" class="no_link" onclick="AddToList('WishList','${film.id}')"><i class="fa fa-wishList fa-fw"></i></a>
+                                        <a onclick="isPublic(${film.id})" class="no_link"><i id="publicCheck_${film.id}" class="fa fa-square-o fa-fw"></i> Public</a>
+                                        <input type="hidden" id="isPublic_${film.id}" value="0" class="pointerA"/>
+                                    </div>
+                                    <div class="tableCell">
+                                        <a onmouseover="starFilm(1,false,${film.id})" onmouseout="starFilm(0,false,${film.id})" onclick="recordStar(1,${film.id})" class="starSelect pointerA"><i class="fa fa-star fa-sm"></i></a>
+                                        <a onmouseover="starFilm(2,false,${film.id})" onmouseout="starFilm(0,false,${film.id})" onclick="recordStar(2,${film.id})" class="starSelect pointerA"><i class="fa fa-star fa-sm"></i></a>
+                                        <a onmouseover="starFilm(3,false,${film.id})" onmouseout="starFilm(0,false,${film.id})" onclick="recordStar(3,${film.id})" class="starSelect pointerA"><i class="fa fa-star fa-sm"></i></a>
+                                        <a onmouseover="starFilm(4,false,${film.id})" onmouseout="starFilm(0,false,${film.id})" onclick="recordStar(4,${film.id})" class="starSelect pointerA"><i class="fa fa-star fa-sm"></i></a>
+                                        <a onmouseover="starFilm(5,false,${film.id})" onmouseout="starFilm(0,false,${film.id})" onclick="recordStar(5,${film.id})" class="starSelect pointerA"><i class="fa fa-star fa-sm"></i></a>
+                                        <input type="hidden" id="stars_${film.id}" value="1" />
+                                    </div>
                                 </c:if>
                                 <c:if test="${page == 'watch_list'}">
                                     <a href="#" class="no_link" onclick="RemoveFromList('WatchList','${film.id}')"><i class="fa fa-trash-o fa-fw"></i></a>

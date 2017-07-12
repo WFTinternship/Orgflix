@@ -34,6 +34,7 @@ public class UserControllerMockTest extends BaseUnitTest {
     private FilmService filmServiceMock;
 
     private List<Film> films = new ArrayList<>();
+    private String[] ratings = new String[0];
     private User user = new User("hulk", "Bruce Banner", "bbanner@avengers.com", "natasha");
 
     /**
@@ -65,11 +66,13 @@ public class UserControllerMockTest extends BaseUnitTest {
     public void signUp_Success() {
         when(filmServiceMock.getFilmsList(0)).thenReturn(films);
         when(filmServiceMock.totalNumberOfFilms()).thenReturn(0);
+        when(filmServiceMock.getAllRatings(0)).thenReturn(ratings);
 
         ModelAndView actualMV = userController.signup();
 
         Assert.assertEquals("signup", actualMV.getViewName());
         Assert.assertEquals(films, actualMV.getModel().get("films"));
+        Assert.assertEquals(ratings, actualMV.getModel().get("ratings"));
         Assert.assertEquals(-1, actualMV.getModel().get("userId"));
         Assert.assertEquals(0, actualMV.getModel().get("userAuth"));
         Assert.assertEquals(0, actualMV.getModel().get("currPage"));
@@ -77,6 +80,7 @@ public class UserControllerMockTest extends BaseUnitTest {
 
         verify(filmServiceMock, times(1)).getFilmsList(0);
         verify(filmServiceMock, times(1)).totalNumberOfFilms();
+        verify(filmServiceMock, times(1)).getAllRatings(0);
     }
 
     /**

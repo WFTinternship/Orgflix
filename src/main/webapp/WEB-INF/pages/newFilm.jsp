@@ -69,13 +69,13 @@
                         </div>
                         <div class="tableCell">
                             <span>Your rate</span><br />
-                            <a onmouseover="star(1,false)" onmouseout="star(0,false)" onclick="star(1,true)" class="starSelect pointerA"><i class="fa fa-star fa-fw"></i></a>
-                            <a onmouseover="star(2,false)" onmouseout="star(0,false)" onclick="star(2,true)" class="starSelect pointerA"><i class="fa fa-star fa-fw"></i></a>
-                            <a onmouseover="star(3,false)" onmouseout="star(0,false)" onclick="star(3,true)" class="starSelect pointerA"><i class="fa fa-star fa-fw"></i></a>
-                            <a onmouseover="star(4,false)" onmouseout="star(0,false)" onclick="star(4,true)" class="starSelect pointerA"><i class="fa fa-star fa-fw"></i></a>
-                            <a onmouseover="star(5,false)" onmouseout="star(0,false)" onclick="star(5,true)" class="starSelect pointerA"><i class="fa fa-star fa-fw"></i></a>
+                            <a onmouseover="starFilm(1,false,'')" onmouseout="starFilm(0,false,'')" onclick="starFilm(1,true,'')" class="starSelect pointerA"><i class="fa fa-star fa-fw"></i></a>
+                            <a onmouseover="starFilm(2,false,'')" onmouseout="starFilm(0,false,'')" onclick="starFilm(2,true,'')" class="starSelect pointerA"><i class="fa fa-star fa-fw"></i></a>
+                            <a onmouseover="starFilm(3,false,'')" onmouseout="starFilm(0,false,'')" onclick="starFilm(3,true,'')" class="starSelect pointerA"><i class="fa fa-star fa-fw"></i></a>
+                            <a onmouseover="starFilm(4,false,'')" onmouseout="starFilm(0,false,'')" onclick="starFilm(4,true,'')" class="starSelect pointerA"><i class="fa fa-star fa-fw"></i></a>
+                            <a onmouseover="starFilm(5,false,'')" onmouseout="starFilm(0,false,'')" onclick="starFilm(5,true,'')" class="starSelect pointerA"><i class="fa fa-star fa-fw"></i></a>
                             <span>(1 star)</span>
-                            <input type="hidden" id="stars" name="stars" value="1" />
+                            <input type="hidden" id="stars_" name="stars" value="1" />
                         </div>
                         <div class="tableCell textCentered">
                             <span>Awards(Oscar)</span><br />

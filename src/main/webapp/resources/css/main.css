@@ -3390,6 +3390,7 @@
 		height:60px;
 		color:white;
 		font-size:20px;
+		display: table;
 	}
 .film-ref{
 	z-index:10;
@@ -3470,8 +3471,13 @@ a.starSelect:hover{
 .longElem{
     width:80%;
 }
+.average-star{
+	color:#e78800 !important;
+	font-weight: bold;
+	padding-left:20px;
+}
 /* END Custom properties*/
-
+a.no_link,
 a.no_link:link,
 a.no_link:visited{
 	color:#fff;
@@ -3505,6 +3511,11 @@ a.no_link:hover{
 }
 
 /* ico size */
+.fa-sm {
+	font-size: 1em;
+	line-height: 0.75em;
+	vertical-align: -15%;
+}
 .fa-lg {
 	font-size: 1.33333333em;
 	line-height: 0.75em;

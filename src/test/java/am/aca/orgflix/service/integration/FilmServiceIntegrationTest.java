@@ -214,6 +214,29 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
+    public void getAllRatings_CorrectSize_Success() {
+        Film film1 = new Film("Film 1", 1990);
+        Film film2 = new Film("Film 2", 1990);
+        filmService.addFilm(film1);
+        filmService.addFilm(film2);
+        Assert.assertEquals(2, filmService.getAllRatings(0).length);
+    }
+
+    @Test
+    public void getAllRatings_CorrectAverages_Success() {
+        Film film1 = new Film("Film 1", 1990);
+        Film film2 = new Film("Film 2", 1990);
+        filmService.addFilm(film1);
+        filmService.rateFilm(film1.getId(),3);
+        filmService.rateFilm(film1.getId(),4);
+        filmService.addFilm(film2);
+        filmService.rateFilm(film2.getId(),5);
+        filmService.rateFilm(film2.getId(),1);
+        Assert.assertEquals("3.5", filmService.getAllRatings(0)[0]);
+        Assert.assertEquals("3.0", filmService.getAllRatings(0)[1]);
+    }
+
+    @Test
     public void totalNumber_Success() {
         film = new Film("In Bruges", 2008);
         for (int i = 0; i < 6; i++) {

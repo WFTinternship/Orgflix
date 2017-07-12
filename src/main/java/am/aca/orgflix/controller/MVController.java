@@ -42,6 +42,7 @@ public class MVController {
     protected ModelAndView getGuestMV(ModelAndView modelAndView){
         try{
             modelAndView.addObject("films", filmService.getFilmsList(0));
+            modelAndView.addObject("ratings", filmService.getAllRatings(0));
             modelAndView.addObject("userId", -1);
             modelAndView.addObject("userAuth", 0);
             modelAndView.addObject("currPage", 0);

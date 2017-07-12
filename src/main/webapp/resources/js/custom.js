@@ -15,13 +15,22 @@ function filmControlMenu(state,id) {
 }
 
 function AddToList(type, id) {
-    $.ajax({url: "/data/addFilmTo"+type,type:"POST",data:{film:id,user:$("#userId").val()},success: function(result){
-        $("#pop-up-result").html(result);
-        $("#pop-up-result").css("display", "block");
-        setTimeout(function() {
-            timeOuter(id,false);
-        }, 900);
-    }});
+    $.ajax({
+        url: "/data/addFilmTo"+type,
+        type:"POST",
+        data:{
+            film:id,
+            user:$("#userId").val(),
+            isPublic:$("#isPublic_"+id).val()
+        },
+        success: function(result){
+            $("#pop-up-result").html(result);
+            $("#pop-up-result").css("display", "block");
+            setTimeout(function() {
+                timeOuter(id,false);
+            }, 900);
+        }
+    });
 }
 
 function timeOuter(id,isDel){
@@ -105,23 +114,41 @@ function submitSignUp() {
     }
 }
 
-function star(star, isClick) {
+function starFilm(star, isClick, id) {
     if(isClick){
-        $("#stars").val(star);
-        $("#stars").siblings("span:nth-of-type(2)").html("("+star+" star)");
+        $("#stars_"+id).val(star);
+        $("#stars_"+id).siblings("span:nth-of-type(2)").html("("+star+" star)");
     } else {
         if(star==0){
-            $("#stars").siblings("a").css("color","gray");
-            for (i = 1; i <= $("#stars").val(); i++) {
-                $("#stars").siblings("a:nth-of-type(" + i + ")").css("color", "#ffe415");
+            $("#stars_"+id).siblings("a").css("color","gray");
+            for (i = 1; i <= $("#stars_"+id).val(); i++) {
+                $("#stars_"+id).siblings("a:nth-of-type(" + i + ")").css("color", "#ffe415");
             }
         } else {
             for (i = 1; i < star; i++) {
-                $("#stars").siblings("a:nth-of-type(" + i + ")").css("color", "red");
+                $("#stars_"+id).siblings("a:nth-of-type(" + i + ")").css("color", "red");
             }
         }
-
     }
+}
+
+function recordStar(star, filmId) {
+    starFilm(star,true,filmId);
+    $.ajax({
+        url: "/data/starFilm",
+        type:"POST",
+        data:{
+            film:filmId,
+            star:star
+        },
+        success: function(result){
+            $("#pop-up-result").html(result);
+            $("#pop-up-result").css("display", "block");
+            setTimeout(function() {
+                timeOuter(filmId,false);
+            }, 900);
+        }
+    });
 }
 
 function hasOscar() {
@@ -134,14 +161,14 @@ function hasOscar() {
     $("#oscarCheck").toggleClass("fa-square-o fa-check-square-o");
 }
 
-function isPublic() {
-    if( $("#isPublic").val() === 0){
+function isPublic(id) {
+    if( $("#isPublic"+id).val() == 0){
         var public = 1;
     } else {
         var public = 0;
     }
-    $("#isPublic").val(public);
-    $("#publicCheck").toggleClass("fa-square-o fa-check-square-o");
+    $("#isPublic"+id).val(public);
+    $("#publicCheck_"+id).toggleClass("fa-square-o fa-check-square-o");
 }
 
 function submitLogin() {

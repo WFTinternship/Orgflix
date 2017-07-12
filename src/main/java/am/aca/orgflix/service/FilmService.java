@@ -59,6 +59,14 @@ public interface FilmService {
     double getRating(int filmId);
 
     /**
+     * Calculates and retrieves average ratings for all films
+     *
+     * @param startIndex the index corresponding to the currently displayed page
+     * @return an array of avarage ratings for all films in order as in getFilmsList() method
+      */
+    String[] getAllRatings(int startIndex);
+
+    /**
      * Retrieves the total number of all films already created
      *
      * @return the number of all films already created

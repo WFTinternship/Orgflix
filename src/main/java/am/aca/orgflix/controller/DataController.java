@@ -86,8 +86,7 @@ public class DataController {
     }
 
     @PostMapping("/addFilmToWishList")
-    public ResponseEntity addFilmToWishList(@RequestParam("user") int userId, @RequestParam("film") int filmId) {
-//    public ResponseEntity addFilmToWishList(@RequestParam("user") int userId, @RequestParam("film") int filmId, @RequestParam("isPublic") boolean isPublic) {
+    public ResponseEntity addFilmToWishList(@RequestParam("user") int userId, @RequestParam("film") int filmId, @RequestParam("isPublic") boolean isPublic) {
         try {
             boolean state = listService.addToPlanned(filmId, true, userId);
             if (state)
@@ -118,6 +117,20 @@ public class DataController {
             boolean state = listService.removeFromWatched(filmId, userId);
             if (state)
                 return new ResponseEntity("Film removed from watch list", HttpStatus.OK);
+            else
+                return new ResponseEntity("Not succeeded", HttpStatus.BAD_REQUEST);
+        } catch (RuntimeException e) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/starFilm")
+    public ResponseEntity starFilm(@RequestParam("film") int filmId,
+                                   @RequestParam("star") int star) {
+        try {
+            boolean state = filmService.rateFilm(filmId, star);
+            if (state)
+                return new ResponseEntity("Film is rated", HttpStatus.OK);
             else
                 return new ResponseEntity("Not succeeded", HttpStatus.BAD_REQUEST);
         } catch (RuntimeException e) {

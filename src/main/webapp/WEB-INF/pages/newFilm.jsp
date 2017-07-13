@@ -9,6 +9,7 @@
     <!--[if lte IE 8]>
     <script src='<c:url value="../resources/js/ie/html5shiv.js" />'></script><![endif]-->
     <link rel="stylesheet" href='<c:url value="../resources/css/main.css" />'/>
+    <link rel="stylesheet" href='<c:url value="../resources/css/custom.css?v=7" />' />
     <!--[if lte IE 9]>
     <link rel="stylesheet" href='<c:url value="../resources/css/ie9.css" />'/><![endif]-->
     <!--[if lte IE 8]>
@@ -107,8 +108,15 @@
                         <input type="hidden" id="numOfActors" name="numOfActors" value="1"/>
                         <input type="hidden" name="userId" value="${userId}"'/>
                         <input type="hidden" name="userAuth" value="${userAuth}"/>
+                        <input type="button" onclick="newActor()" value="New actor" />
+                        <div class="hiddenElement" id="tempNewActor">
+                            <input type="text" class="inputField" id="newActorName" name="newActorName" />
+                            <input type="button" value="Add" onclick="addNewActor()">
+                        </div>
                     </div>
-                    <input type="button" onclick="submitNewFilm()" value="Submit"/>
+                    <div>
+                        <input type="button" onclick="submitNewFilm()" value="Submit"/>
+                    </div>
                 </form>
                 <div id="error" class="error"></div>
             </section>

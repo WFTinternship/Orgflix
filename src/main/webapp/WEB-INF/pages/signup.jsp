@@ -18,6 +18,7 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
     <!--[if lte IE 8]>
     <script src='<c:url value="../resources/js/ie/html5shiv.js" />'></script><![endif]-->
     <link rel="stylesheet" href='<c:url value="../resources/css/main.css" />'/>
+    <link rel="stylesheet" href='<c:url value="../resources/css/custom.css?v=7" />' />
     <!--[if lte IE 9]>
     <link rel="stylesheet" href='<c:url value="../resources/css/ie9.css" />'/><![endif]-->
     <!--[if lte IE 8]>

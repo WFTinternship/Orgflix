@@ -1,7 +1,9 @@
 package am.aca.orgflix.controller.integration;
 
 import am.aca.orgflix.BaseIntegrationTest;
+import am.aca.orgflix.controller.ActorDataController;
 import am.aca.orgflix.controller.DataController;
+import am.aca.orgflix.controller.FilmDataController;
 import am.aca.orgflix.entity.Cast;
 import am.aca.orgflix.entity.Film;
 import am.aca.orgflix.entity.User;
@@ -21,7 +23,9 @@ import org.springframework.http.ResponseEntity;
  */
 public class DataControllerIntegrationTest extends BaseIntegrationTest {
     @Autowired
-    private DataController dataController;
+    private FilmDataController filmDataController;
+    @Autowired
+    private ActorDataController actorDataController;
 
     @Autowired
     private CastService castService;
@@ -54,19 +58,19 @@ public class DataControllerIntegrationTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see DataController#getActorsList()
+     * @see ActorDataController#getActorsList()
      */
     @Test
     public void getActorsList_OneMember_Success() {
         castService.addCast(cast);
 
-        ResponseEntity actualRE = dataController.getActorsList();
+        ResponseEntity actualRE = actorDataController.getActorsList();
         String expectedRE = "[{\"id\":\"" + cast.getId() + "\", \"name\":\"" + cast.getName() + "\", \"oscar\":\"" + cast.isHasOscar() + "\"}]";
         Assert.assertEquals(new ResponseEntity(expectedRE, HttpStatus.OK), actualRE);
     }
 
     /**
-     * @see DataController#getActorsList()
+     * @see ActorDataController#getActorsList()
      */
     @Test
     public void getActorsList_ThreeMembers_Success() {
@@ -77,7 +81,7 @@ public class DataControllerIntegrationTest extends BaseIntegrationTest {
         castService.addCast(cast1);
         castService.addCast(cast2);
 
-        ResponseEntity actualRE = dataController.getActorsList();
+        ResponseEntity actualRE = actorDataController.getActorsList();
 
         String expectedRE = "[{\"id\":\"" + cast2.getId() + "\", \"name\":\"" + cast2.getName() + "\", \"oscar\":\"" + cast2.isHasOscar() + "\"}," +
                 "{\"id\":\"" + cast1.getId() + "\", \"name\":\"" + cast1.getName() + "\", \"oscar\":\"" + cast1.isHasOscar() + "\"}," +
@@ -87,105 +91,105 @@ public class DataControllerIntegrationTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see DataController#getActorsList()
+     * @see ActorDataController#getActorsList()
      */
     @Test
     public void getActorsList_Empty_Fail() {
-        ResponseEntity actualRE = dataController.getActorsList();
+        ResponseEntity actualRE = actorDataController.getActorsList();
 
         Assert.assertEquals(new ResponseEntity("[]", HttpStatus.OK), actualRE);
     }
 
     /**
-     * @see DataController#addFilmToWatchList(int, int, boolean)
+     * @see FilmDataController#addFilmToWatchList(int, int, boolean)
      */
     @Test
     public void addToWatched_Success() {
         filmService.addFilm(film);
         userService.add(user);
 
-        ResponseEntity actualRE = dataController.addFilmToWatchList(user.getId(), film.getId(), true);
+        ResponseEntity actualRE = filmDataController.addFilmToWatchList(user.getId(), film.getId(), true);
 
         Assert.assertEquals(new ResponseEntity("Film added to watch list", HttpStatus.OK), actualRE);
     }
 
     /**
-     * @see DataController#addFilmToWatchList(int, int, boolean)
+     * @see FilmDataController#addFilmToWatchList(int, int, boolean)
      */
     @Test
     public void addToWatched_Fail() {
-        ResponseEntity actualRE = dataController.addFilmToWatchList(user.getId(), film.getId(), true);
+        ResponseEntity actualRE = filmDataController.addFilmToWatchList(user.getId(), film.getId(), true);
 
         Assert.assertEquals(new ResponseEntity(HttpStatus.BAD_REQUEST), actualRE);
     }
 
     /**
-     * @see DataController#addFilmToWishList(int, int, boolean) շ
+     * @see FilmDataController#addFilmToWishList(int, int, boolean) շ
      */
     @Test
     public void addToPlanned_Success() {
         filmService.addFilm(film);
         userService.add(user);
 
-        ResponseEntity actualRE = dataController.addFilmToWishList(user.getId(), film.getId(),true);
+        ResponseEntity actualRE = filmDataController.addFilmToWishList(user.getId(), film.getId(),true);
 
         Assert.assertEquals(new ResponseEntity("Film added to wish list", HttpStatus.OK), actualRE);
     }
 
     /**
-     * @see DataController#addFilmToWishList(int, int, boolean)
+     * @see FilmDataController#addFilmToWishList(int, int, boolean)
      */
     @Test
     public void addToPlanned_Fail() {
-        ResponseEntity actualRE = dataController.addFilmToWishList(user.getId(), film.getId(),true);
+        ResponseEntity actualRE = filmDataController.addFilmToWishList(user.getId(), film.getId(),true);
 
         Assert.assertEquals(new ResponseEntity(HttpStatus.BAD_REQUEST), actualRE);
     }
 
     /**
-     * @see DataController#removeFromWishList(int, int)
+     * @see FilmDataController#removeFromWishList(int, int)
      */
     @Test
     public void removePlanned_Success() {
         filmService.addFilm(film);
         userService.add(user);
-        dataController.addFilmToWishList(user.getId(), film.getId(),true);
+        filmDataController.addFilmToWishList(user.getId(), film.getId(),true);
 
-        ResponseEntity actualRE = dataController.removeFromWishList(user.getId(), film.getId());
+        ResponseEntity actualRE = filmDataController.removeFromWishList(user.getId(), film.getId());
 
         Assert.assertEquals(new ResponseEntity("Film removed from wish list", HttpStatus.OK), actualRE);
     }
 
     /**
-     * @see DataController#removeFromWishList(int, int)
+     * @see FilmDataController#removeFromWishList(int, int)
      */
     @Test
     public void removePlanned_NotExisting_Fail() {
-        ResponseEntity actualRE = dataController.removeFromWishList(user.getId(), film.getId());
+        ResponseEntity actualRE = filmDataController.removeFromWishList(user.getId(), film.getId());
 
         Assert.assertEquals(new ResponseEntity("Not succeeded", HttpStatus.BAD_REQUEST), actualRE);
     }
 
     /**
-     * @see DataController#removeFromWishList(int, int) (int, int)
+     * @see FilmDataController#removeFromWishList(int, int) (int, int)
      */
     @Test
     public void removeWatched_Success() {
         filmService.addFilm(film);
         userService.add(user);
-        dataController.addFilmToWatchList(user.getId(), film.getId(), true);
+        filmDataController.addFilmToWatchList(user.getId(), film.getId(), true);
 
-        ResponseEntity actualRE = dataController.removeFromWatchList(user.getId(), film.getId());
+        ResponseEntity actualRE = filmDataController.removeFromWatchList(user.getId(), film.getId());
 
         Assert.assertEquals(new ResponseEntity("Film removed from watch list", HttpStatus.OK), actualRE);
     }
 
     /**
-     * @see DataController#removeFromWatchList(int, int) (int, int) (int, int)
+     * @see FilmDataController#removeFromWatchList(int, int) (int, int) (int, int)
      */
     @Test
     public void removeWatched_NotExisting_Fail() {
-        ResponseEntity actualRE = dataController.removeFromWishList(user.getId(), film.getId());
+        ResponseEntity actualRE = filmDataController.removeFromWishList(user.getId(), film.getId());
 
         Assert.assertEquals(new ResponseEntity("Not succeeded", HttpStatus.BAD_REQUEST), actualRE);
     }

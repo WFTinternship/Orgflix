@@ -18,7 +18,8 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!--[if lte IE 8]><script src='<c:url value="../resources/js/ie/html5shiv.js" />' ></script><![endif]-->
-    <link rel="stylesheet" href='<c:url value="../resources/css/main.css?v=7" />' />
+    <link rel="stylesheet" href='<c:url value="../resources/css/main.css" />' />
+    <link rel="stylesheet" href='<c:url value="../resources/css/custom.css?v=7" />' />
     <!--[if lte IE 9]><link rel="stylesheet" href='<c:url value="../resources/css/ie9.css" />' /><![endif]-->
     <!--[if lte IE 8]><link rel="stylesheet" href='<c:url value="../resources/css/ie8.css" />' /><![endif]-->
 </head>
@@ -84,8 +85,8 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
                             <div id="contr_${film.id}" class="film-buttons">
                                 <c:if test="${page == 'index'}">
                                     <div class="tableCell">
-                                        <a href="#" class="no_link" onclick="AddToList('WatchList','${film.id}')"><i class="fa fa-watchList fa-fw"></i></a>
-                                        <a href="#" class="no_link" onclick="AddToList('WishList','${film.id}')"><i class="fa fa-wishList fa-fw"></i></a>
+                                        <a href="#" class="no_link" onclick="AddToList('watch','${film.id}')"><i class="fa fa-watchList fa-fw"></i></a>
+                                        <a href="#" class="no_link" onclick="AddToList('wish','${film.id}')"><i class="fa fa-wishList fa-fw"></i></a>
                                         <a onclick="isPublic(${film.id})" class="no_link"><i id="publicCheck_${film.id}" class="fa fa-square-o fa-fw"></i> Public</a>
                                         <input type="hidden" id="isPublic_${film.id}" value="0" class="pointerA"/>
                                     </div>

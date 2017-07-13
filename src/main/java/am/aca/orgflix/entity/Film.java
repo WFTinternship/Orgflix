@@ -11,45 +11,58 @@ import java.util.List;
  */
 @Entity(name = "FILMS")
 public class Film {
-    @Id
-    @GeneratedValue
-    @Column(name = "ID")
+//    @Id
+//    @GeneratedValue
+//    @Column(name = "ID")
     private int id;
-    @Column(name = "TITLE", columnDefinition = "VARCHAR(50)", nullable = false)
+
+//    @Column(name = "TITLE", columnDefinition = "VARCHAR(50)", nullable = false)
     private String title;
-    @Column(name = "PROD_YEAR", nullable = false)
+
+//    @Column(name = "PROD_YEAR", nullable = false)
     private int prodYear;
-    @Column(name = "HAS_OSCAR", nullable = false)
-    @ColumnDefault("false")
+
+//    @Column(name = "HAS_OSCAR", nullable = false)
+//    @ColumnDefault("false")
     private boolean hasOscar;
-    @Column(name = "IMAGE_REF", columnDefinition = "VARCHAR(250)")
+
+//    @Column(name = "IMAGE_REF", columnDefinition = "VARCHAR(250)")
     private String image;
-    @Column(name = "DIRECTOR", columnDefinition = "VARCHAR(250)")
+
+//    @Column(name = "DIRECTOR", columnDefinition = "VARCHAR(250)")
     private String director;
-    @Column(name = "RATE_1STAR")
-    @ColumnDefault("0")
+
+//    @Column(name = "RATE_1STAR")
+//    @ColumnDefault("0")
     private int rate_1star;
-    @Column(name = "RATE_2STAR")
-    @ColumnDefault("0")
+
+//    @Column(name = "RATE_2STAR")
+//    @ColumnDefault("0")
     private int rate_2star;
-    @Column(name = "RATE_3STAR")
-    @ColumnDefault("0")
+
+//    @Column(name = "RATE_3STAR")
+//    @ColumnDefault("0")
     private int rate_3star;
-    @Column(name = "RATE_4STAR")
-    @ColumnDefault("0")
+
+//    @Column(name = "RATE_4STAR")
+//    @ColumnDefault("0")
     private int rate_4star;
-    @Column(name = "RATE_5STAR")
-    @ColumnDefault("0")
+
+//    @Column(name = "RATE_5STAR")
+//    @ColumnDefault("0")
     private int rate_5star;
-    @ManyToMany(cascade = CascadeType.REFRESH)
-    @JoinTable(name = "FILM_TO_CAST",
-            joinColumns = @JoinColumn(name = "FILM_ID"),
-            inverseJoinColumns = @JoinColumn(name = "ACTOR_ID"))
+
+//    @ManyToMany(cascade = CascadeType.REFRESH)
+//    @JoinTable(name = "FILM_TO_CAST",
+//            joinColumns = @JoinColumn(name = "FILM_ID"),
+//            inverseJoinColumns = @JoinColumn(name = "ACTOR_ID"))
     private List<Cast> casts;
-    @ElementCollection(targetClass = Genre.class)
-    @CollectionTable(name = "GENRE_TO_FILM", joinColumns = @JoinColumn(name = "FILM_ID"))
-    @Column(name = "GENRE_ID")
-    private List<Genre> genres;
+
+//    @ManyToMany(cascade = CascadeType.REFRESH)
+//    @JoinTable(name = "GENRE_TO_FILM",
+//            joinColumns = @JoinColumn(name = "FILM_ID"),
+//            inverseJoinColumns = @JoinColumn(name = "GENRE_ID"))
+    private List<GenreEntity> genres;
 
     public Film() {
         hasOscar = false;
@@ -111,6 +124,9 @@ public class Film {
                 '}';
     }
 
+    @Id
+    @GeneratedValue
+    @Column(name = "ID")
     public int getId() {
         return id;
     }
@@ -119,6 +135,7 @@ public class Film {
         this.id = id;
     }
 
+    @Column(name = "TITLE", columnDefinition = "VARCHAR(50)", nullable = false)
     public String getTitle() {
         return title;
     }
@@ -127,14 +144,7 @@ public class Film {
         this.title = title;
     }
 
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
+    @Column(name = "PROD_YEAR", nullable = false)
     public int getProdYear() {
         return prodYear;
     }
@@ -143,6 +153,8 @@ public class Film {
         this.prodYear = prodYear;
     }
 
+    @Column(name = "HAS_OSCAR", nullable = false)
+    @ColumnDefault("false")
     public boolean isHasOscar() {
         return hasOscar;
     }
@@ -151,6 +163,16 @@ public class Film {
         this.hasOscar = hasOscar;
     }
 
+    @Column(name = "IMAGE_REF", columnDefinition = "VARCHAR(250)")
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    @Column(name = "DIRECTOR", columnDefinition = "VARCHAR(250)")
     public String getDirector() {
         return director;
     }
@@ -159,6 +181,8 @@ public class Film {
         this.director = director;
     }
 
+    @Column(name = "RATE_1STAR")
+    @ColumnDefault("0")
     public int getRate_1star() {
         return rate_1star;
     }
@@ -167,6 +191,8 @@ public class Film {
         this.rate_1star = rate_1star;
     }
 
+    @Column(name = "RATE_2STAR")
+    @ColumnDefault("0")
     public int getRate_2star() {
         return rate_2star;
     }
@@ -175,6 +201,8 @@ public class Film {
         this.rate_2star = rate_2star;
     }
 
+    @Column(name = "RATE_3STAR")
+    @ColumnDefault("0")
     public int getRate_3star() {
         return rate_3star;
     }
@@ -183,6 +211,8 @@ public class Film {
         this.rate_3star = rate_3star;
     }
 
+    @Column(name = "RATE_4STAR")
+    @ColumnDefault("0")
     public int getRate_4star() {
         return rate_4star;
     }
@@ -191,6 +221,8 @@ public class Film {
         this.rate_4star = rate_4star;
     }
 
+    @Column(name = "RATE_5STAR")
+    @ColumnDefault("0")
     public int getRate_5star() {
         return rate_5star;
     }
@@ -199,6 +231,10 @@ public class Film {
         this.rate_5star = rate_5star;
     }
 
+    @ManyToMany(cascade = CascadeType.REFRESH)
+    @JoinTable(name = "FILM_TO_CAST",
+            joinColumns = @JoinColumn(name = "FILM_ID"),
+            inverseJoinColumns = @JoinColumn(name = "ACTOR_ID"))
     public List<Cast> getCasts() {
         return casts;
     }
@@ -211,15 +247,19 @@ public class Film {
         this.casts.add(cast);
     }
 
-    public List<Genre> getGenres() {
+    @ManyToMany(cascade = CascadeType.REFRESH)
+    @JoinTable(name = "GENRE_TO_FILM",
+            joinColumns = @JoinColumn(name = "FILM_ID"),
+            inverseJoinColumns = @JoinColumn(name = "GENRE_ID"))
+    public List<GenreEntity> getGenres() {
         return genres;
     }
 
-    public void addGeners(Genre gener) {
-        genres.add(gener);
-    }
-
-    public void setGenres(List<Genre> genres) {
+    public void setGenres(List<GenreEntity> genres) {
         this.genres = genres;
     }
+
+//    public void addGeners(Genre gener) {
+//        genres.add(gener);
+//    }
 }

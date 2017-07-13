@@ -1,7 +1,7 @@
 package am.aca.orgflix.dao.implHibernate;
 
-import am.aca.orgflix.dao.DaoException;
 import am.aca.orgflix.dao.UserDAO;
+import am.aca.orgflix.entity.List;
 import am.aca.orgflix.entity.User;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,13 +21,6 @@ public class HibernateUserDAO extends HibernateBaseDAO implements UserDAO {
     @Transactional
     @Override
     public int add(User user) {
-        checkRequiredFields(user.getPass(), user.getNick(), user.getEmail());
-        if (!validateEmail(user.getEmail()))
-            throw new DaoException("Email Invalid");
-        if (!validatePassword(user.getPass()))
-            throw new DaoException("Password too weak, must be at least 6 characters long");
-        //////////////////////////////UNIQUE CONSTRAINT FAILURE EXCEPTION NAME FOR ERROR MSG
-
         try {
             em.persist(user);
             return user.getId();
@@ -39,10 +32,7 @@ public class HibernateUserDAO extends HibernateBaseDAO implements UserDAO {
     @Override
     public User get(int id) {
         try {
-            User user = em.find(User.class, id);
-            if (user == null)
-                return null;
-            return user;
+            return em.find(User.class, id);
         } catch (RuntimeException e) {
             return null;
         }
@@ -76,28 +66,29 @@ public class HibernateUserDAO extends HibernateBaseDAO implements UserDAO {
             Query query = em.createQuery("SELECT c FROM USERS c where c.EMAIL = ?1 and c.USER_PASS = ?2");
             query.setParameter(1, email);
             query.setParameter(2, pass);
-            return (User) query.getSingleResult();
+            return (User) query.getSingleResult();      ///////NoResultException
         } catch (RuntimeException e) {
             return null;
         }
     }
 
     @Override
+    @Transactional
     public boolean edit(int id, String nick, String name, String pass, String email) {
-        checkRequiredFields(pass, nick, email);
-        if (!validateEmail(email))
-            throw new DaoException("Email Invalid");
-        if (!validatePassword(pass))
-            throw new DaoException("Password too weak, must be at least 6 characters long");
-        //////////////////////////////UNIQUE CONSTRAINT FAILURE EXCEPTION NAME FOR ERROR MSG
+//        checkRequiredFields(pass, nick, email);
+//        if (!validateEmail(email))
+//            throw new DaoException("Email Invalid");
+//        if (!validatePassword(pass))
+//            throw new DaoException("Password too weak, must be at least 6 characters long");
+        ////////////////////////////UNIQUE CONSTRAINT FAILURE EXCEPTION NAME FOR ERROR MSG
         try {
             User actualUser = em.find(User.class, id);
-//            actualUser.setEmail(email);
-//            actualUser.setNick(nick);
-//            actualUser.setUserName(name);
-//            actualUser.setPass(pass);
+            actualUser.setEmail(email);
+            actualUser.setNick(nick);
+            actualUser.setUserName(name);
+            actualUser.setPass(pass);
 
-            em.refresh(actualUser);
+            em.merge(actualUser);
 
             return true;
         } catch (RuntimeException e) {
@@ -106,20 +97,10 @@ public class HibernateUserDAO extends HibernateBaseDAO implements UserDAO {
     }
 
     @Override
+    @Transactional
     public boolean edit(User user) {
-        checkRequiredFields(user.getPass(), user.getNick(), user.getEmail());
-        if (!validateEmail(user.getEmail()))
-            throw new DaoException("Email Invalid");
-        if (!validatePassword(user.getPass()))
-            throw new DaoException("Password too weak, must be at least 6 characters long");
-        //////////////////////////////UNIQUE CONSTRAINT FAILURE EXCEPTION NAME FOR ERROR MSG
-
         try {
-            User actualUser = em.find(User.class, user.getId());
-            actualUser.setEmail(user.getEmail());
-            actualUser.setNick(user.getNick());
-            actualUser.setUserName(user.getUserName());
-            actualUser.setPass(user.getPass());
+            em.merge(user);
             return true;
         } catch (RuntimeException e) {
             return false;
@@ -128,17 +109,13 @@ public class HibernateUserDAO extends HibernateBaseDAO implements UserDAO {
 
     @Override
     public boolean edit(int id, String nick, String pass, String email) {
-        checkRequiredFields(pass, nick, email);
-        if (!validateEmail(email))
-            throw new DaoException("Email Invalid");
-        if (!validatePassword(pass))
-            throw new DaoException("Password too weak, must be at least 6 characters long");
-        //////////////////////////////UNIQUE CONSTRAINT FAILURE EXCEPTION NAME FOR ERROR MSG
         try {
             User actualUser = em.find(User.class, id);
             actualUser.setEmail(email);
             actualUser.setNick(nick);
             actualUser.setPass(pass);
+
+            em.merge(actualUser);
             return true;
         } catch (RuntimeException e) {
             return false;
@@ -165,4 +142,38 @@ public class HibernateUserDAO extends HibernateBaseDAO implements UserDAO {
             return false;
         }
     }
+
+    public boolean insertWatched(int userId, int filmId, boolean isPublic) {
+            List list = new List();
+            list.setFilmId(filmId);
+            list.setUserId(userId);
+            list.setPublic(isPublic);
+            list.setWatched(true);
+
+        try {
+            User user = em.find(User.class, userId);
+            user.getLists().add(list);
+            return true;
+        } catch (RuntimeException e) {
+            return false;
+        }
+    }
+
+    public boolean insertPlanned(int userId, int filmId, boolean isPublic) {
+        List list = new List();
+        list.setFilmId(filmId);
+        list.setUserId(userId);
+        list.setPublic(isPublic);
+        list.setPlanned(true);
+
+        try {
+            User user = em.find(User.class, userId);
+            user.getLists().add(list);
+            return true;
+        } catch (RuntimeException e) {
+            return false;
+        }
+    }
+
+    public boolean
 }

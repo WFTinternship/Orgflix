@@ -5,6 +5,7 @@ import am.aca.orgflix.dao.FilmDAO;
 import am.aca.orgflix.entity.Cast;
 import am.aca.orgflix.entity.Film;
 import am.aca.orgflix.entity.Genre;
+import am.aca.orgflix.service.BaseServiceImpl;
 import am.aca.orgflix.service.FilmService;
 import am.aca.orgflix.service.ServiceException;
 import org.apache.log4j.Logger;
@@ -19,7 +20,7 @@ import java.util.List;
  */
 @Transactional(readOnly = true)
 @Service
-public class FilmServiceImpl implements FilmService {
+public class FilmServiceImpl extends BaseServiceImpl implements FilmService {
 
     private static final Logger LOGGER = Logger.getLogger(FilmServiceImpl.class);
 
@@ -42,16 +43,13 @@ public class FilmServiceImpl implements FilmService {
     @Transactional
     @Override
     public boolean addFilm(Film film) {
+        checkRequiredFields(film.getTitle());
+        validateYear(film.getProdYear());
         try {
-            boolean result = filmDao.addFilm(film);
-            if (!result)
-                return false;
+            return filmDao.addFilm(film) && optimizeRelations(film);
         } catch (RuntimeException e) {
             throw new ServiceException(e.getMessage());
         }
-
-        return optimizeRelations(film);
-
     }
 
     /**
@@ -60,6 +58,8 @@ public class FilmServiceImpl implements FilmService {
     @Transactional
     @Override
     public boolean editFilm(Film film) {
+        checkRequiredFields(film.getTitle());
+        validateYear(film.getProdYear());
         try {
             if (!filmDao.editFilm(film))
                 return false;
@@ -184,6 +184,20 @@ public class FilmServiceImpl implements FilmService {
             LOGGER.warn(e.toString());
         }
         return rate;
+    }
+
+    /**
+     *
+     * @see FilmService#getAllRatings(int)
+     */
+    @Override
+    public String[] getAllRatings(int startIndex) {
+        List<Film> filmList = getFilmsList(startIndex);
+        String[] ratings = new String[filmList.size()];
+        for(int i=0;i<filmList.size();++i){
+            ratings[i]=String.format("%.1f",getRating( filmList.get(i).getId()));
+        }
+        return ratings;
     }
 
     /**

@@ -1,28 +1,35 @@
 package am.aca.orgflix.entity;
 
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Set;
 
 /**
  * User entity class
  */
 @Entity(name = "users")
 public class User {
-    @Id
-    @GeneratedValue
-    @Column(name = "ID", nullable = false)
+    //    @Id
+//    @GeneratedValue
+//    @Column(name = "ID", nullable = false)
     private int id = -1;
-    @Column(name = "NICK", columnDefinition = "VARCHAR(50)", nullable = false, unique = true)
+
+    //        @Column(name = "NICK", columnDefinition = "VARCHAR(50)", nullable = false, unique = true)
     private String nick = "";
-    @Column(name = "USER_NAME", columnDefinition = "VARCHAR(250)")
+
+    //    @Column(name = "USER_NAME", columnDefinition = "VARCHAR(250)")
     private String userName = "";
-    @Column(name = "USER_PASS", columnDefinition = "VARCHAR(50)", nullable = false)
+
+    //    @Column(name = "USER_PASS", columnDefinition = "VARCHAR(50)", nullable = false)
     private String email = "";
-    @Column(name = "EMAIL", columnDefinition = "VARCHAR(50)", nullable = false, unique = true)
+
+    //    @Column(name = "EMAIL", columnDefinition = "VARCHAR(50)", nullable = false, unique = true)
     private String pass = "";
+
+//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "?????", cascade=CascadeType.ALL)
+//    private java.util.List<List> lists;
+
+    private Set<List> lists;
 
     public User(String nick, String userName, String email, String pass) {
         this.nick = nick;
@@ -62,14 +69,9 @@ public class User {
                 '}';
     }
 
-    public String getPass() {
-        return pass;
-    }
-
-    public void setPass(String pass) {
-        this.pass = pass;
-    }
-
+    @Id
+    @GeneratedValue
+    @Column(name = "ID", nullable = false)
     public int getId() {
         return id;
     }
@@ -78,6 +80,7 @@ public class User {
         if (id > 0) this.id = id;
     }
 
+    @Column(name = "NICK", columnDefinition = "VARCHAR(50)", nullable = false, unique = true)
     public String getNick() {
         return nick;
     }
@@ -86,6 +89,7 @@ public class User {
         this.nick = nick;
     }
 
+    @Column(name = "USER_NAME", columnDefinition = "VARCHAR(250)")
     public String getUserName() {
         return userName;
     }
@@ -94,11 +98,30 @@ public class User {
         this.userName = userName;
     }
 
+    @Column(name = "USER_PASS", columnDefinition = "VARCHAR(50)", nullable = false)
+    public String getPass() {
+        return pass;
+    }
+
+    public void setPass(String pass) {
+        this.pass = pass;
+    }
+
+    @Column(name = "EMAIL", columnDefinition = "VARCHAR(50)", nullable = false, unique = true)
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "key.user", cascade = CascadeType.ALL)
+    public Set<List> getLists() {
+        return lists;
+    }
+
+    public void setLists(Set<List> lists) {
+        this.lists = lists;
     }
 }

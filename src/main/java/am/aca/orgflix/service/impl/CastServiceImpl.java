@@ -4,6 +4,7 @@ import am.aca.orgflix.dao.CastDAO;
 import am.aca.orgflix.dao.FilmDAO;
 import am.aca.orgflix.entity.Cast;
 import am.aca.orgflix.entity.Film;
+import am.aca.orgflix.service.BaseServiceImpl;
 import am.aca.orgflix.service.CastService;
 import am.aca.orgflix.service.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ import java.util.List;
  */
 @Transactional(readOnly = true)
 @Service
-public class CastServiceImpl implements CastService {
+public class CastServiceImpl extends BaseServiceImpl implements CastService {
 
     private CastDAO castDAO;
     private FilmDAO filmDAO;
@@ -38,6 +39,7 @@ public class CastServiceImpl implements CastService {
     @Transactional
     @Override
     public boolean addCast(Cast cast) {
+        checkRequiredFields(cast.getName());
         boolean result;
         try {
             result = castDAO.addCast(cast);
@@ -74,6 +76,7 @@ public class CastServiceImpl implements CastService {
     @Transactional
     @Override
     public boolean editCast(Cast cast) {
+        checkRequiredFields(cast.getName());
         boolean state;
         try {
             if (!castDAO.exists(cast))

@@ -2,25 +2,30 @@ package am.aca.orgflix.entity;
 
 import org.hibernate.annotations.ColumnDefault;
 
-import javax.persistence.*;
-import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 /**
  * Actor entity class
  */
 @Entity(name = "CASTS")
 public class Cast {
-    @Id
-    @GeneratedValue
-    @Column(name = "ID")
+    //    @Id
+//    @GeneratedValue
+//    @Column(name = "ID")
     private int id;
-    @Column(name = "ACTOR_NAME", columnDefinition = "VARCHAR(250)", nullable = false)
+
+    //    @Column(name = "ACTOR_NAME", columnDefinition = "VARCHAR(250)", nullable = false)
     private String name;
-    @Column(name = "HAS_OSCAR", columnDefinition = "BOOLEAN", nullable = false)
-    @ColumnDefault("false")
+
+    //    @Column(name = "HAS_OSCAR", columnDefinition = "BOOLEAN", nullable = false)
+//    @ColumnDefault("false")
     private boolean hasOscar;
-    @ManyToMany(mappedBy = "casts", cascade = CascadeType.REFRESH)
-    private List<Film> films;
+
+    //    @ManyToMany(mappedBy = "casts", cascade = CascadeType.REFRESH)
+//    private List<Film> films;
 
     public Cast() {
         this.id = -1;
@@ -37,6 +42,9 @@ public class Cast {
         this.hasOscar = false;
     }
 
+    @Id
+    @GeneratedValue
+    @Column(name = "ID")
     public int getId() {
         return id;
     }
@@ -45,6 +53,7 @@ public class Cast {
         this.id = id;
     }
 
+    @Column(name = "ACTOR_NAME", columnDefinition = "VARCHAR(250)", nullable = false)
     public String getName() {
         return name;
     }
@@ -53,6 +62,8 @@ public class Cast {
         this.name = name;
     }
 
+    @Column(name = "HAS_OSCAR", columnDefinition = "BOOLEAN", nullable = false)
+    @ColumnDefault("false")
     public boolean isHasOscar() {
         return hasOscar;
     }
@@ -69,13 +80,5 @@ public class Cast {
         Cast cast = (Cast) o;
 
         return id == cast.id && hasOscar == cast.hasOscar && name.equals(cast.name);
-    }
-
-    public List<Film> getFilms() {
-        return films;
-    }
-
-    public void setFilms(List<Film> films) {
-        this.films = films;
     }
 }

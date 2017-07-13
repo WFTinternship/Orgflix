@@ -99,10 +99,11 @@ public class FilmController extends MVController {
         String user = selUser.getNick() + " (" + selUser.getEmail() + ")";
 
         ModelAndView modelAndView = new ModelAndView("uploadResult", "fileSuccess", "Film successfully saved!");
-        modelAndView.addObject("actors", castService.listCasts());
+//        modelAndView.addObject("actors", castService.listCasts());
         modelAndView.addObject("userId", userId);
         modelAndView.addObject("user", user);
         modelAndView.addObject("userAuth", userAuth);
+        modelAndView.addObject("currPage", 0);
         return modelAndView;
     }
 }

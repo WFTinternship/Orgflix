@@ -1,51 +1,21 @@
+<%--
+  Page for adding new film
+--%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="m" uri="example-taglib" %>
+<c:set var="contextPath" value="${pageContext.request.contextPath}" />
 <!DOCTYPE HTML>
 <html>
-<head>
-    <title>Orgflix 1.0</title>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <!--[if lte IE 8]>
-    <script src='<c:url value="../resources/js/ie/html5shiv.js" />'></script><![endif]-->
-    <link rel="stylesheet" href='<c:url value="../resources/css/main.css" />'/>
-    <link rel="stylesheet" href='<c:url value="../resources/css/custom.css?v=7" />' />
-    <!--[if lte IE 9]>
-    <link rel="stylesheet" href='<c:url value="../resources/css/ie9.css" />'/><![endif]-->
-    <!--[if lte IE 8]>
-    <link rel="stylesheet" href='<c:url value="../resources/css/ie8.css" />'/><![endif]-->
-</head>
+<!-- Head and CSS Import -->
+<%@ include file="/WEB-INF/pages/header.jsp" %>
 <body>
 <!-- Wrapper -->
 <div id="wrapper">
-    <m:pageHeader/>
-    <!-- Menu -->
-    <nav id="menu">
-        <h2>Menu</h2>
-        <ul>
-            <c:if test="${userId != -1}">
-                <li><i class="fa fa-user fa-fw"></i> <c:out value="${user}"/></li>
-                <li><a onclick="navigator('index')"><i class="fa fa-home fa-fw"></i>Home</a></li>
-                <li><a onclick="navigator('watch_list')"><i class="fa fa-watchList fa-fw"></i> Watch list</a></li>
-                <li><a onclick="navigator('wish_list')"><i class="fa fa-wishList fa-fw"></i> Wish List</a></li>
-                <li><a href="/newFilm"><i class="fa fa-plus-square fa-fw"></i> Add Film</a></li>
-                <li><a href="/"><i class="fa fa-logout fa-fw"></i> Logout</a></li>
-            </c:if>
-            <c:if test="${userId == -1}">
-                <li><a href="/"><i class="fa fa-home fa-fw"></i>Home</a></li>
-                <li><a href="login"><i class="fa fa-login fa-fw"></i> Login</a></li>
-                <li><a href="signup"><i class="fa fa-signUp fa-fw"></i> Sign up</a></li>
-            </c:if>
-        </ul>
-        <form id="navigator" method="POST" action="">
-            <input type="hidden" id="userId" name="userId" value="${userId}"'/>
-            <input type="hidden" id="userAuth" name="userAuth" value="${userAuth}"/>
-            <input type="hidden" id="currPage" name="currPage" value="${currPage}"/>
-            <input type="hidden" id="page" name="page" value="${page}"/>
-        </form>
-    </nav>
-
-    <!-- Main -->
+    <!-- Page header -->
+    <m:pageHeader />
+    <!-- Navigation menu -->
+    <%@ include file="/WEB-INF/pages/menu.jsp" %>
+    <!-- Main page -->
     <div id="main">
         <div class="inner">
             <header>
@@ -106,7 +76,7 @@
                         </div>
                         <input type="hidden" id="buffer" />
                         <input type="hidden" id="numOfActors" name="numOfActors" value="1"/>
-                        <input type="hidden" name="userId" value="${userId}"'/>
+                        <input type="hidden" name="userId" value="${userId}"/>
                         <input type="hidden" name="userAuth" value="${userAuth}"/>
                         <input type="button" onclick="newActor()" value="New actor" />
                         <div class="hiddenElement" id="tempNewActor">
@@ -122,17 +92,10 @@
             </section>
         </div>
     </div>
+    <!-- Page footer -->
     <m:pageFooter/>
 </div>
-
-<!-- Scripts -->
-<script src='<c:url value="../resources/js/jquery.min.js" />'></script>
-<script src='<c:url value="../resources/js/skel.min.js" />'></script>
-<script src='<c:url value="../resources/js/util.js" />'></script>
-<!--[if lte IE 8]>
-<script src='<c:url value="../resources/js/ie/respond.min.js" />'></script><![endif]-->
-<script src='<c:url value="../resources/js/main.js" />'></script>
-<script src='<c:url value="../resources/js/custom.js?v=107" />'></script>
-
+<!-- JS imports -->
+<%@ include file="/WEB-INF/pages/JSImport.jsp" %>
 </body>
 </html>

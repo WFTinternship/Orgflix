@@ -12,13 +12,13 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/")
 public class UserController extends MVController{
 
-    @GetMapping("/signup")
+    @RequestMapping("/signup")
     public ModelAndView signup() {
         ModelAndView modelAndView = new ModelAndView("signup");
         return getGuestMV(modelAndView);
     }
 
-    @PostMapping("/signup")
+    @RequestMapping("/signed")
     public ModelAndView signupResult(@RequestParam("nick") String nick,
                                      @RequestParam("userName") String userName,
                                      @RequestParam("email") String email,

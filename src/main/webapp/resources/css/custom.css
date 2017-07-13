@@ -117,6 +117,7 @@ a.starSelect:hover{
     color:#e78800 !important;
     font-weight: bold;
     padding-left:20px;
+    display: block !important;
 }
 /* END Custom properties*/
 a.no_link,

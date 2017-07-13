@@ -17,7 +17,6 @@ public class HeaderTagHandler extends TagSupport {
         JspWriter out = pageContext.getOut();//returns the instance of JspWriter
         try {
             final String header = "" +
-                    "<!-- Header -->" +
                     "<header id=\"header\">" +
                     "<div class=\"inner\">" +
                     "<!-- Logo -->" +

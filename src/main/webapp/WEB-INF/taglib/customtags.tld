@@ -22,4 +22,6 @@
         <tag-class>am.aca.orgflix.servlet.taghandler.FooterTagHandler</tag-class>
     </tag>
 
+
+
 </taglib>

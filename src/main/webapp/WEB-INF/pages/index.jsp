@@ -6,66 +6,29 @@
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix = "fn" uri = "http://java.sun.com/jsp/jstl/functions" %>
 
+<c:set var="contextPath" value="${pageContext.request.contextPath}" />
 <!DOCTYPE HTML>
-<!--
-Phantom by HTML5 UP
-html5up.net | @ajlkn
-Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
 <html>
-<head>
-    <title>Orgflix 1.0</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!--[if lte IE 8]><script src='<c:url value="../resources/js/ie/html5shiv.js" />' ></script><![endif]-->
-    <link rel="stylesheet" href='<c:url value="../resources/css/main.css" />' />
-    <link rel="stylesheet" href='<c:url value="../resources/css/custom.css?v=7" />' />
-    <!--[if lte IE 9]><link rel="stylesheet" href='<c:url value="../resources/css/ie9.css" />' /><![endif]-->
-    <!--[if lte IE 8]><link rel="stylesheet" href='<c:url value="../resources/css/ie8.css" />' /><![endif]-->
-</head>
+<!-- Head and CSS Import -->
+<%@ include file="/WEB-INF/pages/header.jsp" %>
 <body>
 <!-- Wrapper -->
 <div id="wrapper">
-
+    <!-- Page header -->
     <m:pageHeader />
-
-    <!-- Menu -->
-    <nav id="menu">
-        <h2>Menu</h2>
-        <ul>
-            <c:if test="${userId != -1}">
-                <li><i class="fa fa-user fa-fw"></i> <c:out value="${user}"/></li>
-                <li><a onclick="navigator('index')"><i class="fa fa-home fa-fw"></i>Home</a></li>
-                <li><a onclick="navigator('watch_list')"><i class="fa fa-watchList fa-fw"></i> Watch list</a></li>
-                <li><a onclick="navigator('wish_list')"><i class="fa fa-wishList fa-fw"></i> Wish List</a></li>
-                <li><a onclick="navigator('newFilm')"><i class="fa fa-plus-square fa-fw"></i> Add Film</a></li>
-                <li><a onclick="navigator('/')"><i class="fa fa-logout fa-fw"></i> Logout</a></li>
-            </c:if>
-            <c:if test="${userId == -1}">
-                <li><a onclick="navigator('/')"><i class="fa fa-home fa-fw"></i>Home</a></li>
-                <li><a onclick="navigator('login')"><i class="fa fa-login fa-fw"></i> Login</a></li>
-                <li><a onclick="navigator('signup')"><i class="fa fa-logout fa-fw"></i> Sign up</a></li>
-            </c:if>
-        </ul>
-        <form id="navigator" method="POST" action="0">
-            <input type="hidden" id="userId" name="userId" value="${userId}"/>
-            <input type="hidden" id="userAuth" name="userAuth" value="${userAuth}"/>
-            <input type="hidden" id="currPage" name="currPage" value="${currPage}"/>
-            <input type="hidden" id="page" name="page" value="${page}"/>
-        </form>
-    </nav>
-
-    <!-- Main -->
+    <!-- Navigation menu -->
+    <%@ include file="/WEB-INF/pages/menu.jsp" %>
+    <!-- Main page -->
     <div id="main">
         <div class="inner">
             <header>
                 <c:if test="${ (page == 'index') || (userId==-1)}">
                     <h1>This is OrgFlix, a free film list organizer</h1>
                 </c:if>
-                <c:if test="${page == 'watch'}">
+                <c:if test="${page == 'watch_list'}">
                     <h1>Watch list</h1>
                 </c:if>
-                <c:if test="${page == 'wish'}">
+                <c:if test="${page == 'wish_list'}">
                     <h1>Wish list</h1>
                 </c:if>
             </header>
@@ -127,17 +90,10 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
             </section>
         </div>
     </div>
-
+    <!-- Page footer -->
     <m:pageFooter />
 </div>
-
-<!-- Scripts -->
-<script src='<c:url value="../resources/js/jquery.min.js" />' ></script>
-<script src='<c:url value="../resources/js/skel.min.js" />' ></script>
-<script src='<c:url value="../resources/js/util.js" />' ></script>
-<!--[if lte IE 8]><script src='<c:url value="../resources/js/ie/respond.min.js" />' ></script><![endif]-->
-<script src='<c:url value="../resources/js/main.js" />' ></script>
-<script src='<c:url value="../resources/js/custom.js?v=119" />' ></script>
-
+<!-- JS imports -->
+<%@ include file="/WEB-INF/pages/JSImport.jsp" %>
 </body>
 </html>

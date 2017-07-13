@@ -2,7 +2,6 @@ package am.aca.orgflix.controller.unit;
 
 import am.aca.orgflix.BaseUnitTest;
 import am.aca.orgflix.controller.ActorDataController;
-import am.aca.orgflix.controller.DataController;
 import am.aca.orgflix.controller.FilmDataController;
 import am.aca.orgflix.entity.Cast;
 import am.aca.orgflix.service.*;
@@ -54,6 +53,10 @@ public class DataControllerMockTest extends BaseUnitTest {
         ReflectionTestUtils.setField(filmDataController, "castService", castServiceMock);
         ReflectionTestUtils.setField(filmDataController, "filmService", filmServiceMock);
         ReflectionTestUtils.setField(filmDataController, "listService", listServiceMock);
+        ReflectionTestUtils.setField(actorDataController, "userService", userServiceMock);
+        ReflectionTestUtils.setField(actorDataController, "castService", castServiceMock);
+        ReflectionTestUtils.setField(actorDataController, "filmService", filmServiceMock);
+        ReflectionTestUtils.setField(actorDataController, "listService", listServiceMock);
     }
 
     /**

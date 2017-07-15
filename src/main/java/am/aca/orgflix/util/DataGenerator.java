@@ -2,7 +2,6 @@ package am.aca.orgflix.util;
 
 import am.aca.orgflix.entity.Cast;
 import am.aca.orgflix.entity.Film;
-import am.aca.orgflix.entity.Genre;
 import am.aca.orgflix.service.FilmService;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -14,7 +13,6 @@ import org.springframework.test.context.ContextConfiguration;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -41,9 +39,9 @@ public class DataGenerator {
             film.addCast(new Cast(movieDiv.select("a[href]").get(16).text(), Math.random() < 0.5));
             film.addCast(new Cast(movieDiv.select("a[href]").get(17).text(), Math.random() < 0.5));
             film.setProdYear(Integer.parseInt(movieDiv.getElementsByClass("lister-item-year").text().substring(1, 5)));
-            for (String s : Arrays.asList(movieDiv.getElementsByClass("genre").text().split("\\s*,\\s*"))) {
-                film.addGeners(Genre.getByTitle(s));
-            }
+//            for (String s : Arrays.asList(movieDiv.getElementsByClass("genre").text().split("\\s*,\\s*"))) {
+//                film.addGeners(Genre.getByTitle(s));
+//            }
             film.setHasOscar(Math.random() < 0.5);
             movieList.add(film);
             filmService.addFilm(film);

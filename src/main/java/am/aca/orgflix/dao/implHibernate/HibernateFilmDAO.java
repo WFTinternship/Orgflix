@@ -3,20 +3,23 @@ package am.aca.orgflix.dao.implHibernate;
 import am.aca.orgflix.dao.FilmDAO;
 import am.aca.orgflix.entity.Cast;
 import am.aca.orgflix.entity.Film;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * JPA Hibernate implementation for Film DAO
  */
-public class HibernateFilmDAO extends HibernateBaseDAO implements FilmDAO {
+@Component
+public class HibernateFilmDAO implements FilmDAO {
 
+    private static final int FIXED_NUMBER_OF_FILMS_PER_PAGE = 12;
     private EntityManagerFactory emf = Persistence.createEntityManagerFactory("Orgflix_PU");
     private EntityManager em = emf.createEntityManager();
 
@@ -79,7 +82,7 @@ public class HibernateFilmDAO extends HibernateBaseDAO implements FilmDAO {
 
     @Override
     public List<Cast> getCastsByFilm(int filmId) {
-        Film film = em.getReference(Film.class, filmId);
+        Film film = em.find(Film.class, filmId);
         return film.getCasts();
     }
 
@@ -88,64 +91,123 @@ public class HibernateFilmDAO extends HibernateBaseDAO implements FilmDAO {
         try {
             Query query = em.createQuery("from FILMS");
             query.setFirstResult(startIndex);
-            query.setMaxResults(12);
+            query.setMaxResults(FIXED_NUMBER_OF_FILMS_PER_PAGE);
             return query.getResultList();
         } catch (RuntimeException e) {
             return new ArrayList<>();
         }
     }
 
+//    /**
+//     * @see FilmDAO#getFilmsByGenre(Genre)
+//     */
 //    @Override
 //    public List<Film> getFilmsByGenre(Genre genre) {
-//        List<Film> filteredFilms = new ArrayList<>();
-//        Query query = em.createQuery("from FILMS");
-//        List<Film> films = query.getResultList();
-//
-//        outerLoop:
-//        for (Film film : films) {
-//            for (Genre genre1 : film.getGenres()) {         ///////////////IS THERE A FASTER WAY?
-//                if (genre1 == genre) {
-//                    filteredFilms.add(film);
-//                    continue outerLoop;
-//                }
-//            }
+//        List<Film> result = new ArrayList<>();
+//        try {
+//            Query query = em.createQuery("select film from FILMS film " +
+//                    "join film.genres genre where genre = :givenGenre");
+//            query.setParameter("givenGenre", genre);
+//            result = query.getResultList();
+//        } catch (RuntimeException ignored) {
 //        }
-//
-//        return filteredFilms;
+//        return result;
 //    }
+
+    /**
+     * @see FilmDAO#getFilmsByCast(int)
+     */
+    @Override
+    public List<Film> getFilmsByCast(int actorId) {
+        List<Film> result = new ArrayList<>();
+        try {
+            Query query = em.createQuery("select film from FILMS film " +
+                    "join film.casts cast where cast.id = :givenCast");
+            query.setParameter("givenCast", actorId);
+            result = query.getResultList();
+        } catch (RuntimeException ignored) {
+        }
+        return result;
+    }
 
 //    @Override
-//    public List<Film> getFilmsByCast(int actorId) {
-//        List<Film> filteredFilms = new ArrayList<>();
-//        Query query = em.createQuery("from FILMS");
-//        List<Film> films = query.getResultList();
+//    public double getRating(int filmId) {
+//        try {
+//            Film actualFilm = em.find(Film.class, filmId);
+//            int ratingSum = actualFilm.getRate_1star() + 2 * actualFilm.getRate_2star() +
+//                    3 * actualFilm.getRate_3star() + 4 * actualFilm.getRate_4star() + 5 * actualFilm.getRate_5star();
+//            if (ratingSum == 0)
+//                return 0;
 //
-//        outerLoop:
-//        for (Film film : films) {
-//            for (Cast cast : film.getCasts()) {         ///////////////IS THERE A FASTER WAY?
-//                if (cast.getId() == actorId) {
-//                    filteredFilms.add(film);
-//                    continue outerLoop;
-//                }
-//            }
+//            int ratingCount = actualFilm.getRate_1star() + actualFilm.getRate_2star() +
+//                    actualFilm.getRate_3star() + actualFilm.getRate_4star() + actualFilm.getRate_5star();
+//
+//            return ratingSum / ratingCount;
+//        } catch (RuntimeException e) {
+//            return 0;
 //        }
-//
-//        return filteredFilms;
 //    }
 
+    /**
+     * @see FilmDAO#getRating5(int)
+     */
     @Override
-    public double getRating(int filmId) {
+    public int getRating5(int filmId) {
         try {
             Film actualFilm = em.find(Film.class, filmId);
-            int ratingSum = actualFilm.getRate_1star() + 2 * actualFilm.getRate_2star() +
-                    3 * actualFilm.getRate_3star() + 4 * actualFilm.getRate_4star() + 5 * actualFilm.getRate_5star();
-            if (ratingSum == 0)
-                return 0;
+            return actualFilm.getRate_5star();
+        } catch (RuntimeException e) {
+            return 0;
+        }
+    }
 
-            int ratingCount = actualFilm.getRate_1star() + actualFilm.getRate_2star() +
-                    actualFilm.getRate_3star() + actualFilm.getRate_4star() + actualFilm.getRate_5star();
+    /**
+     * @see FilmDAO#getRating4(int)
+     */
+    @Override
+    public int getRating4(int filmId) {
+        try {
+            Film actualFilm = em.find(Film.class, filmId);
+            return actualFilm.getRate_4star();
+        } catch (RuntimeException e) {
+            return 0;
+        }
+    }
 
-            return ratingSum / ratingCount;
+    /**
+     * @see FilmDAO#getRating3(int)
+     */
+    @Override
+    public int getRating3(int filmId) {
+        try {
+            Film actualFilm = em.find(Film.class, filmId);
+            return actualFilm.getRate_3star();
+        } catch (RuntimeException e) {
+            return 0;
+        }
+    }
+
+    /**
+     * @see FilmDAO#getRating2(int)
+     */
+    @Override
+    public int getRating2(int filmId) {
+        try {
+            Film actualFilm = em.find(Film.class, filmId);
+            return actualFilm.getRate_2star();
+        } catch (RuntimeException e) {
+            return 0;
+        }
+    }
+
+    /**
+     * @see FilmDAO#getRating1(int)
+     */
+    @Override
+    public int getRating1(int filmId) {
+        try {
+            Film actualFilm = em.find(Film.class, filmId);
+            return actualFilm.getRate_1star();
         } catch (RuntimeException e) {
             return 0;
         }
@@ -229,15 +291,29 @@ public class HibernateFilmDAO extends HibernateBaseDAO implements FilmDAO {
         }
     }
 
-    @Transactional
+    /**
+     * @see FilmDAO#remove(int)
+     */
     @Override
-    public boolean remove(Film film) {
+    public boolean remove(int filmId) {
         try {
-            em.remove(film);
-            em.flush();
+            Film actualFilm = em.find(Film.class, filmId);
+            em.remove(actualFilm);
             return true;
         } catch (RuntimeException e) {
             return false;
         }
     }
+
+//    @Transactional
+//    @Override
+//    public boolean remove(Film film) {
+//        try {
+//            em.remove(film);
+//            em.flush();
+//            return true;
+//        } catch (RuntimeException e) {
+//            return false;
+//        }
+//    }
 }

@@ -1,5 +1,6 @@
 package am.aca.orgflix.service;
 
+import am.aca.orgflix.entity.Cast;
 import am.aca.orgflix.entity.Film;
 import am.aca.orgflix.entity.Genre;
 
@@ -42,13 +43,13 @@ public interface FilmService {
      */
     List<Film> getFilmsByCast(int castId);
 
-    /**
-     * Retrieves films of the given genre
-     *
-     * @param genre the genre to filter films by
-     * @return List object of all films of the given genre
-     */
-    List<Film> getFilmsByGenre(Genre genre);
+//    /**
+//     * Retrieves films of the given genre
+//     *
+//     * @param genre the genre to filter films by
+//     * @return List object of all films of the given genre
+//     */
+//    List<Film> getFilmsByGenre(Genre genre);
 
     /**
      * Retrieves the user rating of the given film
@@ -57,6 +58,8 @@ public interface FilmService {
      * @return the rating of the given film, 0 if the film is not rated by users
      */
     double getRating(int filmId);
+
+    String[] getAllRatings(int startIndex);
 
     /**
      * Retrieves the total number of all films already created
@@ -74,11 +77,11 @@ public interface FilmService {
      * @param hasOscar   the Oscar winner status of the desired film
      * @param director   the director of the desired film
      * @param castId     the ID of the desired film's cast member
-     * @param genre      a genre of the desired film
+     * @param genreId      a genre of the desired film
      * @return List object of all films satisfying the given filter parameters
      */
     List<Film> getFilteredFilms(String title, int startYear, int finishYear,
-                                boolean hasOscar, String director, int castId, Genre genre);
+                                boolean hasOscar, String director, int castId, int genreId);
 
     /**
      * Updates the selected film to the given film
@@ -98,12 +101,20 @@ public interface FilmService {
      */
     boolean rateFilm(int filmId, int starType);
 
+//    /**
+//     * Assigns new genre to the given film
+//     *
+//     * @param filmId the ID of the film to be updated
+//     * @param genre  the genre to be added to the film
+//     * @return true if the film is successfully updated, false otherwise
+//     */
+//    boolean addGenreToFilm(Genre genre, int filmId);
+
     /**
-     * Assigns new genre to the given film
+     * Show all actors starring in the given film
      *
-     * @param filmId the ID of the film to be updated
-     * @param genre  the genre to be added to the film
-     * @return true if the film is successfully updated, false otherwise
+     * @param filmId the ID of the given film
+     * @return the List object of all actors starring in the given film
      */
-    boolean addGenreToFilm(Genre genre, int filmId);
+    List<Cast> getCastsByFilm(int filmId);
 }

@@ -1,7 +1,6 @@
 package am.aca.orgflix.dao;
 
 import am.aca.orgflix.BaseIntegrationTest;
-import am.aca.orgflix.dao.impljdbc.JdbcListDAO;
 import am.aca.orgflix.entity.Film;
 import am.aca.orgflix.entity.User;
 import am.aca.orgflix.util.TestHelper;
@@ -14,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.beans.PropertyVetoException;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * Integration tests for List DAO methods
@@ -21,13 +21,13 @@ import java.sql.SQLException;
 public class ListDaoTest extends BaseIntegrationTest {
 
     @Autowired
-    private UserDAO jdbcUserDAO;
+    private UserDAO hibernateUserDAO;
 
     @Autowired
-    private FilmDAO jdbcFilmDAO;
+    private FilmDAO hibernateFilmDAO;
 
     @Autowired
-    private ListDao listDaoJdbc;
+    private ListDao hibernateListDAO;
 
     @Autowired
     private TestHelper helper;
@@ -45,11 +45,11 @@ public class ListDaoTest extends BaseIntegrationTest {
         film.setTitle("Scarface");
         film.setProdYear(1983);
 
-        jdbcFilmDAO.addFilm(film);
+        hibernateFilmDAO.addFilm(film);
         filmId = film.getId();
         //setUp User and User DAO
 
-        userId = jdbcUserDAO.add(new User("MrSmith", "John Smith", "JhonSmith@gmail.com", "pass"));
+        userId = hibernateUserDAO.add(new User("MrSmith", "John Smith", "JhonSmith@gmail.com", "pass"));
 
     }
 
@@ -62,404 +62,471 @@ public class ListDaoTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see JdbcListDAO#insertWatched(int, int, boolean)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateListDAO#insertWatched(int, int, boolean)
      */
     @Test
-    public void insertWatched_Success() {
-        listDaoJdbc.insertWatched(filmId, userId, true);
+    public void insertWatched_ValidInputs_Success() {
+        hibernateListDAO.insertWatched(filmId, userId, true);
 
-        boolean status = listDaoJdbc.isWatched(filmId, userId);
+        boolean status = hibernateListDAO.isWatched(filmId, userId);
         Assert.assertTrue(status);
     }
 
     /**
-     * @see JdbcListDAO#insertPlanned(int, int, boolean)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateListDAO#insertWatched(int, int, boolean)
      */
     @Test
-    public void insertPlanned_Success() {
-        listDaoJdbc.insertPlanned(filmId, userId, true);
+    public void insertWatched_InvalidInputs_Success() {
+        hibernateListDAO.insertWatched(0, 0, true);
 
-        boolean status = listDaoJdbc.isPlanned(filmId, userId);
+        boolean status = hibernateListDAO.isWatched(filmId, userId);
+        Assert.assertFalse(status);
+    }
+
+    /**
+     * @see am.aca.orgflix.dao.implHibernate.HibernateListDAO#insertPlanned(int, int, boolean)
+     */
+    @Test
+    public void insertPlanned_ValidInputs_Success() {
+        hibernateListDAO.insertPlanned(filmId, userId, true);
+
+        boolean status = hibernateListDAO.isPlanned(filmId, userId);
         Assert.assertTrue(status);
     }
 
     /**
-     * @see JdbcListDAO#showOwnWatched(int, int)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateListDAO#insertPlanned(int, int, boolean)
      */
     @Test
-    public void showOwnWatched_Success() {
-        listDaoJdbc.insertWatched(filmId, userId, false);
+    public void insertPlanned_InvalidInputs_Success() {
+        hibernateListDAO.insertPlanned(0, 0, true);
 
-        Film actualFilm = listDaoJdbc.showOwnWatched(userId, 0).get(0);
-        Assert.assertEquals(film, actualFilm);
+        boolean status = hibernateListDAO.isPlanned(filmId, userId);
+        Assert.assertFalse(status);
     }
 
     /**
-     * @see JdbcListDAO#showOwnWatched(int, int)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateListDAO#showOwnWatched(int, int)
      */
     @Test
-    public void showOwnWatched_Partial() {
-        listDaoJdbc.insertWatched(filmId, userId, false);
-        listDaoJdbc.insertWatched(filmId, userId, true);
+    public void showOwnWatched_ValidUser_Success() {
+        hibernateListDAO.insertWatched(filmId, userId, false);
 
-        int size = listDaoJdbc.showOwnWatched(userId, 0).size();
-        Assert.assertEquals(2, size);
-    }
+        List<Film> actualList = hibernateListDAO.showOwnWatched(userId, 0);
+        Film actualFilm = actualList.get(0);
+        int size = actualList.size();
 
-    /**
-     * @see JdbcListDAO#showOwnWatched(int, int)
-     */
-    @Test
-    public void showOwnWatched_Fail() {
-        boolean status = listDaoJdbc.showOwnWatched(userId, 0).isEmpty();
-        Assert.assertTrue(status);
-    }
-
-    /**
-     * @see JdbcListDAO#showOwnPlanned(int, int)
-     */
-    @Test
-    public void showOwnPlanned_Success() {
-        listDaoJdbc.insertPlanned(filmId, userId, false);
-
-        Film actualFilm = listDaoJdbc.showOwnPlanned(userId, 0).get(0);
-        Assert.assertEquals(film, actualFilm);
-    }
-
-    /**
-     * @see JdbcListDAO#showOwnPlanned(int, int)
-     */
-    @Test
-    public void showOwnPlanned_Partial() {
-        listDaoJdbc.insertPlanned(filmId, userId, false);
-        listDaoJdbc.insertPlanned(filmId, userId, true);
-
-        int size = listDaoJdbc.showOwnPlanned(userId, 0).size();
-        Assert.assertEquals(2, size);
-    }
-
-    /**
-     * @see JdbcListDAO#showOwnPlanned(int, int)
-     */
-    @Test
-    public void showOwnPlanned_Fail() {
-        boolean status = listDaoJdbc.showOwnPlanned(userId, 0).isEmpty();
-        Assert.assertTrue(status);
-    }
-
-    /**
-     * @see JdbcListDAO#showOthersWatched(int, int)
-     */
-    @Test
-    public void showOthersWatched_Success() {
-        listDaoJdbc.insertWatched(filmId, userId, true);
-        listDaoJdbc.insertWatched(filmId, userId, true);
-
-        int size = listDaoJdbc.showOthersWatched(userId, 0).size();
-        Assert.assertEquals(2, size);
-    }
-
-    /**
-     * @see JdbcListDAO#showOthersWatched(int, int)
-     */
-    @Test
-    public void showOthersWatched_Partial() {
-        listDaoJdbc.insertWatched(filmId, userId, true);
-        listDaoJdbc.insertWatched(filmId, userId, false);
-
-        int size = listDaoJdbc.showOthersWatched(userId, 0).size();
         Assert.assertEquals(1, size);
+        Assert.assertEquals(film, actualFilm);
+
+        Film film = new Film("American Gangster", 2007);
+        hibernateFilmDAO.addFilm(film);
+
+        hibernateListDAO.insertWatched(film.getId(), userId, true);
+
+        size = hibernateListDAO.showOwnWatched(userId, 0).size();
+        int sizePage2 = hibernateListDAO.showOwnWatched(userId, 1).size();
+
+        Assert.assertEquals(2, size);
+        Assert.assertEquals(0, sizePage2);
     }
 
     /**
-     * @see JdbcListDAO#showOthersWatched(int, int)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateListDAO#showOwnWatched(int, int)
      */
     @Test
-    public void showOthersWatched_Fail() {
-        //setUp List
-        listDaoJdbc.insertWatched(filmId, userId, false);
+    public void showOwnWatched_ValidUser_Empty() {
+        boolean status = hibernateListDAO.showOwnWatched(userId, 0).isEmpty();
+        Assert.assertTrue(status);
+    }
 
-        int size = listDaoJdbc.showOthersWatched(userId, 0).size();
+    /**
+     * @see am.aca.orgflix.dao.implHibernate.HibernateListDAO#showOwnWatched(int, int)
+     */
+    @Test
+    public void showOwnWatched_InvalidUser_Empty() {
+        boolean status = hibernateListDAO.showOwnWatched(0, 0).isEmpty();
+        Assert.assertTrue(status);
+    }
+
+    /**
+     * @see am.aca.orgflix.dao.implHibernate.HibernateListDAO#showOwnPlanned(int, int)
+     */
+    @Test
+    public void showOwnPlanned_ValidUser_Success() {
+        hibernateListDAO.insertPlanned(filmId, userId, false);
+
+        List<Film> actualList = hibernateListDAO.showOwnPlanned(userId, 0);
+        Film actualFilm = actualList.get(0);
+        int size = actualList.size();
+
+        Assert.assertEquals(1, size);
+        Assert.assertEquals(film, actualFilm);
+
+        Film film = new Film("American Gangster", 2007);
+        hibernateFilmDAO.addFilm(film);
+        hibernateListDAO.insertPlanned(film.getId(), userId, true);
+
+        size = hibernateListDAO.showOwnPlanned(userId, 0).size();
+        int sizePage2 = hibernateListDAO.showOwnPlanned(userId, 1).size();
+
+        Assert.assertEquals(2, size);
+        Assert.assertEquals(0, sizePage2);
+    }
+
+    /**
+     * @see am.aca.orgflix.dao.implHibernate.HibernateListDAO#showOwnPlanned(int, int)
+     */
+    @Test
+    public void showOwnPlanned_ValidUser_Empty() {
+        boolean status = hibernateListDAO.showOwnPlanned(userId, 0).isEmpty();
+        Assert.assertTrue(status);
+    }
+
+    /**
+     * @see am.aca.orgflix.dao.implHibernate.HibernateListDAO#showOwnPlanned(int, int)
+     */
+    @Test
+    public void showOwnPlanned_InvalidUser_Fail() {
+        boolean status = hibernateListDAO.showOwnPlanned(0, 0).isEmpty();
+        Assert.assertTrue(status);
+    }
+
+    /**
+     * @see am.aca.orgflix.dao.implHibernate.HibernateListDAO#showOthersWatched(int, int)
+     */
+    @Test
+    public void showOthersWatched_ValidUser_Success() {
+        hibernateListDAO.insertWatched(filmId, userId, false);
+
+        List<Film> actualList = hibernateListDAO.showOthersWatched(userId, 0);
+        Film actualFilm = actualList.get(0);
+        int size = actualList.size();
+
+        Assert.assertEquals(1, size);
+        Assert.assertEquals(film, actualFilm);
+
+        Film film = new Film("American Gangster", 2007);
+        hibernateFilmDAO.addFilm(film);
+
+        hibernateListDAO.insertWatched(film.getId(), userId, false);
+
+        size = hibernateListDAO.showOthersWatched(userId, 0).size();
+        int sizePage2 = hibernateListDAO.showOthersWatched(userId, 1).size();
+
+        Assert.assertEquals(1, size);
+        Assert.assertEquals(0, sizePage2);
+    }
+
+    /**
+     * @see am.aca.orgflix.dao.implHibernate.HibernateListDAO#showOthersWatched(int, int)
+     */
+    @Test
+    public void showOthersWatched_ValidUser_Empty() {
+        //setUp List
+        hibernateListDAO.insertWatched(filmId, userId, false);
+
+        int size = hibernateListDAO.showOthersWatched(userId, 0).size();
         Assert.assertEquals(0, size);
     }
 
     /**
-     * @see JdbcListDAO#showOthersPlanned(int, int)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateListDAO#showOthersWatched(int, int)
      */
     @Test
-    public void showOthersPlanned_Success() {
-        listDaoJdbc.insertPlanned(filmId, userId, true);
-        listDaoJdbc.insertPlanned(filmId, userId, true);
-
-        int size = listDaoJdbc.showOthersPlanned(userId, 0).size();
-        Assert.assertEquals(2, size);
-    }
-
-    /**
-     * @see JdbcListDAO#showOthersPlanned(int, int)
-     */
-    @Test
-    public void showOthersPlanned_Partial() {
-        listDaoJdbc.insertPlanned(filmId, userId, true);
-        listDaoJdbc.insertPlanned(filmId, userId, false);
-
-        int size = listDaoJdbc.showOthersPlanned(userId, 0).size();
-        Assert.assertEquals(1, size);
-    }
-
-    /**
-     * @see JdbcListDAO#showOthersPlanned(int, int)
-     */
-    @Test
-    public void showOthersPlanned_Fail() {
-        //setUp List
-        listDaoJdbc.insertPlanned(filmId, userId, false);
-
-        int size = listDaoJdbc.showOthersPlanned(userId, 0).size();
+    public void showOthersWatched_InvalidUser_Fail() {
+        int size = hibernateListDAO.showOthersWatched(0, 0).size();
         Assert.assertEquals(0, size);
     }
 
     /**
-     * @see JdbcListDAO#updateWatched(int, int)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateListDAO#showOthersPlanned(int, int)
+     */
+    @Test
+    public void showOthersPlanned_ValidUser_Success() {
+        hibernateListDAO.insertPlanned(filmId, userId, false);
+
+        List<Film> actualList = hibernateListDAO.showOthersPlanned(userId, 0);
+        Film actualFilm = actualList.get(0);
+        int size = actualList.size();
+
+        Assert.assertEquals(1, size);
+        Assert.assertEquals(film, actualFilm);
+
+        Film film = new Film("American Gangster", 2007);
+        hibernateFilmDAO.addFilm(film);
+
+        hibernateListDAO.insertPlanned(film.getId(), userId, false);
+
+        size = hibernateListDAO.showOthersPlanned(userId, 0).size();
+        int sizePage2 = hibernateListDAO.showOthersPlanned(userId, 1).size();
+
+        Assert.assertEquals(1, size);
+        Assert.assertEquals(0, sizePage2);
+    }
+
+    /**
+     * @see am.aca.orgflix.dao.implHibernate.HibernateListDAO#showOthersPlanned(int, int)
+     */
+    @Test
+    public void showOthersPlanned_ValidUser_Empty() {
+        //setUp List
+        hibernateListDAO.insertPlanned(filmId, userId, false);
+
+        int size = hibernateListDAO.showOthersPlanned(userId, 0).size();
+        Assert.assertEquals(0, size);
+    }
+
+    /**
+     * @see am.aca.orgflix.dao.implHibernate.HibernateListDAO#showOthersPlanned(int, int)
+     */
+    @Test
+    public void showOthersPlanned_InvalidUser_Fail() {
+        int size = hibernateListDAO.showOthersPlanned(0, 0).size();
+        Assert.assertEquals(0, size);
+    }
+
+    /**
+     * @see am.aca.orgflix.dao.implHibernate.HibernateListDAO#updateWatched(int, int)
      */
     @Test
     public void updateWatched_Success() {
-        listDaoJdbc.insertPlanned(filmId, userId, true);
-        listDaoJdbc.updateWatched(filmId, userId);
+        hibernateListDAO.insertPlanned(filmId, userId, true);
+        hibernateListDAO.updateWatched(filmId, userId);
 
-        boolean status = listDaoJdbc.isWatched(filmId, userId);
+        boolean status = hibernateListDAO.isWatched(filmId, userId);
         Assert.assertTrue(status);
     }
 
     /**
-     * @see JdbcListDAO#updateWatched(int, int)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateListDAO#updateWatched(int, int)
      */
     @Test
     public void updateWatched_Fail() {
-        listDaoJdbc.updateWatched(filmId, userId);
+        hibernateListDAO.updateWatched(filmId, userId);
 
-        boolean status = listDaoJdbc.isWatched(filmId, userId);
+        boolean status = hibernateListDAO.isWatched(filmId, userId);
         Assert.assertFalse(status);
     }
 
     /**
-     * @see JdbcListDAO#updatePlanned(int, int)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateListDAO#updatePlanned(int, int)
      */
     @Test
     public void updatePlanned_Success() {
-        listDaoJdbc.insertWatched(filmId, userId, true);
-        listDaoJdbc.updatePlanned(filmId, userId);
+        hibernateListDAO.insertWatched(filmId, userId, true);
+        hibernateListDAO.updatePlanned(filmId, userId);
 
-        boolean status = listDaoJdbc.isPlanned(filmId, userId);
+        boolean status = hibernateListDAO.isPlanned(filmId, userId);
         Assert.assertTrue(status);
     }
 
     /**
-     * @see JdbcListDAO#updatePlanned(int, int)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateListDAO#updatePlanned(int, int)
      */
     @Test
     public void updatePlanned_Fail() {
-        listDaoJdbc.updatePlanned(filmId, userId);
+        hibernateListDAO.updatePlanned(filmId, userId);
 
-        boolean status = listDaoJdbc.isPlanned(filmId, userId);
+        boolean status = hibernateListDAO.isPlanned(filmId, userId);
         Assert.assertFalse(status);
     }
 
     /**
-     * @see JdbcListDAO#changePrivacy(am.aca.orgflix.entity.Film, int, boolean)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateListDAO#changePrivacy(am.aca.orgflix.entity.Film, int, boolean)
      */
     @Test
     public void changePrivacy_Success() {
-        listDaoJdbc.insertPlanned(filmId, userId, true);
+        hibernateListDAO.insertPlanned(filmId, userId, true);
 
-        boolean status = listDaoJdbc.changePrivacy(film, userId, false);
+        boolean status = hibernateListDAO.changePrivacy(film, userId, false);
         Assert.assertTrue(status);
     }
 
     /**
-     * @see JdbcListDAO#changePrivacy(am.aca.orgflix.entity.Film, int, boolean)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateListDAO#changePrivacy(am.aca.orgflix.entity.Film, int, boolean)
      */
     @Test
     public void changePrivacy_ToPrivate_Success() {
-        listDaoJdbc.insertWatched(filmId, userId, true);
-        listDaoJdbc.changePrivacy(film, userId, false);
+        hibernateListDAO.insertWatched(filmId, userId, true);
+        hibernateListDAO.changePrivacy(film, userId, false);
 
-        boolean status = listDaoJdbc.showOthersWatched(userId, 0).isEmpty();
+        boolean status = hibernateListDAO.showOthersWatched(userId, 0).isEmpty();
         Assert.assertTrue(status);
     }
 
     /**
-     * @see JdbcListDAO#changePrivacy(am.aca.orgflix.entity.Film, int, boolean)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateListDAO#changePrivacy(am.aca.orgflix.entity.Film, int, boolean)
      */
     @Test
     public void changePrivacy_ToPublic_Success() {
-        listDaoJdbc.insertWatched(filmId, userId, false);
-        listDaoJdbc.changePrivacy(film, userId, true);
+        hibernateListDAO.insertWatched(filmId, userId, false);
+        hibernateListDAO.changePrivacy(film, userId, true);
 
-        boolean status = listDaoJdbc.showOthersWatched(userId, 0).isEmpty();
+        boolean status = hibernateListDAO.showOthersWatched(userId, 0).isEmpty();
         Assert.assertFalse(status);
     }
 
     /**
-     * @see JdbcListDAO#changePrivacy(am.aca.orgflix.entity.Film, int, boolean)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateListDAO#changePrivacy(am.aca.orgflix.entity.Film, int, boolean)
      */
     @Test
     public void changePrivacy_Fail() {
-        boolean status = listDaoJdbc.changePrivacy(film, userId, false);
+        boolean status = hibernateListDAO.changePrivacy(film, userId, false);
         Assert.assertFalse(status);
     }
 
     /**
-     * @see JdbcListDAO#resetWatched(int, int)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateListDAO#resetWatched(int, int)
      */
     @Test
     public void resetWatched_Success() {
-        listDaoJdbc.insertWatched(film.getId(), userId, true);
-        listDaoJdbc.resetWatched(filmId, userId);
+        hibernateListDAO.insertWatched(film.getId(), userId, true);
+        hibernateListDAO.resetWatched(filmId, userId);
 
-        boolean status = listDaoJdbc.isWatched(filmId, userId);
+        boolean status = hibernateListDAO.isWatched(filmId, userId);
         Assert.assertFalse(status);
     }
 
     /**
-     * @see JdbcListDAO#resetPlanned(int, int)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateListDAO#resetPlanned(int, int)
      */
     @Test
     public void resetPlanned_Success() {
-        listDaoJdbc.insertPlanned(filmId, userId, false);
-        listDaoJdbc.resetPlanned(filmId, userId);
+        hibernateListDAO.insertPlanned(filmId, userId, false);
+        hibernateListDAO.resetPlanned(filmId, userId);
 
-        boolean status = listDaoJdbc.isPlanned(filmId, userId);
+        boolean status = hibernateListDAO.isPlanned(filmId, userId);
         Assert.assertFalse(status);
     }
 
     /**
-     * @see JdbcListDAO#removeFilm(int, int)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateListDAO#removeFilm(int, int)
      */
     @Test
     public void remove_Success() {
-        listDaoJdbc.insertWatched(filmId, userId, true);
-        listDaoJdbc.removeFilm(filmId, userId);
+        hibernateListDAO.insertWatched(filmId, userId, true);
+        hibernateListDAO.removeFilm(filmId, userId);
 
-        boolean status = listDaoJdbc.isWatched(filmId, userId);
+        boolean status = hibernateListDAO.isWatched(filmId, userId);
         Assert.assertFalse(status);
     }
 
     /**
-     * @see JdbcListDAO#removeFilm(int, int)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateListDAO#removeFilm(int, int)
      */
     @Test
     public void remove_One_Success() {
-        listDaoJdbc.insertWatched(filmId, userId, true);
-        listDaoJdbc.insertPlanned(filmId, userId, true);
-        listDaoJdbc.removeFilm(filmId, userId);
+        hibernateListDAO.insertWatched(filmId, userId, true);
+        hibernateListDAO.insertPlanned(filmId, userId, true);
+        hibernateListDAO.removeFilm(filmId, userId);
 
-        boolean status = listDaoJdbc.isWatched(filmId, userId);
+        boolean status = hibernateListDAO.isWatched(filmId, userId);
         Assert.assertFalse(status);
     }
 
     /**
-     * @see JdbcListDAO#areRelated(int, int)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateListDAO#areRelated(int, int)
      */
     @Test
     public void areRelated_Success() {
-        listDaoJdbc.insertWatched(filmId, userId, true);
+        hibernateListDAO.insertWatched(filmId, userId, true);
 
-        boolean status = listDaoJdbc.areRelated(filmId, userId);
+        boolean status = hibernateListDAO.areRelated(filmId, userId);
         Assert.assertTrue(status);
     }
 
     /**
-     * @see JdbcListDAO#areRelated(int, int)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateListDAO#areRelated(int, int)
      */
     @Test
     public void areRelated_Fail() {
-        boolean status = listDaoJdbc.areRelated(filmId, userId);
+        boolean status = hibernateListDAO.areRelated(filmId, userId);
         Assert.assertFalse(status);
     }
 
     /**
-     * @see JdbcListDAO#isWatched(int, int)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateListDAO#isWatched(int, int)
      */
     @Test
     public void isWatched_Success() {
-        listDaoJdbc.insertWatched(filmId, userId, true);
+        hibernateListDAO.insertWatched(filmId, userId, true);
 
-        boolean status = listDaoJdbc.isWatched(filmId, userId);
+        boolean status = hibernateListDAO.isWatched(filmId, userId);
         Assert.assertTrue(status);
     }
 
     /**
-     * @see JdbcListDAO#isWatched(int, int)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateListDAO#isWatched(int, int)
      */
     @Test
     public void isWatched_Fail() {
-        boolean status = listDaoJdbc.isWatched(filmId, userId);
+        boolean status = hibernateListDAO.isWatched(filmId, userId);
         Assert.assertFalse(status);
     }
 
     /**
-     * @see JdbcListDAO#isPlanned(int, int)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateListDAO#isPlanned(int, int)
      */
     @Test
     public void isPlanned_Success() {
-        listDaoJdbc.insertPlanned(filmId, userId, true);
+        hibernateListDAO.insertPlanned(filmId, userId, true);
 
-        boolean status = listDaoJdbc.isPlanned(filmId, userId);
+        boolean status = hibernateListDAO.isPlanned(filmId, userId);
         Assert.assertTrue(status);
     }
 
     /**
-     * @see JdbcListDAO#isPlanned(int, int)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateListDAO#isPlanned(int, int)
      */
     @Test
     public void isPlanned_Fail() {
-        boolean status = listDaoJdbc.isPlanned(filmId, userId);
+        boolean status = hibernateListDAO.isPlanned(filmId, userId);
         Assert.assertFalse(status);
     }
 
     /**
-     * @see JdbcListDAO#totalNumberOfWatched(int)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateListDAO#totalNumberOfWatched(int)
      */
     @Test
     public void totalNumberWatched_Multiple_Success() {
-        listDaoJdbc.insertWatched(film.getId(), userId, true);
-        listDaoJdbc.insertWatched(film.getId(), userId, true);
-        listDaoJdbc.insertWatched(film.getId(), userId, true);
-        listDaoJdbc.insertWatched(film.getId(), userId, true);
-        int size = listDaoJdbc.totalNumberOfWatched(userId);
+        hibernateListDAO.insertWatched(film.getId(), userId, true);
+        hibernateListDAO.insertWatched(film.getId(), userId, true);
+        hibernateListDAO.insertWatched(film.getId(), userId, true);
+        hibernateListDAO.insertWatched(film.getId(), userId, true);
+        int size = hibernateListDAO.totalNumberOfWatched(userId);
         Assert.assertEquals(4, size);
     }
 
     /**
-     * @see JdbcListDAO#totalNumberOfWatched(int)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateListDAO#totalNumberOfWatched(int)
      */
     @Test
     public void totalNumberWatched_Empty() {
-        int size = listDaoJdbc.totalNumberOfWatched(userId);
+        int size = hibernateListDAO.totalNumberOfWatched(userId);
         Assert.assertEquals(0, size);
     }
 
     /**
-     * @see JdbcListDAO#totalNumberOfPlanned(int)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateListDAO#totalNumberOfPlanned(int)
      */
     @Test
     public void totalNumberPlanned_Multiple_Success() {
-        listDaoJdbc.insertPlanned(film.getId(), userId, true);
-        listDaoJdbc.insertPlanned(film.getId(), userId, true);
-        listDaoJdbc.insertPlanned(film.getId(), userId, true);
-        listDaoJdbc.insertPlanned(film.getId(), userId, true);
-        listDaoJdbc.insertPlanned(film.getId(), userId, true);
-        int size = listDaoJdbc.totalNumberOfPlanned(userId);
+        hibernateListDAO.insertPlanned(film.getId(), userId, true);
+        hibernateListDAO.insertPlanned(film.getId(), userId, true);
+        hibernateListDAO.insertPlanned(film.getId(), userId, true);
+        hibernateListDAO.insertPlanned(film.getId(), userId, true);
+        hibernateListDAO.insertPlanned(film.getId(), userId, true);
+        int size = hibernateListDAO.totalNumberOfPlanned(userId);
         Assert.assertEquals(5, size);
     }
 
     /**
-     * @see JdbcListDAO#totalNumberOfPlanned(int)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateListDAO#totalNumberOfPlanned(int)
      */
     @Test
     public void totalNumberPlanned_Empty() {
-        int size = listDaoJdbc.totalNumberOfPlanned(userId);
+        int size = hibernateListDAO.totalNumberOfPlanned(userId);
         Assert.assertEquals(0, size);
     }
 }

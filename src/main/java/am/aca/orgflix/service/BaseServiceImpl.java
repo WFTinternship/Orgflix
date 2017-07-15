@@ -1,6 +1,8 @@
 package am.aca.orgflix.service;
 
 import java.time.Year;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Implementations of methods used throughout Service implementations
@@ -21,5 +23,22 @@ public class BaseServiceImpl {
             if (field == null || field.length() == 0)
                 throw new ServiceException("Required field " + field + " empty");
         }
+    }
+
+    protected void validateEmail(String email) {
+        final Pattern pattern =
+                Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(email);
+        if (!matcher.find())
+            throw new ServiceException("Invalid Email");
+    }
+
+    protected void validatePassword(String pass) {
+        final Pattern pattern =
+                Pattern.compile("^(?=\\S+$).{6,}$");
+        Matcher matcher = pattern.matcher(pass);
+        if (!matcher.find())
+            throw new ServiceException("Invalid Password, " +
+                    "must be at least 6 characters long and contain no spaces");
     }
 }

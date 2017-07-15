@@ -2,6 +2,7 @@ package am.aca.orgflix.service.impl;
 
 import am.aca.orgflix.dao.UserDAO;
 import am.aca.orgflix.entity.User;
+import am.aca.orgflix.service.BaseServiceImpl;
 import am.aca.orgflix.service.ServiceException;
 import am.aca.orgflix.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Service;
  * Service layer for user related methods
  */
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
     private UserDAO userDao;
 
@@ -25,10 +26,20 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public int add(User user) {
+        checkRequiredFields(user.getNick());
+        checkRequiredFields(user.getEmail());
+        checkRequiredFields(user.getPass());
+        validateEmail(user.getEmail());
+        validatePassword(user.getPass());
+
+        if (userDao.getByEmail(user.getEmail()) != null)
+            throw new ServiceException("Email already used");
+        if (userDao.getByNick(user.getNick()) != null)
+            throw new ServiceException("Nickname already used");
         try {
             return userDao.add(user);
         } catch (RuntimeException e) {
-            throw new ServiceException(e.getMessage());
+            return -1;
         }
     }
 
@@ -37,11 +48,10 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public User get(int id) {
-        User user;
+        User user = new User();
         try {
-            user = userDao.get(id);
-        } catch (RuntimeException e) {
-            throw new ServiceException(e.getMessage());
+            user = userDao.getById(id);
+        } catch (RuntimeException ignored) {
         }
         return user;
     }
@@ -51,13 +61,12 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public User get(String email) {
-        User user;
+        User user = new User();
         try {
-            user = userDao.get(email);
+            user = userDao.getByEmail(email);
         } catch (org.springframework.dao.EmptyResultDataAccessException e) {
             return null;
-        } catch (RuntimeException e) {
-            throw new ServiceException(e.getMessage());
+        } catch (RuntimeException ignored) {
         }
         return user;
     }
@@ -67,13 +76,12 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public User getByNick(String nick) {
-        User user;
+        User user = new User();
         try {
             user = userDao.getByNick(nick);
         } catch (org.springframework.dao.EmptyResultDataAccessException e) {
             return null;
-        } catch (RuntimeException e) {
-            throw new ServiceException(e.getMessage());
+        } catch (RuntimeException ignored) {
         }
         return user;
     }
@@ -83,13 +91,10 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public User authenticate(String email, String pass) {
-        User user;
+        User user = null;
         try {
             user = userDao.authenticate(email, pass);
-        } catch (org.springframework.dao.EmptyResultDataAccessException e) {
-            return null;
-        } catch (RuntimeException e) {
-            throw new ServiceException(e.getMessage());
+        } catch (RuntimeException ignored) {
         }
         return user;
     }
@@ -99,11 +104,21 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public boolean edit(User user) {
-        boolean state;
+        checkRequiredFields(user.getNick());
+        checkRequiredFields(user.getEmail());
+        checkRequiredFields(user.getPass());
+        validateEmail(user.getEmail());
+        validatePassword(user.getPass());
+
+        if (userDao.getByEmail(user.getEmail()) != null)
+            throw new ServiceException("Email already used");
+        if (userDao.getByNick(user.getNick()) != null)
+            throw new ServiceException("Nickname already used");
+
+        boolean state = false;
         try {
             state = userDao.edit(user);
-        } catch (RuntimeException e) {
-            throw new ServiceException(e.getMessage());
+        } catch (RuntimeException ignored) {
         }
         return state;
     }

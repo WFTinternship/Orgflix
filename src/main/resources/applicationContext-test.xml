@@ -22,26 +22,38 @@
         <property name="minPoolSize" value="${MinPoolSize}"/>
     </bean>
 
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="packagesToScan" value="am.aca.orgflix.entity, am.aca.orgflix.dao.implHibernate"/>
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
+        </property>
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.hbm2ddl.auto">create-drop</prop>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+            </props>
+        </property>
+    </bean>
 
-    <context:component-scan base-package="am.aca.orgflix.dao.impljdbc"/>
     <context:component-scan base-package="am.aca.orgflix.service.impl"/>
     <context:component-scan base-package="am.aca.orgflix.controller"/>
-    <!--<context:component-scan base-package="am.aca.orgflix.dao.implHibernate"/>-->
+    <context:component-scan base-package="am.aca.orgflix.entity"/>
+    <context:component-scan base-package="am.aca.orgflix.dao.implHibernate"/>
 
     <bean id="testHelper" class="am.aca.orgflix.util.TestHelper"/>
 
     <!--Spring JDBC @Transactional-->
 
-    <tx:annotation-driven transaction-manager="txManager"/>
-    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-    <property name="dataSource" ref="dataSource"/>
-    </bean>
+    <!--<tx:annotation-driven transaction-manager="txManager"/>-->
+    <!--<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">-->
+    <!--<property name="dataSource" ref="dataSource"/>-->
+    <!--</bean>-->
 
     <!--JPA Hibernate @Transactional-->
-    <!--<tx:annotation-driven proxy-target-class="true" transaction-manager="hibernateTransactionManager"/>-->
-    <!--<bean id="hibernateTransactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">-->
-        <!--<property name="dataSource" ref="dataSource"/>-->
-        <!--<property name="entityManagerFactory" ref="entityManagerFactory"/>-->
-    <!--</bean>-->
+    <tx:annotation-driven/>
+    <bean id="hibernateTransactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
 
 </beans>

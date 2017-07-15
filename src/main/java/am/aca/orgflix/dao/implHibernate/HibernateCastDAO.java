@@ -3,21 +3,28 @@ package am.aca.orgflix.dao.implHibernate;
 import am.aca.orgflix.dao.CastDAO;
 import am.aca.orgflix.entity.Cast;
 import am.aca.orgflix.entity.Film;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.transaction.Transactional;
 import java.util.List;
 
 /**
  * JPA Hibernate implementation for Cast DAO
  */
-public class HibernateCastDAO extends HibernateBaseDAO implements CastDAO {
+@Component
+public class HibernateCastDAO implements CastDAO {
 
     private EntityManagerFactory emf = Persistence.createEntityManagerFactory("Orgflix_PU");
     private EntityManager em = emf.createEntityManager();
 
+    //CREATE
+
+    /**
+     * @see CastDAO#addCast(Cast)
+     */
     @Override
     @Transactional
     public boolean addCast(Cast cast) {
@@ -30,6 +37,11 @@ public class HibernateCastDAO extends HibernateBaseDAO implements CastDAO {
         }
     }
 
+    //RETRIEVE
+
+    /**
+     * @see CastDAO#listCast()
+     */
     @Override
     public List<Cast> listCast() {
         return em.createQuery("from CASTS", Cast.class)
@@ -39,32 +51,74 @@ public class HibernateCastDAO extends HibernateBaseDAO implements CastDAO {
     /**
      * @see CastDAO#getCastById(int)
      */
+    @Override
     public Cast getCastById(int castId) {
-        return new Cast();
+        try {
+            return em.find(Cast.class, castId);
+        } catch (RuntimeException e) {
+            return null;
+        }
     }
 
+    //UPDATE
+
+    /**
+     * @see CastDAO#editCast(Cast)
+     */
     @Override
     @Transactional
     public boolean editCast(Cast cast) {
-
         try {
-            em.merge(cast);
+            Cast actualCast = em.find(Cast.class, cast.getId());
+            em.merge(actualCast);
             return true;
         } catch (RuntimeException e) {
             return false;
         }
     }
 
+    /**
+     * @see CastDAO#addCastToFilm(Cast, int)
+     */
+    @Override
+    @Transactional
+    public boolean addCastToFilm(Cast cast, int filmId) {
+        try {
+            Film actualFilm = em.find(Film.class, filmId);
+            actualFilm.addCast(cast);
+            em.merge(actualFilm);
+            return true;
+        } catch (RuntimeException e) {
+            return false;
+        }
+    }
+
+    //DELETE
+
+    /**
+     * @see CastDAO#remove(Cast)
+     */
     @Override
     @Transactional
     public boolean remove(Cast cast) {
         try {
-            em.remove(cast);
+            Cast actualCast = em.find(Cast.class, cast.getId());
+            em.remove(actualCast);
             return true;
         } catch (RuntimeException e) {
             return false;
         }
     }
+
+//    @Override
+//    public boolean isStarringIn(int actorId, int filmId) {
+//        return false;
+//    }
+//
+//    @Override
+//    public boolean exists(Cast cast) {
+//        return false;
+//    }
 
 //    @Override
 //    public boolean isStarringIn(int actorId, int filmId) {          //////////DO I EVEN NEED THIS?

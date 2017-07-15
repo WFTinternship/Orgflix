@@ -24,7 +24,7 @@ public interface UserDAO {
      * @param id the id of the user in DB
      * @return user object with the matched id
      */
-    User get(int id);
+    User getById(int id);
 
     /**
      * Return user by user user's email
@@ -32,7 +32,7 @@ public interface UserDAO {
      * @param email the email of the user in DB
      * @return user object with the matched id
      */
-    User get(String email);
+    User getByEmail(String email);
 
     /**
      * Return user by user user's nickname
@@ -53,17 +53,17 @@ public interface UserDAO {
 
     //Update
 
-    /**
-     * Update the user's data with selected id in DB based on the provided fields' data
-     *
-     * @param id    user id to search for
-     * @param nick  user's nick name to be updated to
-     * @param name  user's name to be updated to (not required)
-     * @param pass  user's password to be updated to
-     * @param email user's email to be updated to
-     * @return true if update was successful, otherwise false
-     */
-    boolean edit(int id, String nick, String name, String pass, String email);
+//    /**
+//     * Update the user's data with selected id in DB based on the provided fields' data
+//     *
+//     * @param id    user id to search for
+//     * @param nick  user's nick name to be updated to
+//     * @param name  user's name to be updated to (not required)
+//     * @param pass  user's password to be updated to
+//     * @param email user's email to be updated to
+//     * @return true if update was successful, otherwise false
+//     */
+//    boolean edit(int id, String nick, String name, String pass, String email);
 
     /**
      * @param user the user whose data should be updated according to its current field values
@@ -74,17 +74,17 @@ public interface UserDAO {
      */
     boolean edit(User user);
 
-    /**
-     * @param id    user id to search for
-     * @param nick  user's nick name to be updated to
-     * @param pass  user's password to be updated to
-     * @param email user's email to be updated to
-     * @return true if update was successful, otherwise false
-     * @see am/aca/dao/jdbc/impljdbc/JdbcUserDAO.java:131
-     * <p>
-     * Update the user's data with selected id in DB based on the provided fields' data
-     */
-    boolean edit(int id, String nick, String pass, String email);
+//    /**
+//     * @param id    user id to search for
+//     * @param nick  user's nick name to be updated to
+//     * @param pass  user's password to be updated to
+//     * @param email user's email to be updated to
+//     * @return true if update was successful, otherwise false
+//     * @see am/aca/dao/jdbc/impljdbc/JdbcUserDAO.java:131
+//     * <p>
+//     * Update the user's data with selected id in DB based on the provided fields' data
+//     */
+//    boolean edit(int id, String nick, String pass, String email);
 
     //Delete
 
@@ -95,14 +95,14 @@ public interface UserDAO {
      * @return true if the remove was successful, otherwise false
      */
     boolean remove(int id);
-
-    /**
-     * @param user the user to be removed
-     * @return true if the remove was successful, otherwise false
-     * @see am/aca/dao/jdbc/impljdbc/JdbcUserDAO.java:178
-     * <p>
-     * Removed provided user from DB
-     */
-    boolean remove(User user);
+//
+//    /**
+//     * @param user the user to be removed
+//     * @return true if the remove was successful, otherwise false
+//     * @see am/aca/dao/jdbc/impljdbc/JdbcUserDAO.java:178
+//     * <p>
+//     * Removed provided user from DB
+//     */
+//    boolean remove(User user);
 
 }

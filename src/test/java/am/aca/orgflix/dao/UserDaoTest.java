@@ -1,7 +1,6 @@
 package am.aca.orgflix.dao;
 
 import am.aca.orgflix.BaseIntegrationTest;
-import am.aca.orgflix.dao.impljdbc.JdbcUserDAO;
 import am.aca.orgflix.entity.User;
 import am.aca.orgflix.util.TestHelper;
 import org.junit.After;
@@ -16,10 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class UserDaoTest extends BaseIntegrationTest {
 
-    private final User standardUser = new User("gago", "Gagik Petrosyan", "davit.abovyan@gmail.com", "pass");
+    private final User standardUser = new User("scarface", "Tony Montana", "scarface@miami.com", "elvira");
 
     @Autowired
-    private UserDAO jdbcUserDAO;
+    private UserDAO hibernateUserDAO;
 
     @Autowired
     private TestHelper testHelper;
@@ -36,345 +35,289 @@ public class UserDaoTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see JdbcUserDAO#add(am.aca.orgflix.entity.User)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateUserDAO#add(am.aca.orgflix.entity.User)
      */
     @Test
     public void addUser_Success() {
-        boolean status = jdbcUserDAO.add(standardUser) > 0;
-        Assert.assertTrue(status);
+        int id = hibernateUserDAO.add(standardUser);
+        Assert.assertTrue(id > 0);
     }
 
     /**
-     * @see JdbcUserDAO#add(am.aca.orgflix.entity.User)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateUserDAO#add(am.aca.orgflix.entity.User)
      */
     @Test
     public void addUser_EmptyUserName_Success() {
-        user = new User("gago", "", "gagik1@gmail.com", "pass");
-        boolean status = jdbcUserDAO.add(user) > 0;
-        Assert.assertTrue(status);
+        user = new User("scarface", "", "scarface@miami.com", "elvira");
+        int id = hibernateUserDAO.add(user);
+        Assert.assertTrue(id > 0);
     }
 
     /**
-     * @see JdbcUserDAO#add(am.aca.orgflix.entity.User)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateUserDAO#add(am.aca.orgflix.entity.User)
      */
-    @Test(expected = DaoException.class)
-    public void addUser_EmptyNick_Fail() {
-        jdbcUserDAO.add(new User("", "Gagik Petrosyan", "gagik2@gmail.com", "pass"));
-    }
-
-    /**
-     * @see JdbcUserDAO#add(am.aca.orgflix.entity.User)
-     */
-    @Test(expected = DaoException.class)
-    public void addUser_EmptyEmail_Fail() {
-        jdbcUserDAO.add(new User("gago", "Gagik Petrosyan", "", "pass"));
-    }
-
-    /**
-     * @see JdbcUserDAO#add(am.aca.orgflix.entity.User)
-     */
-    @Test(expected = DaoException.class)
-    public void addUser_EmptyPass_Fail() {
-        jdbcUserDAO.add(new User("gago", "Gagik Petrosyan", "gagik3@gmail.com", ""));
-    }
-
-    /**
-     * @see JdbcUserDAO#add(am.aca.orgflix.entity.User)
-     */
-    @Test(expected = DaoException.class)
+    @Test
     public void addUser_NullNick_Fail() {
-        jdbcUserDAO.add(new User(null, "Gagik Petrosyan", "gagik2@gmail.com", "pass"));
+        int id = hibernateUserDAO.add(new User(null, "Tony Montana", "scarface@miami.com", "elvira"));
+        Assert.assertEquals(-1, id);
     }
 
     /**
-     * @see JdbcUserDAO#add(am.aca.orgflix.entity.User)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateUserDAO#add(am.aca.orgflix.entity.User)
      */
-    @Test(expected = DaoException.class)
+    @Test
     public void addUser_NullEmail_Fail() {
-        jdbcUserDAO.add(new User("gago", "Gagik Petrosyan", null, "pass"));
+        int id = hibernateUserDAO.add(new User("scarface", "Tony Montana", null, "elvira"));
+        Assert.assertEquals(-1, id);
     }
 
     /**
-     * @see JdbcUserDAO#add(am.aca.orgflix.entity.User)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateUserDAO#add(am.aca.orgflix.entity.User)
      */
-    @Test(expected = DaoException.class)
+    @Test
     public void addUser_NullPass_Fail() {
-        jdbcUserDAO.add(new User("gago", "Gagik Petrosyan", "gagik3@gmail.com", null));
+        int id = hibernateUserDAO.add(new User("scarface", "Tony Montana", "scarface@miami.com", null));
+        Assert.assertEquals(-1, id);
     }
 
     /**
-     * @see JdbcUserDAO#add(am.aca.orgflix.entity.User)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateUserDAO#add(am.aca.orgflix.entity.User)
      */
-    @Test(expected = org.springframework.dao.DuplicateKeyException.class)
+    @Test
     public void addUser_EmailAlreadyExists_Fail() {
-        jdbcUserDAO.add(standardUser);
-        jdbcUserDAO.add(new User("armen", "Armen Hakobyan", "davit.abovyan@gmail.com", "pass1"));
+        hibernateUserDAO.add(standardUser);
+        int id = hibernateUserDAO.add(new User("scarface6", "Tony Montana", "scarface@miami.com", "elvira"));
+        Assert.assertEquals(-1, id);
     }
 
     /**
-     * @see JdbcUserDAO#get(int)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateUserDAO#getById(int)
      */
     @Test
     public void getUser_ById_Success() {
-        int id = jdbcUserDAO.add(standardUser);
-        User gotUser = jdbcUserDAO.get(id);
+        int id = hibernateUserDAO.add(standardUser);
+        User actualUser = hibernateUserDAO.getById(id);
 
-        boolean status = standardUser.equals(gotUser);
-        Assert.assertTrue(status);
-    }
-
-    /**
-     * @see JdbcUserDAO#get(int)
-     */
-    @Test(expected = org.springframework.dao.EmptyResultDataAccessException.class)
-    public void getUser_ByWrongId_Fail() {
-        jdbcUserDAO.add(standardUser);
-
-        boolean status = standardUser.equals(jdbcUserDAO.get(-1));
-        Assert.assertFalse(status);
-    }
-
-    /**
-     * @see JdbcUserDAO#get(String)
-     */
-    @Test
-    public void getUser_ByEmail_Success() {
-        jdbcUserDAO.add(standardUser);
-
-        boolean status = standardUser.equals(jdbcUserDAO.get("davit.abovyan@gmail.com"));
-        Assert.assertTrue(status);
-    }
-
-    /**
-     * @see JdbcUserDAO#get(String)
-     */
-    @Test(expected = org.springframework.dao.EmptyResultDataAccessException.class)
-    public void getUser_ByWrongEmail_Fail() {
-        jdbcUserDAO.add(standardUser);
-        jdbcUserDAO.get("davit.abovyan1@gmail.com");
-//        Assert.assertFalse(user.equals(jdbcUserDAO.get("davit.abovyan1@gmail.com")));
-    }
-
-    /**
-     * @see JdbcUserDAO#getByNick(String)
-     */
-    @Test
-    public void getByNick_Success() {
-        jdbcUserDAO.add(standardUser);
-        User actualUser = jdbcUserDAO.getByNick("gago");
         Assert.assertEquals(standardUser, actualUser);
     }
 
     /**
-     * @see JdbcUserDAO#getByNick(String)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateUserDAO#getById(int)
      */
-    @Test (expected = org.springframework.dao.EmptyResultDataAccessException.class)
-    public void getByNick_NotExisting_Fail() {
-        jdbcUserDAO.getByNick("gago");
+    @Test
+    public void getUser_ByWrongId_Fail() {
+        hibernateUserDAO.add(standardUser);
+
+        User actualUser = hibernateUserDAO.getById(-1);
+        Assert.assertNull(actualUser);
     }
 
     /**
-     * @see JdbcUserDAO#authenticate(java.lang.String, java.lang.String)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateUserDAO#getByEmail(String)
+     */
+    @Test
+    public void getUser_ByEmail_Success() {
+        hibernateUserDAO.add(standardUser);
+
+        User actualUser = hibernateUserDAO.getByEmail("scarface@miami.com");
+        Assert.assertEquals(standardUser, actualUser);
+    }
+
+    /**
+     * @see am.aca.orgflix.dao.implHibernate.HibernateUserDAO#getByEmail(String)
+     */
+    @Test
+    public void getUser_ByWrongEmail_Fail() {
+        hibernateUserDAO.add(standardUser);
+        User actualUser = hibernateUserDAO.getByEmail("Sscarface@miami.com");
+        Assert.assertNull(actualUser);
+    }
+
+    /**
+     * @see am.aca.orgflix.dao.implHibernate.HibernateUserDAO#getByNick(String)
+     */
+    @Test
+    public void getByNick_Success() {
+        hibernateUserDAO.add(standardUser);
+        User actualUser = hibernateUserDAO.getByNick("scarface");
+        Assert.assertEquals(standardUser, actualUser);
+    }
+
+    /**
+     * @see am.aca.orgflix.dao.implHibernate.HibernateUserDAO#getByNick(String)
+     */
+    @Test
+    public void getByNick_NotExisting_Fail() {
+        User actualUser = hibernateUserDAO.getByNick("scarface");
+        Assert.assertNull(actualUser);
+    }
+
+    /**
+     * @see am.aca.orgflix.dao.implHibernate.HibernateUserDAO#authenticate(java.lang.String, java.lang.String)
      */
     @Test
     public void authenticate_Success() {
-        jdbcUserDAO.add(standardUser);
+        hibernateUserDAO.add(standardUser);
 
-        boolean status = standardUser.equals(jdbcUserDAO.authenticate(standardUser.getEmail(), standardUser.getPass()));
-        Assert.assertTrue(status);
+        User actualUser = hibernateUserDAO.authenticate(standardUser.getEmail(), standardUser.getPass());
+        Assert.assertEquals(standardUser, actualUser);
     }
 
     /**
-     * @see JdbcUserDAO#authenticate(java.lang.String, java.lang.String)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateUserDAO#authenticate(java.lang.String, java.lang.String)
      */
-    @Test(expected = org.springframework.dao.EmptyResultDataAccessException.class)
+    @Test
     public void authenticate_WrongPass_Fail() {
-        jdbcUserDAO.add(standardUser);
-        jdbcUserDAO.authenticate(standardUser.getEmail(), "xxx");
+        hibernateUserDAO.add(standardUser);
+        User actualUser = hibernateUserDAO.authenticate(standardUser.getEmail(), "xxx");
+        Assert.assertNull(actualUser);
     }
 
     /**
-     * @see JdbcUserDAO#edit(am.aca.orgflix.entity.User)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateUserDAO#edit(am.aca.orgflix.entity.User)
      */
     @Test
     public void editUser_Email_Success() {
-        user = new User("gago", "Gagik Petrosyan", "davit.abovyan@gmail.com", "pass");
-        jdbcUserDAO.add(user);
-        final String newEmail = "gagik@gmail.com";
+        user = new User("scarface", "Tony Montana", "scarface@miami.com", "elvira");
+        int id = hibernateUserDAO.add(user);
+
+        final String newEmail = "scarface@miami.com";
         user.setEmail(newEmail);
-        jdbcUserDAO.edit(user);
-        String actualEmail = jdbcUserDAO.get(newEmail).getEmail();
+        boolean status = hibernateUserDAO.edit(user);
+
+        String actualEmail = hibernateUserDAO.getById(id).getEmail();
+        Assert.assertTrue(status);
         Assert.assertEquals(newEmail, actualEmail);
     }
 
     /**
-     * @see JdbcUserDAO#edit(am.aca.orgflix.entity.User)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateUserDAO#edit(am.aca.orgflix.entity.User)
      */
     @Test
     public void editUser_Nick_Success() {
-        user = new User("gago", "Gagik Petrosyan", "davit.abovyan@gmail.com", "pass");
-        int id = jdbcUserDAO.add(user);
-        final String newNick = "davo";
-        user.setNick(newNick);
-        jdbcUserDAO.edit(user);
+        user = new User("scarface", "Tony Montana", "scarface@miami.com", "elvira");
+        int id = hibernateUserDAO.add(user);
 
-        String actualNick = jdbcUserDAO.get(id).getNick();
+        final String newNick = "scarface Tony";
+        user.setNick(newNick);
+        boolean status = hibernateUserDAO.edit(user);
+
+        String actualNick = hibernateUserDAO.getById(id).getNick();
+        Assert.assertTrue(status);
         Assert.assertEquals(newNick, actualNick);
 
     }
 
     /**
-     * @see JdbcUserDAO#edit(am.aca.orgflix.entity.User)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateUserDAO#edit(am.aca.orgflix.entity.User)
      */
     @Test
     public void editUser_UserName_Success() {
-        user = new User("gago", "Gagik Petrosyan", "davit.abovyan@gmail.com", "pass");
-        int id = jdbcUserDAO.add(user);
-        final String newUserName = "Davit Abovyan";
-        user.setUserName(newUserName);
-        jdbcUserDAO.edit(user);
+        user = new User("scarface", "Tony Montana", "scarface@miami.com", "elvira");
+        int id = hibernateUserDAO.add(user);
 
-        String actualName = jdbcUserDAO.get(id).getUserName();
+        final String newUserName = "Tony Montana Jr";
+        user.setUserName(newUserName);
+        boolean status = hibernateUserDAO.edit(user);
+
+        String actualName = hibernateUserDAO.getById(id).getUserName();
+        Assert.assertTrue(status);
         Assert.assertEquals(newUserName, actualName);
 
     }
 
     /**
-     * @see JdbcUserDAO#edit(am.aca.orgflix.entity.User)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateUserDAO#edit(am.aca.orgflix.entity.User)
      */
     @Test
     public void editUser_Pass_Success() {
-        user = new User("gago", "Gagik Petrosyan", "davit.abovyan@gmail.com", "pass");
-        int id = jdbcUserDAO.add(user);
-        final String newPass = "password";
-        user.setPass(newPass);
-        jdbcUserDAO.edit(user);
+        user = new User("scarface", "Tony Montana", "scarface@miami.com", "elvira");
+        int id = hibernateUserDAO.add(user);
 
-        String actualPass = jdbcUserDAO.get(id).getPass();
+        final String newPass = "elvira<3";
+        user.setPass(newPass);
+        boolean status = hibernateUserDAO.edit(user);
+
+        String actualPass = hibernateUserDAO.getById(id).getPass();
+        Assert.assertTrue(status);
         Assert.assertEquals(newPass, actualPass);
 
     }
 
     /**
-     * @see JdbcUserDAO#edit(am.aca.orgflix.entity.User)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateUserDAO#edit(am.aca.orgflix.entity.User)
      */
-    @Test(expected = RuntimeException.class)
+    @Test
     public void editUser_EmailNonUnique_Fail() {
-        jdbcUserDAO.add(standardUser);
-        User otherUser = new User("gago", "Gagik Petrosyan", "gagik.petrosyan@gmail.com", "pass");
-        jdbcUserDAO.add(otherUser);
-        otherUser.setEmail("davit.abovyan@gmail.com");
-        boolean status = jdbcUserDAO.edit(otherUser);
+        hibernateUserDAO.add(standardUser);
+
+        User otherUser = new User("bot", "Tony Montana", "scarface@gmail.com", "elvira");
+        hibernateUserDAO.add(otherUser);
+
+        otherUser.setEmail("scarfac@miami.com");
+
+        boolean status = hibernateUserDAO.edit(otherUser);
         Assert.assertFalse(status);
     }
 
     /**
-     * @see JdbcUserDAO#edit(am.aca.orgflix.entity.User)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateUserDAO#edit(am.aca.orgflix.entity.User)
      */
-    @Test(expected = DaoException.class)
+    @Test
     public void editUser_EmailNULL_Fail() {
-        user = new User("davit", "Davit Abvoyan", "davit.abovyan@gmail.com", "pass");
-        jdbcUserDAO.add(user);
+        user = new User("scarface", "Tony Montana", "scarface@miami.com", "pass");
+        hibernateUserDAO.add(user);
         user.setEmail(null);
-        boolean status = jdbcUserDAO.edit(user);
+
+        boolean status = hibernateUserDAO.edit(user);
         Assert.assertFalse(status);
     }
 
     /**
-     * @see JdbcUserDAO#edit(am.aca.orgflix.entity.User)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateUserDAO#edit(am.aca.orgflix.entity.User)
      */
-    @Test(expected = DaoException.class)
+    @Test
     public void editUser_NickNULL_Fail() {
-        user = new User("davit", "Davit Abvoyan", "davit.abovyan@gmail.com", "pass");
-        jdbcUserDAO.add(user);
+        user = new User("scarface", "Tony Montana", "scarface@miami.com", "pass");
+        hibernateUserDAO.add(user);
         user.setNick(null);
-        boolean status = jdbcUserDAO.edit(user);
+
+        boolean status = hibernateUserDAO.edit(user);
         Assert.assertFalse(status);
     }
 
     /**
-     * @see JdbcUserDAO#edit(am.aca.orgflix.entity.User)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateUserDAO#edit(am.aca.orgflix.entity.User)
      */
-    @Test(expected = DaoException.class)
+    @Test
     public void editUser_PassNULL_Fail() {
-        user = new User("davit", "Davit Abvoyan", "davit.abovyan@gmail.com", "pass");
-        jdbcUserDAO.add(user);
+        user = new User("scarface", "Tony Montana", "scarface@miami.com", "pass");
+        hibernateUserDAO.add(user);
         user.setPass(null);
-        boolean status = jdbcUserDAO.edit(user);
+
+        boolean status = hibernateUserDAO.edit(user);
         Assert.assertFalse(status);
     }
 
     /**
-     * @see JdbcUserDAO#edit(am.aca.orgflix.entity.User)
-     */
-    @Test(expected = DaoException.class)
-    public void editUser_EmailEmpty_Fail() {
-        user = new User("davit", "Davit Abvoyan", "davit.abovyan@gmail.com", "pass");
-        jdbcUserDAO.add(user);
-        user.setEmail("");
-        boolean status = jdbcUserDAO.edit(user);
-        Assert.assertFalse(status);
-    }
-
-    /**
-     * @see JdbcUserDAO#edit(am.aca.orgflix.entity.User)
-     */
-    @Test(expected = DaoException.class)
-    public void editUser_NickEmpty_Fail() {
-        user = new User("davit", "Davit Abvoyan", "davit.abovyan@gmail.com", "pass");
-        jdbcUserDAO.add(user);
-        user.setNick("");
-        boolean status = jdbcUserDAO.edit(user);
-        Assert.assertFalse(status);
-    }
-
-    /**
-     * @see JdbcUserDAO#edit(am.aca.orgflix.entity.User)
-     */
-    @Test(expected = DaoException.class)
-    public void editUser_PassEmpty_Fail() {
-        user = new User("davit", "Davit Abvoyan", "davit.abovyan@gmail.com", "pass");
-        jdbcUserDAO.add(user);
-        user.setPass("");
-        boolean status = jdbcUserDAO.edit(user);
-        Assert.assertFalse(status);
-    }
-
-    /**
-     * @see JdbcUserDAO#remove(int)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateUserDAO#remove(int)
      */
     @Test
-    public void Remove_Success() {
-        jdbcUserDAO.add(standardUser);
-        boolean status = jdbcUserDAO.remove(standardUser.getId());
+    public void Remove_ValidUser_Success() {
+        hibernateUserDAO.add(standardUser);
+
+        boolean status = hibernateUserDAO.remove(standardUser.getId());
+        User actualUser = hibernateUserDAO.getById(standardUser.getId());
         Assert.assertTrue(status);
+        Assert.assertNull(actualUser);
     }
 
     /**
-     * @see JdbcUserDAO#remove(int)
+     * @see am.aca.orgflix.dao.implHibernate.HibernateUserDAO#remove(int)
      */
     @Test
-    public void Remove_Fail() {
-        boolean status = jdbcUserDAO.remove(standardUser.getId());
-        Assert.assertFalse(status);
-    }
-
-    /**
-     * @see JdbcUserDAO#remove(int)
-     */
-    @Test(expected = RuntimeException.class)
-    public void Remove_CheckByGet_Success() {
-        jdbcUserDAO.add(standardUser);
-        jdbcUserDAO.remove(standardUser.getId());
-        jdbcUserDAO.get(standardUser.getId());
-    }
-
-    /**
-     * @see JdbcUserDAO#remove(int)
-     */
-    @Test
-    public void Remove_NotExisting_Fail() {
-        boolean status = jdbcUserDAO.remove(standardUser.getId());
+    public void Remove_InvalidUser_Fail() {
+        boolean status = hibernateUserDAO.remove(standardUser.getId());
         Assert.assertFalse(status);
     }
 }

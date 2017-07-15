@@ -1,10 +1,10 @@
 package am.aca.orgflix.service.unit;
 
 import am.aca.orgflix.BaseUnitTest;
-import am.aca.orgflix.dao.DaoException;
 import am.aca.orgflix.dao.FilmDAO;
 import am.aca.orgflix.entity.Cast;
 import am.aca.orgflix.entity.Film;
+import am.aca.orgflix.entity.Genre;
 import am.aca.orgflix.service.FilmService;
 import am.aca.orgflix.service.ServiceException;
 import am.aca.orgflix.service.impl.FilmServiceImpl;
@@ -61,7 +61,7 @@ public class FilmServiceMockTest extends BaseUnitTest {
     @Test
     public void addFilm_WithGenresAndCasts_Success() {
         film.addCast(cast);
-//        film.addGeners(Genre.DRAMA);
+        film.addGeners(Genre.DRAMA);
 
         when(filmDaoMock.addFilm(film)).thenReturn(true);
 
@@ -126,7 +126,7 @@ public class FilmServiceMockTest extends BaseUnitTest {
     @Test
     public void editFilm_WithGenresAndCasts_Success() {
         film.addCast(cast);
-//        film.addGeners(Genre.DRAMA);
+        film.addGeners(Genre.DRAMA);
 
         when(filmDaoMock.editFilm(film)).thenReturn(true);
 
@@ -190,10 +190,11 @@ public class FilmServiceMockTest extends BaseUnitTest {
      */
     @Test
     public void getFilmById_Fail() {
-        when(filmDaoMock.getFilmsByCast(film.getId())).thenThrow(DaoException.class);
+        List<Film> emptyList = new ArrayList<>();
+        when(filmDaoMock.getFilmsByCast(film.getId())).thenReturn(emptyList);
 
         Film actualFilm = filmService.getFilmById(film.getId());
-        Assert.assertEquals(null, actualFilm);
+        Assert.assertEquals(emptyList, actualFilm);
 
         verify(filmDaoMock, times(1)).getFilmById(film.getId());
     }
@@ -216,13 +217,13 @@ public class FilmServiceMockTest extends BaseUnitTest {
      */
     @Test
     public void getFilmsByCast_Fail() {
-        when(filmDaoMock.getFilmsByCast(cast.getId())).thenThrow(DaoException.class);
+        List<Film> emptyList = new ArrayList<>();
+        when(filmDaoMock.getFilmsByCast(cast.getId())).thenReturn(emptyList);
 
-        try {
-            filmService.getFilmsByCast(cast.getId());
-        } catch (RuntimeException e) {
-            verify(filmDaoMock, times(1)).getFilmsByCast(cast.getId());
-        }
+        List<Film> actualFilms = filmService.getFilmsByCast(cast.getId());
+
+        Assert.assertEquals(emptyList, actualFilms);
+        verify(filmDaoMock, times(1)).getFilmsByCast(cast.getId());
 
     }
 
@@ -303,7 +304,7 @@ public class FilmServiceMockTest extends BaseUnitTest {
      */
     @Test
     public void rateFilm_Fail() {
-        when(filmDaoMock.rateFilm(film.getId(), 0)).thenThrow(DaoException.class);
+        when(filmDaoMock.rateFilm(film.getId(), 0)).thenReturn(false);
 
         boolean status = filmService.rateFilm(film.getId(), 5);
         Assert.assertFalse(status);

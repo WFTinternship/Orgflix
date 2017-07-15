@@ -2,11 +2,8 @@ package am.aca.orgflix.service.unit;
 
 import am.aca.orgflix.BaseUnitTest;
 import am.aca.orgflix.dao.CastDAO;
-import am.aca.orgflix.dao.DaoException;
 import am.aca.orgflix.entity.Cast;
-import am.aca.orgflix.entity.Film;
 import am.aca.orgflix.service.CastService;
-import am.aca.orgflix.service.ServiceException;
 import am.aca.orgflix.service.impl.CastServiceImpl;
 import org.junit.After;
 import org.junit.Assert;
@@ -179,13 +176,13 @@ public class CastServiceMockTest extends BaseUnitTest {
      */
     @Test
     public void listCasts_Fail() {
-        when(castDaoMock.listCast()).thenThrow(DaoException.class);
+        List<Cast> emptyList = new ArrayList<>();
+        when(castDaoMock.listCast()).thenReturn(emptyList);
 
-        try {
-            castService.listCasts();
-        } catch (ServiceException e) {
-            verify(castDaoMock, times(1)).listCast();
-        }
+        List<Cast> actualList = castService.listCasts();
+
+        Assert.assertEquals(emptyList, actualList);
+        verify(castDaoMock, times(1)).listCast();
 
     }
 

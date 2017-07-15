@@ -10,59 +10,34 @@ import java.util.List;
  * Film entity class
  */
 @Entity(name = "FILMS")
+@Table(name = "FILMS")
 public class Film {
-//    @Id
-//    @GeneratedValue
-//    @Column(name = "ID")
     private int id;
 
-//    @Column(name = "TITLE", columnDefinition = "VARCHAR(50)", nullable = false)
     private String title;
 
-//    @Column(name = "PROD_YEAR", nullable = false)
     private int prodYear;
 
-//    @Column(name = "HAS_OSCAR", nullable = false)
-//    @ColumnDefault("false")
     private boolean hasOscar;
 
-//    @Column(name = "IMAGE_REF", columnDefinition = "VARCHAR(250)")
     private String image;
 
-//    @Column(name = "DIRECTOR", columnDefinition = "VARCHAR(250)")
     private String director;
 
-//    @Column(name = "RATE_1STAR")
-//    @ColumnDefault("0")
     private int rate_1star;
 
-//    @Column(name = "RATE_2STAR")
-//    @ColumnDefault("0")
     private int rate_2star;
 
-//    @Column(name = "RATE_3STAR")
-//    @ColumnDefault("0")
     private int rate_3star;
 
-//    @Column(name = "RATE_4STAR")
-//    @ColumnDefault("0")
     private int rate_4star;
 
-//    @Column(name = "RATE_5STAR")
-//    @ColumnDefault("0")
     private int rate_5star;
 
-//    @ManyToMany(cascade = CascadeType.REFRESH)
-//    @JoinTable(name = "FILM_TO_CAST",
-//            joinColumns = @JoinColumn(name = "FILM_ID"),
-//            inverseJoinColumns = @JoinColumn(name = "ACTOR_ID"))
     private List<Cast> casts;
 
-//    @ManyToMany(cascade = CascadeType.REFRESH)
-//    @JoinTable(name = "GENRE_TO_FILM",
-//            joinColumns = @JoinColumn(name = "FILM_ID"),
-//            inverseJoinColumns = @JoinColumn(name = "GENRE_ID"))
-    private List<GenreEntity> genres;
+    private List<Genre> genres;
+
 
     public Film() {
         hasOscar = false;
@@ -247,19 +222,19 @@ public class Film {
         this.casts.add(cast);
     }
 
-    @ManyToMany(cascade = CascadeType.REFRESH)
-    @JoinTable(name = "GENRE_TO_FILM",
-            joinColumns = @JoinColumn(name = "FILM_ID"),
-            inverseJoinColumns = @JoinColumn(name = "GENRE_ID"))
-    public List<GenreEntity> getGenres() {
+    @ElementCollection(targetClass = Genre.class)
+    @CollectionTable(name = "GENRE_TO_FILM",
+            joinColumns = @JoinColumn(name = "FILM_ID"))
+    @Column(name = "GENRE_ID")
+    public List<Genre> getGenres() {
         return genres;
     }
 
-    public void setGenres(List<GenreEntity> genres) {
+    public void setGenres(List<Genre> genres) {
         this.genres = genres;
     }
 
-//    public void addGeners(Genre gener) {
-//        genres.add(gener);
-//    }
+    public void addGeners(Genre gener) {
+        genres.add(gener);
+    }
 }

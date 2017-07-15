@@ -411,7 +411,7 @@ public class FilmDaoTest extends BaseIntegrationTest {
     public void filter_ByGenreOnly_Success() {
         film.setTitle("City of God");
         film.setProdYear(2002);
-//        film.setGenres();
+        film.addGeners(Genre.ACTION);
         hibernateFilmDAO.addFilm(film);
 
         Film actualFilm = hibernateFilmDAO.getFilteredFilms
@@ -433,7 +433,7 @@ public class FilmDaoTest extends BaseIntegrationTest {
         film.setTitle("The Departed");
         film.setProdYear(2002);
         film.setDirector("Martin Scorsese");
-//        film.setGenres();
+        film.addGeners(Genre.CRIME);
         film.setHasOscar(true);
         hibernateFilmDAO.addFilm(film);
 

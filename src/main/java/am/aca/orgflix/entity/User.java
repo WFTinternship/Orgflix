@@ -7,7 +7,8 @@ import java.util.Set;
 /**
  * User entity class
  */
-@Entity(name = "users")
+@Entity(name = "USERS")
+@Table(name = "USERS")
 public class User {
     //    @Id
 //    @GeneratedValue

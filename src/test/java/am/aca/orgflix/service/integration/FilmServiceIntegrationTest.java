@@ -50,7 +50,7 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
     @Test
     public void addFilm_WithRelations_Success() {
         film = new Film("In Bruges", 2008);
-//        film.addGeners(Genre.ACTION);
+        film.addGeners(Genre.ACTION);
 
         boolean status = filmService.addFilm(film);
         Assert.assertTrue(status);
@@ -316,7 +316,7 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
         film.setDirector("Tate Taylor");
         cast = new Cast("Emily Blunt");
         film.addCast(cast);
-//        film.setGenres();
+        film.addGeners(Genre.DRAMA);
         filmService.addFilm(film);
 
         List<Film> trainspottingResultList = filmService.getFilteredFilms

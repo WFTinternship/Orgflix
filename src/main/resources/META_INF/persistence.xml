@@ -10,6 +10,8 @@
         <class>am.aca.orgflix.entity.Cast</class>
         <class>am.aca.orgflix.entity.Film</class>
         <class>am.aca.orgflix.entity.User</class>
+        <class>am.aca.orgflix.entity.List</class>
+        <class>am.aca.orgflix.entity.ListID</class>
 
         <properties>
             <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/orgflixtest"/>

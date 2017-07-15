@@ -2,15 +2,13 @@ package am.aca.orgflix.entity;
 
 import org.hibernate.annotations.ColumnDefault;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * Actor entity class
  */
 @Entity(name = "CASTS")
+@Table(name = "CASTS")
 public class Cast {
     //    @Id
 //    @GeneratedValue

@@ -5,11 +5,11 @@ function pagination(page, type) {
     $("#navigator").submit();
 }
 
-function filmControlMenu(state, id) {
+function filmControlMenu(state, filmId) {
     if (state) {
-        $("#contr_" + id).css("display", "block");
+        $("#contr_" + filmId).css("display", "block");
     } else {
-        $("#contr_" + id).css("display", "none");
+        $("#contr_" + filmId).css("display", "none");
     }
 }
 
@@ -18,23 +18,22 @@ function timeOuter(id, isDel) {
         $("#" + id).css("display", "none");
     }
     console.log(id + " done");
-    $("#pop-up-result").css("display", "none");
+    $("#outer-pop-up").css("display", "none");
 }
 
-function AddToList(type, id) {
+function AddToList(type, filmId) {
     $.ajax({
         url: "/data/film/"+type+ "/addToList",
         type: "POST",
         data: {
-            film: id,
-            user: $("#userId").val(),
-            isPublic: $("#isPublic_" + id).val()
+            film: filmId,
+            isPublic: $("#isPublic_" + filmId).val()
         },
         success: function (result) {
-            $("#pop-up-result").html(result);
-            $("#pop-up-result").css("display", "block");
+            $("#inner-pop-up").html(result);
+            $("#outer-pop-up").css("display", "block");
             setTimeout(function () {
-                timeOuter(id, false);
+                timeOuter(filmId, false);
             }, 900);
         }
     });
@@ -49,8 +48,8 @@ function RemoveFromList(type, id) {
             user: $("#userId").val()
         },
         success: function (result) {
-            $("#pop-up-result").html(result);
-            $("#pop-up-result").css("display", "block");
+            $("#inner-pop-up").html(result);
+            $("#outer-pop-up").css("display", "block");
             setTimeout(timeOuter(id, true), 3000);
         }
     });
@@ -66,15 +65,21 @@ function recordStar(star, filmId) {
             star: star
         },
         success: function (result) {
-            $("#pop-up-result").html(result);
-            $("#pop-up-result").css("display", "block");
+            $("#inner-pop-up").html(result);
+            $("#outer-pop-up").css("display", "block");
             setTimeout(function () {
                 timeOuter(filmId, false);
             }, 900);
         }
     });
 }
-
+function ajaxSupport(result) {
+    $("#inner-pop-up").html(result);
+    $("#outer-pop-up").css("display", "block");
+    setTimeout(function () {
+        timeOuter(filmId, false);
+    }, 900);
+}
 function getActorsList(elem, state) {
     if (state) {
         $.ajax({

@@ -4,6 +4,7 @@ import am.aca.orgflix.service.CastService;
 import am.aca.orgflix.service.FilmService;
 import am.aca.orgflix.service.ListService;
 import am.aca.orgflix.service.UserService;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -12,6 +13,9 @@ import org.springframework.web.servlet.ModelAndView;
  * Super class for created custom ModelAndView controllers
  */
 public class MVController {
+
+    //common logger for all the classes in the Service layer
+    protected Logger LOGGER = LOGGER = Logger.getLogger(MVController.class);
 
     protected UserService userService;
     protected ListService listService;
@@ -43,13 +47,11 @@ public class MVController {
         try{
             modelAndView.addObject("films", filmService.getFilmsList(0));
             modelAndView.addObject("ratings", filmService.getAllRatings(0));
-            modelAndView.addObject("userId", -1);
-            modelAndView.addObject("userAuth", 0);
             modelAndView.addObject("currPage", 0);
             modelAndView.addObject("page", "index");
             modelAndView.addObject("numOfPages", filmService.totalNumberOfFilms()/12);
         }catch (RuntimeException e){
-            modelAndView = new ModelAndView("error");
+            modelAndView = new ModelAndView("error","message",e);
         }
         return modelAndView;
     }

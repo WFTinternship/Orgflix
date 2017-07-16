@@ -231,9 +231,6 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
         final String query = "UPDATE FILMS SET TITLE = ?,PROD_YEAR = ?,HAS_OSCAR = ?, image_ref = ?, RATE_1STAR = ? " +
                 ",RATE_2STAR = ?, RATE_3STAR = ?,RATE_4STAR = ?,RATE_5STAR = ?, DIRECTOR = ? " +
                 " WHERE ID = ? ";
-//        final String query = "UPDATE films SET Title = ?,Prod_Year = ?,HasOscar = ?, image_ref = ?, Rate_1star = ? " +
-//                ",Rate_2star = ?, Rate_3star = ?,Rate_4star = ?,Rate_5star = ?, director = ? " +
-//                " WHERE id = ? ";
 
         return getJdbcTemplate().update(query,
                 film.getTitle(),

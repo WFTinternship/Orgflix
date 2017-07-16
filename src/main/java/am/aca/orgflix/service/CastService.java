@@ -45,7 +45,7 @@ public interface CastService {
     /**
      * Updates features of the given actor
      *
-     * @param cast the object to replace the previous version
+     * @param castId the object to replace the previous version
      * @return true if successfully updated, false otherwise
      */
     Cast getCastById(int castId);

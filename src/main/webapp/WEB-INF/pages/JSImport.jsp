@@ -12,4 +12,4 @@
 <!--[if lte IE 8]>
 <script src="${contextPath}/resources/js/ie/respond.min.js" ></script><![endif]-->
 <script src="${contextPath}/resources/js/main.js" ></script>
-<script src="${contextPath}/resources/js/custom.js?v=101" ></script>
+<script src="${contextPath}/resources/js/custom.js" ></script>

@@ -3054,6 +3054,7 @@
 						line-height: 1.5;
 						border: 0;
 						color: inherit;
+						cursor:pointer !important;
 					}
 
 					#menu > .inner > ul > li:first-child {

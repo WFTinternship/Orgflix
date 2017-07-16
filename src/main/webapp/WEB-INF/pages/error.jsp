@@ -20,7 +20,8 @@
     <div id="main">
         <div class="inner">
             <header>
-                <h1>ERROR - Something bad has happaned !</h1>
+                <h1>ERROR - Something bad has happened !</h1>
+                <div>${message}</div>
             </header>
         </div>
     </div>

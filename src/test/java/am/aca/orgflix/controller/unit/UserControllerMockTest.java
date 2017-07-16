@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -98,7 +99,7 @@ public class UserControllerMockTest extends BaseUnitTest {
     }
 
     /**
-     * @see UserController#signupResult(String, String, String, String)
+     * @see UserController#signupResult(javax.servlet.http.HttpSession, String, String, String, String)
      */
     @Test
     public void signUpResult_Success() {
@@ -106,7 +107,7 @@ public class UserControllerMockTest extends BaseUnitTest {
         when(filmServiceMock.getFilmsList(0)).thenReturn(films);
 
         ModelAndView actualMV = userController.signupResult
-                (user.getNick(), user.getUserName(), user.getEmail(), user.getPass());
+                (new MockHttpSession(), user.getNick(), user.getUserName(), user.getEmail(), user.getPass());
 
         Assert.assertEquals("index", actualMV.getViewName());
         Assert.assertEquals(films, actualMV.getModel().get("films"));
@@ -121,14 +122,14 @@ public class UserControllerMockTest extends BaseUnitTest {
     }
 
     /**
-     * @see UserController#signupResult(String, String, String, String)
+     * @see UserController#signupResult(javax.servlet.http.HttpSession, String, String, String, String)
      */
     @Test
     public void signUpResult_AuthenticationError_Fail() {
         when(userServiceMock.add(user)).thenReturn(-1);
 
         ModelAndView actualMV = userController.signupResult
-                (user.getNick(), user.getUserName(), user.getEmail(), user.getPass());
+                (new MockHttpSession(), user.getNick(), user.getUserName(), user.getEmail(), user.getPass());
         Assert.assertEquals("error", actualMV.getViewName());
 
         verify(userServiceMock, times(1)).add(user);
@@ -136,14 +137,14 @@ public class UserControllerMockTest extends BaseUnitTest {
     }
 
     /**
-     * @see UserController#signupResult(String, String, String, String)
+     * @see UserController#signupResult(javax.servlet.http.HttpSession, String, String, String, String)
      */
     @Test
     public void signUpResult_InternalError_Fail() {
         when(userServiceMock.add(user)).thenThrow(ServiceException.class);
 
         ModelAndView actualMV = userController.signupResult
-                (user.getNick(), user.getUserName(), user.getEmail(), user.getPass());
+                (new MockHttpSession(), user.getNick(), user.getUserName(), user.getEmail(), user.getPass());
         Assert.assertEquals("error", actualMV.getViewName());
 
         verify(userServiceMock, times(1)).add(user);

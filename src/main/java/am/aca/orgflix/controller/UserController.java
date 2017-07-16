@@ -45,6 +45,7 @@ public class UserController extends MVController{
 
                 modelAndView = new ModelAndView("index");
                 modelAndView.addObject("films", filmService.getFilmsList(0));
+                modelAndView.addObject("numOfPages", filmService.totalNumberOfFilms() / 12);
                 modelAndView.addObject("currPage", 0);
                 modelAndView.addObject("page", "index");
             } else {
@@ -84,7 +85,7 @@ public class UserController extends MVController{
         return modelAndView;
     }
 
-    @RequestMapping("/logedIn")
+    @RequestMapping("/loggedIn")
     public ModelAndView paging(HttpSession session,
                                @RequestParam("email") String email,
                                @RequestParam("pass") String pass) {

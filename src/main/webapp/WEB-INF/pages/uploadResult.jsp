@@ -22,10 +22,9 @@
                 <div>
                     <h1>${fileSuccess}</h1>
                     <form:form method="post" action="filmSaved" enctype="multipart/form-data">
-                        <a href="uploadForm">Add another film</a>
+                        <a href="/">Back to Homepage</a>
                     </form:form>
                 </div>
-                </form>
             </section>
         </div>
     </div>

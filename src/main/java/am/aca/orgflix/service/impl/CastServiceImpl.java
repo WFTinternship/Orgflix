@@ -5,11 +5,11 @@ import am.aca.orgflix.dao.FilmDAO;
 import am.aca.orgflix.entity.Cast;
 import am.aca.orgflix.entity.Film;
 import am.aca.orgflix.service.CastService;
-import am.aca.orgflix.service.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,12 +43,13 @@ public class CastServiceImpl extends BaseService implements CastService {
     @Transactional
     @Override
     public boolean addCast(Cast cast) {
+        checkRequiredFields(cast.getName());
         boolean result;
         try {
             result = castDAO.addCast(cast);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
-            throw new ServiceException(e.toString());
+            return false;
         }
         return result;
     }
@@ -67,7 +68,7 @@ public class CastServiceImpl extends BaseService implements CastService {
             state = castDAO.addCastToFilm(cast, filmId);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
-            throw new ServiceException(e.getMessage());
+            return false;
         }
         return state;
     }
@@ -78,6 +79,7 @@ public class CastServiceImpl extends BaseService implements CastService {
     @Transactional
     @Override
     public boolean editCast(Cast cast) {
+        checkRequiredFields(cast.getName());
         boolean state;
         try {
             if (!castDAO.exists(cast))
@@ -85,7 +87,7 @@ public class CastServiceImpl extends BaseService implements CastService {
             state = castDAO.editCast(cast);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
-            throw new ServiceException(e.getMessage());
+            return false;
         }
         return state;
     }
@@ -95,12 +97,12 @@ public class CastServiceImpl extends BaseService implements CastService {
      */
     @Override
     public List<Cast> listCasts() {
-        List<Cast> list;
+        List<Cast> list = new ArrayList<>();
         try {
             list = castDAO.listCast();
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
-            throw new ServiceException(e.getMessage());
+            return list;
         }
         return list;
     }
@@ -110,12 +112,12 @@ public class CastServiceImpl extends BaseService implements CastService {
      */
     @Override
     public List<Film> listFilmsByCast(int castId) {
-        List<Film> list;
+        List<Film> list = new ArrayList<>();
         try {
             list = filmDAO.getFilmsByCast(castId);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
-            throw new ServiceException(e.getMessage());
+            return list;
         }
         return list;
     }
@@ -125,12 +127,12 @@ public class CastServiceImpl extends BaseService implements CastService {
      */
     @Override
     public List<Cast> getCastsByFilm(int filmId) {
-        List<Cast> list;
+        List<Cast> list = new ArrayList<>();
         try {
             list = castDAO.getCastsByFilm(filmId);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
-            throw new ServiceException(e.getMessage());
+            return list;
         }
         return list;
     }
@@ -145,7 +147,7 @@ public class CastServiceImpl extends BaseService implements CastService {
             cast = castDAO.getCastById(castId);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
-            throw new ServiceException(e.getMessage());
+            return null;
         }
         return cast;
     }

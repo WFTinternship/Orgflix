@@ -7,7 +7,6 @@ import am.aca.orgflix.dao.impljdbc.mapper.FilmRowMapper;
 import am.aca.orgflix.entity.Film;
 import am.aca.orgflix.entity.Genre;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -38,11 +37,6 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
      */
     @Override
     public boolean addFilm(Film film) {
-        // ensure that all required fields are properly assigned
-        if (!checkRequiredFields(film.getTitle()) || 1888 > film.getProdYear()
-                || Calendar.getInstance().get(Calendar.YEAR) + 7 < film.getProdYear())
-            throw new DaoException("Illegal argument");
-
         KeyHolder holder = new GeneratedKeyHolder();
 
         final String query = "INSERT INTO FILMS (TITLE, PROD_YEAR, HAS_OSCAR, image_ref, " +
@@ -83,12 +77,8 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
      */
     @Override
     public boolean rateFilm(int filmId, int starType) {
-        // the scale of rates is from one up to 5 inclusive
-        if (starType > 5 || starType < 1)
-            throw new DaoException("Illegal argument");
-
-        final String sratType = "RATE_" + starType + "STAR";
-        final String query = "UPDATE FILMS SET " + sratType + " = " + sratType + " + 1 WHERE ID = ? ";
+        final String starTypeQuery = "RATE_" + starType + "STAR";
+        final String query = "UPDATE FILMS SET " + starTypeQuery + " = " + starTypeQuery + " + 1 WHERE ID = ? ";
         return getJdbcTemplate().update(query, filmId) == 1;
     }
 
@@ -102,7 +92,7 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
         final String getQuery = "SELECT * FROM FILMS WHERE ID = ? LIMIT 1";
         try {
             return getJdbcTemplate().queryForObject(getQuery, new Object[]{id}, new FilmRowMapper());
-        } catch (EmptyResultDataAccessException e) {
+        } catch (RuntimeException e) {
             // no film with such id exists in the DB
             return null;
         }
@@ -175,6 +165,16 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
             return 0.0;
         // each scale of one to five has appropriate weight effecting the overall rate
         return (double) ratingSum / ratingCount;
+    }
+
+    /**
+     * @see FilmDAO#getRating(int, int)
+     */
+    @Override
+    public int getRating(int filmId, int starType) {
+        String starTypeQuery = "RATE_" + starType + "STAR";
+        final String query = "SELECT" + starTypeQuery + "FROM FILMS WHERE ID = ?";
+        return getJdbcTemplate().queryForObject(query, new Object[]{filmId}, Integer.class);
     }
 
     /**

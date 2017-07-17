@@ -82,6 +82,14 @@ public interface FilmDAO {
     double getRating(int filmId);
 
     /**
+     * Retrieves the number of times the desired film was rated 1 star
+     *
+     * @param filmId the ID of the desired film
+     * @return the number of times the film with given ID was rated 1 star
+     */
+    int getRating(int filmId, int starType);
+
+    /**
      * Provide the current total number of films in DB
      *
      * @return the current total number of films in DB

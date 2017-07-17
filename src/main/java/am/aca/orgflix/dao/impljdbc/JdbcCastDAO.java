@@ -2,7 +2,6 @@ package am.aca.orgflix.dao.impljdbc;
 
 import am.aca.orgflix.dao.BaseDAO;
 import am.aca.orgflix.dao.CastDAO;
-import am.aca.orgflix.dao.DaoException;
 import am.aca.orgflix.dao.impljdbc.mapper.CastRowMapper;
 import am.aca.orgflix.entity.Cast;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +33,6 @@ public class JdbcCastDAO extends BaseDAO implements CastDAO {
      */
     @Override
     public boolean addCast(Cast cast) {
-        // ensure that all required field is properly assigned
-        if (!checkRequiredFields(cast.getName())) {
-            throw new DaoException("Name is required");
-        }
         KeyHolder holder = new GeneratedKeyHolder();
         final String query = "INSERT INTO CASTS (ACTOR_NAME, HAS_OSCAR) VALUES (?, ?)";
         int result = getJdbcTemplate().update(connection -> {
@@ -89,8 +84,8 @@ public class JdbcCastDAO extends BaseDAO implements CastDAO {
     /**
      * @see CastDAO#getCastById(int)
      */
-    public Cast getCastById(int castId){
-        final String query ="SELECT * FROM CASTS WHERE ID = ?";
+    public Cast getCastById(int castId) {
+        final String query = "SELECT * FROM CASTS WHERE ID = ?";
         return getJdbcTemplate().queryForObject(query, new Object[]{castId}, new CastRowMapper());
     }
 
@@ -101,10 +96,6 @@ public class JdbcCastDAO extends BaseDAO implements CastDAO {
      */
     @Override
     public boolean editCast(Cast cast) {
-        // ensure that all required field is properly assigned
-        if (!checkRequiredFields(cast.getName()))
-            throw new DaoException("Illegal argument");
-
         final String query = "UPDATE CASTS SET ACTOR_NAME = ?, HAS_OSCAR = ? WHERE ID = ?";
         return getJdbcTemplate().update(query, cast.getName(), cast.isHasOscar(), cast.getId()) == 1;
     }

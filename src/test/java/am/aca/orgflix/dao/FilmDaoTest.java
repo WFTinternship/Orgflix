@@ -67,7 +67,7 @@ public class FilmDaoTest extends BaseIntegrationTest {
     /**
      * @see JdbcFilmDAO#addFilm(am.aca.orgflix.entity.Film)
      */
-    @Test(expected = DaoException.class)
+    @Test(expected = RuntimeException.class)
     public void addFilm_Fail() {
         jdbcFilmDAO.addFilm(film);
     }
@@ -120,7 +120,7 @@ public class FilmDaoTest extends BaseIntegrationTest {
     /**
      * @see JdbcFilmDAO#rateFilm(int, int)
      */
-    @Test(expected = DaoException.class)
+    @Test(expected = RuntimeException.class)
     public void rateFilm_Fail() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);

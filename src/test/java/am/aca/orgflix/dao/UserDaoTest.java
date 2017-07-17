@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class UserDaoTest extends BaseIntegrationTest {
 
-    private final User standardUser = new User("gago", "Gagik Petrosyan", "davit.abovyan@gmail.com", "pass");
+    private final User standardUser = new User("scarface", "Tony Montana", "scarface@miami.com", "elvira");
 
     @Autowired
     private UserDAO jdbcUserDAO;
@@ -31,7 +31,7 @@ public class UserDaoTest extends BaseIntegrationTest {
      */
     @After
     public void tearDown() {
-        testHelper.emptyTable(new String[]{"users"});
+        testHelper.emptyTable(new String[]{"USERS"});
         user = null;
     }
 
@@ -39,9 +39,9 @@ public class UserDaoTest extends BaseIntegrationTest {
      * @see JdbcUserDAO#add(am.aca.orgflix.entity.User)
      */
     @Test
-    public void addUser_Success() {
-        boolean status = jdbcUserDAO.add(standardUser) > 0;
-        Assert.assertTrue(status);
+    public void addUser_ValidUser_Success() {
+        int id = jdbcUserDAO.add(standardUser);
+        Assert.assertTrue(id > 0);
     }
 
     /**
@@ -49,7 +49,7 @@ public class UserDaoTest extends BaseIntegrationTest {
      */
     @Test
     public void addUser_EmptyUserName_Success() {
-        user = new User("gago", "", "gagik1@gmail.com", "pass");
+        user = new User("scarface", "", "scarface@miami.com", "elvira");
         boolean status = jdbcUserDAO.add(user) > 0;
         Assert.assertTrue(status);
     }
@@ -59,7 +59,7 @@ public class UserDaoTest extends BaseIntegrationTest {
      */
     @Test(expected = DaoException.class)
     public void addUser_EmptyNick_Fail() {
-        jdbcUserDAO.add(new User("", "Gagik Petrosyan", "gagik2@gmail.com", "pass"));
+        jdbcUserDAO.add(new User("", "Tony Montana", "scarface@miami.com", "elvira"));
     }
 
     /**
@@ -67,7 +67,7 @@ public class UserDaoTest extends BaseIntegrationTest {
      */
     @Test(expected = DaoException.class)
     public void addUser_EmptyEmail_Fail() {
-        jdbcUserDAO.add(new User("gago", "Gagik Petrosyan", "", "pass"));
+        jdbcUserDAO.add(new User("scarface", "Tony Montana", "", "elvira"));
     }
 
     /**
@@ -75,7 +75,7 @@ public class UserDaoTest extends BaseIntegrationTest {
      */
     @Test(expected = DaoException.class)
     public void addUser_EmptyPass_Fail() {
-        jdbcUserDAO.add(new User("gago", "Gagik Petrosyan", "gagik3@gmail.com", ""));
+        jdbcUserDAO.add(new User("scarface", "Tony Montana", "scarface@miami.com", ""));
     }
 
     /**
@@ -83,7 +83,7 @@ public class UserDaoTest extends BaseIntegrationTest {
      */
     @Test(expected = DaoException.class)
     public void addUser_NullNick_Fail() {
-        jdbcUserDAO.add(new User(null, "Gagik Petrosyan", "gagik2@gmail.com", "pass"));
+        jdbcUserDAO.add(new User(null, "Tony Montana", "scarface@miami.com", "elvira"));
     }
 
     /**
@@ -91,7 +91,7 @@ public class UserDaoTest extends BaseIntegrationTest {
      */
     @Test(expected = DaoException.class)
     public void addUser_NullEmail_Fail() {
-        jdbcUserDAO.add(new User("gago", "Gagik Petrosyan", null, "pass"));
+        jdbcUserDAO.add(new User("scarface", "Tony Montana", null, "elvira"));
     }
 
     /**
@@ -99,7 +99,7 @@ public class UserDaoTest extends BaseIntegrationTest {
      */
     @Test(expected = DaoException.class)
     public void addUser_NullPass_Fail() {
-        jdbcUserDAO.add(new User("gago", "Gagik Petrosyan", "gagik3@gmail.com", null));
+        jdbcUserDAO.add(new User("scarface", "Tony Montana", "scarface@miami.com", null));
     }
 
     /**
@@ -108,7 +108,7 @@ public class UserDaoTest extends BaseIntegrationTest {
     @Test(expected = org.springframework.dao.DuplicateKeyException.class)
     public void addUser_EmailAlreadyExists_Fail() {
         jdbcUserDAO.add(standardUser);
-        jdbcUserDAO.add(new User("armen", "Armen Hakobyan", "davit.abovyan@gmail.com", "pass1"));
+        jdbcUserDAO.add(new User("armen", "Armen Hakobyan", "scarface@miami.com", "elvira1"));
     }
 
     /**
@@ -141,7 +141,7 @@ public class UserDaoTest extends BaseIntegrationTest {
     public void getUser_ByEmail_Success() {
         jdbcUserDAO.add(standardUser);
 
-        boolean status = standardUser.equals(jdbcUserDAO.get("davit.abovyan@gmail.com"));
+        boolean status = standardUser.equals(jdbcUserDAO.get("scarface@miami.com"));
         Assert.assertTrue(status);
     }
 
@@ -151,8 +151,8 @@ public class UserDaoTest extends BaseIntegrationTest {
     @Test(expected = org.springframework.dao.EmptyResultDataAccessException.class)
     public void getUser_ByWrongEmail_Fail() {
         jdbcUserDAO.add(standardUser);
-        jdbcUserDAO.get("davit.abovyan1@gmail.com");
-//        Assert.assertFalse(user.equals(jdbcUserDAO.get("davit.abovyan1@gmail.com")));
+        jdbcUserDAO.get("davit.abovyan1@miami.com");
+//        Assert.assertFalse(user.equals(jdbcUserDAO.get("davit.abovyan1@miami.com")));
     }
 
     /**
@@ -161,7 +161,7 @@ public class UserDaoTest extends BaseIntegrationTest {
     @Test
     public void getByNick_Success() {
         jdbcUserDAO.add(standardUser);
-        User actualUser = jdbcUserDAO.getByNick("gago");
+        User actualUser = jdbcUserDAO.getByNick("scarface");
         Assert.assertEquals(standardUser, actualUser);
     }
 
@@ -170,7 +170,7 @@ public class UserDaoTest extends BaseIntegrationTest {
      */
     @Test (expected = org.springframework.dao.EmptyResultDataAccessException.class)
     public void getByNick_NotExisting_Fail() {
-        jdbcUserDAO.getByNick("gago");
+        jdbcUserDAO.getByNick("scarface");
     }
 
     /**
@@ -198,9 +198,9 @@ public class UserDaoTest extends BaseIntegrationTest {
      */
     @Test
     public void editUser_Email_Success() {
-        user = new User("gago", "Gagik Petrosyan", "davit.abovyan@gmail.com", "pass");
+        user = new User("scarface", "Tony Montana", "scarface@miami.com", "elvira");
         jdbcUserDAO.add(user);
-        final String newEmail = "gagik@gmail.com";
+        final String newEmail = "gagik@miami.com";
         user.setEmail(newEmail);
         jdbcUserDAO.edit(user);
         String actualEmail = jdbcUserDAO.get(newEmail).getEmail();
@@ -212,7 +212,7 @@ public class UserDaoTest extends BaseIntegrationTest {
      */
     @Test
     public void editUser_Nick_Success() {
-        user = new User("gago", "Gagik Petrosyan", "davit.abovyan@gmail.com", "pass");
+        user = new User("scarface", "Tony Montana", "scarface@miami.com", "elvira");
         int id = jdbcUserDAO.add(user);
         final String newNick = "davo";
         user.setNick(newNick);
@@ -228,7 +228,7 @@ public class UserDaoTest extends BaseIntegrationTest {
      */
     @Test
     public void editUser_UserName_Success() {
-        user = new User("gago", "Gagik Petrosyan", "davit.abovyan@gmail.com", "pass");
+        user = new User("scarface", "Tony Montana", "scarface@miami.com", "elvira");
         int id = jdbcUserDAO.add(user);
         final String newUserName = "Davit Abovyan";
         user.setUserName(newUserName);
@@ -244,9 +244,9 @@ public class UserDaoTest extends BaseIntegrationTest {
      */
     @Test
     public void editUser_Pass_Success() {
-        user = new User("gago", "Gagik Petrosyan", "davit.abovyan@gmail.com", "pass");
+        user = new User("scarface", "Tony Montana", "scarface@miami.com", "elvira");
         int id = jdbcUserDAO.add(user);
-        final String newPass = "password";
+        final String newPass = "elviraword";
         user.setPass(newPass);
         jdbcUserDAO.edit(user);
 
@@ -261,9 +261,9 @@ public class UserDaoTest extends BaseIntegrationTest {
     @Test(expected = RuntimeException.class)
     public void editUser_EmailNonUnique_Fail() {
         jdbcUserDAO.add(standardUser);
-        User otherUser = new User("gago", "Gagik Petrosyan", "gagik.petrosyan@gmail.com", "pass");
+        User otherUser = new User("scarface", "Tony Montana", "gagik.petrosyan@miami.com", "elvira");
         jdbcUserDAO.add(otherUser);
-        otherUser.setEmail("davit.abovyan@gmail.com");
+        otherUser.setEmail("scarface@miami.com");
         boolean status = jdbcUserDAO.edit(otherUser);
         Assert.assertFalse(status);
     }
@@ -273,7 +273,7 @@ public class UserDaoTest extends BaseIntegrationTest {
      */
     @Test(expected = DaoException.class)
     public void editUser_EmailNULL_Fail() {
-        user = new User("davit", "Davit Abvoyan", "davit.abovyan@gmail.com", "pass");
+        user = new User("davit", "Tony Montana", "scarface@miami.com", "elvira");
         jdbcUserDAO.add(user);
         user.setEmail(null);
         boolean status = jdbcUserDAO.edit(user);
@@ -285,7 +285,7 @@ public class UserDaoTest extends BaseIntegrationTest {
      */
     @Test(expected = DaoException.class)
     public void editUser_NickNULL_Fail() {
-        user = new User("davit", "Davit Abvoyan", "davit.abovyan@gmail.com", "pass");
+        user = new User("davit", "Tony Montana", "scarface@miami.com", "elvira");
         jdbcUserDAO.add(user);
         user.setNick(null);
         boolean status = jdbcUserDAO.edit(user);
@@ -297,7 +297,7 @@ public class UserDaoTest extends BaseIntegrationTest {
      */
     @Test(expected = DaoException.class)
     public void editUser_PassNULL_Fail() {
-        user = new User("davit", "Davit Abvoyan", "davit.abovyan@gmail.com", "pass");
+        user = new User("davit", "Tony Montana", "scarface@miami.com", "elvira");
         jdbcUserDAO.add(user);
         user.setPass(null);
         boolean status = jdbcUserDAO.edit(user);
@@ -309,7 +309,7 @@ public class UserDaoTest extends BaseIntegrationTest {
      */
     @Test(expected = DaoException.class)
     public void editUser_EmailEmpty_Fail() {
-        user = new User("davit", "Davit Abvoyan", "davit.abovyan@gmail.com", "pass");
+        user = new User("davit", "Tony Montana", "scarface@miami.com", "elvira");
         jdbcUserDAO.add(user);
         user.setEmail("");
         boolean status = jdbcUserDAO.edit(user);
@@ -321,7 +321,7 @@ public class UserDaoTest extends BaseIntegrationTest {
      */
     @Test(expected = DaoException.class)
     public void editUser_NickEmpty_Fail() {
-        user = new User("davit", "Davit Abvoyan", "davit.abovyan@gmail.com", "pass");
+        user = new User("davit", "Tony Montana", "scarface@miami.com", "elvira");
         jdbcUserDAO.add(user);
         user.setNick("");
         boolean status = jdbcUserDAO.edit(user);
@@ -333,7 +333,7 @@ public class UserDaoTest extends BaseIntegrationTest {
      */
     @Test(expected = DaoException.class)
     public void editUser_PassEmpty_Fail() {
-        user = new User("davit", "Davit Abvoyan", "davit.abovyan@gmail.com", "pass");
+        user = new User("davit", "Tony Montana", "scarface@miami.com", "elvira");
         jdbcUserDAO.add(user);
         user.setPass("");
         boolean status = jdbcUserDAO.edit(user);

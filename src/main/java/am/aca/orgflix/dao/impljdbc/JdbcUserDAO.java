@@ -1,7 +1,6 @@
 package am.aca.orgflix.dao.impljdbc;
 
 import am.aca.orgflix.dao.BaseDAO;
-import am.aca.orgflix.dao.DaoException;
 import am.aca.orgflix.dao.UserDAO;
 import am.aca.orgflix.dao.impljdbc.mapper.UserRowMapper;
 import am.aca.orgflix.entity.User;
@@ -36,10 +35,6 @@ public class JdbcUserDAO extends BaseDAO implements UserDAO {
     public int add(User user) {
         // default return value which means nothing added
         int id = -1;
-        // ensure that no null record will be passed for NOT NULL fields
-        if (!checkRequiredFields(user.getNick(), user.getPass(), user.getEmail()))
-            throw new DaoException("Nick, password and Email are required!");
-
         final String query = "INSERT INTO USERS (NICK,USER_NAME,EMAIL,USER_PASS) " +
                 " VALUES( ? , ? , ? , ? ) ";
 
@@ -107,10 +102,6 @@ public class JdbcUserDAO extends BaseDAO implements UserDAO {
      */
     @Override
     public boolean edit(int id, String nick, String name, String pass, String email) {
-        // ensure that no null record will be passed for NOT NULL fields
-        if (!checkRequiredFields(nick, pass, email))
-            throw new DaoException("Illegal argument");
-
         final String query = "UPDATE USERS SET NICK = ?,USER_NAME = ?,EMAIL = ?, USER_PASS = ? " +
                 " WHERE ID = ? ";
         return getJdbcTemplate().update(query, nick, name, email, pass, id) == 1;

@@ -1,11 +1,13 @@
 package am.aca.orgflix.dao;
 
 import am.aca.orgflix.BaseIntegrationTest;
-import am.aca.orgflix.dao.impljdbc.JdbcListDAO;
 import am.aca.orgflix.entity.Film;
 import am.aca.orgflix.entity.User;
 import am.aca.orgflix.util.TestHelper;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.beans.PropertyVetoException;
@@ -60,7 +62,7 @@ public class ListDaoTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see JdbcListDAO#insertWatched(int, int, boolean)
+     * @see ListDao#insertWatched(int, int, boolean)
      */
     @Test
     public void insertWatched_ValidInput_Success() {
@@ -72,7 +74,7 @@ public class ListDaoTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see JdbcListDAO#insertWatched(int, int, boolean)
+     * @see ListDao#insertWatched(int, int, boolean)
      */
     @Test(expected = RuntimeException.class)
     public void insertWatched_InvalidFilm_Fail() {
@@ -80,7 +82,7 @@ public class ListDaoTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see JdbcListDAO#insertWatched(int, int, boolean)
+     * @see ListDao#insertWatched(int, int, boolean)
      */
     @Test(expected = RuntimeException.class)
     public void insertWatched_InvalidUser_Fail() {
@@ -88,7 +90,7 @@ public class ListDaoTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see JdbcListDAO#insertWatched(int, int, boolean)
+     * @see ListDao#insertWatched(int, int, boolean)
      */
     @Test(expected = RuntimeException.class)
     public void insertWatched_Duplicate_Fail() {
@@ -97,7 +99,7 @@ public class ListDaoTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see JdbcListDAO#insertPlanned(int, int, boolean)
+     * @see ListDao#insertPlanned(int, int, boolean)
      */
     @Test
     public void insertPlanned_ValidInput_Success() {
@@ -109,7 +111,7 @@ public class ListDaoTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see JdbcListDAO#insertPlanned(int, int, boolean)
+     * @see ListDao#insertPlanned(int, int, boolean)
      */
     @Test(expected = RuntimeException.class)
     public void insertPlanned_InvalidUser_Fail() {
@@ -117,7 +119,7 @@ public class ListDaoTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see JdbcListDAO#insertPlanned(int, int, boolean)
+     * @see ListDao#insertPlanned(int, int, boolean)
      */
     @Test(expected = RuntimeException.class)
     public void insertPlanned_InvalidFilm_Fail() {
@@ -125,7 +127,7 @@ public class ListDaoTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see JdbcListDAO#insertPlanned(int, int, boolean)
+     * @see ListDao#insertPlanned(int, int, boolean)
      */
     @Test(expected = RuntimeException.class)
     public void insertPlanned_Duplicate_Fail() {
@@ -134,7 +136,7 @@ public class ListDaoTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see JdbcListDAO#showOwnWatched(int, int, int)
+     * @see ListDao#showOwnWatched(int, int, int)
      */
     @Test
     public void showOwnWatched_ValidUser_Success() {
@@ -157,7 +159,7 @@ public class ListDaoTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see JdbcListDAO#showOwnWatched(int, int, int)
+     * @see ListDao#showOwnWatched(int, int, int)
      */
     @Test
     public void showOwnWatched_InvalidUser_Fail() {
@@ -166,7 +168,7 @@ public class ListDaoTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see JdbcListDAO#showOwnPlanned(int, int, int)
+     * @see ListDao#showOwnPlanned(int, int, int)
      */
     @Test
     public void showOwnPlanned_ValidUser_Success() {
@@ -189,7 +191,7 @@ public class ListDaoTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see JdbcListDAO#showOwnPlanned(int, int, int)
+     * @see ListDao#showOwnPlanned(int, int, int)
      */
     @Test
     public void showOwnPlanned_InvalidUser_Fail() {
@@ -198,7 +200,7 @@ public class ListDaoTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see JdbcListDAO#showOthersWatched(int, int, int)
+     * @see ListDao#showOthersWatched(int, int, int)
      */
     @Test
     public void showOthersWatched_ValidUser_Success() {
@@ -224,7 +226,7 @@ public class ListDaoTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see JdbcListDAO#showOthersWatched(int, int, int)
+     * @see ListDao#showOthersWatched(int, int, int)
      */
     @Test
     public void showOthersWatched_InvalidUser_Fail() {
@@ -235,7 +237,7 @@ public class ListDaoTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see JdbcListDAO#showOthersPlanned(int, int, int)
+     * @see ListDao#showOthersPlanned(int, int, int)
      */
     @Test
     public void showOthersPlanned_ValidUser_Success() {
@@ -261,7 +263,7 @@ public class ListDaoTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see JdbcListDAO#showOthersPlanned(int, int, int)
+     * @see ListDao#showOthersPlanned(int, int, int)
      */
     @Test
     public void showOthersPlanned_InvalidUser_Fail() {
@@ -270,7 +272,7 @@ public class ListDaoTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see JdbcListDAO#updateWatched(int, int)
+     * @see ListDao#updateWatched(int, int)
      */
     @Test
     public void updateWatched_Success() {
@@ -282,7 +284,7 @@ public class ListDaoTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see JdbcListDAO#updateWatched(int, int)
+     * @see ListDao#updateWatched(int, int)
      */
     @Test
     public void updateWatched_Fail() {
@@ -293,7 +295,7 @@ public class ListDaoTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see JdbcListDAO#updatePlanned(int, int)
+     * @see ListDao#updatePlanned(int, int)
      */
     @Test
     public void updatePlanned_Success() {
@@ -305,7 +307,7 @@ public class ListDaoTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see JdbcListDAO#updatePlanned(int, int)
+     * @see ListDao#updatePlanned(int, int)
      */
     @Test
     public void updatePlanned_Fail() {
@@ -316,7 +318,7 @@ public class ListDaoTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see JdbcListDAO#changePrivacy(am.aca.orgflix.entity.Film, int, boolean)
+     * @see ListDao#changePrivacy(am.aca.orgflix.entity.Film, int, boolean)
      */
     @Test
     public void changePrivacy_Success() {
@@ -343,7 +345,7 @@ public class ListDaoTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see JdbcListDAO#changePrivacy(am.aca.orgflix.entity.Film, int, boolean)
+     * @see ListDao#changePrivacy(am.aca.orgflix.entity.Film, int, boolean)
      */
     @Test
     public void changePrivacy_InvalidInput_Fail() {
@@ -352,7 +354,7 @@ public class ListDaoTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see JdbcListDAO#resetWatched(int, int)
+     * @see ListDao#resetWatched(int, int)
      */
     @Test
     public void resetWatched_ValidInput_Success() {
@@ -376,7 +378,7 @@ public class ListDaoTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see JdbcListDAO#resetWatched(int, int)
+     * @see ListDao#resetWatched(int, int)
      */
     @Test
     public void resetWatched_InvalidInput_Fail() {
@@ -385,7 +387,7 @@ public class ListDaoTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see JdbcListDAO#resetPlanned(int, int)
+     * @see ListDao#resetPlanned(int, int)
      */
     @Test
     public void resetPlanned_ValidInput_Success() {
@@ -409,7 +411,7 @@ public class ListDaoTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see JdbcListDAO#resetPlanned(int, int)
+     * @see ListDao#resetPlanned(int, int)
      */
     @Test
     public void resetPlanned_InvalidInput_Fail() {
@@ -418,7 +420,7 @@ public class ListDaoTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see JdbcListDAO#removeFilm(int, int)
+     * @see ListDao#removeFilm(int, int)
      */
     @Test
     public void remove_ValidInput_Success() {
@@ -442,7 +444,7 @@ public class ListDaoTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see JdbcListDAO#areRelated(int, int)
+     * @see ListDao#areRelated(int, int)
      */
     @Test
     public void areRelated_ValidInput_Success() {
@@ -456,7 +458,7 @@ public class ListDaoTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see JdbcListDAO#isWatched(int, int)
+     * @see ListDao#isWatched(int, int)
      */
     @Test
     public void isWatched_ValidInput_Success() {
@@ -478,7 +480,7 @@ public class ListDaoTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see JdbcListDAO#isWatched(int, int)
+     * @see ListDao#isWatched(int, int)
      */
     @Test
     public void isWatched_InvalidInput_Fail() {
@@ -487,7 +489,7 @@ public class ListDaoTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see JdbcListDAO#isPlanned(int, int)
+     * @see ListDao#isPlanned(int, int)
      */
     @Test
     public void isPlanned_ValidInput_Success() {
@@ -508,7 +510,7 @@ public class ListDaoTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see JdbcListDAO#isPlanned(int, int)
+     * @see ListDao#isPlanned(int, int)
      */
     @Test
     public void isPlanned_InvalidInput_Fail() {
@@ -517,7 +519,7 @@ public class ListDaoTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see JdbcListDAO#totalNumberOfWatched(int)
+     * @see ListDao#totalNumberOfWatched(int)
      */
     @Test
     public void totalNumberWatched_Multiple_Success() {
@@ -531,7 +533,7 @@ public class ListDaoTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see JdbcListDAO#totalNumberOfWatched(int)
+     * @see ListDao#totalNumberOfWatched(int)
      */
     @Test
     public void totalNumberWatched_Empty() {
@@ -540,7 +542,7 @@ public class ListDaoTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see JdbcListDAO#totalNumberOfPlanned(int)
+     * @see ListDao#totalNumberOfPlanned(int)
      */
     @Test
     public void totalNumberPlanned_Multiple_Success() {
@@ -554,7 +556,7 @@ public class ListDaoTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see JdbcListDAO#totalNumberOfPlanned(int)
+     * @see ListDao#totalNumberOfPlanned(int)
      */
     @Test
     public void totalNumberPlanned_Empty() {

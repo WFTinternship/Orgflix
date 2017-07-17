@@ -11,13 +11,18 @@ import org.springframework.stereotype.Service;
  * Service layer for user related methods
  */
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl extends BaseService implements UserService {
 
     private UserDAO userDao;
 
     @Autowired
     public void setUserDao(UserDAO userDao) {
         this.userDao = userDao;
+    }
+
+    public UserServiceImpl() {
+        // class name to include in logging
+        super(UserServiceImpl.class);
     }
 
     /**
@@ -28,6 +33,7 @@ public class UserServiceImpl implements UserService {
         try {
             return userDao.add(user);
         } catch (RuntimeException e) {
+            LOGGER.warn(e.getMessage());
             throw new ServiceException(e.getMessage());
         }
     }
@@ -41,6 +47,7 @@ public class UserServiceImpl implements UserService {
         try {
             user = userDao.get(id);
         } catch (RuntimeException e) {
+            LOGGER.warn(e.getMessage());
             throw new ServiceException(e.getMessage());
         }
         return user;
@@ -57,6 +64,7 @@ public class UserServiceImpl implements UserService {
         } catch (org.springframework.dao.EmptyResultDataAccessException e) {
             return null;
         } catch (RuntimeException e) {
+            LOGGER.warn(e.getMessage());
             throw new ServiceException(e.getMessage());
         }
         return user;
@@ -73,6 +81,7 @@ public class UserServiceImpl implements UserService {
         } catch (org.springframework.dao.EmptyResultDataAccessException e) {
             return null;
         } catch (RuntimeException e) {
+            LOGGER.warn(e.getMessage());
             throw new ServiceException(e.getMessage());
         }
         return user;
@@ -89,6 +98,7 @@ public class UserServiceImpl implements UserService {
         } catch (org.springframework.dao.EmptyResultDataAccessException e) {
             return null;
         } catch (RuntimeException e) {
+            LOGGER.warn(e.getMessage());
             throw new ServiceException(e.getMessage());
         }
         return user;
@@ -103,6 +113,7 @@ public class UserServiceImpl implements UserService {
         try {
             state = userDao.edit(user);
         } catch (RuntimeException e) {
+            LOGGER.warn(e.getMessage());
             throw new ServiceException(e.getMessage());
         }
         return state;

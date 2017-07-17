@@ -76,8 +76,6 @@
                         </div>
                         <input type="hidden" id="buffer" />
                         <input type="hidden" id="numOfActors" name="numOfActors" value="1"/>
-                        <input type="hidden" name="userId" value="${userId}"/>
-                        <input type="hidden" name="userAuth" value="${userAuth}"/>
                         <input type="button" onclick="newActor()" value="New actor" />
                         <div class="hiddenElement" id="tempNewActor">
                             <input type="text" class="inputField" id="newActorName" name="newActorName" />

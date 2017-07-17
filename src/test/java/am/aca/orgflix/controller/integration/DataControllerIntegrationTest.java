@@ -17,6 +17,11 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpSession;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 /**
  * Integration tests for Data controller
@@ -101,95 +106,100 @@ public class DataControllerIntegrationTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see FilmDataController#addFilmToWatchList(int, int, boolean)
+     * @see FilmDataController#addFilmToWatchList(javax.servlet.http.HttpSession, int, boolean)
      */
     @Test
     public void addToWatched_Success() {
         filmService.addFilm(film);
         userService.add(user);
 
-        ResponseEntity actualRE = filmDataController.addFilmToWatchList(user.getId(), film.getId(), true);
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpSession session = new MockHttpSession();
+        request.setSession(session);
+
+        session.setAttribute("userId",1);
+        ResponseEntity actualRE = filmDataController.addFilmToWatchList(session, film.getId(), true);
 
         Assert.assertEquals(new ResponseEntity("Film added to watch list", HttpStatus.OK), actualRE);
     }
 
     /**
-     * @see FilmDataController#addFilmToWatchList(int, int, boolean)
+     * @see FilmDataController#addFilmToWatchList(javax.servlet.http.HttpSession, int, boolean)
      */
     @Test
     public void addToWatched_Fail() {
-        ResponseEntity actualRE = filmDataController.addFilmToWatchList(user.getId(), film.getId(), true);
+        ResponseEntity actualRE = filmDataController.addFilmToWatchList(new MockHttpSession(), film.getId(), true);
 
         Assert.assertEquals(new ResponseEntity(HttpStatus.BAD_REQUEST), actualRE);
     }
 
     /**
-     * @see FilmDataController#addFilmToWishList(int, int, boolean) շ
+     * @see FilmDataController#addFilmToWishList(javax.servlet.http.HttpSession, int, boolean) շ
      */
     @Test
     public void addToPlanned_Success() {
         filmService.addFilm(film);
         userService.add(user);
 
-        ResponseEntity actualRE = filmDataController.addFilmToWishList(user.getId(), film.getId(),true);
+        ResponseEntity actualRE = filmDataController.addFilmToWishList(new MockHttpSession(), film.getId(),true);
 
         Assert.assertEquals(new ResponseEntity("Film added to wish list", HttpStatus.OK), actualRE);
     }
 
     /**
-     * @see FilmDataController#addFilmToWishList(int, int, boolean)
+     * @see FilmDataController#addFilmToWishList(javax.servlet.http.HttpSession, int, boolean)
      */
     @Test
     public void addToPlanned_Fail() {
-        ResponseEntity actualRE = filmDataController.addFilmToWishList(user.getId(), film.getId(),true);
+        ResponseEntity actualRE = filmDataController.addFilmToWishList(new MockHttpSession(), film.getId(),true);
 
         Assert.assertEquals(new ResponseEntity(HttpStatus.BAD_REQUEST), actualRE);
     }
 
     /**
-     * @see FilmDataController#removeFromWishList(int, int)
+     * @see FilmDataController#removeFromWishList(javax.servlet.http.HttpSession, int)
      */
     @Test
     public void removePlanned_Success() {
         filmService.addFilm(film);
         userService.add(user);
-        filmDataController.addFilmToWishList(user.getId(), film.getId(),true);
+        filmDataController.addFilmToWishList(new MockHttpSession(), film.getId(),true);
 
-        ResponseEntity actualRE = filmDataController.removeFromWishList(user.getId(), film.getId());
+        ResponseEntity actualRE = filmDataController.removeFromWishList(new MockHttpSession(), film.getId());
 
         Assert.assertEquals(new ResponseEntity("Film removed from wish list", HttpStatus.OK), actualRE);
     }
 
     /**
-     * @see FilmDataController#removeFromWishList(int, int)
+     * @see FilmDataController#removeFromWishList(javax.servlet.http.HttpSession, int)
      */
     @Test
     public void removePlanned_NotExisting_Fail() {
-        ResponseEntity actualRE = filmDataController.removeFromWishList(user.getId(), film.getId());
+        ResponseEntity actualRE = filmDataController.removeFromWishList(new MockHttpSession(), film.getId());
 
         Assert.assertEquals(new ResponseEntity("Not succeeded", HttpStatus.BAD_REQUEST), actualRE);
     }
 
     /**
-     * @see FilmDataController#removeFromWishList(int, int) (int, int)
+     * @see FilmDataController#removeFromWishList(javax.servlet.http.HttpSession, int)
      */
     @Test
     public void removeWatched_Success() {
         filmService.addFilm(film);
         userService.add(user);
-        filmDataController.addFilmToWatchList(user.getId(), film.getId(), true);
+        filmDataController.addFilmToWatchList(new MockHttpSession(), film.getId(), true);
 
-        ResponseEntity actualRE = filmDataController.removeFromWatchList(user.getId(), film.getId());
+        ResponseEntity actualRE = filmDataController.removeFromWatchList(new MockHttpSession(), film.getId());
 
         Assert.assertEquals(new ResponseEntity("Film removed from watch list", HttpStatus.OK), actualRE);
     }
 
     /**
-     * @see FilmDataController#removeFromWatchList(int, int) (int, int) (int, int)
+     * @see FilmDataController#removeFromWatchList(javax.servlet.http.HttpSession, int)
      */
     @Test
     public void removeWatched_NotExisting_Fail() {
-        ResponseEntity actualRE = filmDataController.removeFromWishList(user.getId(), film.getId());
+        ResponseEntity actualRE = filmDataController.removeFromWishList(new MockHttpSession(), film.getId());
 
         Assert.assertEquals(new ResponseEntity("Not succeeded", HttpStatus.BAD_REQUEST), actualRE);
     }

@@ -5,6 +5,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpSession;
+
 /**
  * ModelAndView controller for user related actions
  */
@@ -14,12 +16,20 @@ public class UserController extends MVController{
 
     @RequestMapping("/signup")
     public ModelAndView signup() {
-        ModelAndView modelAndView = new ModelAndView("signup");
-        return getGuestMV(modelAndView);
+        ModelAndView modelAndView;
+        try{
+            modelAndView = new ModelAndView("signup");
+            modelAndView = getGuestMV(modelAndView);
+        } catch (RuntimeException e) {
+            LOGGER.warn(e.getMessage());
+            modelAndView = new ModelAndView("error","message",e);
+        }
+        return modelAndView;
     }
 
     @RequestMapping("/signed")
-    public ModelAndView signupResult(@RequestParam("nick") String nick,
+    public ModelAndView signupResult(HttpSession session,
+                                     @RequestParam("nick") String nick,
                                      @RequestParam("userName") String userName,
                                      @RequestParam("email") String email,
                                      @RequestParam("pass") String pass) {
@@ -30,50 +40,76 @@ public class UserController extends MVController{
         try {
             int userId = userService.add(user);
             if (userId != -1) {
+                session.setAttribute("userId", userId);
+                session.setAttribute("user", user.getNick() + " (" + email + ")");
+
                 modelAndView = new ModelAndView("index");
                 modelAndView.addObject("films", filmService.getFilmsList(0));
-                modelAndView.addObject("userId", userId);
-                modelAndView.addObject("user", nick + " (" + email + ")");
-                modelAndView.addObject("userAuth", pass.hashCode() + email.hashCode());
+                modelAndView.addObject("numOfPages", filmService.totalNumberOfFilms() / 12);
                 modelAndView.addObject("currPage", 0);
                 modelAndView.addObject("page", "index");
             } else {
-                modelAndView = new ModelAndView("error");
+                modelAndView = new ModelAndView("error", "message", "You are not logged in, please first login");
             }
         } catch (RuntimeException e) {
-            modelAndView = new ModelAndView("error");
+            LOGGER.warn(e.getMessage());
+            modelAndView = new ModelAndView("error","message",e);
         }
-
         return modelAndView;
     }
 
 
     @RequestMapping("/login")
     public ModelAndView login() {
-        return new ModelAndView("login");
+        ModelAndView modelAndView;
+        try{
+            modelAndView = new ModelAndView("login");
+        }catch (RuntimeException e){
+            LOGGER.warn(e.getMessage());
+            modelAndView = new ModelAndView("error","message",e);
+        }
+        return modelAndView;
     }
 
-    @RequestMapping("/logedIn")
-    public ModelAndView paging(@RequestParam("email") String email,
+    @RequestMapping("/logout")
+    public ModelAndView logout(HttpSession session) {
+        ModelAndView modelAndView;
+        try{
+            session.setAttribute("userId", -1);
+            session.removeAttribute("user");
+            modelAndView = new ModelAndView("login");
+        }catch (RuntimeException e){
+            LOGGER.warn(e.getMessage());
+            modelAndView = new ModelAndView("error","message",e);
+        }
+        return modelAndView;
+    }
+
+    @RequestMapping("/loggedIn")
+    public ModelAndView paging(HttpSession session,
+                               @RequestParam("email") String email,
                                @RequestParam("pass") String pass) {
 
         ModelAndView modelAndView;
         try {
             User user = userService.authenticate(email, pass);
             if (user == null) {
-                modelAndView = new ModelAndView("error");
+                modelAndView = new ModelAndView("error","message","Wrong email/or password, please try again");
+                session.setAttribute("userId", -1);
+                session.setAttribute("user", "");
             } else {
                 modelAndView = new ModelAndView("index");
                 modelAndView.addObject("films", filmService.getFilmsList(0));
                 modelAndView.addObject("numOfPages", filmService.totalNumberOfFilms() / 12);
-                modelAndView.addObject("userId", user.getId());
-                modelAndView.addObject("user", user.getNick() + " (" + email + ")");
-                modelAndView.addObject("userAuth", user.getPass().hashCode() + email.hashCode());
                 modelAndView.addObject("currPage", 0);
                 modelAndView.addObject("page", "index");
+
+                session.setAttribute("userId", user.getId());
+                session.setAttribute("user", user.getNick() + " (" + user.getEmail() + ")");
             }
         }catch (RuntimeException e){
-            modelAndView = new ModelAndView("error");
+            LOGGER.warn(e.getMessage());
+            modelAndView = new ModelAndView("error","message",e);
         }
         return modelAndView;
     }

@@ -17,10 +17,15 @@ import java.util.List;
  */
 @Transactional(readOnly = true)
 @Service
-public class CastServiceImpl implements CastService {
+public class CastServiceImpl extends BaseService implements CastService {
 
     private CastDAO castDAO;
     private FilmDAO filmDAO;
+
+    public CastServiceImpl() {
+        // class name to include in logging
+        super(CastServiceImpl.class);
+    }
 
     @Autowired
     public void setCastDAO(CastDAO castDAO) {
@@ -42,6 +47,7 @@ public class CastServiceImpl implements CastService {
         try {
             result = castDAO.addCast(cast);
         } catch (RuntimeException e) {
+            LOGGER.warn(e.getMessage());
             throw new ServiceException(e.toString());
         }
         return result;
@@ -57,12 +63,10 @@ public class CastServiceImpl implements CastService {
         try {
             if (castDAO.isStarringIn(cast.getId(), filmId))
                 return false;
-        } catch (RuntimeException e) {
-            throw new ServiceException(e.getMessage());
-        }
-        try {
+
             state = castDAO.addCastToFilm(cast, filmId);
         } catch (RuntimeException e) {
+            LOGGER.warn(e.getMessage());
             throw new ServiceException(e.getMessage());
         }
         return state;
@@ -78,12 +82,9 @@ public class CastServiceImpl implements CastService {
         try {
             if (!castDAO.exists(cast))
                 return false;
-        } catch (RuntimeException e) {
-            throw new ServiceException(e.getMessage());
-        }
-        try {
             state = castDAO.editCast(cast);
         } catch (RuntimeException e) {
+            LOGGER.warn(e.getMessage());
             throw new ServiceException(e.getMessage());
         }
         return state;
@@ -98,6 +99,7 @@ public class CastServiceImpl implements CastService {
         try {
             list = castDAO.listCast();
         } catch (RuntimeException e) {
+            LOGGER.warn(e.getMessage());
             throw new ServiceException(e.getMessage());
         }
         return list;
@@ -112,6 +114,7 @@ public class CastServiceImpl implements CastService {
         try {
             list = filmDAO.getFilmsByCast(castId);
         } catch (RuntimeException e) {
+            LOGGER.warn(e.getMessage());
             throw new ServiceException(e.getMessage());
         }
         return list;
@@ -126,16 +129,22 @@ public class CastServiceImpl implements CastService {
         try {
             list = castDAO.getCastsByFilm(filmId);
         } catch (RuntimeException e) {
+            LOGGER.warn(e.getMessage());
             throw new ServiceException(e.getMessage());
         }
         return list;
     }
+
+    /**
+     * @see CastService#getCastById(int)
+     */
     @Override
     public Cast getCastById(int castId) {
         Cast cast;
         try {
             cast = castDAO.getCastById(castId);
         } catch (RuntimeException e) {
+            LOGGER.warn(e.getMessage());
             throw new ServiceException(e.getMessage());
         }
         return cast;

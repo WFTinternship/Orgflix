@@ -18,12 +18,9 @@ import java.util.List;
 
 @Transactional(readOnly = true)
 @Service
-public class ListServiceImpl implements ListService {
-
-    private static final Logger LOGGER = Logger.getLogger(ListServiceImpl.class);
+public class ListServiceImpl extends BaseService implements ListService {
 
     private ListDao listDao;
-
     private CastService castService;
 
     @Autowired
@@ -34,6 +31,11 @@ public class ListServiceImpl implements ListService {
     @Autowired
     public void setCastService(CastService castService) {
         this.castService = castService;
+    }
+
+    public ListServiceImpl() {
+        // class name to include in logging
+        super(ListServiceImpl.class);
     }
 
     /**
@@ -51,6 +53,7 @@ public class ListServiceImpl implements ListService {
             //case: not planned
             else state = listDao.insertWatched(filmId, userId, isPublic);
         } catch (RuntimeException e) {
+            LOGGER.warn(e.getMessage());
             throw new ServiceException(e.getMessage());
         }
         return state;
@@ -71,6 +74,7 @@ public class ListServiceImpl implements ListService {
                 //case: not watched
             else state = listDao.insertPlanned(filmId, userId, isPublic);
         } catch (RuntimeException e) {
+            LOGGER.warn(e.getMessage());
             throw new ServiceException(e.getMessage());
         }
         return state;
@@ -89,6 +93,7 @@ public class ListServiceImpl implements ListService {
                 film.setCasts(castService.getCastsByFilm(film.getId()));
             }
         } catch (RuntimeException e) {
+            LOGGER.warn(e.getMessage());
             throw new ServiceException(e.getMessage());
         }
         return list;
@@ -107,6 +112,7 @@ public class ListServiceImpl implements ListService {
                 film.setCasts(castService.getCastsByFilm(film.getId()));
             }
         } catch (RuntimeException e) {
+            LOGGER.warn(e.getMessage());
             throw new ServiceException(e.getMessage());
         }
         return list;
@@ -125,6 +131,7 @@ public class ListServiceImpl implements ListService {
                 film.setCasts(castService.getCastsByFilm(film.getId()));
             }
         } catch (RuntimeException e) {
+            LOGGER.warn(e.getMessage());
             throw new ServiceException(e.getMessage());
         }
         return list;
@@ -143,6 +150,7 @@ public class ListServiceImpl implements ListService {
                 film.setCasts(castService.getCastsByFilm(film.getId()));
             }
         } catch (RuntimeException e) {
+            LOGGER.warn(e.getMessage());
             throw new ServiceException(e.getMessage());
         }
         return list;
@@ -160,6 +168,7 @@ public class ListServiceImpl implements ListService {
                 return false;
             state = listDao.changePrivacy(film, userId, false);
         } catch (RuntimeException e) {
+            LOGGER.warn(e.getMessage());
             throw new ServiceException(e.getMessage());
         }
         return state;
@@ -177,6 +186,7 @@ public class ListServiceImpl implements ListService {
                 return false;
             state = listDao.changePrivacy(film, userId, true);
         } catch (RuntimeException e) {
+            LOGGER.warn(e.getMessage());
             throw new ServiceException(e.getMessage());
         }
         return state;
@@ -195,6 +205,7 @@ public class ListServiceImpl implements ListService {
                 total = listDao.totalNumberOfPlanned(userId);
             }
         } catch (RuntimeException e) {
+            LOGGER.warn(e.getMessage());
             throw new ServiceException(e.getMessage());
         }
         return total;
@@ -214,6 +225,7 @@ public class ListServiceImpl implements ListService {
                 state = listDao.resetWatched(filmId, userId);
             } else state = listDao.removeFilm(filmId, userId);
         } catch (RuntimeException e) {
+            LOGGER.warn(e.getMessage());
             throw new ServiceException(e.getMessage());
         }
         return state;
@@ -233,6 +245,7 @@ public class ListServiceImpl implements ListService {
                 state = listDao.resetPlanned(filmId, userId);
             else state = listDao.removeFilm(filmId, userId);
         } catch (RuntimeException e) {
+            LOGGER.warn(e.getMessage());
             throw new ServiceException(e.getMessage());
         }
         return state;

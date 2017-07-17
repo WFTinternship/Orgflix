@@ -23,7 +23,7 @@
                 <h1>Login to Your account at OrgFlix</h1>
             </header>
             <section>
-                <form id="loginForm" method="POST" action="/logedIn">
+                <form id="loginForm" method="POST" action="/loggedIn">
                     <div>
                         <span>Email</span>
                         <input type="text" id="email" name="email" class="inputField" />

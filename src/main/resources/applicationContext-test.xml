@@ -26,7 +26,6 @@
     <context:component-scan base-package="am.aca.orgflix.dao.impljdbc"/>
     <context:component-scan base-package="am.aca.orgflix.service.impl"/>
     <context:component-scan base-package="am.aca.orgflix.controller"/>
-    <!--<context:component-scan base-package="am.aca.orgflix.dao.implHibernate"/>-->
 
     <bean id="testHelper" class="am.aca.orgflix.util.TestHelper"/>
 

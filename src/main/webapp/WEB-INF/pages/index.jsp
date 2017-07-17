@@ -22,7 +22,7 @@
     <div id="main">
         <div class="inner">
             <header>
-                <c:if test="${ (page == 'index') || (userId==-1)}">
+                <c:if test="${ (page == 'index') || (sessionScope.userId==-1)}">
                     <h1>This is OrgFlix, a free film list organizer</h1>
                 </c:if>
                 <c:if test="${page == 'watch_list'}">
@@ -39,12 +39,12 @@
                             <img src='<c:url value="../resources/images/${film.image}" />' />
 
                         </div>
-                        <c:if test="${userId == -1}">
+                        <c:if test="${sessionScope.userId == -1}">
                             <div class="film-buttons average-star">
                                 <i class="fa fa-star fa-sm"></i> (<c:out value="${ratings[loop.index]}"/> )
                             </div>
                         </c:if>
-                        <c:if test="${userId != -1}">
+                        <c:if test="${sessionScope.userId != -1}">
                             <div id="contr_${film.id}" class="film-buttons">
                                 <c:if test="${page == 'index'}">
                                     <div class="tableCell">
@@ -63,10 +63,10 @@
                                     </div>
                                 </c:if>
                                 <c:if test="${page == 'watch_list'}">
-                                    <a href="#" class="no_link" onclick="RemoveFromList('WatchList','${film.id}')"><i class="fa fa-trash-o fa-fw"></i></a>
+                                    <a href="#" class="no_link" onclick="RemoveFromList('watch','${film.id}')"><i class="fa fa-trash-o fa-fw"></i></a>
                                 </c:if>
                                 <c:if test="${page == 'wish_list'}">
-                                    <a href="#" class="no_link" onclick="RemoveFromList('WishList','${film.id}')"><i class="fa fa-trash-o fa-fw"></i></a>
+                                    <a href="#" class="no_link" onclick="RemoveFromList('wish','${film.id}')"><i class="fa fa-trash-o fa-fw"></i></a>
                                 </c:if>
                             </div>
                         </c:if>
@@ -86,7 +86,9 @@
                     </div>
                 </c:if>
 
-                <div id="pop-up-result" class="pop-up-result"></div>
+                <div id="outer-pop-up">
+                    <div id="inner-pop-up" ></div>
+                </div>
             </section>
         </div>
     </div>

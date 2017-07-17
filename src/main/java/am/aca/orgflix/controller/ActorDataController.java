@@ -36,6 +36,7 @@ public class ActorDataController extends DataController {
             sb.append("]");
             return new ResponseEntity(sb.toString(), HttpStatus.OK);
         } catch (RuntimeException e) {
+            LOGGER.warn(e.getMessage());
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
     }

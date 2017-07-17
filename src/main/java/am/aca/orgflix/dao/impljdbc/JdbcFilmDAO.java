@@ -1,7 +1,6 @@
 package am.aca.orgflix.dao.impljdbc;
 
 import am.aca.orgflix.dao.BaseDAO;
-import am.aca.orgflix.dao.DaoException;
 import am.aca.orgflix.dao.FilmDAO;
 import am.aca.orgflix.dao.impljdbc.mapper.FilmRowMapper;
 import am.aca.orgflix.entity.Film;
@@ -15,7 +14,7 @@ import org.springframework.stereotype.Component;
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.util.Calendar;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -90,22 +89,17 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
     @Override
     public Film getFilmById(int id) {
         final String getQuery = "SELECT * FROM FILMS WHERE ID = ? LIMIT 1";
-        try {
-            return getJdbcTemplate().queryForObject(getQuery, new Object[]{id}, new FilmRowMapper());
-        } catch (RuntimeException e) {
-            // no film with such id exists in the DB
-            return null;
-        }
+        return getJdbcTemplate().queryForObject(getQuery, new Object[]{id}, new FilmRowMapper());
     }
 
     /**
-     * @see FilmDAO#getFilmsList(int)
+     * @see FilmDAO#getFilmsList(int, int)
      */
     @Override
-    public List<Film> getFilmsList(int startIndex) {
-        final String query = "SELECT * FROM FILMS LIMIT ? , 12 ";
+    public List<Film> getFilmsList(int startIndex, int pageSize) {
+        final String query = "SELECT * FROM FILMS LIMIT ? , ? ";
         return getJdbcTemplate().query(query,
-                new Object[]{startIndex},
+                new Object[]{startIndex, pageSize},
                 new FilmRowMapper());
     }
 
@@ -173,7 +167,7 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
     @Override
     public int getRating(int filmId, int starType) {
         String starTypeQuery = "RATE_" + starType + "STAR";
-        final String query = "SELECT" + starTypeQuery + "FROM FILMS WHERE ID = ?";
+        final String query = "SELECT " + starTypeQuery + " FROM FILMS WHERE ID = ?";
         return getJdbcTemplate().queryForObject(query, new Object[]{filmId}, Integer.class);
     }
 
@@ -187,32 +181,64 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
     }
 
     /**
-     * @see FilmDAO#getFilteredFilms(java.lang.String, int, int, java.lang.String,
-     * java.lang.String, java.lang.String, java.lang.String)
+     * @see FilmDAO#getFilteredFilms(String, int, int, boolean, String, String, int)
      */
     @Override
-    public List<Film> getFilteredFilms(String title, int startYear, int finishYear, String hasOscar, String director, String castId, String genreId) {
-        final String query = "SELECT FILMS.ID, FILMS.TITLE, FILMS.PROD_YEAR, " +
-                "FILMS.HAS_OSCAR, FILMS.image_ref, FILMS.DIRECTOR, " +
+    public List<Film> getFilteredFilms(String title, int startYear, int finishYear,
+                                       boolean hasOscar, String director, String castName, int genreId) {
+
+        StringBuilder queryBuilder = new StringBuilder();
+
+        List<Object> paramsList = new ArrayList<>();
+
+        queryBuilder.append("SELECT FILMS.ID, FILMS.TITLE, FILMS.PROD_YEAR, " +
+                "FILMS.HAS_OSCAR, FILMS.IMAGE_REF, FILMS.DIRECTOR, " +
                 "FILMS.RATE_1STAR, FILMS.RATE_2STAR, FILMS.RATE_3STAR, " +
                 "FILMS.RATE_4STAR, FILMS.RATE_5STAR FROM FILMS " +
                 "LEFT JOIN FILM_TO_CAST " +
                 "ON FILMS.ID = FILM_TO_CAST.FILM_ID " +
+                "LEFT JOIN CASTS " +
+                "ON FILM_TO_CAST.ACTOR_ID = CASTS.ID " +
                 "LEFT JOIN GENRE_TO_FILM " +
                 "ON GENRE_TO_FILM.FILM_ID = FILMS.ID " +
-                "WHERE FILMS.TITLE LIKE ? " +
-                "AND FILMS.PROD_YEAR >= ? " +
-                "AND FILMS.PROD_YEAR <= ? " +
-                "AND FILMS.HAS_OSCAR LIKE ? " +
-                "AND (FILMS.DIRECTOR LIKE ? " +
-                "OR FILMS.DIRECTOR IS NULL) " +
-                "AND (FILM_TO_CAST.Actor_ID LIKE ? " +
-                "OR FILM_TO_CAST.Actor_ID IS NULL)" +
-                "AND (GENRE_TO_FILM.GENRE_ID LIKE ? " +
-                "OR GENRE_TO_FILM.GENRE_ID IS NULL) ";
-        return getJdbcTemplate().query(query, new Object[]{
-                "%" + title + "%", startYear, finishYear, hasOscar, director, castId, genreId
-        }, new FilmRowMapper());
+                "WHERE FILMS.TITLE LIKE ? ");
+
+        paramsList.add("%" + title + "%");
+
+        if (startYear != 0) {
+            queryBuilder.append("AND FILMS.PROD_YEAR >= ? ");
+            paramsList.add(startYear);
+        }
+
+        if (finishYear != 0) {
+            queryBuilder.append("AND FILMS.PROD_YEAR <= ? ");
+            paramsList.add(finishYear);
+        }
+
+        if (hasOscar)
+            queryBuilder.append("AND FILMS.HAS_OSCAR = TRUE ");
+
+        if (director != null) {
+            queryBuilder.append("AND FILMS.DIRECTOR LIKE ? ");
+            paramsList.add("%" + director + "%");
+        }
+
+        if (castName != null) {
+            queryBuilder.append("AND CASTS.ACTOR_NAME LIKE ? ");
+            paramsList.add("%" + castName + "%");
+        }
+
+        if (genreId > 0) {
+            queryBuilder.append("AND GENRE_TO_FILM.GENRE_ID = ? ");
+            paramsList.add(genreId);
+        }
+
+        queryBuilder.append("GROUP BY FILMS.ID");
+
+        Object[] params = paramsList.toArray(new Object[0]);
+        final String query = queryBuilder.toString();
+
+        return getJdbcTemplate().query(query, params, new FilmRowMapper());
     }
 
 
@@ -223,17 +249,9 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
      */
     @Override
     public boolean editFilm(Film film) {
-        // ensure that all required fields are properly assigned
-        if (!checkRequiredFields(film.getTitle()) || 1888 > film.getProdYear()
-                || Calendar.getInstance().get(Calendar.YEAR) + 7 < film.getProdYear())
-            throw new DaoException("Illegal argument");
-
         final String query = "UPDATE FILMS SET TITLE = ?,PROD_YEAR = ?,HAS_OSCAR = ?, image_ref = ?, RATE_1STAR = ? " +
                 ",RATE_2STAR = ?, RATE_3STAR = ?,RATE_4STAR = ?,RATE_5STAR = ?, DIRECTOR = ? " +
                 " WHERE ID = ? ";
-//        final String query = "UPDATE films SET Title = ?,Prod_Year = ?,HasOscar = ?, image_ref = ?, Rate_1star = ? " +
-//                ",Rate_2star = ?, Rate_3star = ?,Rate_4star = ?,Rate_5star = ?, director = ? " +
-//                " WHERE id = ? ";
 
         return getJdbcTemplate().update(query,
                 film.getTitle(),

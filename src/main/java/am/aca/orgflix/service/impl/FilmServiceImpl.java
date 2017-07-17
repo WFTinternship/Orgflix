@@ -46,7 +46,7 @@ public class FilmServiceImpl implements FilmService {
             if (!filmDao.addFilm(film))
                 return false;
             else
-                return  optimizeRelations(film);
+                return optimizeRelations(film);
         } catch (RuntimeException e) {
             throw new ServiceException(e.getMessage());
         }
@@ -110,7 +110,7 @@ public class FilmServiceImpl implements FilmService {
     public List<Film> getFilmsList(int startIndex) {
         List<Film> list;
         try {
-            list = filmDao.getFilmsList(startIndex);
+            list = filmDao.getFilmsList(startIndex, 12);
         } catch (RuntimeException e) {
             throw new ServiceException(e.getMessage());
         }
@@ -185,15 +185,14 @@ public class FilmServiceImpl implements FilmService {
     }
 
     /**
-     *
      * @see FilmService#getAllRatings(int)
      */
     @Override
     public String[] getAllRatings(int startIndex) {
         List<Film> filmList = getFilmsList(startIndex);
         String[] ratings = new String[filmList.size()];
-        for(int i=0;i<filmList.size();++i){
-            ratings[i]=String.format("%.1f",getRating( filmList.get(i).getId()));
+        for (int i = 0; i < filmList.size(); ++i) {
+            ratings[i] = String.format("%.1f", getRating(filmList.get(i).getId()));
         }
         return ratings;
     }
@@ -219,7 +218,8 @@ public class FilmServiceImpl implements FilmService {
     public List<Film> getFilteredFilms(String title, int startYear, int finishYear, boolean hasOscar, String director, int castId, Genre genre) {
         List<Film> films;
         try {
-            films = filmDao.getFilteredFilms(title, startYear, finishYear, hasOscar ? "1" : "%", director, String.valueOf(castId), String.valueOf(genre.getValue()));
+            System.out.println("hi");
+            films = filmDao.getFilteredFilms(title, startYear, finishYear, hasOscar, director, String.valueOf(castId), genre.getValue());
         } catch (RuntimeException e) {
             throw new ServiceException(e.getMessage());
         }

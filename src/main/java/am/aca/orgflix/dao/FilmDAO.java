@@ -52,9 +52,10 @@ public interface FilmDAO {
      * Get one page of lists of films from DB, each page contains 12 films
      *
      * @param startIndex 0 based page index
-     * @return a list of films (up to 12 films) for the requested page
+     * @param pageSize maximum number of films per page
+     * @return a list of films for the requested page
      */
-    List<Film> getFilmsList(int startIndex);
+    List<Film> getFilmsList(int startIndex, int pageSize);
 
     /**
      * Return the list of all films associated with provided genre
@@ -104,11 +105,11 @@ public interface FilmDAO {
      * @param finishYear the upper bound of the desired film's release date
      * @param hasOscar   indicator whether or not the desired film has Oscar for Best Picture
      * @param director   the full or partial name of the desired film's director
-     * @param castId     the id of the desired film's cast member
+     * @param castName   the the desired film's cast member
      * @param genreId    the id of the desired film's genre
      * @return list of all films satisfying all filter and search conditions given by the user
      */
-    List<Film> getFilteredFilms(String title, int startYear, int finishYear, String hasOscar, String director, String castId, String genreId);
+    List<Film> getFilteredFilms(String title, int startYear, int finishYear, boolean hasOscar, String director, String castName, int genreId);
 
     // UPDATE
 

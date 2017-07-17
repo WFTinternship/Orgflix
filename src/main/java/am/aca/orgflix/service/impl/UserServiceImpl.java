@@ -60,7 +60,7 @@ public class UserServiceImpl extends BaseService implements UserService {
     public User get(String email) {
         User user;
         try {
-            user = userDao.get(email);
+            user = userDao.getByEmail(email);
         } catch (org.springframework.dao.EmptyResultDataAccessException e) {
             return null;
         } catch (RuntimeException e) {

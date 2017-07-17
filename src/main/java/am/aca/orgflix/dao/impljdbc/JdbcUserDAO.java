@@ -68,12 +68,18 @@ public class JdbcUserDAO extends BaseDAO implements UserDAO {
     }
 
     /**
-     * @see UserDAO#get(java.lang.String)
+     * @see UserDAO#getByEmail(java.lang.String)
      */
     @Override
-    public User get(String email) {
+    public User getByEmail(String email) {
         final String query = "SELECT * FROM USERS WHERE EMAIL = ? LIMIT 1";
         return getJdbcTemplate().queryForObject(query, new Object[]{email}, new UserRowMapper());
+    }
+
+    @Override
+    public User getById(int id) {
+        final String query = "SELECT * FROM USERS WHERE ID = ?";
+        return getJdbcTemplate().queryForObject(query, new Object[] {id}, new UserRowMapper());
     }
 
     /**

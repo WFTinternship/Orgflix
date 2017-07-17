@@ -106,12 +106,12 @@ public class UserServiceMockTest extends BaseUnitTest {
      */
     @Test
     public void getUser_ByEmail_Success() {
-        when(userDaoMock.get("bbanner@avengers.com")).thenReturn(user);
+        when(userDaoMock.getByEmail("bbanner@avengers.com")).thenReturn(user);
 
         User actualUser = userService.get("bbanner@avengers.com");
         Assert.assertEquals(user, actualUser);
 
-        verify(userDaoMock, times(1)).get("bbanner@avengers.com");
+        verify(userDaoMock, times(1)).getByEmail("bbanner@avengers.com");
     }
 
     /**
@@ -119,12 +119,12 @@ public class UserServiceMockTest extends BaseUnitTest {
      */
     @Test
     public void getUser_ByEmail_Fail() {
-        when(userDaoMock.get("bot@mail.ru")).thenThrow(DaoException.class);
+        when(userDaoMock.getByEmail("bot@mail.ru")).thenThrow(DaoException.class);
 
         try {
             userService.get("bot@mail.ru");
         } catch (ServiceException e) {
-            verify(userDaoMock, times(1)).get("bot@mail.ru");
+            verify(userDaoMock, times(1)).getByEmail("bot@mail.ru");
         }
     }
 

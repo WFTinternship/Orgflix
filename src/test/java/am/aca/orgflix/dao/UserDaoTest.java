@@ -1,7 +1,6 @@
 package am.aca.orgflix.dao;
 
 import am.aca.orgflix.BaseIntegrationTest;
-import am.aca.orgflix.dao.impljdbc.JdbcUserDAO;
 import am.aca.orgflix.entity.User;
 import am.aca.orgflix.util.TestHelper;
 import org.junit.After;
@@ -36,127 +35,100 @@ public class UserDaoTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see JdbcUserDAO#add(am.aca.orgflix.entity.User)
+     * @see UserDAO#add(am.aca.orgflix.entity.User)
      */
     @Test
-    public void addUser_ValidUser_Success() {
+    public void addUser_Success() {
         int id = jdbcUserDAO.add(standardUser);
         Assert.assertTrue(id > 0);
     }
 
     /**
-     * @see JdbcUserDAO#add(am.aca.orgflix.entity.User)
+     * @see UserDAO#add(am.aca.orgflix.entity.User)
      */
     @Test
     public void addUser_EmptyUserName_Success() {
         user = new User("scarface", "", "scarface@miami.com", "elvira");
-        boolean status = jdbcUserDAO.add(user) > 0;
-        Assert.assertTrue(status);
+        int id = jdbcUserDAO.add(user);
+        Assert.assertTrue(id > 0);
     }
 
     /**
-     * @see JdbcUserDAO#add(am.aca.orgflix.entity.User)
+     * @see UserDAO#add(am.aca.orgflix.entity.User)
      */
-    @Test(expected = DaoException.class)
-    public void addUser_EmptyNick_Fail() {
-        jdbcUserDAO.add(new User("", "Tony Montana", "scarface@miami.com", "elvira"));
-    }
-
-    /**
-     * @see JdbcUserDAO#add(am.aca.orgflix.entity.User)
-     */
-    @Test(expected = DaoException.class)
-    public void addUser_EmptyEmail_Fail() {
-        jdbcUserDAO.add(new User("scarface", "Tony Montana", "", "elvira"));
-    }
-
-    /**
-     * @see JdbcUserDAO#add(am.aca.orgflix.entity.User)
-     */
-    @Test(expected = DaoException.class)
-    public void addUser_EmptyPass_Fail() {
-        jdbcUserDAO.add(new User("scarface", "Tony Montana", "scarface@miami.com", ""));
-    }
-
-    /**
-     * @see JdbcUserDAO#add(am.aca.orgflix.entity.User)
-     */
-    @Test(expected = DaoException.class)
+    @Test(expected = RuntimeException.class)
     public void addUser_NullNick_Fail() {
         jdbcUserDAO.add(new User(null, "Tony Montana", "scarface@miami.com", "elvira"));
     }
 
     /**
-     * @see JdbcUserDAO#add(am.aca.orgflix.entity.User)
+     * @see UserDAO#add(am.aca.orgflix.entity.User)
      */
-    @Test(expected = DaoException.class)
+    @Test(expected = RuntimeException.class)
     public void addUser_NullEmail_Fail() {
         jdbcUserDAO.add(new User("scarface", "Tony Montana", null, "elvira"));
     }
 
     /**
-     * @see JdbcUserDAO#add(am.aca.orgflix.entity.User)
+     * @see UserDAO#add(am.aca.orgflix.entity.User)
      */
-    @Test(expected = DaoException.class)
+    @Test(expected = RuntimeException.class)
     public void addUser_NullPass_Fail() {
         jdbcUserDAO.add(new User("scarface", "Tony Montana", "scarface@miami.com", null));
     }
 
     /**
-     * @see JdbcUserDAO#add(am.aca.orgflix.entity.User)
+     * @see UserDAO#add(am.aca.orgflix.entity.User)
      */
-    @Test(expected = org.springframework.dao.DuplicateKeyException.class)
+    @Test(expected = RuntimeException.class)
     public void addUser_EmailAlreadyExists_Fail() {
         jdbcUserDAO.add(standardUser);
-        jdbcUserDAO.add(new User("armen", "Armen Hakobyan", "scarface@miami.com", "elvira1"));
+        jdbcUserDAO.add(new User("scarface6", "Tony Montana", "scarface@miami.com", "elvira"));
     }
 
     /**
-     * @see JdbcUserDAO#get(int)
+     * @see UserDAO#getById(int)
      */
     @Test
     public void getUser_ById_Success() {
         int id = jdbcUserDAO.add(standardUser);
-        User gotUser = jdbcUserDAO.get(id);
+        User actualUser = jdbcUserDAO.getById(id);
 
-        boolean status = standardUser.equals(gotUser);
-        Assert.assertTrue(status);
+        Assert.assertEquals(standardUser, actualUser);
     }
 
     /**
-     * @see JdbcUserDAO#get(int)
+     * @see UserDAO#getById(int)
      */
-    @Test(expected = org.springframework.dao.EmptyResultDataAccessException.class)
+    @Test(expected = RuntimeException.class)
     public void getUser_ByWrongId_Fail() {
         jdbcUserDAO.add(standardUser);
 
-        boolean status = standardUser.equals(jdbcUserDAO.get(-1));
-        Assert.assertFalse(status);
+        jdbcUserDAO.getById(-1);
     }
 
     /**
-     * @see JdbcUserDAO#get(String)
+     * @see UserDAO#getByEmail(String)
      */
     @Test
     public void getUser_ByEmail_Success() {
         jdbcUserDAO.add(standardUser);
 
-        boolean status = standardUser.equals(jdbcUserDAO.get("scarface@miami.com"));
-        Assert.assertTrue(status);
+        User actualUser = jdbcUserDAO.getByEmail("scarface@miami.com");
+        Assert.assertEquals(standardUser, actualUser);
     }
 
     /**
-     * @see JdbcUserDAO#get(String)
+     * @see UserDAO#getByEmail(String)
      */
-    @Test(expected = org.springframework.dao.EmptyResultDataAccessException.class)
+    @Test(expected = RuntimeException.class)
     public void getUser_ByWrongEmail_Fail() {
         jdbcUserDAO.add(standardUser);
-        jdbcUserDAO.get("davit.abovyan1@miami.com");
-//        Assert.assertFalse(user.equals(jdbcUserDAO.get("davit.abovyan1@miami.com")));
+        jdbcUserDAO.getByEmail("Sscarface@miami.com");
     }
 
     /**
-     * @see JdbcUserDAO#getByNick(String)
+     * @see UserDAO#getByNick(String)
      */
     @Test
     public void getByNick_Success() {
@@ -166,214 +138,170 @@ public class UserDaoTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see JdbcUserDAO#getByNick(String)
+     * @see UserDAO#getByNick(String)
      */
-    @Test (expected = org.springframework.dao.EmptyResultDataAccessException.class)
+    @Test(expected = RuntimeException.class)
     public void getByNick_NotExisting_Fail() {
         jdbcUserDAO.getByNick("scarface");
     }
 
     /**
-     * @see JdbcUserDAO#authenticate(java.lang.String, java.lang.String)
+     * @see UserDAO#authenticate(java.lang.String, java.lang.String)
      */
     @Test
     public void authenticate_Success() {
         jdbcUserDAO.add(standardUser);
 
-        boolean status = standardUser.equals(jdbcUserDAO.authenticate(standardUser.getEmail(), standardUser.getPass()));
-        Assert.assertTrue(status);
+        User actualUser = jdbcUserDAO.authenticate(standardUser.getEmail(), standardUser.getPass());
+        Assert.assertEquals(standardUser, actualUser);
     }
 
     /**
-     * @see JdbcUserDAO#authenticate(java.lang.String, java.lang.String)
+     * @see UserDAO#authenticate(java.lang.String, java.lang.String)
      */
-    @Test(expected = org.springframework.dao.EmptyResultDataAccessException.class)
+    @Test(expected = RuntimeException.class)
     public void authenticate_WrongPass_Fail() {
         jdbcUserDAO.add(standardUser);
         jdbcUserDAO.authenticate(standardUser.getEmail(), "xxx");
     }
 
     /**
-     * @see JdbcUserDAO#edit(am.aca.orgflix.entity.User)
+     * @see UserDAO#edit(am.aca.orgflix.entity.User)
      */
     @Test
     public void editUser_Email_Success() {
         user = new User("scarface", "Tony Montana", "scarface@miami.com", "elvira");
-        jdbcUserDAO.add(user);
-        final String newEmail = "gagik@miami.com";
+        int id = jdbcUserDAO.add(user);
+
+        final String newEmail = "scarface@miami.com";
         user.setEmail(newEmail);
-        jdbcUserDAO.edit(user);
-        String actualEmail = jdbcUserDAO.get(newEmail).getEmail();
+        boolean status = jdbcUserDAO.edit(user);
+
+        String actualEmail = jdbcUserDAO.getById(id).getEmail();
+        Assert.assertTrue(status);
         Assert.assertEquals(newEmail, actualEmail);
     }
 
     /**
-     * @see JdbcUserDAO#edit(am.aca.orgflix.entity.User)
+     * @see UserDAO#edit(am.aca.orgflix.entity.User)
      */
     @Test
     public void editUser_Nick_Success() {
         user = new User("scarface", "Tony Montana", "scarface@miami.com", "elvira");
         int id = jdbcUserDAO.add(user);
-        final String newNick = "davo";
-        user.setNick(newNick);
-        jdbcUserDAO.edit(user);
 
-        String actualNick = jdbcUserDAO.get(id).getNick();
+        final String newNick = "scarface Tony";
+        user.setNick(newNick);
+        boolean status = jdbcUserDAO.edit(user);
+
+        String actualNick = jdbcUserDAO.getById(id).getNick();
+        Assert.assertTrue(status);
         Assert.assertEquals(newNick, actualNick);
 
     }
 
     /**
-     * @see JdbcUserDAO#edit(am.aca.orgflix.entity.User)
+     * @see UserDAO#edit(am.aca.orgflix.entity.User)
      */
     @Test
     public void editUser_UserName_Success() {
         user = new User("scarface", "Tony Montana", "scarface@miami.com", "elvira");
         int id = jdbcUserDAO.add(user);
-        final String newUserName = "Davit Abovyan";
-        user.setUserName(newUserName);
-        jdbcUserDAO.edit(user);
 
-        String actualName = jdbcUserDAO.get(id).getUserName();
+        final String newUserName = "Tony Montana Jr";
+        user.setUserName(newUserName);
+        boolean status = jdbcUserDAO.edit(user);
+
+        String actualName = jdbcUserDAO.getById(id).getUserName();
+        Assert.assertTrue(status);
         Assert.assertEquals(newUserName, actualName);
 
     }
 
     /**
-     * @see JdbcUserDAO#edit(am.aca.orgflix.entity.User)
+     * @see UserDAO#edit(am.aca.orgflix.entity.User)
      */
     @Test
     public void editUser_Pass_Success() {
         user = new User("scarface", "Tony Montana", "scarface@miami.com", "elvira");
         int id = jdbcUserDAO.add(user);
-        final String newPass = "elviraword";
-        user.setPass(newPass);
-        jdbcUserDAO.edit(user);
 
-        String actualPass = jdbcUserDAO.get(id).getPass();
+        final String newPass = "elvira<3";
+        user.setPass(newPass);
+        boolean status = jdbcUserDAO.edit(user);
+
+        String actualPass = jdbcUserDAO.getById(id).getPass();
+        Assert.assertTrue(status);
         Assert.assertEquals(newPass, actualPass);
 
     }
 
     /**
-     * @see JdbcUserDAO#edit(am.aca.orgflix.entity.User)
+     * @see UserDAO#edit(am.aca.orgflix.entity.User)
      */
     @Test(expected = RuntimeException.class)
     public void editUser_EmailNonUnique_Fail() {
         jdbcUserDAO.add(standardUser);
-        User otherUser = new User("scarface", "Tony Montana", "gagik.petrosyan@miami.com", "elvira");
+
+        User otherUser = new User("bot", "Tony Montana", "scarface@gmail.com", "elvira");
         jdbcUserDAO.add(otherUser);
+
         otherUser.setEmail("scarface@miami.com");
-        boolean status = jdbcUserDAO.edit(otherUser);
-        Assert.assertFalse(status);
+        jdbcUserDAO.edit(user);
     }
 
     /**
-     * @see JdbcUserDAO#edit(am.aca.orgflix.entity.User)
+     * @see UserDAO#edit(am.aca.orgflix.entity.User)
      */
-    @Test(expected = DaoException.class)
+    @Test(expected = RuntimeException.class)
     public void editUser_EmailNULL_Fail() {
-        user = new User("davit", "Tony Montana", "scarface@miami.com", "elvira");
+        user = new User("scarface", "Tony Montana", "scarface@miami.com", "pass");
         jdbcUserDAO.add(user);
         user.setEmail(null);
-        boolean status = jdbcUserDAO.edit(user);
-        Assert.assertFalse(status);
+
+        jdbcUserDAO.edit(user);
     }
 
     /**
-     * @see JdbcUserDAO#edit(am.aca.orgflix.entity.User)
+     * @see UserDAO#edit(am.aca.orgflix.entity.User)
      */
-    @Test(expected = DaoException.class)
+    @Test(expected = RuntimeException.class)
     public void editUser_NickNULL_Fail() {
-        user = new User("davit", "Tony Montana", "scarface@miami.com", "elvira");
+        user = new User("scarface", "Tony Montana", "scarface@miami.com", "pass");
         jdbcUserDAO.add(user);
         user.setNick(null);
-        boolean status = jdbcUserDAO.edit(user);
-        Assert.assertFalse(status);
+
+        jdbcUserDAO.edit(user);
     }
 
     /**
-     * @see JdbcUserDAO#edit(am.aca.orgflix.entity.User)
+     * @see UserDAO#edit(am.aca.orgflix.entity.User)
      */
-    @Test(expected = DaoException.class)
+    @Test(expected = RuntimeException.class)
     public void editUser_PassNULL_Fail() {
-        user = new User("davit", "Tony Montana", "scarface@miami.com", "elvira");
+        user = new User("scarface", "Tony Montana", "scarface@miami.com", "pass");
         jdbcUserDAO.add(user);
         user.setPass(null);
-        boolean status = jdbcUserDAO.edit(user);
-        Assert.assertFalse(status);
+
+        jdbcUserDAO.edit(user);
     }
 
     /**
-     * @see JdbcUserDAO#edit(am.aca.orgflix.entity.User)
-     */
-    @Test(expected = DaoException.class)
-    public void editUser_EmailEmpty_Fail() {
-        user = new User("davit", "Tony Montana", "scarface@miami.com", "elvira");
-        jdbcUserDAO.add(user);
-        user.setEmail("");
-        boolean status = jdbcUserDAO.edit(user);
-        Assert.assertFalse(status);
-    }
-
-    /**
-     * @see JdbcUserDAO#edit(am.aca.orgflix.entity.User)
-     */
-    @Test(expected = DaoException.class)
-    public void editUser_NickEmpty_Fail() {
-        user = new User("davit", "Tony Montana", "scarface@miami.com", "elvira");
-        jdbcUserDAO.add(user);
-        user.setNick("");
-        boolean status = jdbcUserDAO.edit(user);
-        Assert.assertFalse(status);
-    }
-
-    /**
-     * @see JdbcUserDAO#edit(am.aca.orgflix.entity.User)
-     */
-    @Test(expected = DaoException.class)
-    public void editUser_PassEmpty_Fail() {
-        user = new User("davit", "Tony Montana", "scarface@miami.com", "elvira");
-        jdbcUserDAO.add(user);
-        user.setPass("");
-        boolean status = jdbcUserDAO.edit(user);
-        Assert.assertFalse(status);
-    }
-
-    /**
-     * @see JdbcUserDAO#remove(int)
+     * @see UserDAO#remove(int)
      */
     @Test
-    public void Remove_Success() {
+    public void Remove_ValidUser_Success() {
         jdbcUserDAO.add(standardUser);
+
         boolean status = jdbcUserDAO.remove(standardUser.getId());
         Assert.assertTrue(status);
     }
 
     /**
-     * @see JdbcUserDAO#remove(int)
+     * @see UserDAO#remove(int)
      */
     @Test
-    public void Remove_Fail() {
-        boolean status = jdbcUserDAO.remove(standardUser.getId());
-        Assert.assertFalse(status);
-    }
-
-    /**
-     * @see JdbcUserDAO#remove(int)
-     */
-    @Test(expected = RuntimeException.class)
-    public void Remove_CheckByGet_Success() {
-        jdbcUserDAO.add(standardUser);
-        jdbcUserDAO.remove(standardUser.getId());
-        jdbcUserDAO.get(standardUser.getId());
-    }
-
-    /**
-     * @see JdbcUserDAO#remove(int)
-     */
-    @Test
-    public void Remove_NotExisting_Fail() {
+    public void Remove_InvalidUser_Fail() {
         boolean status = jdbcUserDAO.remove(standardUser.getId());
         Assert.assertFalse(status);
     }

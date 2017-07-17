@@ -32,7 +32,9 @@ public interface UserDAO {
      * @param email the email of the user in DB
      * @return user object with the matched id
      */
-    User get(String email);
+    User getByEmail(String email);
+
+    User getById(int id);
 
     /**
      * Return user by user user's nickname

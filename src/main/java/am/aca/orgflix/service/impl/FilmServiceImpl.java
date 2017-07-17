@@ -114,7 +114,7 @@ public class FilmServiceImpl extends BaseService implements FilmService {
     public List<Film> getFilmsList(int startIndex) {
         List<Film> list;
         try {
-            list = filmDao.getFilmsList(startIndex);
+            list = filmDao.getFilmsList(startIndex, 12);
             for (Film film : list) {
                 film.setCasts(castDao.getCastsByFilm(film.getId()));
             }
@@ -230,7 +230,7 @@ public class FilmServiceImpl extends BaseService implements FilmService {
     public List<Film> getFilteredFilms(String title, int startYear, int finishYear, boolean hasOscar, String director, int castId, Genre genre) {
         List<Film> films;
         try {
-            films = filmDao.getFilteredFilms(title, startYear, finishYear, hasOscar ? "1" : "%", director, String.valueOf(castId), String.valueOf(genre.getValue()));
+            films = filmDao.getFilteredFilms(title, startYear, finishYear, hasOscar, director, String.valueOf(castId), genre.getValue());
         } catch (RuntimeException e) {
             LOGGER.warn(e.toString());
             throw new ServiceException(e.getMessage());

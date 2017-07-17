@@ -5,7 +5,6 @@ import am.aca.orgflix.entity.Film;
 import am.aca.orgflix.service.CastService;
 import am.aca.orgflix.service.ListService;
 import am.aca.orgflix.service.ServiceException;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +22,11 @@ public class ListServiceImpl extends BaseService implements ListService {
     private ListDao listDao;
     private CastService castService;
 
+    public ListServiceImpl() {
+        // class name to include in logging
+        super(ListServiceImpl.class);
+    }
+
     @Autowired
     public void setListDao(ListDao listDao) {
         this.listDao = listDao;
@@ -31,11 +35,6 @@ public class ListServiceImpl extends BaseService implements ListService {
     @Autowired
     public void setCastService(CastService castService) {
         this.castService = castService;
-    }
-
-    public ListServiceImpl() {
-        // class name to include in logging
-        super(ListServiceImpl.class);
     }
 
     /**
@@ -88,7 +87,7 @@ public class ListServiceImpl extends BaseService implements ListService {
     public List<Film> showOwnWatched(int userId, int page) {
         List<Film> list;
         try {
-            list = listDao.showOwnWatched(userId, page);
+            list = listDao.showOwnWatched(userId, page, 12);
             for (Film film : list) {
                 film.setCasts(castService.getCastsByFilm(film.getId()));
             }
@@ -107,7 +106,7 @@ public class ListServiceImpl extends BaseService implements ListService {
     public List<Film> showOwnPlanned(int userId, int page) {
         List<Film> list;
         try {
-            list = listDao.showOwnPlanned(userId, page);
+            list = listDao.showOwnPlanned(userId, page, 12);
             for (Film film : list) {
                 film.setCasts(castService.getCastsByFilm(film.getId()));
             }
@@ -126,7 +125,7 @@ public class ListServiceImpl extends BaseService implements ListService {
     public List<Film> showOthersWatched(int userId, int page) {
         List<Film> list;
         try {
-            list = listDao.showOthersWatched(userId, page);
+            list = listDao.showOthersWatched(userId, page, 12);
             for (Film film : list) {
                 film.setCasts(castService.getCastsByFilm(film.getId()));
             }
@@ -145,7 +144,7 @@ public class ListServiceImpl extends BaseService implements ListService {
     public List<Film> showOthersPlanned(int userId, int page) {
         List<Film> list;
         try {
-            list = listDao.showOthersPlanned(userId, page);
+            list = listDao.showOthersPlanned(userId, page, 12);
             for (Film film : list) {
                 film.setCasts(castService.getCastsByFilm(film.getId()));
             }

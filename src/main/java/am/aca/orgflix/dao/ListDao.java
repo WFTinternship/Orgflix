@@ -42,7 +42,7 @@ public interface ListDao {
      * @param page   index from desired pagination
      * @return the list of all films marked as watched by the current user
      */
-    List<Film> showOwnWatched(int userId, int page);
+    List<Film> showOwnWatched(int userId, int page, int itemsPerPage);
 
     /**
      * Retrieves the list of all films marked as planned by the current user with pagination
@@ -51,7 +51,7 @@ public interface ListDao {
      * @param page   index from desired pagination
      * @return the list of all films marked as planned by the current user
      */
-    List<Film> showOwnPlanned(int userId, int page);
+    List<Film> showOwnPlanned(int userId, int page, int itemsPerPage);
 
     /**
      * Retrieves the list of all films marked as watched by the selected user with pagination
@@ -60,7 +60,7 @@ public interface ListDao {
      * @param page   index from desired pagination
      * @return the list of all films marked as watched by the selected user
      */
-    List<Film> showOthersWatched(int userId, int page);
+    List<Film> showOthersWatched(int userId, int page, int itemsPerPage);
 
     /**
      * Retrieves the list of all films marked as planned by the selected user with pagination
@@ -69,7 +69,7 @@ public interface ListDao {
      * @param page   index from desired pagination
      * @return the list of all films marked as planned by the selected user
      */
-    List<Film> showOthersPlanned(int userId, int page);
+    List<Film> showOthersPlanned(int userId, int page, int itemsPerPage);
 
     // UPDATE
 

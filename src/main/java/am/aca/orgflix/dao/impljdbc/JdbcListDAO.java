@@ -47,57 +47,57 @@ public class JdbcListDAO extends BaseDAO implements ListDao {
     // RETRIEVE
 
     /**
-     * @see ListDao#showOwnWatched(int, int)
+     * @see ListDao#showOwnWatched(int, int, int)
      */
     @Override
-    public List<Film> showOwnWatched(int userId, int page) {
+    public List<Film> showOwnWatched(int userId, int page, int itemsPerPage) {
         final String query = "SELECT FILMS.ID, FILMS.TITLE, FILMS.DIRECTOR, FILMS.HAS_OSCAR, " +
                 "FILMS.IMAGE_REF, FILMS.PROD_YEAR, FILMS.RATE_1STAR, FILMS.RATE_2STAR, " +
                 "FILMS.RATE_3STAR, FILMS.RATE_4STAR, FILMS.RATE_5STAR " +
                 "FROM LISTS INNER JOIN FILMS " +
                 "ON LISTS.FILM_ID = FILMS.ID " +
-                "WHERE LISTS.USER_ID = ? AND IS_WATCHED = TRUE LIMIT ? , 12 ";
-        return getJdbcTemplate().query(query, new Object[]{userId, page}, new FilmRowMapper());
+                "WHERE LISTS.USER_ID = ? AND IS_WATCHED = TRUE LIMIT ? , ? ";
+        return getJdbcTemplate().query(query, new Object[]{userId, page, itemsPerPage}, new FilmRowMapper());
     }
 
     /**
-     * @see ListDao#showOwnPlanned(int, int)
+     * @see ListDao#showOwnPlanned(int, int, int)
      */
     @Override
-    public List<Film> showOwnPlanned(int userId, int page) {
+    public List<Film> showOwnPlanned(int userId, int page, int itemsPerPage) {
         final String query = "SELECT FILMS.ID, FILMS.TITLE, FILMS.DIRECTOR, FILMS.HAS_OSCAR, " +
                 "FILMS.IMAGE_REF, FILMS.PROD_YEAR, FILMS.RATE_1STAR, FILMS.RATE_2STAR, " +
                 "FILMS.RATE_3STAR, FILMS.RATE_4STAR, FILMS.RATE_5STAR " +
                 "FROM LISTS INNER JOIN FILMS " +
                 "ON LISTS.FILM_ID = FILMS.ID " +
-                "WHERE LISTS.USER_ID = ? AND IS_WISHED = TRUE LIMIT ? , 12 ";
-        return getJdbcTemplate().query(query, new Object[]{userId, page}, new FilmRowMapper());
+                "WHERE LISTS.USER_ID = ? AND IS_WISHED = TRUE LIMIT ? , ? ";
+        return getJdbcTemplate().query(query, new Object[]{userId, page, itemsPerPage}, new FilmRowMapper());
     }
 
     /**
-     * @see ListDao#showOthersWatched(int, int)
+     * @see ListDao#showOthersWatched(int, int, int)
      */
     @Override
-    public List<Film> showOthersWatched(int userId, int page) {
+    public List<Film> showOthersWatched(int userId, int page, int itemsPerPage) {
         final String query = "SELECT FILMS.ID, FILMS.TITLE, FILMS.DIRECTOR, FILMS.HAS_OSCAR, " +
                 "FILMS.IMAGE_REF, FILMS.PROD_YEAR, FILMS.RATE_1STAR, FILMS.RATE_2STAR, " +
                 "FILMS.RATE_3STAR, FILMS.RATE_4STAR, FILMS.RATE_5STAR FROM LISTS INNER JOIN FILMS " +
                 "ON LISTS.FILM_ID = FILMS.ID " +
-                "WHERE LISTS.USER_ID = ? AND IS_WATCHED = TRUE AND IS_PUBLIC = TRUE LIMIT ? , 12 ";
-        return getJdbcTemplate().query(query, new Object[]{userId, page}, new FilmRowMapper());
+                "WHERE LISTS.USER_ID = ? AND IS_WATCHED = TRUE AND IS_PUBLIC = TRUE LIMIT ? , ? ";
+        return getJdbcTemplate().query(query, new Object[]{userId, page, itemsPerPage}, new FilmRowMapper());
     }
 
     /**
-     * @see ListDao#showOthersPlanned(int, int)
+     * @see ListDao#showOthersPlanned(int, int, int)
      */
     @Override
-    public List<Film> showOthersPlanned(int userId, int page) {
+    public List<Film> showOthersPlanned(int userId, int page, int itemsPerPage) {
         final String query = "SELECT FILMS.ID, FILMS.TITLE, FILMS.DIRECTOR, FILMS.HAS_OSCAR, " +
                 "FILMS.IMAGE_REF, FILMS.PROD_YEAR, FILMS.RATE_1STAR, FILMS.RATE_2STAR, " +
                 "FILMS.RATE_3STAR, FILMS.RATE_4STAR, FILMS.RATE_5STAR FROM LISTS INNER JOIN FILMS " +
                 "ON LISTS.FILM_ID = FILMS.ID " +
-                "WHERE LISTS.USER_ID = ? AND IS_WISHED = TRUE AND IS_PUBLIC = TRUE LIMIT ? , 12 ";
-        return getJdbcTemplate().query(query, new Object[]{userId, page}, new FilmRowMapper());
+                "WHERE LISTS.USER_ID = ? AND IS_WISHED = TRUE AND IS_PUBLIC = TRUE LIMIT ? , ? ";
+        return getJdbcTemplate().query(query, new Object[]{userId, page, itemsPerPage}, new FilmRowMapper());
     }
 
     // UPDATE

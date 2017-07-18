@@ -21,10 +21,11 @@ public interface FilmService {
     /**
      * Shows the List object of all films already added, with pagination
      *
-     * @param startIndex the index corresponding to the desired page
+     * @param startIndex   the index corresponding to the desired page
+     * @param itemsPerPage the number of films per page
      * @return List object of films starting from given index
      */
-    List<Film> getFilmsList(int startIndex);
+    List<Film> getFilmsList(int startIndex, int itemsPerPage);
 
     /**
      * Retrieves the film having the given ID
@@ -63,7 +64,7 @@ public interface FilmService {
      *
      * @param startIndex the index corresponding to the currently displayed page
      * @return an array of avarage ratings for all films in order as in getFilmsList() method
-      */
+     */
     String[] getAllRatings(int startIndex);
 
     /**
@@ -81,12 +82,12 @@ public interface FilmService {
      * @param finishYear the most recent approximate production year of the desired film
      * @param hasOscar   the Oscar winner status of the desired film
      * @param director   the director of the desired film
-     * @param castId     the ID of the desired film's cast member
-     * @param genre      a genre of the desired film
+     * @param cast       the full name or a keyword in the desired film's cast member
+     * @param genreId      a genre of the desired film
      * @return List object of all films satisfying the given filter parameters
      */
     List<Film> getFilteredFilms(String title, int startYear, int finishYear,
-                                boolean hasOscar, String director, int castId, Genre genre);
+                                boolean hasOscar, String director, String cast, int genreId);
 
     /**
      * Updates the selected film to the given film

@@ -1,11 +1,12 @@
 package am.aca.orgflix.controller.unit;
 
 import am.aca.orgflix.BaseUnitTest;
-import am.aca.orgflix.controller.MainController;
 import am.aca.orgflix.controller.UserController;
 import am.aca.orgflix.entity.Film;
 import am.aca.orgflix.entity.User;
-import am.aca.orgflix.service.*;
+import am.aca.orgflix.service.FilmService;
+import am.aca.orgflix.service.ServiceException;
+import am.aca.orgflix.service.UserService;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -65,7 +66,7 @@ public class UserControllerMockTest extends BaseUnitTest {
      */
     @Test
     public void signUp_Success() {
-        when(filmServiceMock.getFilmsList(0)).thenReturn(films);
+        when(filmServiceMock.getFilmsList(0, 12)).thenReturn(films);
         when(filmServiceMock.totalNumberOfFilms()).thenReturn(0);
         when(filmServiceMock.getAllRatings(0)).thenReturn(ratings);
 
@@ -79,7 +80,7 @@ public class UserControllerMockTest extends BaseUnitTest {
         Assert.assertEquals(0, actualMV.getModel().get("currPage"));
         Assert.assertEquals("index", actualMV.getModel().get("page"));
 
-        verify(filmServiceMock, times(1)).getFilmsList(0);
+        verify(filmServiceMock, times(1)).getFilmsList(0, 12);
         verify(filmServiceMock, times(1)).totalNumberOfFilms();
         verify(filmServiceMock, times(1)).getAllRatings(0);
     }
@@ -89,13 +90,13 @@ public class UserControllerMockTest extends BaseUnitTest {
      */
     @Test
     public void signUp_Exception_Fail() {
-        when(filmServiceMock.getFilmsList(0)).thenThrow(ServiceException.class);
+        when(filmServiceMock.getFilmsList(0, 12)).thenThrow(ServiceException.class);
 
         ModelAndView actualMV = userController.signup();
 
         Assert.assertEquals("error", actualMV.getViewName());
 
-        verify(filmServiceMock, times(1)).getFilmsList(0);
+        verify(filmServiceMock, times(1)).getFilmsList(0, 12);
     }
 
     /**
@@ -104,7 +105,7 @@ public class UserControllerMockTest extends BaseUnitTest {
     @Test
     public void signUpResult_Success() {
         when(userServiceMock.add(user)).thenReturn(2);
-        when(filmServiceMock.getFilmsList(0)).thenReturn(films);
+        when(filmServiceMock.getFilmsList(0, 12)).thenReturn(films);
 
         ModelAndView actualMV = userController.signupResult
                 (new MockHttpSession(), user.getNick(), user.getUserName(), user.getEmail(), user.getPass());
@@ -117,7 +118,7 @@ public class UserControllerMockTest extends BaseUnitTest {
         Assert.assertEquals(0, actualMV.getModel().get("currPage"));
         Assert.assertEquals("index", actualMV.getModel().get("page"));
 
-        verify(filmServiceMock, times(1)).getFilmsList(0);
+        verify(filmServiceMock, times(1)).getFilmsList(0, 12);
         verify(userServiceMock, times(1)).add(user);
     }
 

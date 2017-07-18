@@ -45,7 +45,7 @@ public class MVController {
     // support method for guest modelAndView
     protected ModelAndView getGuestMV(ModelAndView modelAndView){
         try{
-            modelAndView.addObject("films", filmService.getFilmsList(0));
+            modelAndView.addObject("films", filmService.getFilmsList(0, 12));
             modelAndView.addObject("ratings", filmService.getAllRatings(0));
             modelAndView.addObject("currPage", 0);
             modelAndView.addObject("page", "index");

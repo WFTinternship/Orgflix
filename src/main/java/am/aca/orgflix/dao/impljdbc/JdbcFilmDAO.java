@@ -67,7 +67,7 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
      */
     @Override
     public boolean addGenreToFilm(Genre genre, int filmId) {
-        final String query = "INSERT INTO GENRE_TO_FILM(GENRE_ID,FILM_ID) VALUES (? , ? ) ";
+        final String query = "INSERT INTO FILM_TO_GENRE(GENRE_ID,FILM_ID) VALUES (? , ? ) ";
         return getJdbcTemplate().update(query, genre.getValue(), filmId) == 1;
     }
 
@@ -111,8 +111,8 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
         final String filmQuery = "SELECT FILMS.ID, FILMS.TITLE, FILMS.DIRECTOR, FILMS.HAS_OSCAR, " +
                 "FILMS.image_ref, FILMS.PROD_YEAR, FILMS.RATE_1STAR, FILMS.RATE_2STAR, " +
                 "FILMS.RATE_3STAR, FILMS.RATE_4STAR, FILMS.RATE_5STAR " +
-                "FROM GENRE_TO_FILM" +
-                " LEFT JOIN FILMS ON GENRE_TO_FILM.FILM_ID = FILMS.ID " +
+                "FROM FILM_TO_GENRE" +
+                " LEFT JOIN FILMS ON FILM_TO_GENRE.FILM_ID = FILMS.ID " +
                 " WHERE GENRE_ID = ?";
 
         return getJdbcTemplate().query(filmQuery, new Object[]{genre.getValue()}, new FilmRowMapper());
@@ -199,8 +199,8 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
                 "ON FILMS.ID = FILM_TO_CAST.FILM_ID " +
                 "LEFT JOIN CASTS " +
                 "ON FILM_TO_CAST.ACTOR_ID = CASTS.ID " +
-                "LEFT JOIN GENRE_TO_FILM " +
-                "ON GENRE_TO_FILM.FILM_ID = FILMS.ID " +
+                "LEFT JOIN FILM_TO_GENRE " +
+                "ON FILM_TO_GENRE.FILM_ID = FILMS.ID " +
                 "WHERE FILMS.TITLE LIKE ? ");
 
         paramsList.add("%" + title + "%");
@@ -229,7 +229,7 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
         }
 
         if (genreId > 0) {
-            queryBuilder.append("AND GENRE_TO_FILM.GENRE_ID = ? ");
+            queryBuilder.append("AND FILM_TO_GENRE.GENRE_ID = ? ");
             paramsList.add(genreId);
         }
 
@@ -285,7 +285,7 @@ public class JdbcFilmDAO extends BaseDAO implements FilmDAO {
      */
     @Override
     public boolean resetRelationGenres(Film film) {
-        final String query = "DELETE FROM GENRE_TO_FILM WHERE FILM_ID = ?";
+        final String query = "DELETE FROM FILM_TO_GENRE WHERE FILM_ID = ?";
         return getJdbcTemplate().update(query, film.getId()) >= 1;
     }
 

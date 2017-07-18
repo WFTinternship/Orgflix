@@ -55,7 +55,7 @@ public class CastServiceImpl extends BaseService implements CastService {
     }
 
     /**
-     * @see CastService#listCasts()
+     * @see CastService#addCastToFilm(Cast, int)
      */
     @Transactional
     @Override
@@ -74,26 +74,7 @@ public class CastServiceImpl extends BaseService implements CastService {
     }
 
     /**
-     * @see CastService#listFilmsByCast(int)
-     */
-    @Transactional
-    @Override
-    public boolean editCast(Cast cast) {
-        checkRequiredFields(cast.getName());
-        boolean state;
-        try {
-            if (!castDAO.exists(cast))
-                return false;
-            state = castDAO.editCast(cast);
-        } catch (RuntimeException e) {
-            LOGGER.warn(e.getMessage());
-            return false;
-        }
-        return state;
-    }
-
-    /**
-     * @see CastService#getCastsByFilm(int)
+     * @see CastService#listCasts()
      */
     @Override
     public List<Cast> listCasts() {
@@ -108,7 +89,7 @@ public class CastServiceImpl extends BaseService implements CastService {
     }
 
     /**
-     * @see CastService#editCast(am.aca.orgflix.entity.Cast)
+     * @see CastService#listFilmsByCast(int)
      */
     @Override
     public List<Film> listFilmsByCast(int castId) {
@@ -150,5 +131,24 @@ public class CastServiceImpl extends BaseService implements CastService {
             return null;
         }
         return cast;
+    }
+
+    /**
+     * @see CastService#editCast(Cast)
+     */
+    @Transactional
+    @Override
+    public boolean editCast(Cast cast) {
+        checkRequiredFields(cast.getName());
+        boolean state;
+        try {
+            if (!castDAO.exists(cast))
+                return false;
+            state = castDAO.editCast(cast);
+        } catch (RuntimeException e) {
+            LOGGER.warn(e.getMessage());
+            return false;
+        }
+        return state;
     }
 }

@@ -1,17 +1,17 @@
 package am.aca.orgflix.service.impl;
 
-import am.aca.orgflix.dao.CastDAO;
 import am.aca.orgflix.dao.FilmDAO;
 import am.aca.orgflix.entity.Cast;
 import am.aca.orgflix.entity.Film;
 import am.aca.orgflix.entity.Genre;
+import am.aca.orgflix.service.CastService;
 import am.aca.orgflix.service.FilmService;
 import am.aca.orgflix.service.ServiceException;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,7 +22,12 @@ import java.util.List;
 public class FilmServiceImpl extends BaseService implements FilmService {
 
     private FilmDAO filmDao;
-    private CastDAO castDao;
+    private CastService castService;
+
+    public FilmServiceImpl() {
+        // class name to include in logging
+        super(FilmServiceImpl.class);
+    }
 
     @Autowired
     public void setFilmDao(FilmDAO filmDao) {
@@ -30,13 +35,8 @@ public class FilmServiceImpl extends BaseService implements FilmService {
     }
 
     @Autowired
-    public void setCastDao(CastDAO castDao) {
-        this.castDao = castDao;
-    }
-
-    public FilmServiceImpl() {
-        // class name to include in logging
-        super(FilmServiceImpl.class);
+    public void setCastService(CastService castService) {
+        this.castService = castService;
     }
 
     /**
@@ -45,35 +45,15 @@ public class FilmServiceImpl extends BaseService implements FilmService {
     @Transactional
     @Override
     public boolean addFilm(Film film) {
+        checkRequiredFields(film.getTitle());
+        validateYear(film.getProdYear());
+
         try {
-            if (!filmDao.addFilm(film))
-                return false;
-            else
-                return  optimizeRelations(film);
+            return filmDao.addFilm(film) && optimizeRelations(film);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
-            throw new ServiceException(e.getMessage());
+            return false;
         }
-    }
-
-    /**
-     * @see FilmService#getFilmsList(int)
-     */
-    @Transactional
-    @Override
-    public boolean editFilm(Film film) {
-        try {
-            if (!filmDao.editFilm(film))
-                return false;
-
-            filmDao.resetRelationGenres(film);
-            filmDao.resetRelationCasts(film);
-
-        } catch (RuntimeException e) {
-            LOGGER.warn(e.getMessage());
-            throw new ServiceException(e.getMessage());
-        }
-        return optimizeRelations(film);
     }
 
     /**
@@ -86,7 +66,7 @@ public class FilmServiceImpl extends BaseService implements FilmService {
             film = filmDao.getFilmById(id);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
-            throw new ServiceException(e.getMessage());
+            return null;
         }
         return film;
     }
@@ -96,112 +76,125 @@ public class FilmServiceImpl extends BaseService implements FilmService {
      */
     @Override
     public List<Film> getFilmsByCast(int castId) {
-        List<Film> list;
+        List<Film> list = new ArrayList<>();
         try {
             list = filmDao.getFilmsByCast(castId);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
-            throw new ServiceException(e.getMessage());
+            return list;
         }
         return list;
     }
 
     /**
-     * @see FilmService#getFilmsByGenre(am.aca.orgflix.entity.Genre)
+     * @see FilmService#getFilmsList(int, int)
      */
     @Transactional
     @Override
-    public List<Film> getFilmsList(int startIndex) {
-        List<Film> list;
+    public List<Film> getFilmsList(int startIndex, int itemsPerPage) {
+        List<Film> list = new ArrayList<>();
         try {
             list = filmDao.getFilmsList(startIndex, 12);
             for (Film film : list) {
-                film.setCasts(castDao.getCastsByFilm(film.getId()));
+                film.setCasts(castService.getCastsByFilm(film.getId()));
             }
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
-            throw new ServiceException(e.getMessage());
+            return list;
         }
         return list;
+    }
+
+    /**
+     * @see FilmService#getFilmsByGenre(Genre)
+     */
+    @Override
+    public List<Film> getFilmsByGenre(Genre genre) {
+        List<Film> list = new ArrayList<>();
+        try {
+            list = filmDao.getFilmsByGenre(genre);
+        } catch (RuntimeException e) {
+            LOGGER.warn(e.getMessage());
+            return list;
+        }
+        return list;
+    }
+
+    /**
+     * @see FilmService#rateFilm(int, int)
+     */
+    @Transactional
+    @Override
+    public boolean rateFilm(int filmId, int starType) {
+        validateRating(starType);
+
+        boolean state;
+        try {
+            state = filmDao.rateFilm(filmId, starType);
+        } catch (RuntimeException e) {
+            LOGGER.warn(e.getMessage());
+            return false;
+        }
+        return state;
+    }
+
+    /**
+     * @see FilmService#addGenreToFilm(Genre, int)
+     */
+    @Transactional
+    @Override
+    public boolean addGenreToFilm(Genre genre, int filmId) {
+        boolean state = false;
+        try {
+            state = filmDao.addGenreToFilm(genre, filmId);
+        } catch (RuntimeException e) {
+            LOGGER.warn(e.getMessage());
+//            return false;
+        }
+        return state;
     }
 
     /**
      * @see FilmService#getRating(int)
      */
     @Override
-    public List<Film> getFilmsByGenre(Genre genre) {
-        List<Film> list;
-        try {
-            list = filmDao.getFilmsByGenre(genre);
-        } catch (RuntimeException e) {
-            LOGGER.warn(e.getMessage());
-            throw new ServiceException(e.getMessage());
-        }
-        return list;
-    }
-
-    /**
-     * @see FilmService#totalNumberOfFilms()
-     */
-    @Transactional
-    @Override
-    public boolean rateFilm(int filmId, int starType) {
-        boolean state;
-        try {
-            state = filmDao.rateFilm(filmId, starType);
-        } catch (RuntimeException e) {
-            LOGGER.warn(e.getMessage());
-            throw new ServiceException(e.getMessage());
-        }
-        return state;
-    }
-
-    /**
-     * @see FilmService#getFilteredFilms(java.lang.String, int, int,
-     * boolean, java.lang.String, int, am.aca.orgflix.entity.Genre)
-     */
-    @Transactional
-    @Override
-    public boolean addGenreToFilm(Genre genre, int filmId) {
-        boolean state;
-        try {
-            state = filmDao.addGenreToFilm(genre, filmId);
-        } catch (RuntimeException e) {
-            LOGGER.warn(e.getMessage());
-            throw new ServiceException(e.getMessage());
-        }
-        return state;
-    }
-
-    /**
-     * @see FilmService#editFilm(am.aca.orgflix.entity.Film)
-     */
-    @Override
     public double getRating(int filmId) {
-        double rate;
+        int ratingSum = 0;
+        int ratingCount = 0;
+
         try {
-            rate = filmDao.getRating(filmId);
+            for (int i = 1; i <= 5; i++) {
+                ratingCount += filmDao.getRating(filmId, i);
+                ratingSum += filmDao.getRating(filmId, i) * i;
+            }
+
+            if (ratingCount == 0)
+                return 0;
+            else {
+                double result = (double) ratingSum / ratingCount;
+
+                int scale = (int) Math.pow(10, 1);
+                return (double) Math.round(result * scale) / scale;
+            }
         } catch (RuntimeException e) {
             LOGGER.warn(e.toString());
-            throw new ServiceException(e.getMessage());
+            return 0;
         }
-        return rate;
     }
 
     /**
-     *
      * @see FilmService#getAllRatings(int)
      */
     @Override
     public String[] getAllRatings(int startIndex) {
         String[] ratings;
         try {
-            List<Film> filmList = getFilmsList(startIndex*12);
+            List<Film> filmList = getFilmsList(startIndex * 12, 12);
             ratings = new String[filmList.size()];
             for (int i = 0; i < filmList.size(); ++i) {
                 ratings[i] = String.format("%.1f", getRating(filmList.get(i).getId()));
             }
-        }catch(RuntimeException e){
+        } catch (RuntimeException e) {
             LOGGER.warn(e.toString());
             throw new ServiceException(e.getMessage());
         }
@@ -209,7 +202,7 @@ public class FilmServiceImpl extends BaseService implements FilmService {
     }
 
     /**
-     * @see FilmService#rateFilm(int, int)
+     * @see FilmService#totalNumberOfFilms()
      */
     @Override
     public int totalNumberOfFilms() {
@@ -218,24 +211,51 @@ public class FilmServiceImpl extends BaseService implements FilmService {
             total = filmDao.totalNumberOfFilms();
         } catch (RuntimeException e) {
             LOGGER.warn(e.toString());
-            throw new ServiceException(e.getMessage());
+            return 0;
         }
         return total;
     }
 
     /**
-     * @see FilmService#addGenreToFilm(am.aca.orgflix.entity.Genre, int)
+     * @see FilmService#getFilteredFilms(String, int, int, boolean, String, String, int)
      */
     @Override
-    public List<Film> getFilteredFilms(String title, int startYear, int finishYear, boolean hasOscar, String director, int castId, Genre genre) {
-        List<Film> films;
+    public List<Film> getFilteredFilms(String title, int startYear, int finishYear,
+                                       boolean hasOscar, String director, String cast, int genre) {
+        List<Film> films = new ArrayList<>();
+        if (title == null)
+            title = "";
         try {
-            films = filmDao.getFilteredFilms(title, startYear, finishYear, hasOscar, director, String.valueOf(castId), genre.getValue());
+            films = filmDao.getFilteredFilms(title, startYear,
+                    finishYear, hasOscar, director, cast, genre);
         } catch (RuntimeException e) {
             LOGGER.warn(e.toString());
-            throw new ServiceException(e.getMessage());
+            return films;
         }
         return films;
+    }
+
+    /**
+     * @see FilmService#editFilm(Film)
+     */
+    @Transactional
+    @Override
+    public boolean editFilm(Film film) {
+        checkRequiredFields(film.getTitle());
+        validateYear(film.getProdYear());
+
+        try {
+            if (!filmDao.editFilm(film))
+                return false;
+
+            filmDao.resetRelationGenres(film);
+            filmDao.resetRelationCasts(film);
+
+        } catch (RuntimeException e) {
+            LOGGER.warn(e.getMessage());
+            return false;
+        }
+        return optimizeRelations(film);
     }
 
 
@@ -248,17 +268,17 @@ public class FilmServiceImpl extends BaseService implements FilmService {
     private boolean optimizeRelations(Film film) {
         try {
             for (Genre genre : film.getGenres()) {
-                if (!addGenreToFilm(genre, film.getId()))
+                if (!filmDao.addGenreToFilm(genre, film.getId()))
                     return false;
             }
 
             for (Cast cast : film.getCasts()) {
-                if (!castDao.addCastToFilm(cast, film.getId()))
+                if (!castService.addCastToFilm(cast, film.getId()))
                     return false;
             }
         } catch (RuntimeException e) {
             LOGGER.warn(e.toString());
-            throw new ServiceException(e.getMessage());
+            return false;
         }
         return true;
     }

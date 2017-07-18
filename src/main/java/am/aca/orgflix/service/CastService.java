@@ -43,13 +43,19 @@ public interface CastService {
     List<Cast> getCastsByFilm(int filmId);
 
     /**
-     * Updates features of the given actor
+     * Retrieves the cast having the given ID
      *
-     * @param castId the object to replace the previous version
-     * @return true if successfully updated, false otherwise
+     * @param castId the ID of the desired cast
+     * @return the cast object having the given ID, null if not found
      */
     Cast getCastById(int castId);
 
+    /**
+     * Updates features of the given actor
+     *
+     * @param cast the object to replace the previous version
+     * @return true if successfully updated, false otherwise
+     */
     boolean editCast(Cast cast);
 
     /**

@@ -34,7 +34,7 @@ public class MainController extends MVController {
                 User selUser = userService.get(userId);
                 user = selUser.getNick() + " (" + selUser.getEmail() + ")";
             }
-            modelAndView.addObject("films", filmService.getFilmsList(page * 12));
+            modelAndView.addObject("films", filmService.getFilmsList(page * 12, 12));
             modelAndView.addObject("numOfPages", filmService.totalNumberOfFilms() / 12);
             modelAndView.addObject("ratings", filmService.getAllRatings(page));
             modelAndView.addObject("currPage", page);

@@ -36,7 +36,7 @@ public class FilmDaoTest extends BaseIntegrationTest {
      */
     @After
     public void tearDown() {
-        helper.emptyTable(new String[]{"genre_to_film", "film_to_cast", "films", "casts"});
+        helper.emptyTable(new String[]{"FILM_TO_GENRE", "FILM_TO_CAST", "FILMS", "CASTS"});
     }
 
     /**

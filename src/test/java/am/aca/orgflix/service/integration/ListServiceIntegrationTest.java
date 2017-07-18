@@ -50,7 +50,7 @@ public class ListServiceIntegrationTest extends BaseIntegrationTest {
     @After
     public void tearDown() {
         helper.emptyTable(new String[]{
-                "lists", "films", "users"
+                "LISTS", "FILMS", "USERS"
         });
     }
 

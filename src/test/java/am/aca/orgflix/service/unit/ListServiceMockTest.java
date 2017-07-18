@@ -1,12 +1,10 @@
 package am.aca.orgflix.service.unit;
 
 import am.aca.orgflix.BaseUnitTest;
-import am.aca.orgflix.dao.DaoException;
 import am.aca.orgflix.dao.ListDao;
 import am.aca.orgflix.entity.Film;
 import am.aca.orgflix.entity.User;
 import am.aca.orgflix.service.ListService;
-import am.aca.orgflix.service.ServiceException;
 import am.aca.orgflix.service.impl.ListServiceImpl;
 import org.junit.After;
 import org.junit.Assert;
@@ -192,13 +190,12 @@ public class ListServiceMockTest extends BaseUnitTest {
      */
     @Test
     public void showOwnWatched_Fail() {
-        when(listDaoMock.showOwnWatched(user.getId(), 0, 12)).thenThrow(DaoException.class);
+        when(listDaoMock.showOwnWatched(user.getId(), 0, 12)).thenThrow(RuntimeException.class);
 
-        try {
-            listService.showOwnWatched(user.getId(), 0);
-        } catch (ServiceException e) {
-            verify(listDaoMock, times(1)).showOwnWatched(user.getId(), film.getId(), 12);
-        }
+        List<Film> actualFilms = listService.showOwnWatched(user.getId(), 0);
+        Assert.assertTrue(actualFilms.isEmpty());
+
+        verify(listDaoMock, times(1)).showOwnWatched(user.getId(), film.getId(), 12);
     }
 
     /**
@@ -219,13 +216,11 @@ public class ListServiceMockTest extends BaseUnitTest {
      */
     @Test
     public void showOwnPlanned_Fail() {
-        when(listDaoMock.showOwnPlanned(user.getId(), 0, 12)).thenThrow(DaoException.class);
+        when(listDaoMock.showOwnPlanned(user.getId(), 0, 12)).thenThrow(RuntimeException.class);
 
-        try {
-            listService.showOwnPlanned(user.getId(), 0);
-        } catch (ServiceException e) {
-            verify(listDaoMock, times(1)).showOwnPlanned(user.getId(), film.getId(), 12);
-        }
+        List<Film> acualFilms = listService.showOwnPlanned(user.getId(), 0);
+        Assert.assertTrue(acualFilms.isEmpty());
+        verify(listDaoMock, times(1)).showOwnPlanned(user.getId(), film.getId(), 12);
     }
 
     /**
@@ -246,13 +241,11 @@ public class ListServiceMockTest extends BaseUnitTest {
      */
     @Test
     public void showOthersWatched_Fail() {
-        when(listDaoMock.showOthersWatched(user.getId(), 0, 12)).thenThrow(DaoException.class);
+        when(listDaoMock.showOthersWatched(user.getId(), 0, 12)).thenThrow(RuntimeException.class);
 
-        try {
-            listService.showOthersWatched(user.getId(), 0);
-        } catch (ServiceException e) {
-            verify(listDaoMock, times(1)).showOthersWatched(user.getId(), film.getId(), 12);
-        }
+        List<Film> actualFilms = listService.showOthersWatched(user.getId(), 0);
+        Assert.assertTrue(actualFilms.isEmpty());
+        verify(listDaoMock, times(1)).showOthersWatched(user.getId(), film.getId(), 12);
     }
 
     /**
@@ -273,13 +266,11 @@ public class ListServiceMockTest extends BaseUnitTest {
      */
     @Test
     public void showOthersPlanned_Fail() {
-        when(listDaoMock.showOthersPlanned(user.getId(), 0, 12)).thenThrow(DaoException.class);
+        when(listDaoMock.showOthersPlanned(user.getId(), 0, 12)).thenThrow(RuntimeException.class);
 
-        try {
-            listService.showOthersPlanned(user.getId(), 0);
-        } catch (ServiceException e) {
-            verify(listDaoMock, times(1)).showOthersPlanned(user.getId(), film.getId(), 12);
-        }
+        List<Film> actualFilms = listService.showOthersPlanned(user.getId(), 0);
+        Assert.assertTrue(actualFilms.isEmpty());
+        verify(listDaoMock, times(1)).showOthersPlanned(user.getId(), film.getId(), 12);
     }
 
     /**
@@ -480,13 +471,11 @@ public class ListServiceMockTest extends BaseUnitTest {
      */
     @Test
     public void totalNumber_Watched_Fail() {
-        when(listDaoMock.totalNumberOfWatched(user.getId())).thenThrow(DaoException.class);
+        when(listDaoMock.totalNumberOfWatched(user.getId())).thenThrow(RuntimeException.class);
 
-        try {
-            listService.totalNumberOfFilmsInAList(user.getId(), true);
-        } catch (ServiceException e) {
-            verify(listDaoMock, times(1)).totalNumberOfWatched(user.getId());
-        }
+        int size = listService.totalNumberOfFilmsInAList(user.getId(), true);
+        Assert.assertEquals(0, size);
+        verify(listDaoMock, times(1)).totalNumberOfWatched(user.getId());
     }
 
     /**
@@ -507,12 +496,10 @@ public class ListServiceMockTest extends BaseUnitTest {
      */
     @Test
     public void totalNumber_Planned_Fail() {
-        when(listDaoMock.totalNumberOfPlanned(user.getId())).thenThrow(DaoException.class);
+        when(listDaoMock.totalNumberOfPlanned(user.getId())).thenThrow(RuntimeException.class);
 
-        try {
-            listService.totalNumberOfFilmsInAList(user.getId(), false);
-        } catch (ServiceException e) {
-            verify(listDaoMock, times(1)).totalNumberOfPlanned(user.getId());
-        }
+        int size = listService.totalNumberOfFilmsInAList(user.getId(), false);
+        Assert.assertEquals(0, size);
+        verify(listDaoMock, times(1)).totalNumberOfPlanned(user.getId());
     }
 }

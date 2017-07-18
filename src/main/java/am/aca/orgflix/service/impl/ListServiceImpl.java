@@ -4,11 +4,11 @@ import am.aca.orgflix.dao.ListDao;
 import am.aca.orgflix.entity.Film;
 import am.aca.orgflix.service.CastService;
 import am.aca.orgflix.service.ListService;
-import am.aca.orgflix.service.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -53,7 +53,7 @@ public class ListServiceImpl extends BaseService implements ListService {
             else state = listDao.insertWatched(filmId, userId, isPublic);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
-            throw new ServiceException(e.getMessage());
+            return false;
         }
         return state;
     }
@@ -74,7 +74,7 @@ public class ListServiceImpl extends BaseService implements ListService {
             else state = listDao.insertPlanned(filmId, userId, isPublic);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
-            throw new ServiceException(e.getMessage());
+            return false;
         }
         return state;
     }
@@ -85,7 +85,7 @@ public class ListServiceImpl extends BaseService implements ListService {
     @Transactional
     @Override
     public List<Film> showOwnWatched(int userId, int page) {
-        List<Film> list;
+        List<Film> list = new ArrayList<>();
         try {
             list = listDao.showOwnWatched(userId, page, 12);
             for (Film film : list) {
@@ -93,7 +93,7 @@ public class ListServiceImpl extends BaseService implements ListService {
             }
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
-            throw new ServiceException(e.getMessage());
+            return list;
         }
         return list;
     }
@@ -104,7 +104,7 @@ public class ListServiceImpl extends BaseService implements ListService {
     @Transactional
     @Override
     public List<Film> showOwnPlanned(int userId, int page) {
-        List<Film> list;
+        List<Film> list = new ArrayList<>();
         try {
             list = listDao.showOwnPlanned(userId, page, 12);
             for (Film film : list) {
@@ -112,7 +112,7 @@ public class ListServiceImpl extends BaseService implements ListService {
             }
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
-            throw new ServiceException(e.getMessage());
+            return list;
         }
         return list;
     }
@@ -123,7 +123,7 @@ public class ListServiceImpl extends BaseService implements ListService {
     @Transactional
     @Override
     public List<Film> showOthersWatched(int userId, int page) {
-        List<Film> list;
+        List<Film> list = new ArrayList<>();
         try {
             list = listDao.showOthersWatched(userId, page, 12);
             for (Film film : list) {
@@ -131,7 +131,7 @@ public class ListServiceImpl extends BaseService implements ListService {
             }
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
-            throw new ServiceException(e.getMessage());
+            return list;
         }
         return list;
     }
@@ -142,7 +142,7 @@ public class ListServiceImpl extends BaseService implements ListService {
     @Transactional
     @Override
     public List<Film> showOthersPlanned(int userId, int page) {
-        List<Film> list;
+        List<Film> list = new ArrayList<>();
         try {
             list = listDao.showOthersPlanned(userId, page, 12);
             for (Film film : list) {
@@ -150,7 +150,7 @@ public class ListServiceImpl extends BaseService implements ListService {
             }
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
-            throw new ServiceException(e.getMessage());
+            return list;
         }
         return list;
     }
@@ -168,7 +168,7 @@ public class ListServiceImpl extends BaseService implements ListService {
             state = listDao.changePrivacy(film, userId, false);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
-            throw new ServiceException(e.getMessage());
+            return false;
         }
         return state;
     }
@@ -186,7 +186,7 @@ public class ListServiceImpl extends BaseService implements ListService {
             state = listDao.changePrivacy(film, userId, true);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
-            throw new ServiceException(e.getMessage());
+            return false;
         }
         return state;
     }
@@ -196,7 +196,7 @@ public class ListServiceImpl extends BaseService implements ListService {
      */
     @Override
     public int totalNumberOfFilmsInAList(int userId, boolean isWatched) {
-        int total = 0;
+        int total;
         try {
             if (isWatched) {
                 total = listDao.totalNumberOfWatched(userId);
@@ -205,7 +205,7 @@ public class ListServiceImpl extends BaseService implements ListService {
             }
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
-            throw new ServiceException(e.getMessage());
+            return 0;
         }
         return total;
     }
@@ -225,7 +225,7 @@ public class ListServiceImpl extends BaseService implements ListService {
             } else state = listDao.removeFilm(filmId, userId);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
-            throw new ServiceException(e.getMessage());
+            return false;
         }
         return state;
     }
@@ -245,7 +245,7 @@ public class ListServiceImpl extends BaseService implements ListService {
             else state = listDao.removeFilm(filmId, userId);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
-            throw new ServiceException(e.getMessage());
+            return false;
         }
         return state;
     }

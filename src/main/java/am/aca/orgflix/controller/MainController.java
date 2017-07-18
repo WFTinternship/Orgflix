@@ -31,7 +31,7 @@ public class MainController extends MVController {
             String user = "";
             int userId = (int) session.getAttribute("userId");
             if ( userId != -1) {
-                User selUser = userService.get(userId);
+                User selUser = userService.getById(userId);
                 user = selUser.getNick() + " (" + selUser.getEmail() + ")";
             }
             modelAndView.addObject("films", filmService.getFilmsList(page * 12, 12));
@@ -54,7 +54,7 @@ public class MainController extends MVController {
         try {
             int userId = (int) session.getAttribute("userId");
             if (userId != -1) {
-                User selUser = userService.get(userId);
+                User selUser = userService.getById(userId);
                 String user = selUser.getNick() + " (" + selUser.getEmail() + ")";
 
                 modelAndView = new ModelAndView("index");
@@ -82,7 +82,7 @@ public class MainController extends MVController {
         try {
             int userId = (int) session.getAttribute("userId");
             if (userId != -1) {
-                User selUser = userService.get(userId);
+                User selUser = userService.getById(userId);
                 String user = selUser.getNick() + " (" + selUser.getEmail() + ")";
 
                 modelAndView.addObject("films", listService.showOwnPlanned(userId, currPage * 12));
@@ -109,7 +109,7 @@ public class MainController extends MVController {
         try {
             int userId = (int) session.getAttribute("userId");
             if (userId != -1) {
-                User selUser = userService.get(userId);
+                User selUser = userService.getById(userId);
                 String user = selUser.getNick() + " (" + selUser.getEmail() + ")";
 
                 modelAndView.addObject("films", listService.showOthersWatched(userService.getByNick(nick).getId(), page));
@@ -136,7 +136,7 @@ public class MainController extends MVController {
             int userId = (int) session.getAttribute("userId");
             if (userId != -1) {
 
-                User selUser = userService.get(userId);
+                User selUser = userService.getById(userId);
                 String user = selUser.getNick() + " (" + selUser.getEmail() + ")";
 
                 modelAndView.addObject("films", listService.showOthersPlanned(userService.getByNick(nick).getId(), page));

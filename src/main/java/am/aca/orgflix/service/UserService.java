@@ -22,7 +22,7 @@ public interface UserService {
      * @param id the ID of the desired user
      * @return the User object having the given ID
      */
-    User get(int id);
+    User getById(int id);
 
     /**
      * Retrieves the User object passed the authentication by email and password
@@ -39,7 +39,7 @@ public interface UserService {
      * @param email the email to filter the user by
      * @return the User object with the given email
      */
-    User get(String email);
+    User getByEmail(String email);
 
     /**
      * Retrieves the User object having the given nickname

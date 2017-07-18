@@ -30,7 +30,13 @@ public class UserServiceImpl extends BaseService implements UserService {
      */
     @Override
     public int add(User user) {
+        checkRequiredFields(user.getNick(), user.getEmail(), user.getPass());
+        validateEmail(user.getEmail());
+        validatePassword(user.getPass());
+
         try {
+            if (authenticate(user.getEmail(), user.getPass()) == null)
+                return -1;
             return userDao.add(user);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
@@ -39,10 +45,10 @@ public class UserServiceImpl extends BaseService implements UserService {
     }
 
     /**
-     * @see UserService#get(int)
+     * @see UserService#getById(int)
      */
     @Override
-    public User get(int id) {
+    public User getById(int id) {
         User user;
         try {
             user = userDao.get(id);
@@ -54,10 +60,10 @@ public class UserServiceImpl extends BaseService implements UserService {
     }
 
     /**
-     * @see UserService#get(java.lang.String)
+     * @see UserService#getByEmail(java.lang.String)
      */
     @Override
-    public User get(String email) {
+    public User getByEmail(String email) {
         User user;
         try {
             user = userDao.getByEmail(email);
@@ -71,7 +77,7 @@ public class UserServiceImpl extends BaseService implements UserService {
     }
 
     /**
-     * @see UserService#get(String)
+     * @see UserService#getByEmail(String)
      */
     @Override
     public User getByNick(String nick) {
@@ -109,6 +115,10 @@ public class UserServiceImpl extends BaseService implements UserService {
      */
     @Override
     public boolean edit(User user) {
+        checkRequiredFields(user.getNick(), user.getEmail(), user.getPass());
+        validateEmail(user.getEmail());
+        validatePassword(user.getPass());
+
         boolean state;
         try {
             state = userDao.edit(user);

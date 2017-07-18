@@ -115,7 +115,7 @@ public class MainControllerMockTest extends BaseUnitTest {
     public void paging_Authenticated_Success() {
         when(filmServiceMock.getFilmsList(12, 12)).thenReturn(films);
         when(filmServiceMock.totalNumberOfFilms()).thenReturn(0);
-        when(userServiceMock.get(1)).thenReturn(user);
+        when(userServiceMock.getById(1)).thenReturn(user);
 
         ModelAndView actualMV = mainController.paging(new MockHttpSession(), 1);
 
@@ -129,7 +129,7 @@ public class MainControllerMockTest extends BaseUnitTest {
 
         verify(filmServiceMock, times(1)).getFilmsList(12, 12);
         verify(filmServiceMock, times(1)).totalNumberOfFilms();
-        verify(userServiceMock, times(1)).get(1);
+        verify(userServiceMock, times(1)).getById(1);
     }
 
     /**
@@ -139,7 +139,7 @@ public class MainControllerMockTest extends BaseUnitTest {
     public void paging_UnAuthenticated_Success() {
         when(filmServiceMock.getFilmsList(24, 12)).thenReturn(films);
         when(filmServiceMock.totalNumberOfFilms()).thenReturn(0);
-        when(userServiceMock.get(1)).thenReturn(user);
+        when(userServiceMock.getById(1)).thenReturn(user);
 
         ModelAndView actualMV = mainController.paging(new MockHttpSession(),2);
 
@@ -160,13 +160,13 @@ public class MainControllerMockTest extends BaseUnitTest {
      */
     @Test
     public void paging_InternalError_Fail() {
-        when(userServiceMock.get(1)).thenThrow(ServiceException.class);
+        when(userServiceMock.getById(1)).thenThrow(ServiceException.class);
 
         ModelAndView actualMV = mainController.paging(new MockHttpSession(), 2);
 
         Assert.assertEquals("error", actualMV.getViewName());
 
-        verify(userServiceMock, times(1)).get(1);
+        verify(userServiceMock, times(1)).getById(1);
     }
 
     /**
@@ -174,7 +174,7 @@ public class MainControllerMockTest extends BaseUnitTest {
      */
     @Test
     public void pagingWAuth_Success() {
-        when(userServiceMock.get(user.getId())).thenReturn(user);
+        when(userServiceMock.getById(user.getId())).thenReturn(user);
         when(filmServiceMock.getFilmsList(0, 12)).thenReturn(films);
         when(filmServiceMock.totalNumberOfFilms()).thenReturn(0);
 
@@ -190,7 +190,7 @@ public class MainControllerMockTest extends BaseUnitTest {
 
         verify(filmServiceMock, times(1)).getFilmsList(0, 12);
         verify(filmServiceMock, times(1)).totalNumberOfFilms();
-        verify(userServiceMock, times(1)).get(user.getId());
+        verify(userServiceMock, times(1)).getById(user.getId());
     }
 
     /**
@@ -198,13 +198,13 @@ public class MainControllerMockTest extends BaseUnitTest {
      */
     @Test
     public void pagingWAuth_AuthenticationError_Fail() {
-        when(userServiceMock.get(user.getId())).thenReturn(null);
+        when(userServiceMock.getById(user.getId())).thenReturn(null);
 
         ModelAndView actualMV = mainController.paging(new MockHttpSession(), 0);
 
         Assert.assertEquals("error", actualMV.getViewName());
 
-        verify(userServiceMock, times(1)).get(user.getId());
+        verify(userServiceMock, times(1)).getById(user.getId());
     }
 
     /**
@@ -212,14 +212,14 @@ public class MainControllerMockTest extends BaseUnitTest {
      */
     @Test
     public void pagingWAuth_InternalError_Fail() {
-        when(userServiceMock.get(user.getId())).thenReturn(user);
+        when(userServiceMock.getById(user.getId())).thenReturn(user);
         when(filmServiceMock.getFilmsList(0, 12)).thenThrow(ServiceException.class);
 
         ModelAndView actualMV = mainController.paging(new MockHttpSession(), 0);
 
         Assert.assertEquals("error", actualMV.getViewName());
 
-        verify(userServiceMock, times(1)).get(user.getId());
+        verify(userServiceMock, times(1)).getById(user.getId());
         verify(filmServiceMock, times(1)).getFilmsList(0, 12);
     }
 
@@ -230,7 +230,7 @@ public class MainControllerMockTest extends BaseUnitTest {
     public void watchList_Success() {
         when(listServiceMock.showOwnWatched(1, 12)).thenReturn(films);
         when(listServiceMock.totalNumberOfFilmsInAList(1, true)).thenReturn(0);
-        when(userServiceMock.get(1)).thenReturn(user);
+        when(userServiceMock.getById(1)).thenReturn(user);
 
         ModelAndView actualMV = mainController.watchList(new MockHttpSession(), 1);
 
@@ -244,7 +244,7 @@ public class MainControllerMockTest extends BaseUnitTest {
 
         verify(listServiceMock, times(1)).showOwnWatched(1, 12);
         verify(listServiceMock, times(1)).totalNumberOfFilmsInAList(1, true);
-        verify(userServiceMock, times(1)).get(1);
+        verify(userServiceMock, times(1)).getById(1);
     }
 
     /**
@@ -252,12 +252,12 @@ public class MainControllerMockTest extends BaseUnitTest {
      */
     @Test
     public void watchList_InternalError_Fail() {
-        when(userServiceMock.get(1)).thenThrow(ServiceException.class);
+        when(userServiceMock.getById(1)).thenThrow(ServiceException.class);
 
         ModelAndView actualMV = mainController.watchList(new MockHttpSession(), 1);
         Assert.assertEquals("error", actualMV.getViewName());
 
-        verify(userServiceMock, times(1)).get(1);
+        verify(userServiceMock, times(1)).getById(1);
     }
 
     /**
@@ -266,7 +266,7 @@ public class MainControllerMockTest extends BaseUnitTest {
     @Test
     public void wishList_Success() {
         when(listServiceMock.showOwnPlanned(1, 12)).thenReturn(films);
-        when(userServiceMock.get(1)).thenReturn(user);
+        when(userServiceMock.getById(1)).thenReturn(user);
 
         ModelAndView actualMV = mainController.wishList(new MockHttpSession(), 1);
 
@@ -280,7 +280,7 @@ public class MainControllerMockTest extends BaseUnitTest {
 
         verify(listServiceMock, times(1)).showOwnPlanned(1, 12);
         verify(listServiceMock, times(1)).totalNumberOfFilmsInAList(1, false);
-        verify(userServiceMock, times(1)).get(1);
+        verify(userServiceMock, times(1)).getById(1);
     }
 
     /**
@@ -288,12 +288,12 @@ public class MainControllerMockTest extends BaseUnitTest {
      */
     @Test
     public void wishList_InternalError_Fail() {
-        when(userServiceMock.get(1)).thenThrow(ServiceException.class);
+        when(userServiceMock.getById(1)).thenThrow(ServiceException.class);
 
         ModelAndView actualMV = mainController.wishList(new MockHttpSession(), 1);
         Assert.assertEquals("error", actualMV.getViewName());
 
-        verify(userServiceMock, times(1)).get(1);
+        verify(userServiceMock, times(1)).getById(1);
     }
 
     /**
@@ -301,7 +301,7 @@ public class MainControllerMockTest extends BaseUnitTest {
      */
     @Test
     public void othersWatched_Success() {
-        when(userServiceMock.get(1)).thenReturn(user);
+        when(userServiceMock.getById(1)).thenReturn(user);
         when(userServiceMock.getByNick("hulk")).thenReturn(user);
         when(listServiceMock.showOthersWatched(user.getId(), 2)).thenReturn(films);
 
@@ -315,7 +315,7 @@ public class MainControllerMockTest extends BaseUnitTest {
         Assert.assertEquals(2, actualMV.getModel().get("currPage"));
         Assert.assertEquals("OthersWatched", actualMV.getModel().get("page"));
 
-        verify(userServiceMock, times(1)).get(1);
+        verify(userServiceMock, times(1)).getById(1);
         verify(userServiceMock, times(1)).getByNick("hulk");
         verify(listServiceMock, times(1)).showOthersWatched(user.getId(), 2);
     }
@@ -325,12 +325,12 @@ public class MainControllerMockTest extends BaseUnitTest {
      */
     @Test
     public void othersWatched_InternalError_Fail() {
-        when(userServiceMock.get(1)).thenThrow(ServiceException.class);
+        when(userServiceMock.getById(1)).thenThrow(ServiceException.class);
 
         ModelAndView actualMV = mainController.getWatchedByOtherUser(new MockHttpSession(), "hulk", 1);
         Assert.assertEquals("error", actualMV.getViewName());
 
-        verify(userServiceMock, times(1)).get(1);
+        verify(userServiceMock, times(1)).getById(1);
     }
 
     /**
@@ -338,7 +338,7 @@ public class MainControllerMockTest extends BaseUnitTest {
      */
     @Test
     public void othersPlanneded_Success() {
-        when(userServiceMock.get(1)).thenReturn(user);
+        when(userServiceMock.getById(1)).thenReturn(user);
         when(userServiceMock.getByNick("hulk")).thenReturn(user);
         when(listServiceMock.showOthersPlanned(user.getId(), 2)).thenReturn(films);
 
@@ -352,7 +352,7 @@ public class MainControllerMockTest extends BaseUnitTest {
         Assert.assertEquals(2, actualMV.getModel().get("currPage"));
         Assert.assertEquals("OthersPlanned", actualMV.getModel().get("page"));
 
-        verify(userServiceMock, times(1)).get(1);
+        verify(userServiceMock, times(1)).getById(1);
         verify(userServiceMock, times(1)).getByNick("hulk");
         verify(listServiceMock, times(1)).showOthersPlanned(user.getId(), 2);
     }
@@ -362,11 +362,11 @@ public class MainControllerMockTest extends BaseUnitTest {
      */
     @Test
     public void othersPlanned_InternalError_Fail() {
-        when(userServiceMock.get(1)).thenThrow(ServiceException.class);
+        when(userServiceMock.getById(1)).thenThrow(ServiceException.class);
 
         ModelAndView actualMV = mainController.getPlannedByOtherUser(new MockHttpSession(), "hulk", 1);
         Assert.assertEquals("error", actualMV.getViewName());
 
-        verify(userServiceMock, times(1)).get(1);
+        verify(userServiceMock, times(1)).getById(1);
     }
 }

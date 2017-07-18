@@ -115,48 +115,48 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see UserServiceImpl#get(int)
+     * @see UserServiceImpl#getById(int)
      */
     @Test
     public void getUser_ById_Success() {
         int id = userService.add(standardUser);
-        User gotUser = userService.get(id);
+        User gotUser = userService.getById(id);
 
         boolean status = standardUser.equals(gotUser);
         Assert.assertTrue(status);
     }
 
     /**
-     * @see UserServiceImpl#get(int)
+     * @see UserServiceImpl#getById(int)
      */
     @Test
     public void getUser_ByWrongId_Fail() {
         userService.add(standardUser);
         int id = userService.add(new User("gago", "Gagik Petrosyan", "davit.abovyan1@gmail.com", "pass"));
 
-        boolean status = standardUser.equals(userService.get(id));
+        boolean status = standardUser.equals(userService.getById(id));
         Assert.assertFalse(status);
     }
 
     /**
-     * @see UserServiceImpl#get(java.lang.String)
+     * @see UserServiceImpl#getByEmail(java.lang.String)
      */
     @Test
     public void getUser_ByEmail_Success() {
         userService.add(standardUser);
 
-        boolean status = standardUser.equals(userService.get("davit.abovyan@gmail.com"));
+        boolean status = standardUser.equals(userService.getByEmail("davit.abovyan@gmail.com"));
         Assert.assertTrue(status);
     }
 
     /**
-     * @see UserServiceImpl#get(java.lang.String)
+     * @see UserServiceImpl#getByEmail(java.lang.String)
      */
     @Test(expected = RuntimeException.class)
     public void getUser_ByWrongEmail_Fail() {
         userService.add(standardUser);
 
-        boolean status = user.equals(userService.get("davit.abovyan1@gmail.com"));
+        boolean status = user.equals(userService.getByEmail("davit.abovyan1@gmail.com"));
         Assert.assertFalse(status);
     }
 
@@ -213,7 +213,7 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
         user.setEmail(newEmail);
         userService.edit(user);
 
-        String actualEmail = userService.get(newEmail).getEmail();
+        String actualEmail = userService.getByEmail(newEmail).getEmail();
         Assert.assertEquals(newEmail, actualEmail);
     }
 
@@ -229,7 +229,7 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
         user.setNick(newNick);
         userService.edit(user);
 
-        String actualNick = userService.get(id).getNick();
+        String actualNick = userService.getById(id).getNick();
         Assert.assertEquals(newNick, actualNick);
 
     }
@@ -246,7 +246,7 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
         user.setUserName(newUserName);
         userService.edit(user);
 
-        String actualUserName = userService.get(id).getUserName();
+        String actualUserName = userService.getById(id).getUserName();
         Assert.assertEquals(newUserName, actualUserName);
     }
 
@@ -262,7 +262,7 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
         user.setPass(newPass);
         userService.edit(user);
 
-        String actualPass = userService.get(id).getPass();
+        String actualPass = userService.getById(id).getPass();
         Assert.assertEquals(newPass, actualPass);
     }
 

@@ -37,7 +37,7 @@ public class FilmController extends MVController {
             if (userId != -1) {
                 modelAndView = new ModelAndView("newFilm");
 
-                User selUser = userService.get(userId);
+                User selUser = userService.getById(userId);
                 String user = selUser.getNick() + " (" + selUser.getEmail() + ")";
                 modelAndView.addObject("currPage", page);
                 modelAndView.addObject("actors", castService.listCasts());
@@ -105,7 +105,7 @@ public class FilmController extends MVController {
                 stream.flush();
                 stream.close();
 
-                User selUser = userService.get(userId);
+                User selUser = userService.getById(userId);
                 String user = selUser.getNick() + " (" + selUser.getEmail() + ")";
 
                 modelAndView = new ModelAndView("uploadResult", "fileSuccess", "Film successfully saved!");

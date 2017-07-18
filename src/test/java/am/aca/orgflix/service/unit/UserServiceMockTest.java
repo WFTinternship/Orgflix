@@ -95,7 +95,7 @@ public class UserServiceMockTest extends BaseUnitTest {
      */
     @Test
     public void addUser_NotUniqueEmail_Fail() {
-        when(userDaoMock.getByEmail(user.getEmail())).thenReturn(null);
+        when(userDaoMock.getByEmail(user.getEmail())).thenReturn(user);
 
         try {
             userService.add(user);
@@ -148,11 +148,13 @@ public class UserServiceMockTest extends BaseUnitTest {
      */
     @Test
     public void addUser_NotUniqueNick_Fail() {
-        when(userDaoMock.getByNick(user.getNick())).thenReturn(null);
+        when(userDaoMock.getByEmail(user.getEmail())).thenReturn(null);
+        when(userDaoMock.getByNick(user.getNick())).thenReturn(user);
 
         try {
             userService.add(user);
         } catch (ServiceException e) {
+            verify(userDaoMock, times(1)).getByEmail(user.getEmail());
             verify(userDaoMock, times(1)).getByNick(user.getNick());
         }
     }
@@ -280,7 +282,7 @@ public class UserServiceMockTest extends BaseUnitTest {
     /**
      * @see UserServiceImpl#edit(User)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void editUser_EmailNotUnique_Fail() {
         when(userDaoMock.getByEmail(user.getEmail())).thenReturn(user);
         try {
@@ -311,10 +313,10 @@ public class UserServiceMockTest extends BaseUnitTest {
     /**
      * @see UserServiceImpl#edit(User)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void editUser_NotUniqueNick_Fail() {
         when(userDaoMock.getByEmail(user.getEmail())).thenReturn(null);
-        when(userDaoMock.getByEmail(user.getEmail())).thenReturn(user);
+        when(userDaoMock.getByNick(user.getNick())).thenReturn(user);
         try {
             userService.edit(user);
         } catch (RuntimeException e) {

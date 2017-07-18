@@ -15,14 +15,14 @@ public class UserServiceImpl extends BaseService implements UserService {
 
     private UserDAO userDao;
 
-    @Autowired
-    public void setUserDao(UserDAO userDao) {
-        this.userDao = userDao;
-    }
-
     public UserServiceImpl() {
         // class name to include in logging
         super(UserServiceImpl.class);
+    }
+
+    @Autowired
+    public void setUserDao(UserDAO userDao) {
+        this.userDao = userDao;
     }
 
     /**
@@ -34,9 +34,12 @@ public class UserServiceImpl extends BaseService implements UserService {
         validateEmail(user.getEmail());
         validatePassword(user.getPass());
 
+        if (userDao.getByEmail(user.getEmail()) != null)
+            throw new ServiceException("Email already used");
+        if (userDao.getByNick(user.getNick()) != null)
+            throw new ServiceException("Nickname already used");
+
         try {
-            if (authenticate(user.getEmail(), user.getPass()) == null)
-                return -1;
             return userDao.add(user);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
@@ -51,7 +54,7 @@ public class UserServiceImpl extends BaseService implements UserService {
     public User getById(int id) {
         User user;
         try {
-            user = userDao.get(id);
+            user = userDao.getById(id);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
             throw new ServiceException(e.getMessage());
@@ -119,6 +122,10 @@ public class UserServiceImpl extends BaseService implements UserService {
         validateEmail(user.getEmail());
         validatePassword(user.getPass());
 
+        if (userDao.getByEmail(user.getEmail()) != null)
+            throw new ServiceException("Email already used");
+        if (userDao.getByNick(user.getNick()) != null)
+            throw new ServiceException("Nickname already used");
         boolean state;
         try {
             state = userDao.edit(user);

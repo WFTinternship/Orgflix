@@ -1,7 +1,6 @@
 package am.aca.orgflix.controller.integration;
 
 import am.aca.orgflix.BaseIntegrationTest;
-import am.aca.orgflix.controller.DataController;
 import am.aca.orgflix.controller.MainController;
 import am.aca.orgflix.entity.Cast;
 import am.aca.orgflix.entity.Film;
@@ -22,8 +21,6 @@ import java.util.List;
  * Integration tests for Data controller
  */
 public class MainControllerIntegrationTest extends BaseIntegrationTest{
-    @Autowired
-    private DataController dataController;
 
     @Autowired
     private CastService castService;

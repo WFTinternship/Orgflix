@@ -18,6 +18,14 @@ public interface CastService {
     boolean add(Cast cast);
 
     /**
+     * Add all casts in the array to the film
+     * @param filmId the id of film to witch the casts will be added
+     * @param actorIds array of ids for each cast to be added
+     * @return list of cast objects added to the film
+     */
+    List<Cast> addCastsToFilm(int filmId, int[] actorIds);
+
+    /**
      * Shows all actors already created
      *
      * @return the List object of all actors already created

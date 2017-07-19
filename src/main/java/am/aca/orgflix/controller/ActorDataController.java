@@ -1,6 +1,9 @@
 package am.aca.orgflix.controller;
 
 import am.aca.orgflix.entity.Cast;
+import am.aca.orgflix.service.CastService;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,7 +16,17 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/data/actor")
-public class ActorDataController extends DataController {
+public class ActorDataController {
+
+    protected Logger LOGGER = Logger.getLogger(ActorDataController.class);
+
+    private CastService castService;
+
+    @Autowired
+    public void setCastService(CastService castService) {
+        this.castService = castService;
+    }
+
 
     @RequestMapping("/getList")
     public ResponseEntity getActorsList() {

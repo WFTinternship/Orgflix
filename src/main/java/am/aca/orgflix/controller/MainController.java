@@ -1,7 +1,13 @@
 package am.aca.orgflix.controller;
 
 import am.aca.orgflix.entity.User;
+import am.aca.orgflix.service.FilmService;
+import am.aca.orgflix.service.ListService;
+import am.aca.orgflix.service.UserService;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -10,30 +16,50 @@ import javax.servlet.http.HttpSession;
 /**
  * Main page mapper
  */
-@Component
+@Controller
 @RequestMapping("/")
-public class MainController extends MVController {
+public class MainController {
+
+    private Logger LOGGER = Logger.getLogger(MainController.class);
+
+    private UserService userService;
+    private ListService listService;
+    private FilmService filmService;
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    @Autowired
+    public void setListService(ListService listService) {
+        this.listService = listService;
+    }
+
+    @Autowired
+    public void setFilmService(FilmService filmService) {
+        this.filmService = filmService;
+    }
+
 
     @RequestMapping("/")
-    public ModelAndView index(HttpSession session) {
+    public ModelAndView indexPageFirtVisit(HttpSession session) {
         if(!session.getAttributeNames().hasMoreElements() )
             session.setAttribute("userId", -1);
         ModelAndView modelAndView = new ModelAndView("index");
-        return getGuestMV(modelAndView);
+        modelAndView.addObject("films", filmService.getAll(0, 12));
+        modelAndView.addObject("ratings", filmService.getAllRatings(0, 12));
+        modelAndView.addObject("currPage", 0);
+        modelAndView.addObject("page", "index");
+        modelAndView.addObject("numOfPages", filmService.getTotalNumber()/12);
+        return modelAndView;
     }
 
     @RequestMapping("/index")
-    public ModelAndView paging(HttpSession session,
-                               @RequestParam("currPage") int page) {
+    public ModelAndView indexPage(@RequestParam("currPage") int page) {
         ModelAndView modelAndView;
         try {
             modelAndView = new ModelAndView("index");
-            String user = "";
-            int userId = (int) session.getAttribute("userId");
-            if ( userId != -1) {
-                User selUser = userService.getById(userId);
-                user = selUser.getNick() + " (" + selUser.getEmail() + ")";
-            }
             modelAndView.addObject("films", filmService.getAll(page * 12, 12));
             modelAndView.addObject("numOfPages", filmService.getTotalNumber() / 12);
             modelAndView.addObject("ratings", filmService.getAllRatings(page, 12));
@@ -54,13 +80,9 @@ public class MainController extends MVController {
         try {
             int userId = (int) session.getAttribute("userId");
             if (userId != -1) {
-                User selUser = userService.getById(userId);
-                String user = selUser.getNick() + " (" + selUser.getEmail() + ")";
-
                 modelAndView = new ModelAndView("index");
                 modelAndView.addObject("films", listService.showOwnWatched(userId, currPage * 12));
                 modelAndView.addObject("numOfPages", listService.totalNumberOfFilmsInAList(userId, true) / 12);
-                modelAndView.addObject("user", user);
                 modelAndView.addObject("currPage", currPage);
                 modelAndView.addObject("page", "watch_list");
             }else{
@@ -82,12 +104,8 @@ public class MainController extends MVController {
         try {
             int userId = (int) session.getAttribute("userId");
             if (userId != -1) {
-                User selUser = userService.getById(userId);
-                String user = selUser.getNick() + " (" + selUser.getEmail() + ")";
-
                 modelAndView.addObject("films", listService.showOwnPlanned(userId, currPage * 12));
                 modelAndView.addObject("numOfPages", listService.totalNumberOfFilmsInAList(userId, false) / 12);
-                modelAndView.addObject("user", user);
                 modelAndView.addObject("currPage", currPage);
                 modelAndView.addObject("page", "wish_list");
             }else{
@@ -109,11 +127,8 @@ public class MainController extends MVController {
         try {
             int userId = (int) session.getAttribute("userId");
             if (userId != -1) {
-                User selUser = userService.getById(userId);
-                String user = selUser.getNick() + " (" + selUser.getEmail() + ")";
-
-                modelAndView.addObject("films", listService.showOthersWatched(userService.getByNick(nick).getId(), page));
-                modelAndView.addObject("user", user);
+                modelAndView.addObject("films",
+                        listService.showOthersWatched(userService.getByNick(nick).getId(), page));
                 modelAndView.addObject("currPage", page);
                 modelAndView.addObject("page", "OthersWatched");
             }else{
@@ -135,12 +150,8 @@ public class MainController extends MVController {
         try {
             int userId = (int) session.getAttribute("userId");
             if (userId != -1) {
-
-                User selUser = userService.getById(userId);
-                String user = selUser.getNick() + " (" + selUser.getEmail() + ")";
-
-                modelAndView.addObject("films", listService.showOthersPlanned(userService.getByNick(nick).getId(), page));
-                modelAndView.addObject("user", user);
+                modelAndView.addObject("films",
+                        listService.showOthersPlanned(userService.getByNick(nick).getId(), page));
                 modelAndView.addObject("currPage", page);
                 modelAndView.addObject("page", "OthersPlanned");
             }else{

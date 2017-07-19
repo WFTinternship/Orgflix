@@ -1,7 +1,12 @@
 package am.aca.orgflix.controller;
 
 import am.aca.orgflix.entity.User;
+import am.aca.orgflix.service.FilmService;
+import am.aca.orgflix.service.UserService;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -10,16 +15,36 @@ import javax.servlet.http.HttpSession;
 /**
  * ModelAndView controller for user related actions
  */
-@Component
+@Controller
 @RequestMapping("/")
-public class UserController extends MVController{
+public class UserController{
+
+    private Logger LOGGER = Logger.getLogger(UserController.class);
+
+    private UserService userService;
+    private FilmService filmService;
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    @Autowired
+    public void setFilmService(FilmService filmService) {
+        this.filmService = filmService;
+    }
+
 
     @RequestMapping("/signup")
     public ModelAndView signup() {
         ModelAndView modelAndView;
         try{
             modelAndView = new ModelAndView("signup");
-            modelAndView = getGuestMV(modelAndView);
+            modelAndView.addObject("films", filmService.getAll(0, 12));
+            modelAndView.addObject("ratings", filmService.getAllRatings(0, 12));
+            modelAndView.addObject("currPage", 0);
+            modelAndView.addObject("page", "index");
+            modelAndView.addObject("numOfPages", filmService.getTotalNumber()/12);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
             modelAndView = new ModelAndView("error","message",e);

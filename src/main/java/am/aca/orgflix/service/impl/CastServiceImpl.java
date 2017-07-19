@@ -53,6 +53,22 @@ public class CastServiceImpl extends BaseService implements CastService {
         return result;
     }
 
+
+    /**
+     * @see CastService#addCastsToFilm(int, int[])
+     */
+    @Transactional
+    @Override
+    public List<Cast> addCastsToFilm(int filmId, int[] actorIds) {
+        List<Cast> castList = new ArrayList<>();
+        for (int id : actorIds) {
+            Cast cast = getById(id);
+            castList.add(cast);
+            addToFilm(cast, filmId);
+        }
+        return castList;
+    }
+
     /**
      * @see CastService#addToFilm(Cast, int)
      */

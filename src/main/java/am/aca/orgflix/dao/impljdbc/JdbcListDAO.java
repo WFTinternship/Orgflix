@@ -170,7 +170,7 @@ public class JdbcListDAO extends NamedParameterJdbcDaoSupport implements ListDao
         int count = getJdbcTemplate().queryForObject(checkQuery, new Object[]{
                 userId, filmId
         }, Integer.class);
-        return (count == 1);
+        return (count > 0);
     }
 
     /**

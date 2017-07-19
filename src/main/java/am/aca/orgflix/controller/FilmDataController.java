@@ -1,5 +1,9 @@
 package am.aca.orgflix.controller;
 
+import am.aca.orgflix.service.FilmService;
+import am.aca.orgflix.service.ListService;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,7 +18,22 @@ import javax.servlet.http.HttpSession;
  */
 @RestController
 @RequestMapping("/data/film")
-public class FilmDataController extends DataController{
+public class FilmDataController{
+
+    protected Logger LOGGER = Logger.getLogger(FilmDataController.class);
+
+    private ListService listService;
+    private FilmService filmService;
+
+    @Autowired
+    public void setListService(ListService listService) {
+        this.listService = listService;
+    }
+
+    @Autowired
+    public void setFilmService(FilmService filmService) {
+        this.filmService = filmService;
+    }
 
     @PostMapping("/watch/addToList")
     public ResponseEntity addFilmToWatchList(

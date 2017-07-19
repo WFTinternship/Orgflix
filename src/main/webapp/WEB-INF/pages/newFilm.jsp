@@ -23,7 +23,7 @@
             </header>
             <section>
                 <h3 style="color:#4581ff">${filesuccess}</h3>
-                <form id="newFilm" method="POST" action="/newFilmResult" enctype="multipart/form-data">
+                <form id="newFilm" method="POST" action="addResult" enctype="multipart/form-data">
                     <div>
                         <span>Film Title</span>
                         <input type="text" id="title" name="title" class="inputField"/>

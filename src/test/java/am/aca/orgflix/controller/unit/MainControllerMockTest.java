@@ -69,7 +69,7 @@ public class MainControllerMockTest extends BaseUnitTest {
     }
 
     /**
-     * @see MainController#index(HttpSession)
+     * @see MainController#indexPageFirtVisit(HttpSession)
      */
     @Test
     public void index_Success() {
@@ -77,7 +77,7 @@ public class MainControllerMockTest extends BaseUnitTest {
         when(filmServiceMock.getTotalNumber()).thenReturn(0);
         when(filmServiceMock.getAllRatings(0, 12)).thenReturn(ratings);
 
-        ModelAndView actualMV = mainController.index(new MockHttpSession());
+        ModelAndView actualMV = mainController.indexPageFirtVisit(new MockHttpSession());
 
         Assert.assertEquals("index", actualMV.getViewName());
         Assert.assertEquals(films, actualMV.getModel().get("films"));
@@ -94,13 +94,13 @@ public class MainControllerMockTest extends BaseUnitTest {
     }
 
     /**
-     * @see MainController#index(HttpSession)
+     * @see MainController#indexPageFirtVisit(HttpSession)
      */
     @Test
     public void index_ExceptionThrown_Fail() {
         when(filmServiceMock.getAll(0, 12)).thenThrow(ServiceException.class);
 
-        ModelAndView actualMV = mainController.index(new MockHttpSession());
+        ModelAndView actualMV = mainController.indexPageFirtVisit(new MockHttpSession());
 
         Assert.assertEquals("error", actualMV.getViewName());
 
@@ -109,7 +109,7 @@ public class MainControllerMockTest extends BaseUnitTest {
 
 
     /**
-     * @see MainController#paging(javax.servlet.http.HttpSession, int)
+     * @see MainController#indexPage( int)
      */
     @Test
     public void paging_Authenticated_Success() {
@@ -117,7 +117,7 @@ public class MainControllerMockTest extends BaseUnitTest {
         when(filmServiceMock.getTotalNumber()).thenReturn(0);
         when(userServiceMock.getById(1)).thenReturn(user);
 
-        ModelAndView actualMV = mainController.paging(new MockHttpSession(), 1);
+        ModelAndView actualMV = mainController.indexPage( 1);
 
         Assert.assertEquals("index", actualMV.getViewName());
         Assert.assertEquals(films, actualMV.getModel().get("films"));
@@ -133,7 +133,7 @@ public class MainControllerMockTest extends BaseUnitTest {
     }
 
     /**
-     * @see MainController#paging(javax.servlet.http.HttpSession, int)
+     * @see MainController#indexPage(int)
      */
     @Test
     public void paging_UnAuthenticated_Success() {
@@ -141,7 +141,7 @@ public class MainControllerMockTest extends BaseUnitTest {
         when(filmServiceMock.getTotalNumber()).thenReturn(0);
         when(userServiceMock.getById(1)).thenReturn(user);
 
-        ModelAndView actualMV = mainController.paging(new MockHttpSession(),2);
+        ModelAndView actualMV = mainController.indexPage(2);
 
         Assert.assertEquals("index", actualMV.getViewName());
         Assert.assertEquals(films, actualMV.getModel().get("films"));
@@ -156,13 +156,13 @@ public class MainControllerMockTest extends BaseUnitTest {
     }
 
     /**
-     * @see MainController#paging(javax.servlet.http.HttpSession, int)
+     * @see MainController#indexPage(int)
      */
     @Test
     public void paging_InternalError_Fail() {
         when(userServiceMock.getById(1)).thenThrow(ServiceException.class);
 
-        ModelAndView actualMV = mainController.paging(new MockHttpSession(), 2);
+        ModelAndView actualMV = mainController.indexPage(2);
 
         Assert.assertEquals("error", actualMV.getViewName());
 
@@ -170,7 +170,7 @@ public class MainControllerMockTest extends BaseUnitTest {
     }
 
     /**
-     * @see MainController#paging(javax.servlet.http.HttpSession, int)
+     * @see MainController#indexPage(int)
      */
     @Test
     public void pagingWAuth_Success() {
@@ -178,7 +178,7 @@ public class MainControllerMockTest extends BaseUnitTest {
         when(filmServiceMock.getAll(0, 12)).thenReturn(films);
         when(filmServiceMock.getTotalNumber()).thenReturn(0);
 
-        ModelAndView actualMV = mainController.paging(new MockHttpSession(),0);
+        ModelAndView actualMV = mainController.indexPage(0);
 
         Assert.assertEquals("index", actualMV.getViewName());
         Assert.assertEquals(films, actualMV.getModel().get("films"));
@@ -194,13 +194,13 @@ public class MainControllerMockTest extends BaseUnitTest {
     }
 
     /**
-     * @see MainController#paging(javax.servlet.http.HttpSession, int)
+     * @see MainController#indexPage(int)
      */
     @Test
     public void pagingWAuth_AuthenticationError_Fail() {
         when(userServiceMock.getById(user.getId())).thenReturn(null);
 
-        ModelAndView actualMV = mainController.paging(new MockHttpSession(), 0);
+        ModelAndView actualMV = mainController.indexPage(0);
 
         Assert.assertEquals("error", actualMV.getViewName());
 
@@ -208,14 +208,14 @@ public class MainControllerMockTest extends BaseUnitTest {
     }
 
     /**
-     * @see MainController#paging(javax.servlet.http.HttpSession, int)
+     * @see MainController#indexPage(int)
      */
     @Test
     public void pagingWAuth_InternalError_Fail() {
         when(userServiceMock.getById(user.getId())).thenReturn(user);
         when(filmServiceMock.getAll(0, 12)).thenThrow(ServiceException.class);
 
-        ModelAndView actualMV = mainController.paging(new MockHttpSession(), 0);
+        ModelAndView actualMV = mainController.indexPage(0);
 
         Assert.assertEquals("error", actualMV.getViewName());
 

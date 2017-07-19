@@ -77,12 +77,12 @@ public class DataControllerMockTest extends BaseUnitTest {
     @Test
     public void getActorsList_Success() {
         casts.add(cast);
-        when(castServiceMock.listCasts()).thenReturn(casts);
+        when(castServiceMock.getAll()).thenReturn(casts);
 
         ResponseEntity actualRE = actorDataController.getActorsList();
         Assert.assertEquals(new ResponseEntity("[{\"id\":\"0\", \"name\":\"Thandie Newton\", \"oscar\":\"false\"}]", HttpStatus.OK), actualRE);
 
-        verify(castServiceMock, times(1)).listCasts();
+        verify(castServiceMock, times(1)).getAll();
     }
 
     /**
@@ -91,12 +91,12 @@ public class DataControllerMockTest extends BaseUnitTest {
     @Test
     public void getActorsList_Fail() {
         casts.add(cast);
-        when(castServiceMock.listCasts()).thenThrow(ServiceException.class);
+        when(castServiceMock.getAll()).thenThrow(ServiceException.class);
 
         ResponseEntity actualRE = actorDataController.getActorsList();
         Assert.assertEquals(new ResponseEntity(HttpStatus.BAD_REQUEST), actualRE);
 
-        verify(castServiceMock, times(1)).listCasts();
+        verify(castServiceMock, times(1)).getAll();
     }
 
     /**
@@ -104,12 +104,12 @@ public class DataControllerMockTest extends BaseUnitTest {
      */
     @Test
     public void getActorsList_Empty_Success() {
-        when(castServiceMock.listCasts()).thenReturn(casts);
+        when(castServiceMock.getAll()).thenReturn(casts);
 
         ResponseEntity actualRE = actorDataController.getActorsList();
         Assert.assertEquals(new ResponseEntity("[]", HttpStatus.OK), actualRE);
 
-        verify(castServiceMock, times(1)).listCasts();
+        verify(castServiceMock, times(1)).getAll();
     }
 
     /**

@@ -45,7 +45,7 @@ public class ListDaoTest extends BaseIntegrationTest {
         film.setTitle("Scarface");
         film.setProdYear(1983);
 
-        jdbcFilmDAO.addFilm(film);
+        jdbcFilmDAO.add(film);
         filmId = film.getId();
         //setUp User and User DAO
 
@@ -136,232 +136,232 @@ public class ListDaoTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see ListDao#showOwnWatched(int, int, int)
+     * @see ListDao#getOwnWatched(int, int, int)
      */
     @Test
     public void showOwnWatched_ValidUser_Success() {
-        List<Film> actualFilms = listDaoJdbc.showOwnWatched(userId, 0, 12);
+        List<Film> actualFilms = listDaoJdbc.getOwnWatched(userId, 0, 12);
         Assert.assertTrue(actualFilms.isEmpty());
 
         listDaoJdbc.insertWatched(filmId, userId, false);
 
-        actualFilms = listDaoJdbc.showOwnWatched(userId, 0, 12);
+        actualFilms = listDaoJdbc.getOwnWatched(userId, 0, 12);
         Assert.assertEquals(1, actualFilms.size());
         Assert.assertEquals(film, actualFilms.get(0));
 
-        jdbcFilmDAO.addFilm(film);
+        jdbcFilmDAO.add(film);
         listDaoJdbc.insertWatched(film.getId(), userId, true);
-        actualFilms = listDaoJdbc.showOwnWatched(userId, 0, 12);
+        actualFilms = listDaoJdbc.getOwnWatched(userId, 0, 12);
         Assert.assertEquals(2, actualFilms.size());
 
-        actualFilms = listDaoJdbc.showOwnWatched(userId, 2, 12);
+        actualFilms = listDaoJdbc.getOwnWatched(userId, 2, 12);
         Assert.assertEquals(0, actualFilms.size());
     }
 
     /**
-     * @see ListDao#showOwnWatched(int, int, int)
+     * @see ListDao#getOwnWatched(int, int, int)
      */
     @Test
     public void showOwnWatched_InvalidUser_Fail() {
-        List<Film> actualFilms = listDaoJdbc.showOwnWatched(0, 0, 12);
+        List<Film> actualFilms = listDaoJdbc.getOwnWatched(0, 0, 12);
         Assert.assertTrue(actualFilms.isEmpty());
     }
 
     /**
-     * @see ListDao#showOwnPlanned(int, int, int)
+     * @see ListDao#getOwnPlanned(int, int, int)
      */
     @Test
     public void showOwnPlanned_ValidUser_Success() {
-        List<Film> actualFilms = listDaoJdbc.showOwnPlanned(userId, 0, 12);
+        List<Film> actualFilms = listDaoJdbc.getOwnPlanned(userId, 0, 12);
         Assert.assertTrue(actualFilms.isEmpty());
 
         listDaoJdbc.insertPlanned(filmId, userId, false);
 
-        actualFilms = listDaoJdbc.showOwnPlanned(userId, 0, 12);
+        actualFilms = listDaoJdbc.getOwnPlanned(userId, 0, 12);
         Assert.assertEquals(1, actualFilms.size());
         Assert.assertEquals(film, actualFilms.get(0));
 
-        jdbcFilmDAO.addFilm(film);
+        jdbcFilmDAO.add(film);
         listDaoJdbc.insertPlanned(film.getId(), userId, true);
-        actualFilms = listDaoJdbc.showOwnPlanned(userId, 0, 12);
+        actualFilms = listDaoJdbc.getOwnPlanned(userId, 0, 12);
         Assert.assertEquals(2, actualFilms.size());
 
-        actualFilms = listDaoJdbc.showOwnPlanned(userId, 2, 12);
+        actualFilms = listDaoJdbc.getOwnPlanned(userId, 2, 12);
         Assert.assertEquals(0, actualFilms.size());
     }
 
     /**
-     * @see ListDao#showOwnPlanned(int, int, int)
+     * @see ListDao#getOwnPlanned(int, int, int)
      */
     @Test
     public void showOwnPlanned_InvalidUser_Fail() {
-        List<Film> actualFilms = listDaoJdbc.showOwnPlanned(0, 0, 12);
+        List<Film> actualFilms = listDaoJdbc.getOwnPlanned(0, 0, 12);
         Assert.assertTrue(actualFilms.isEmpty());
     }
 
     /**
-     * @see ListDao#showOthersWatched(int, int, int)
+     * @see ListDao#getOthersWatched(int, int, int)
      */
     @Test
     public void showOthersWatched_ValidUser_Success() {
         listDaoJdbc.insertWatched(filmId, userId, true);
 
-        List<Film> actualFilms = listDaoJdbc.showOthersWatched(userId, 0, 12);
+        List<Film> actualFilms = listDaoJdbc.getOthersWatched(userId, 0, 12);
         Assert.assertEquals(1, actualFilms.size());
 
-        jdbcFilmDAO.addFilm(film);
+        jdbcFilmDAO.add(film);
         listDaoJdbc.insertWatched(film.getId(), userId, false);
 
-        actualFilms = listDaoJdbc.showOthersWatched(userId, 0, 12);
+        actualFilms = listDaoJdbc.getOthersWatched(userId, 0, 12);
         Assert.assertEquals(1, actualFilms.size());
 
-        jdbcFilmDAO.addFilm(film);
+        jdbcFilmDAO.add(film);
         listDaoJdbc.insertWatched(film.getId(), userId, true);
 
-        actualFilms = listDaoJdbc.showOthersWatched(userId, 0, 12);
+        actualFilms = listDaoJdbc.getOthersWatched(userId, 0, 12);
         Assert.assertEquals(2, actualFilms.size());
 
-        actualFilms = listDaoJdbc.showOthersWatched(userId, 12, 12);
+        actualFilms = listDaoJdbc.getOthersWatched(userId, 12, 12);
         Assert.assertEquals(0, actualFilms.size());
     }
 
     /**
-     * @see ListDao#showOthersWatched(int, int, int)
+     * @see ListDao#getOthersWatched(int, int, int)
      */
     @Test
     public void showOthersWatched_InvalidUser_Fail() {
         listDaoJdbc.insertWatched(filmId, userId, false);
 
-        List<Film> actualFilms = listDaoJdbc.showOthersWatched(userId, 0, 12);
+        List<Film> actualFilms = listDaoJdbc.getOthersWatched(userId, 0, 12);
         Assert.assertTrue(actualFilms.isEmpty());
     }
 
     /**
-     * @see ListDao#showOthersPlanned(int, int, int)
+     * @see ListDao#getOthersPlanned(int, int, int)
      */
     @Test
     public void showOthersPlanned_ValidUser_Success() {
         listDaoJdbc.insertPlanned(filmId, userId, true);
 
-        List<Film> actualFilms = listDaoJdbc.showOthersPlanned(userId, 0, 12);
+        List<Film> actualFilms = listDaoJdbc.getOthersPlanned(userId, 0, 12);
         Assert.assertEquals(1, actualFilms.size());
 
-        jdbcFilmDAO.addFilm(film);
+        jdbcFilmDAO.add(film);
         listDaoJdbc.insertPlanned(film.getId(), userId, false);
 
-        actualFilms = listDaoJdbc.showOthersPlanned(userId, 0, 12);
+        actualFilms = listDaoJdbc.getOthersPlanned(userId, 0, 12);
         Assert.assertEquals(1, actualFilms.size());
 
-        jdbcFilmDAO.addFilm(film);
+        jdbcFilmDAO.add(film);
         listDaoJdbc.insertPlanned(film.getId(), userId, true);
 
-        actualFilms = listDaoJdbc.showOthersPlanned(userId, 0, 12);
+        actualFilms = listDaoJdbc.getOthersPlanned(userId, 0, 12);
         Assert.assertEquals(2, actualFilms.size());
 
-        actualFilms = listDaoJdbc.showOthersPlanned(userId, 12, 12);
+        actualFilms = listDaoJdbc.getOthersPlanned(userId, 12, 12);
         Assert.assertEquals(0, actualFilms.size());
     }
 
     /**
-     * @see ListDao#showOthersPlanned(int, int, int)
+     * @see ListDao#getOthersPlanned(int, int, int)
      */
     @Test
     public void showOthersPlanned_InvalidUser_Fail() {
-        List<Film> actualFilms = listDaoJdbc.showOthersPlanned(userId, 0, 12);
+        List<Film> actualFilms = listDaoJdbc.getOthersPlanned(userId, 0, 12);
         Assert.assertTrue(actualFilms.isEmpty());
     }
 
     /**
-     * @see ListDao#updateWatched(int, int)
+     * @see ListDao#setFilmAsWatched(int, int)
      */
     @Test
     public void updateWatched_Success() {
         listDaoJdbc.insertPlanned(filmId, userId, true);
-        listDaoJdbc.updateWatched(filmId, userId);
+        listDaoJdbc.setFilmAsWatched(filmId, userId);
 
         boolean status = listDaoJdbc.isWatched(filmId, userId);
         Assert.assertTrue(status);
     }
 
     /**
-     * @see ListDao#updateWatched(int, int)
+     * @see ListDao#setFilmAsWatched(int, int)
      */
     @Test
     public void updateWatched_Fail() {
-        listDaoJdbc.updateWatched(filmId, userId);
+        listDaoJdbc.setFilmAsWatched(filmId, userId);
 
         boolean status = listDaoJdbc.isWatched(filmId, userId);
         Assert.assertFalse(status);
     }
 
     /**
-     * @see ListDao#updatePlanned(int, int)
+     * @see ListDao#setFilmAsPlanned(int, int)
      */
     @Test
     public void updatePlanned_Success() {
         listDaoJdbc.insertWatched(filmId, userId, true);
-        listDaoJdbc.updatePlanned(filmId, userId);
+        listDaoJdbc.setFilmAsPlanned(filmId, userId);
 
         boolean status = listDaoJdbc.isPlanned(filmId, userId);
         Assert.assertTrue(status);
     }
 
     /**
-     * @see ListDao#updatePlanned(int, int)
+     * @see ListDao#setFilmAsPlanned(int, int)
      */
     @Test
     public void updatePlanned_Fail() {
-        listDaoJdbc.updatePlanned(filmId, userId);
+        listDaoJdbc.setFilmAsPlanned(filmId, userId);
 
         boolean status = listDaoJdbc.isPlanned(filmId, userId);
         Assert.assertFalse(status);
     }
 
     /**
-     * @see ListDao#changePrivacy(am.aca.orgflix.entity.Film, int, boolean)
+     * @see ListDao#setFilmPrivacy(am.aca.orgflix.entity.Film, int, boolean)
      */
     @Test
     public void changePrivacy_Success() {
         listDaoJdbc.insertPlanned(filmId, userId, true);
-        listDaoJdbc.updateWatched(filmId, userId);
+        listDaoJdbc.setFilmAsWatched(filmId, userId);
 
-        boolean status = listDaoJdbc.changePrivacy(film, userId, false);
+        boolean status = listDaoJdbc.setFilmPrivacy(film, userId, false);
         Assert.assertTrue(status);
 
-        List<Film> actualFilms = listDaoJdbc.showOthersPlanned(userId, 0, 12);
+        List<Film> actualFilms = listDaoJdbc.getOthersPlanned(userId, 0, 12);
         Assert.assertTrue(actualFilms.isEmpty());
 
-        actualFilms = listDaoJdbc.showOthersWatched(userId, 0, 12);
+        actualFilms = listDaoJdbc.getOthersWatched(userId, 0, 12);
         Assert.assertTrue(actualFilms.isEmpty());
 
-        status = listDaoJdbc.changePrivacy(film, userId, true);
+        status = listDaoJdbc.setFilmPrivacy(film, userId, true);
         Assert.assertTrue(status);
 
-        actualFilms = listDaoJdbc.showOthersPlanned(userId, 0, 12);
+        actualFilms = listDaoJdbc.getOthersPlanned(userId, 0, 12);
         Assert.assertEquals(1, actualFilms.size());
 
-        actualFilms = listDaoJdbc.showOthersWatched(userId, 0, 12);
+        actualFilms = listDaoJdbc.getOthersWatched(userId, 0, 12);
         Assert.assertEquals(1, actualFilms.size());
     }
 
     /**
-     * @see ListDao#changePrivacy(am.aca.orgflix.entity.Film, int, boolean)
+     * @see ListDao#setFilmPrivacy(am.aca.orgflix.entity.Film, int, boolean)
      */
     @Test
     public void changePrivacy_InvalidInput_Fail() {
-        boolean status = listDaoJdbc.changePrivacy(film, userId, false);
+        boolean status = listDaoJdbc.setFilmPrivacy(film, userId, false);
         Assert.assertFalse(status);
     }
 
     /**
-     * @see ListDao#resetWatched(int, int)
+     * @see ListDao#setFilmAsNotWatched(int, int)
      */
     @Test
     public void resetWatched_ValidInput_Success() {
         listDaoJdbc.insertWatched(filmId, userId, true);
-        listDaoJdbc.updatePlanned(filmId, userId);
+        listDaoJdbc.setFilmAsPlanned(filmId, userId);
 
-        boolean status = listDaoJdbc.resetWatched(filmId, userId);
+        boolean status = listDaoJdbc.setFilmAsNotWatched(filmId, userId);
         Assert.assertTrue(status);
 
         status = listDaoJdbc.isWatched(filmId, userId);
@@ -370,31 +370,31 @@ public class ListDaoTest extends BaseIntegrationTest {
         status = listDaoJdbc.isPlanned(filmId, userId);
         Assert.assertTrue(status);
 
-        List<Film> actualFilms = listDaoJdbc.showOwnWatched(userId, 0, 12);
+        List<Film> actualFilms = listDaoJdbc.getOwnWatched(userId, 0, 12);
         Assert.assertTrue(actualFilms.isEmpty());
 
-        actualFilms = listDaoJdbc.showOwnPlanned(userId, 0, 12);
+        actualFilms = listDaoJdbc.getOwnPlanned(userId, 0, 12);
         Assert.assertEquals(1, actualFilms.size());
     }
 
     /**
-     * @see ListDao#resetWatched(int, int)
+     * @see ListDao#setFilmAsNotWatched(int, int)
      */
     @Test
     public void resetWatched_InvalidInput_Fail() {
-        boolean status = listDaoJdbc.resetWatched(0, 0);
+        boolean status = listDaoJdbc.setFilmAsNotWatched(0, 0);
         Assert.assertFalse(status);
     }
 
     /**
-     * @see ListDao#resetPlanned(int, int)
+     * @see ListDao#setFilmAsNotPlanned(int, int)
      */
     @Test
     public void resetPlanned_ValidInput_Success() {
         listDaoJdbc.insertPlanned(filmId, userId, false);
-        listDaoJdbc.updateWatched(filmId, userId);
+        listDaoJdbc.setFilmAsWatched(filmId, userId);
 
-        boolean status = listDaoJdbc.resetPlanned(filmId, userId);
+        boolean status = listDaoJdbc.setFilmAsNotPlanned(filmId, userId);
         Assert.assertTrue(status);
 
         status = listDaoJdbc.isPlanned(filmId, userId);
@@ -403,19 +403,19 @@ public class ListDaoTest extends BaseIntegrationTest {
         status = listDaoJdbc.isWatched(filmId, userId);
         Assert.assertTrue(status);
 
-        List<Film> actualFilms = listDaoJdbc.showOwnPlanned(userId, 0, 12);
+        List<Film> actualFilms = listDaoJdbc.getOwnPlanned(userId, 0, 12);
         Assert.assertTrue(actualFilms.isEmpty());
 
-        actualFilms = listDaoJdbc.showOwnWatched(userId, 0, 12);
+        actualFilms = listDaoJdbc.getOwnWatched(userId, 0, 12);
         Assert.assertEquals(1, actualFilms.size());
     }
 
     /**
-     * @see ListDao#resetPlanned(int, int)
+     * @see ListDao#setFilmAsNotPlanned(int, int)
      */
     @Test
     public void resetPlanned_InvalidInput_Fail() {
-        boolean status = listDaoJdbc.resetPlanned(filmId, userId);
+        boolean status = listDaoJdbc.setFilmAsNotPlanned(filmId, userId);
         Assert.assertFalse(status);
     }
 
@@ -425,7 +425,7 @@ public class ListDaoTest extends BaseIntegrationTest {
     @Test
     public void remove_ValidInput_Success() {
         listDaoJdbc.insertWatched(filmId, userId, true);
-        listDaoJdbc.updatePlanned(filmId, userId);
+        listDaoJdbc.setFilmAsPlanned(filmId, userId);
 
         boolean status = listDaoJdbc.removeFilm(filmId, userId);
         Assert.assertTrue(status);
@@ -436,10 +436,10 @@ public class ListDaoTest extends BaseIntegrationTest {
         status = listDaoJdbc.isPlanned(filmId, userId);
         Assert.assertFalse(status);
 
-        List<Film> actualFilms = listDaoJdbc.showOwnWatched(userId, 0, 12);
+        List<Film> actualFilms = listDaoJdbc.getOwnWatched(userId, 0, 12);
         Assert.assertTrue(actualFilms.isEmpty());
 
-        actualFilms = listDaoJdbc.showOwnPlanned(userId, 0, 12);
+        actualFilms = listDaoJdbc.getOwnPlanned(userId, 0, 12);
         Assert.assertTrue(actualFilms.isEmpty());
     }
 
@@ -524,7 +524,7 @@ public class ListDaoTest extends BaseIntegrationTest {
     @Test
     public void totalNumberWatched_Multiple_Success() {
         for (int i = 1; i <= 7; i++) {
-            jdbcFilmDAO.addFilm(film);
+            jdbcFilmDAO.add(film);
             listDaoJdbc.insertWatched(film.getId(), userId, true);
         }
 
@@ -547,7 +547,7 @@ public class ListDaoTest extends BaseIntegrationTest {
     @Test
     public void totalNumberPlanned_Multiple_Success() {
         for (int i = 1; i <= 5; i++) {
-            jdbcFilmDAO.addFilm(film);
+            jdbcFilmDAO.add(film);
             listDaoJdbc.insertPlanned(film.getId(), userId, true);
         }
 

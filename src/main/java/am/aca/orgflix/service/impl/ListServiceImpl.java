@@ -47,7 +47,7 @@ public class ListServiceImpl extends BaseService implements ListService {
         try {
             //case: planned
             if (listDao.areRelated(filmId, userId)) {
-                state = listDao.updateWatched(filmId, userId);
+                state = listDao.setFilmAsWatched(filmId, userId);
             }
             //case: not planned
             else state = listDao.insertWatched(filmId, userId, isPublic);
@@ -68,7 +68,7 @@ public class ListServiceImpl extends BaseService implements ListService {
         try {
             //case: watched
             if (listDao.areRelated(filmId, userId))
-                state = listDao.updatePlanned(filmId, userId);
+                state = listDao.setFilmAsPlanned(filmId, userId);
 
                 //case: not watched
             else state = listDao.insertPlanned(filmId, userId, isPublic);
@@ -87,9 +87,9 @@ public class ListServiceImpl extends BaseService implements ListService {
     public List<Film> showOwnWatched(int userId, int page) {
         List<Film> list = new ArrayList<>();
         try {
-            list = listDao.showOwnWatched(userId, page, 12);
+            list = listDao.getOwnWatched(userId, page, 12);
             for (Film film : list) {
-                film.setCasts(castService.getCastsByFilm(film.getId()));
+                film.setCasts(castService.getByFilm(film.getId()));
             }
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
@@ -106,9 +106,9 @@ public class ListServiceImpl extends BaseService implements ListService {
     public List<Film> showOwnPlanned(int userId, int page) {
         List<Film> list = new ArrayList<>();
         try {
-            list = listDao.showOwnPlanned(userId, page, 12);
+            list = listDao.getOwnPlanned(userId, page, 12);
             for (Film film : list) {
-                film.setCasts(castService.getCastsByFilm(film.getId()));
+                film.setCasts(castService.getByFilm(film.getId()));
             }
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
@@ -125,9 +125,9 @@ public class ListServiceImpl extends BaseService implements ListService {
     public List<Film> showOthersWatched(int userId, int page) {
         List<Film> list = new ArrayList<>();
         try {
-            list = listDao.showOthersWatched(userId, page, 12);
+            list = listDao.getOthersWatched(userId, page, 12);
             for (Film film : list) {
-                film.setCasts(castService.getCastsByFilm(film.getId()));
+                film.setCasts(castService.getByFilm(film.getId()));
             }
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
@@ -144,9 +144,9 @@ public class ListServiceImpl extends BaseService implements ListService {
     public List<Film> showOthersPlanned(int userId, int page) {
         List<Film> list = new ArrayList<>();
         try {
-            list = listDao.showOthersPlanned(userId, page, 12);
+            list = listDao.getOthersPlanned(userId, page, 12);
             for (Film film : list) {
-                film.setCasts(castService.getCastsByFilm(film.getId()));
+                film.setCasts(castService.getByFilm(film.getId()));
             }
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
@@ -165,7 +165,7 @@ public class ListServiceImpl extends BaseService implements ListService {
         try {
             if (!listDao.areRelated(film.getId(), userId))
                 return false;
-            state = listDao.changePrivacy(film, userId, false);
+            state = listDao.setFilmPrivacy(film, userId, false);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
             return false;
@@ -183,7 +183,7 @@ public class ListServiceImpl extends BaseService implements ListService {
         try {
             if (!listDao.areRelated(film.getId(), userId))
                 return false;
-            state = listDao.changePrivacy(film, userId, true);
+            state = listDao.setFilmPrivacy(film, userId, true);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
             return false;
@@ -221,7 +221,7 @@ public class ListServiceImpl extends BaseService implements ListService {
             if (!listDao.isWatched(filmId, userId))
                 return false;
             if (listDao.isPlanned(filmId, userId)) {
-                state = listDao.resetWatched(filmId, userId);
+                state = listDao.setFilmAsNotWatched(filmId, userId);
             } else state = listDao.removeFilm(filmId, userId);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
@@ -241,7 +241,7 @@ public class ListServiceImpl extends BaseService implements ListService {
             if (!listDao.isPlanned(filmId, userId))
                 return false;
             if (listDao.isWatched(filmId, userId))
-                state = listDao.resetPlanned(filmId, userId);
+                state = listDao.setFilmAsNotPlanned(filmId, userId);
             else state = listDao.removeFilm(filmId, userId);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());

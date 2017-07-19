@@ -45,11 +45,11 @@ public class MVController {
     // support method for guest modelAndView
     protected ModelAndView getGuestMV(ModelAndView modelAndView){
         try{
-            modelAndView.addObject("films", filmService.getFilmsList(0, 12));
-            modelAndView.addObject("ratings", filmService.getAllRatings(0));
+            modelAndView.addObject("films", filmService.getAll(0, 12));
+            modelAndView.addObject("ratings", filmService.getAllRatings(0, 12));
             modelAndView.addObject("currPage", 0);
             modelAndView.addObject("page", "index");
-            modelAndView.addObject("numOfPages", filmService.totalNumberOfFilms()/12);
+            modelAndView.addObject("numOfPages", filmService.getTotalNumber()/12);
         }catch (RuntimeException e){
             modelAndView = new ModelAndView("error","message",e);
         }

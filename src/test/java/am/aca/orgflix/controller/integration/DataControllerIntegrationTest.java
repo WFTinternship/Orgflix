@@ -2,7 +2,6 @@ package am.aca.orgflix.controller.integration;
 
 import am.aca.orgflix.BaseIntegrationTest;
 import am.aca.orgflix.controller.ActorDataController;
-import am.aca.orgflix.controller.DataController;
 import am.aca.orgflix.controller.FilmDataController;
 import am.aca.orgflix.entity.Cast;
 import am.aca.orgflix.entity.Film;
@@ -19,9 +18,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 /**
  * Integration tests for Data controller
@@ -67,7 +63,7 @@ public class DataControllerIntegrationTest extends BaseIntegrationTest {
      */
     @Test
     public void getActorsList_OneMember_Success() {
-        castService.addCast(cast);
+        castService.add(cast);
 
         ResponseEntity actualRE = actorDataController.getActorsList();
         String expectedRE = "[{\"id\":\"" + cast.getId() + "\", \"name\":\"" + cast.getName() + "\", \"oscar\":\"" + cast.isHasOscar() + "\"}]";
@@ -82,9 +78,9 @@ public class DataControllerIntegrationTest extends BaseIntegrationTest {
         Cast cast1 = new Cast("Mark Strong");
         Cast cast2 = new Cast("Idris Elba");
 
-        castService.addCast(cast);
-        castService.addCast(cast1);
-        castService.addCast(cast2);
+        castService.add(cast);
+        castService.add(cast1);
+        castService.add(cast2);
 
         ResponseEntity actualRE = actorDataController.getActorsList();
 
@@ -110,7 +106,7 @@ public class DataControllerIntegrationTest extends BaseIntegrationTest {
      */
     @Test
     public void addToWatched_Success() {
-        filmService.addFilm(film);
+        filmService.add(film);
         userService.add(user);
 
         MockHttpServletRequest request = new MockHttpServletRequest();
@@ -138,7 +134,7 @@ public class DataControllerIntegrationTest extends BaseIntegrationTest {
      */
     @Test
     public void addToPlanned_Success() {
-        filmService.addFilm(film);
+        filmService.add(film);
         userService.add(user);
 
         ResponseEntity actualRE = filmDataController.addFilmToWishList(new MockHttpSession(), film.getId(),true);
@@ -161,7 +157,7 @@ public class DataControllerIntegrationTest extends BaseIntegrationTest {
      */
     @Test
     public void removePlanned_Success() {
-        filmService.addFilm(film);
+        filmService.add(film);
         userService.add(user);
         filmDataController.addFilmToWishList(new MockHttpSession(), film.getId(),true);
 
@@ -185,7 +181,7 @@ public class DataControllerIntegrationTest extends BaseIntegrationTest {
      */
     @Test
     public void removeWatched_Success() {
-        filmService.addFilm(film);
+        filmService.add(film);
         userService.add(user);
         filmDataController.addFilmToWatchList(new MockHttpSession(), film.getId(), true);
 

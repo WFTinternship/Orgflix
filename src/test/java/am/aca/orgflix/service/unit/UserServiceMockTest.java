@@ -51,16 +51,16 @@ public class UserServiceMockTest extends BaseUnitTest {
      */
     @Test
     public void addUser_Success() {
-        when(userDaoMock.getByEmail(user.getEmail())).thenReturn(null);
-        when(userDaoMock.getByNick(user.getNick())).thenReturn(null);
+        when(userDaoMock.emailIsUsed(user.getEmail())).thenReturn(false);
+        when(userDaoMock.nickIsUsed(user.getNick())).thenReturn(false);
         when(userDaoMock.add(user)).thenReturn(1);
 
         int id = userService.add(user);
         Assert.assertEquals(1, id);
 
         verify(userDaoMock, times(1)).add(user);
-        verify(userDaoMock, times(1)).getByEmail(user.getEmail());
-        verify(userDaoMock, times(1)).getByNick(user.getNick());
+        verify(userDaoMock, times(1)).emailIsUsed(user.getEmail());
+        verify(userDaoMock, times(1)).nickIsUsed(user.getNick());
     }
 
     /**
@@ -95,12 +95,12 @@ public class UserServiceMockTest extends BaseUnitTest {
      */
     @Test
     public void addUser_NotUniqueEmail_Fail() {
-        when(userDaoMock.getByEmail(user.getEmail())).thenReturn(user);
+        when(userDaoMock.emailIsUsed(user.getEmail())).thenReturn(true);
 
         try {
             userService.add(user);
         } catch (ServiceException e) {
-            verify(userDaoMock, times(1)).getByEmail(user.getEmail());
+            verify(userDaoMock, times(1)).emailIsUsed(user.getEmail());
         }
     }
 
@@ -148,14 +148,14 @@ public class UserServiceMockTest extends BaseUnitTest {
      */
     @Test
     public void addUser_NotUniqueNick_Fail() {
-        when(userDaoMock.getByEmail(user.getEmail())).thenReturn(null);
-        when(userDaoMock.getByNick(user.getNick())).thenReturn(user);
+        when(userDaoMock.emailIsUsed(user.getEmail())).thenReturn(false);
+        when(userDaoMock.nickIsUsed(user.getNick())).thenReturn(true);
 
         try {
             userService.add(user);
         } catch (ServiceException e) {
-            verify(userDaoMock, times(1)).getByEmail(user.getEmail());
-            verify(userDaoMock, times(1)).getByNick(user.getNick());
+            verify(userDaoMock, times(1)).emailIsUsed(user.getEmail());
+            verify(userDaoMock, times(1)).nickIsUsed(user.getNick());
         }
     }
 
@@ -240,16 +240,16 @@ public class UserServiceMockTest extends BaseUnitTest {
      */
     @Test
     public void editUser_ValidUser_Success() {
-        when(userDaoMock.getByEmail(user.getEmail())).thenReturn(null);
-        when(userDaoMock.getByNick(user.getNick())).thenReturn(null);
+        when(userDaoMock.emailIsUsed(user.getEmail())).thenReturn(false);
+        when(userDaoMock.nickIsUsed(user.getNick())).thenReturn(false);
         when(userDaoMock.edit(user)).thenReturn(true);
 
         boolean status = userService.edit(user);
         Assert.assertTrue(status);
 
         verify(userDaoMock, times(1)).edit(user);
-        verify(userDaoMock, times(1)).getByNick(user.getNick());
-        verify(userDaoMock, times(1)).getByEmail(user.getEmail());
+        verify(userDaoMock, times(1)).nickIsUsed(user.getNick());
+        verify(userDaoMock, times(1)).emailIsUsed(user.getEmail());
     }
 
     /**
@@ -284,11 +284,11 @@ public class UserServiceMockTest extends BaseUnitTest {
      */
     @Test
     public void editUser_EmailNotUnique_Fail() {
-        when(userDaoMock.getByEmail(user.getEmail())).thenReturn(user);
+        when(userDaoMock.emailIsUsed(user.getEmail())).thenReturn(true);
         try {
             userService.edit(user);
         } catch (RuntimeException e) {
-            verify(userDaoMock, times(1)).getByEmail(user.getEmail());
+            verify(userDaoMock, times(1)).emailIsUsed(user.getEmail());
         }
     }
 
@@ -315,13 +315,13 @@ public class UserServiceMockTest extends BaseUnitTest {
      */
     @Test
     public void editUser_NotUniqueNick_Fail() {
-        when(userDaoMock.getByEmail(user.getEmail())).thenReturn(null);
-        when(userDaoMock.getByNick(user.getNick())).thenReturn(user);
+        when(userDaoMock.emailIsUsed(user.getEmail())).thenReturn(false);
+        when(userDaoMock.nickIsUsed(user.getNick())).thenReturn(true);
         try {
             userService.edit(user);
         } catch (RuntimeException e) {
-            verify(userDaoMock, times(1)).getByEmail(user.getEmail());
-            verify(userDaoMock, times(1)).getByNick(user.getNick());
+            verify(userDaoMock, times(1)).emailIsUsed(user.getEmail());
+            verify(userDaoMock, times(1)).nickIsUsed(user.getNick());
         }
     }
 

@@ -152,17 +152,18 @@ public class UserDaoTest extends BaseIntegrationTest {
     public void authenticate_Success() {
         jdbcUserDAO.add(standardUser);
 
-        User actualUser = jdbcUserDAO.authenticate(standardUser.getEmail(), standardUser.getPass());
-        Assert.assertEquals(standardUser, actualUser);
+        boolean status = jdbcUserDAO.authenticate(standardUser.getEmail(), standardUser.getPass());
+        Assert.assertTrue(status);
     }
 
     /**
      * @see UserDAO#authenticate(java.lang.String, java.lang.String)
      */
-    @Test(expected = RuntimeException.class)
+    @Test
     public void authenticate_WrongPass_Fail() {
         jdbcUserDAO.add(standardUser);
-        jdbcUserDAO.authenticate(standardUser.getEmail(), "xxx");
+        boolean status = jdbcUserDAO.authenticate(standardUser.getEmail(), "xxx");
+        Assert.assertFalse(status);
     }
 
     /**
@@ -304,5 +305,31 @@ public class UserDaoTest extends BaseIntegrationTest {
     public void Remove_InvalidUser_Fail() {
         boolean status = jdbcUserDAO.remove(standardUser.getId());
         Assert.assertFalse(status);
+    }
+
+    /**
+     * @see UserDAO#emailIsUsed(String)
+     */
+    @Test
+    public void emailIsUsed_ValidEmail_Success() {
+        boolean status = jdbcUserDAO.emailIsUsed(standardUser.getEmail());
+        Assert.assertFalse(status);
+
+        jdbcUserDAO.add(standardUser);
+        status = jdbcUserDAO.emailIsUsed(standardUser.getEmail());
+        Assert.assertTrue(status);
+    }
+
+    /**
+     * @see UserDAO#emailIsUsed(String)
+     */
+    @Test
+    public void nickIsUsed_ValidEmail_Success() {
+        boolean status = jdbcUserDAO.nickIsUsed(standardUser.getNick());
+        Assert.assertFalse(status);
+
+        jdbcUserDAO.add(standardUser);
+        status = jdbcUserDAO.nickIsUsed(standardUser.getNick());
+        Assert.assertTrue(status);
     }
 }

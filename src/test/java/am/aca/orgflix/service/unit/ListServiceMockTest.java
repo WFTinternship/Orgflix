@@ -73,13 +73,13 @@ public class ListServiceMockTest extends BaseUnitTest {
     @Test
     public void addToWatched_WhenPlanned_Success() {
         when(listDaoMock.areRelated(film.getId(), user.getId())).thenReturn(true);
-        when(listDaoMock.updateWatched(film.getId(), user.getId())).thenReturn(true);
+        when(listDaoMock.setFilmAsWatched(film.getId(), user.getId())).thenReturn(true);
 
         boolean status = listService.addToWatched(film.getId(), true, user.getId());
         Assert.assertTrue(status);
 
         verify(listDaoMock, times(1)).areRelated(film.getId(), user.getId());
-        verify(listDaoMock, times(1)).updateWatched(film.getId(), user.getId());
+        verify(listDaoMock, times(1)).setFilmAsWatched(film.getId(), user.getId());
     }
 
     /**
@@ -88,13 +88,13 @@ public class ListServiceMockTest extends BaseUnitTest {
     @Test
     public void addToWatched_WhenPlanned_Fail() {
         when(listDaoMock.areRelated(film.getId(), user.getId())).thenReturn(true);
-        when(listDaoMock.updateWatched(film.getId(), user.getId())).thenReturn(false);
+        when(listDaoMock.setFilmAsWatched(film.getId(), user.getId())).thenReturn(false);
 
         boolean status = listService.addToWatched(film.getId(), true, user.getId());
         Assert.assertFalse(status);
 
         verify(listDaoMock, times(1)).areRelated(film.getId(), user.getId());
-        verify(listDaoMock, times(1)).updateWatched(film.getId(), user.getId());
+        verify(listDaoMock, times(1)).setFilmAsWatched(film.getId(), user.getId());
     }
 
     /**
@@ -133,13 +133,13 @@ public class ListServiceMockTest extends BaseUnitTest {
     @Test
     public void addToPlanned_WhenWatched_Success() {
         when(listDaoMock.areRelated(film.getId(), user.getId())).thenReturn(true);
-        when(listDaoMock.updatePlanned(film.getId(), user.getId())).thenReturn(true);
+        when(listDaoMock.setFilmAsPlanned(film.getId(), user.getId())).thenReturn(true);
 
         boolean status = listService.addToPlanned(film.getId(), true, user.getId());
         Assert.assertTrue(status);
 
         verify(listDaoMock, times(1)).areRelated(film.getId(), user.getId());
-        verify(listDaoMock, times(1)).updatePlanned(film.getId(), user.getId());
+        verify(listDaoMock, times(1)).setFilmAsPlanned(film.getId(), user.getId());
     }
 
     /**
@@ -148,13 +148,13 @@ public class ListServiceMockTest extends BaseUnitTest {
     @Test
     public void addToPlanned_WhenWatched_Fail() {
         when(listDaoMock.areRelated(film.getId(), user.getId())).thenReturn(true);
-        when(listDaoMock.updatePlanned(film.getId(), user.getId())).thenReturn(false);
+        when(listDaoMock.setFilmAsPlanned(film.getId(), user.getId())).thenReturn(false);
 
         boolean status = listService.addToPlanned(film.getId(), true, user.getId());
         Assert.assertFalse(status);
 
         verify(listDaoMock, times(1)).areRelated(film.getId(), user.getId());
-        verify(listDaoMock, times(1)).updatePlanned(film.getId(), user.getId());
+        verify(listDaoMock, times(1)).setFilmAsPlanned(film.getId(), user.getId());
     }
 
     /**
@@ -177,12 +177,12 @@ public class ListServiceMockTest extends BaseUnitTest {
      */
     @Test
     public void showOwnWatched_Success() {
-        when(listDaoMock.showOwnWatched(user.getId(), 0, 12)).thenReturn(films);
+        when(listDaoMock.getOwnWatched(user.getId(), 0, 12)).thenReturn(films);
 
         List<Film> actualFilms = listService.showOwnWatched(user.getId(), 0);
         Assert.assertEquals(films, actualFilms);
 
-        verify(listDaoMock, times(1)).showOwnWatched(user.getId(), film.getId(), 12);
+        verify(listDaoMock, times(1)).getOwnWatched(user.getId(), film.getId(), 12);
     }
 
     /**
@@ -190,12 +190,12 @@ public class ListServiceMockTest extends BaseUnitTest {
      */
     @Test
     public void showOwnWatched_Fail() {
-        when(listDaoMock.showOwnWatched(user.getId(), 0, 12)).thenThrow(RuntimeException.class);
+        when(listDaoMock.getOwnWatched(user.getId(), 0, 12)).thenThrow(RuntimeException.class);
 
         List<Film> actualFilms = listService.showOwnWatched(user.getId(), 0);
         Assert.assertTrue(actualFilms.isEmpty());
 
-        verify(listDaoMock, times(1)).showOwnWatched(user.getId(), film.getId(), 12);
+        verify(listDaoMock, times(1)).getOwnWatched(user.getId(), film.getId(), 12);
     }
 
     /**
@@ -203,12 +203,12 @@ public class ListServiceMockTest extends BaseUnitTest {
      */
     @Test
     public void showOwnPlanned_Success() {
-        when(listDaoMock.showOwnPlanned(user.getId(), 0, 12)).thenReturn(films);
+        when(listDaoMock.getOwnPlanned(user.getId(), 0, 12)).thenReturn(films);
 
         List<Film> actualFilms = listService.showOwnPlanned(user.getId(), 0);
         Assert.assertEquals(films, actualFilms);
 
-        verify(listDaoMock, times(1)).showOwnPlanned(user.getId(), film.getId(), 12);
+        verify(listDaoMock, times(1)).getOwnPlanned(user.getId(), film.getId(), 12);
     }
 
     /**
@@ -216,11 +216,11 @@ public class ListServiceMockTest extends BaseUnitTest {
      */
     @Test
     public void showOwnPlanned_Fail() {
-        when(listDaoMock.showOwnPlanned(user.getId(), 0, 12)).thenThrow(RuntimeException.class);
+        when(listDaoMock.getOwnPlanned(user.getId(), 0, 12)).thenThrow(RuntimeException.class);
 
         List<Film> acualFilms = listService.showOwnPlanned(user.getId(), 0);
         Assert.assertTrue(acualFilms.isEmpty());
-        verify(listDaoMock, times(1)).showOwnPlanned(user.getId(), film.getId(), 12);
+        verify(listDaoMock, times(1)).getOwnPlanned(user.getId(), film.getId(), 12);
     }
 
     /**
@@ -228,12 +228,12 @@ public class ListServiceMockTest extends BaseUnitTest {
      */
     @Test
     public void showOthersWatched_Success() {
-        when(listDaoMock.showOthersWatched(user.getId(), 0, 12)).thenReturn(films);
+        when(listDaoMock.getOthersWatched(user.getId(), 0, 12)).thenReturn(films);
 
         List<Film> actualFilms = listService.showOthersWatched(user.getId(), 0);
         Assert.assertEquals(films, actualFilms);
 
-        verify(listDaoMock, times(1)).showOthersWatched(user.getId(), film.getId(), 12);
+        verify(listDaoMock, times(1)).getOthersWatched(user.getId(), film.getId(), 12);
     }
 
     /**
@@ -241,11 +241,11 @@ public class ListServiceMockTest extends BaseUnitTest {
      */
     @Test
     public void showOthersWatched_Fail() {
-        when(listDaoMock.showOthersWatched(user.getId(), 0, 12)).thenThrow(RuntimeException.class);
+        when(listDaoMock.getOthersWatched(user.getId(), 0, 12)).thenThrow(RuntimeException.class);
 
         List<Film> actualFilms = listService.showOthersWatched(user.getId(), 0);
         Assert.assertTrue(actualFilms.isEmpty());
-        verify(listDaoMock, times(1)).showOthersWatched(user.getId(), film.getId(), 12);
+        verify(listDaoMock, times(1)).getOthersWatched(user.getId(), film.getId(), 12);
     }
 
     /**
@@ -253,12 +253,12 @@ public class ListServiceMockTest extends BaseUnitTest {
      */
     @Test
     public void showOthersPlanned_Success() {
-        when(listDaoMock.showOthersPlanned(user.getId(), 0, 12)).thenReturn(films);
+        when(listDaoMock.getOthersPlanned(user.getId(), 0, 12)).thenReturn(films);
 
         List<Film> actualFilms = listService.showOthersPlanned(user.getId(), 0);
         Assert.assertEquals(films, actualFilms);
 
-        verify(listDaoMock, times(1)).showOthersPlanned(user.getId(), film.getId(), 12);
+        verify(listDaoMock, times(1)).getOthersPlanned(user.getId(), film.getId(), 12);
     }
 
     /**
@@ -266,11 +266,11 @@ public class ListServiceMockTest extends BaseUnitTest {
      */
     @Test
     public void showOthersPlanned_Fail() {
-        when(listDaoMock.showOthersPlanned(user.getId(), 0, 12)).thenThrow(RuntimeException.class);
+        when(listDaoMock.getOthersPlanned(user.getId(), 0, 12)).thenThrow(RuntimeException.class);
 
         List<Film> actualFilms = listService.showOthersPlanned(user.getId(), 0);
         Assert.assertTrue(actualFilms.isEmpty());
-        verify(listDaoMock, times(1)).showOthersPlanned(user.getId(), film.getId(), 12);
+        verify(listDaoMock, times(1)).getOthersPlanned(user.getId(), film.getId(), 12);
     }
 
     /**
@@ -293,14 +293,14 @@ public class ListServiceMockTest extends BaseUnitTest {
     public void removeFromWatched_WhenPlanned_Success() {
         when(listDaoMock.isWatched(film.getId(), user.getId())).thenReturn(true);
         when(listDaoMock.isPlanned(film.getId(), user.getId())).thenReturn(true);
-        when(listDaoMock.resetWatched(film.getId(), user.getId())).thenReturn(true);
+        when(listDaoMock.setFilmAsNotWatched(film.getId(), user.getId())).thenReturn(true);
 
         boolean status = listService.removeFromWatched(film.getId(), user.getId());
         Assert.assertTrue(status);
 
         verify(listDaoMock, times(1)).isWatched(film.getId(), user.getId());
         verify(listDaoMock, times(1)).isPlanned(film.getId(), user.getId());
-        verify(listDaoMock, times(1)).resetWatched(film.getId(), user.getId());
+        verify(listDaoMock, times(1)).setFilmAsNotWatched(film.getId(), user.getId());
     }
 
     /**
@@ -340,14 +340,14 @@ public class ListServiceMockTest extends BaseUnitTest {
     public void removeFromPlanned_WhenWatched_Success() {
         when(listDaoMock.isPlanned(film.getId(), user.getId())).thenReturn(true);
         when(listDaoMock.isWatched(film.getId(), user.getId())).thenReturn(true);
-        when(listDaoMock.resetPlanned(film.getId(), user.getId())).thenReturn(true);
+        when(listDaoMock.setFilmAsNotPlanned(film.getId(), user.getId())).thenReturn(true);
 
         boolean status = listService.removeFromPlanned(film.getId(), user.getId());
         Assert.assertTrue(status);
 
         verify(listDaoMock, times(1)).isWatched(film.getId(), user.getId());
         verify(listDaoMock, times(1)).isPlanned(film.getId(), user.getId());
-        verify(listDaoMock, times(1)).resetPlanned(film.getId(), user.getId());
+        verify(listDaoMock, times(1)).setFilmAsNotPlanned(film.getId(), user.getId());
     }
 
     /**
@@ -373,13 +373,13 @@ public class ListServiceMockTest extends BaseUnitTest {
     @Test
     public void makePrivate_Success() {
         when(listDaoMock.areRelated(film.getId(), user.getId())).thenReturn(true);
-        when(listDaoMock.changePrivacy(film, user.getId(), false)).thenReturn(true);
+        when(listDaoMock.setFilmPrivacy(film, user.getId(), false)).thenReturn(true);
 
         boolean status = listService.makePrivate(user.getId(), film);
         Assert.assertTrue(status);
 
         verify(listDaoMock, times(1)).areRelated(film.getId(), user.getId());
-        verify(listDaoMock, times(1)).changePrivacy(film, user.getId(), false);
+        verify(listDaoMock, times(1)).setFilmPrivacy(film, user.getId(), false);
     }
 
     /**
@@ -401,13 +401,13 @@ public class ListServiceMockTest extends BaseUnitTest {
     @Test
     public void makePrivate_UpdateError_Fail() {
         when(listDaoMock.areRelated(film.getId(), user.getId())).thenReturn(true);
-        when(listDaoMock.changePrivacy(film, user.getId(), false)).thenReturn(false);
+        when(listDaoMock.setFilmPrivacy(film, user.getId(), false)).thenReturn(false);
 
         boolean status = listService.makePrivate(user.getId(), film);
         Assert.assertFalse(status);
 
         verify(listDaoMock, times(1)).areRelated(film.getId(), user.getId());
-        verify(listDaoMock, times(1)).changePrivacy(film, user.getId(), false);
+        verify(listDaoMock, times(1)).setFilmPrivacy(film, user.getId(), false);
     }
 
     /**
@@ -416,13 +416,13 @@ public class ListServiceMockTest extends BaseUnitTest {
     @Test
     public void makePublic_Success() {
         when(listDaoMock.areRelated(film.getId(), user.getId())).thenReturn(true);
-        when(listDaoMock.changePrivacy(film, user.getId(), true)).thenReturn(true);
+        when(listDaoMock.setFilmPrivacy(film, user.getId(), true)).thenReturn(true);
 
         boolean status = listService.makePublic(user.getId(), film);
         Assert.assertTrue(status);
 
         verify(listDaoMock, times(1)).areRelated(film.getId(), user.getId());
-        verify(listDaoMock, times(1)).changePrivacy(film, user.getId(), true);
+        verify(listDaoMock, times(1)).setFilmPrivacy(film, user.getId(), true);
     }
 
     /**
@@ -444,13 +444,13 @@ public class ListServiceMockTest extends BaseUnitTest {
     @Test
     public void makePublic_UpdateError_Fail() {
         when(listDaoMock.areRelated(film.getId(), user.getId())).thenReturn(true);
-        when(listDaoMock.changePrivacy(film, user.getId(), true)).thenReturn(false);
+        when(listDaoMock.setFilmPrivacy(film, user.getId(), true)).thenReturn(false);
 
         boolean status = listService.makePublic(user.getId(), film);
         Assert.assertFalse(status);
 
         verify(listDaoMock, times(1)).areRelated(film.getId(), user.getId());
-        verify(listDaoMock, times(1)).changePrivacy(film, user.getId(), true);
+        verify(listDaoMock, times(1)).setFilmPrivacy(film, user.getId(), true);
     }
 
     /**

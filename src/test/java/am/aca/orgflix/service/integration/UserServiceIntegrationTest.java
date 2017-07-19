@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class UserServiceIntegrationTest extends BaseIntegrationTest {
 
-    private final User standardUser = new User("dave", "Gagik Petrosyan", "davit.abovyan@gmail.com", "pass");
+    private final User standardUser = new User("dave", "Gagik Petrosyan", "davit.abovyan@gmail.com", "passssss");
 
     @Autowired
     private UserService userService;

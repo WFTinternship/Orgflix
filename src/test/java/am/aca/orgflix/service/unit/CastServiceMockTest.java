@@ -61,244 +61,218 @@ public class CastServiceMockTest extends BaseUnitTest {
     }
 
     /**
-     * @see CastServiceImpl#addCast(am.aca.orgflix.entity.Cast)
+     * @see CastServiceImpl#add(am.aca.orgflix.entity.Cast)
      */
     @Test
     public void addCast_ValidCast_Success() {
-        when(castDaoMock.addCast(cast)).thenReturn(true);
+        when(castDaoMock.add(cast)).thenReturn(true);
 
-        boolean status = castService.addCast(cast);
+        boolean status = castService.add(cast);
         Assert.assertTrue(status);
 
-        verify(castDaoMock, times(1)).addCast(cast);
+        verify(castDaoMock, times(1)).add(cast);
     }
 
     /**
-     * @see CastServiceImpl#addCast(am.aca.orgflix.entity.Cast)
+     * @see CastServiceImpl#add(am.aca.orgflix.entity.Cast)
      */
     @Test(expected = ServiceException.class)
     public void addCast_NameNull_Fail() {
         cast.setName(null);
-        boolean status = castService.addCast(cast);
+        boolean status = castService.add(cast);
         Assert.assertFalse(status);
     }
 
     /**
-     * @see CastServiceImpl#addCast(am.aca.orgflix.entity.Cast)
+     * @see CastServiceImpl#add(am.aca.orgflix.entity.Cast)
      */
     @Test(expected = ServiceException.class)
     public void addCast_NameEmpty_Fail() {
         cast.setName("");
-        boolean status = castService.addCast(cast);
+        boolean status = castService.add(cast);
         Assert.assertFalse(status);
     }
 
     /**
-     * @see CastServiceImpl#addCast(am.aca.orgflix.entity.Cast)
+     * @see CastServiceImpl#add(am.aca.orgflix.entity.Cast)
      */
     @Test
     public void addCast_DaoException_Fail() {
-        when(castDaoMock.addCast(cast)).thenThrow(RuntimeException.class);
+        when(castDaoMock.add(cast)).thenThrow(RuntimeException.class);
 
-        boolean status = castService.addCast(cast);
+        boolean status = castService.add(cast);
         Assert.assertFalse(status);
 
-        verify(castDaoMock, times(1)).addCast(cast);
+        verify(castDaoMock, times(1)).add(cast);
     }
 
     /**
-     * @see CastServiceImpl#addCastToFilm(am.aca.orgflix.entity.Cast, int)
+     * @see CastServiceImpl#addToFilm(am.aca.orgflix.entity.Cast, int)
      */
     @Test
     public void addCastToFilm_ValidInput_Success() {
-        when(castDaoMock.isStarringIn(cast.getId(), film.getId())).thenReturn(false);
-        when(castDaoMock.addCastToFilm(cast, film.getId())).thenReturn(true);
+        when(castDaoMock.isRelatedToFilm(cast.getId(), film.getId())).thenReturn(false);
+        when(castDaoMock.addToFilm(cast, film.getId())).thenReturn(true);
 
-        boolean status = castService.addCastToFilm(cast, film.getId());
+        boolean status = castService.addToFilm(cast, film.getId());
         Assert.assertTrue(status);
 
-        verify(castDaoMock, times(1)).isStarringIn(cast.getId(), film.getId());
-        verify(castDaoMock, times(1)).addCastToFilm(cast, film.getId());
+        verify(castDaoMock, times(1)).isRelatedToFilm(cast.getId(), film.getId());
+        verify(castDaoMock, times(1)).addToFilm(cast, film.getId());
     }
 
     /**
-     * @see CastServiceImpl#addCastToFilm(am.aca.orgflix.entity.Cast, int)
+     * @see CastServiceImpl#addToFilm(am.aca.orgflix.entity.Cast, int)
      */
     @Test
     public void addCastToFilm_AlreadyStarring_Fail() {
-        when(castDaoMock.isStarringIn(cast.getId(), film.getId())).thenReturn(true);
+        when(castDaoMock.isRelatedToFilm(cast.getId(), film.getId())).thenReturn(true);
 
-        boolean status = castService.addCastToFilm(cast, film.getId());
+        boolean status = castService.addToFilm(cast, film.getId());
         Assert.assertFalse(status);
 
-        verify(castDaoMock, times(1)).isStarringIn(cast.getId(), film.getId());
+        verify(castDaoMock, times(1)).isRelatedToFilm(cast.getId(), film.getId());
     }
 
     /**
-     * @see CastServiceImpl#addCastToFilm(am.aca.orgflix.entity.Cast, int)
+     * @see CastServiceImpl#addToFilm(am.aca.orgflix.entity.Cast, int)
      */
     @Test
     public void addCastToFilm_InsertionError_Fail() {
-        when(castDaoMock.isStarringIn(cast.getId(), film.getId())).thenReturn(false);
-        when(castDaoMock.addCastToFilm(cast, film.getId())).thenReturn(false);
+        when(castDaoMock.isRelatedToFilm(cast.getId(), film.getId())).thenReturn(false);
+        when(castDaoMock.addToFilm(cast, film.getId())).thenReturn(false);
 
-        boolean status = castService.addCastToFilm(cast, film.getId());
+        boolean status = castService.addToFilm(cast, film.getId());
         Assert.assertFalse(status);
 
-        verify(castDaoMock, times(1)).isStarringIn(cast.getId(), film.getId());
-        verify(castDaoMock, times(1)).addCastToFilm(cast, film.getId());
+        verify(castDaoMock, times(1)).isRelatedToFilm(cast.getId(), film.getId());
+        verify(castDaoMock, times(1)).addToFilm(cast, film.getId());
     }
 
     /**
-     * @see CastServiceImpl#addCastToFilm(am.aca.orgflix.entity.Cast, int)
+     * @see CastServiceImpl#addToFilm(am.aca.orgflix.entity.Cast, int)
      */
     @Test
     public void addCastToFilm_DaoException_Fail() {
-        when(castDaoMock.isStarringIn(cast.getId(), film.getId())).thenThrow(RuntimeException.class);
+        when(castDaoMock.isRelatedToFilm(cast.getId(), film.getId())).thenThrow(RuntimeException.class);
 
-        boolean status = castService.addCastToFilm(cast, film.getId());
+        boolean status = castService.addToFilm(cast, film.getId());
         Assert.assertFalse(status);
 
-        verify(castDaoMock, times(1)).isStarringIn(cast.getId(), film.getId());
+        verify(castDaoMock, times(1)).isRelatedToFilm(cast.getId(), film.getId());
     }
 
     /**
-     * @see CastServiceImpl#editCast(am.aca.orgflix.entity.Cast)
+     * @see CastServiceImpl#edit(am.aca.orgflix.entity.Cast)
      */
     @Test
     public void editCast_ValidInput_Success() {
         when(castDaoMock.exists(cast)).thenReturn(true);
-        when(castDaoMock.editCast(cast)).thenReturn(true);
+        when(castDaoMock.edit(cast)).thenReturn(true);
 
-        boolean status = castService.editCast(cast);
+        boolean status = castService.edit(cast);
         Assert.assertTrue(status);
 
         verify(castDaoMock, times(1)).exists(cast);
-        verify(castDaoMock, times(1)).editCast(cast);
+        verify(castDaoMock, times(1)).edit(cast);
     }
 
     /**
-     * @see CastServiceImpl#editCast(am.aca.orgflix.entity.Cast)
+     * @see CastServiceImpl#edit(am.aca.orgflix.entity.Cast)
      */
     @Test
     public void editCast_NonExisting_Fail() {
         when(castDaoMock.exists(cast)).thenReturn(false);
 
-        boolean status = castService.editCast(cast);
+        boolean status = castService.edit(cast);
         Assert.assertFalse(status);
 
         verify(castDaoMock, times(1)).exists(cast);
     }
 
     /**
-     * @see CastServiceImpl#editCast(am.aca.orgflix.entity.Cast)
+     * @see CastServiceImpl#edit(am.aca.orgflix.entity.Cast)
      */
     @Test
     public void editCast_UpdateError_Fail() {
         when(castDaoMock.exists(cast)).thenReturn(true);
-        when(castDaoMock.editCast(cast)).thenReturn(false);
+        when(castDaoMock.edit(cast)).thenReturn(false);
 
-        boolean status = castService.editCast(cast);
+        boolean status = castService.edit(cast);
         Assert.assertFalse(status);
 
         verify(castDaoMock, times(1)).exists(cast);
-        verify(castDaoMock, times(1)).editCast(cast);
+        verify(castDaoMock, times(1)).edit(cast);
     }
 
     /**
-     * @see CastServiceImpl#editCast(am.aca.orgflix.entity.Cast)
+     * @see CastServiceImpl#edit(am.aca.orgflix.entity.Cast)
      */
     @Test(expected = RuntimeException.class)
     public void editCast_NameNull_Fail() {
         cast.setName(null);
 
-        castService.editCast(cast);
+        castService.edit(cast);
     }
 
     /**
-     * @see CastServiceImpl#editCast(am.aca.orgflix.entity.Cast)
+     * @see CastServiceImpl#edit(am.aca.orgflix.entity.Cast)
      */
     @Test(expected = RuntimeException.class)
     public void editCast_NameEmpty_Fail() {
         cast.setName("");
 
-        castService.editCast(cast);
+        castService.edit(cast);
     }
 
     /**
-     * @see CastServiceImpl#listCasts()
+     * @see CastServiceImpl#getAll()
      */
     @Test
     public void listCasts_Success() {
-        when(castDaoMock.listCast()).thenReturn(casts);
+        when(castDaoMock.getAll()).thenReturn(casts);
 
-        List<Cast> actualCasts = castService.listCasts();
+        List<Cast> actualCasts = castService.getAll();
         Assert.assertEquals(casts, actualCasts);
 
-        verify(castDaoMock, times(1)).listCast();
+        verify(castDaoMock, times(1)).getAll();
     }
 
     /**
-     * @see CastServiceImpl#listCasts()
+     * @see CastServiceImpl#getAll()
      */
     @Test
     public void listCasts_Fail() {
-        when(castDaoMock.listCast()).thenThrow(RuntimeException.class);
+        when(castDaoMock.getAll()).thenThrow(RuntimeException.class);
 
-        List<Cast> casts = castService.listCasts();
+        List<Cast> casts = castService.getAll();
         Assert.assertTrue(casts.isEmpty());
-        verify(castDaoMock, times(1)).listCast();
+        verify(castDaoMock, times(1)).getAll();
     }
 
     /**
-     * @see CastServiceImpl#listFilmsByCast(int)
-     */
-    @Test
-    public void listFilmsByCast_Success() {
-        when(filmDaoMock.getFilmsByCast(cast.getId())).thenReturn(films);
-
-        List<Film> actualFilms = castService.listFilmsByCast(cast.getId());
-        Assert.assertEquals(films, actualFilms);
-
-        verify(filmDaoMock, times(1)).getFilmsByCast(cast.getId());
-    }
-
-    /**
-     * @see CastServiceImpl#listFilmsByCast(int)
-     */
-    @Test
-    public void listFilmsByCast_Fail() {
-        when(filmDaoMock.getFilmsByCast(cast.getId())).thenThrow(RuntimeException.class);
-
-        List<Film> actualFilms = castService.listFilmsByCast(cast.getId());
-        Assert.assertTrue(actualFilms.isEmpty());
-
-        verify(filmDaoMock, times(1)).getFilmsByCast(cast.getId());
-    }
-
-    /**
-     * @see CastServiceImpl#getCastsByFilm(int)
+     * @see CastServiceImpl#getByFilm(int)
      */
     @Test
     public void getCastsByFilm_Success() {
-        when(castDaoMock.getCastsByFilm(film.getId())).thenReturn(casts);
+        when(castDaoMock.getByFilm(film.getId())).thenReturn(casts);
 
-        List<Cast> actualCasts = castService.getCastsByFilm(film.getId());
+        List<Cast> actualCasts = castService.getByFilm(film.getId());
         Assert.assertEquals(casts, actualCasts);
 
-        verify(castDaoMock, times(1)).getCastsByFilm(film.getId());
+        verify(castDaoMock, times(1)).getByFilm(film.getId());
     }
 
     /**
-     * @see CastServiceImpl#getCastsByFilm(int)
+     * @see CastServiceImpl#getByFilm(int)
      */
     @Test
     public void getCastsByFilm_Fail() {
-        when(castDaoMock.getCastsByFilm(film.getId())).thenThrow(RuntimeException.class);
+        when(castDaoMock.getByFilm(film.getId())).thenThrow(RuntimeException.class);
 
-        List<Cast> actualCast = castService.getCastsByFilm(film.getId());
+        List<Cast> actualCast = castService.getByFilm(film.getId());
         Assert.assertTrue(actualCast.isEmpty());
 
-        verify(castDaoMock, times(1)).getCastsByFilm(film.getId());
+        verify(castDaoMock, times(1)).getByFilm(film.getId());
     }
 }

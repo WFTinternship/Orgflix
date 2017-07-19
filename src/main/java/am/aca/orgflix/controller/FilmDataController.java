@@ -1,10 +1,5 @@
 package am.aca.orgflix.controller;
 
-import am.aca.orgflix.service.CastService;
-import am.aca.orgflix.service.FilmService;
-import am.aca.orgflix.service.ListService;
-import am.aca.orgflix.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -91,7 +86,7 @@ public class FilmDataController extends DataController{
     public ResponseEntity starFilm(@RequestParam("film") int filmId,
                                    @RequestParam("star") int star) {
         try {
-            boolean state = filmService.rateFilm(filmId, star);
+            boolean state = filmService.rate(filmId, star);
             if (state)
                 return new ResponseEntity("Film is rated", HttpStatus.OK);
             else

@@ -46,7 +46,7 @@ public class DataGenerator {
             }
             film.setHasOscar(Math.random() < 0.5);
             movieList.add(film);
-            filmService.addFilm(film);
+            filmService.add(film);
         }
 
         System.out.println(movieList);

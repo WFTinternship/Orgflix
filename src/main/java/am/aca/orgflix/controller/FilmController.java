@@ -40,7 +40,7 @@ public class FilmController extends MVController {
                 User selUser = userService.getById(userId);
                 String user = selUser.getNick() + " (" + selUser.getEmail() + ")";
                 modelAndView.addObject("currPage", page);
-                modelAndView.addObject("actors", castService.listCasts());
+                modelAndView.addObject("actors", castService.getAll());
                 modelAndView.addObject("user", user);
             } else {
                 modelAndView = new ModelAndView("error", "message", "You are not logged in, please first login");
@@ -76,16 +76,16 @@ public class FilmController extends MVController {
                 else if (star == 2) film.setRate_2star(1);
                 else film.setRate_1star(1);
 
-                filmService.addFilm(film);
+                filmService.add(film);
                 int filmId = film.getId();
                 List<Cast> castList = new ArrayList<>();
                 for (int id : actorIds) {
-                    Cast cast = castService.getCastById(id);
+                    Cast cast = castService.getById(id);
                     castList.add(cast);
                 }
                 film.setCasts(castList);
                 film.setImage(filmId + "/" + filmId + ".jpg");
-                filmService.editFilm(film);
+                filmService.edit(film);
 
                 final String UPLOAD_FILE_DIRECTORY = UPLOAD_DIRECTORY + File.separator + filmId;
 

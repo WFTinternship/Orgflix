@@ -1,10 +1,10 @@
 package am.aca.orgflix.dao.impljdbc;
 
-import am.aca.orgflix.dao.BaseDAO;
 import am.aca.orgflix.dao.ListDao;
 import am.aca.orgflix.dao.impljdbc.mapper.FilmRowMapper;
 import am.aca.orgflix.entity.Film;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
@@ -14,11 +14,10 @@ import java.util.List;
  * DAO layer for list of film related methods
  */
 @Component
-public class JdbcListDAO extends BaseDAO implements ListDao {
+public class JdbcListDAO extends NamedParameterJdbcDaoSupport implements ListDao {
 
     @Autowired
     public JdbcListDAO(DataSource dataSource) {
-        super(JdbcUserDAO.class);
         this.setDataSource(dataSource);
     }
 
@@ -47,10 +46,10 @@ public class JdbcListDAO extends BaseDAO implements ListDao {
     // RETRIEVE
 
     /**
-     * @see ListDao#showOwnWatched(int, int, int)
+     * @see ListDao#getOwnWatched(int, int, int)
      */
     @Override
-    public List<Film> showOwnWatched(int userId, int page, int itemsPerPage) {
+    public List<Film> getOwnWatched(int userId, int page, int itemsPerPage) {
         final String query = "SELECT FILMS.ID, FILMS.TITLE, FILMS.DIRECTOR, FILMS.HAS_OSCAR, " +
                 "FILMS.IMAGE_REF, FILMS.PROD_YEAR, FILMS.RATE_1STAR, FILMS.RATE_2STAR, " +
                 "FILMS.RATE_3STAR, FILMS.RATE_4STAR, FILMS.RATE_5STAR " +
@@ -61,10 +60,10 @@ public class JdbcListDAO extends BaseDAO implements ListDao {
     }
 
     /**
-     * @see ListDao#showOwnPlanned(int, int, int)
+     * @see ListDao#getOwnPlanned(int, int, int)
      */
     @Override
-    public List<Film> showOwnPlanned(int userId, int page, int itemsPerPage) {
+    public List<Film> getOwnPlanned(int userId, int page, int itemsPerPage) {
         final String query = "SELECT FILMS.ID, FILMS.TITLE, FILMS.DIRECTOR, FILMS.HAS_OSCAR, " +
                 "FILMS.IMAGE_REF, FILMS.PROD_YEAR, FILMS.RATE_1STAR, FILMS.RATE_2STAR, " +
                 "FILMS.RATE_3STAR, FILMS.RATE_4STAR, FILMS.RATE_5STAR " +
@@ -75,10 +74,10 @@ public class JdbcListDAO extends BaseDAO implements ListDao {
     }
 
     /**
-     * @see ListDao#showOthersWatched(int, int, int)
+     * @see ListDao#getOthersWatched(int, int, int)
      */
     @Override
-    public List<Film> showOthersWatched(int userId, int page, int itemsPerPage) {
+    public List<Film> getOthersWatched(int userId, int page, int itemsPerPage) {
         final String query = "SELECT FILMS.ID, FILMS.TITLE, FILMS.DIRECTOR, FILMS.HAS_OSCAR, " +
                 "FILMS.IMAGE_REF, FILMS.PROD_YEAR, FILMS.RATE_1STAR, FILMS.RATE_2STAR, " +
                 "FILMS.RATE_3STAR, FILMS.RATE_4STAR, FILMS.RATE_5STAR FROM LISTS INNER JOIN FILMS " +
@@ -88,10 +87,10 @@ public class JdbcListDAO extends BaseDAO implements ListDao {
     }
 
     /**
-     * @see ListDao#showOthersPlanned(int, int, int)
+     * @see ListDao#getOthersPlanned(int, int, int)
      */
     @Override
-    public List<Film> showOthersPlanned(int userId, int page, int itemsPerPage) {
+    public List<Film> getOthersPlanned(int userId, int page, int itemsPerPage) {
         final String query = "SELECT FILMS.ID, FILMS.TITLE, FILMS.DIRECTOR, FILMS.HAS_OSCAR, " +
                 "FILMS.IMAGE_REF, FILMS.PROD_YEAR, FILMS.RATE_1STAR, FILMS.RATE_2STAR, " +
                 "FILMS.RATE_3STAR, FILMS.RATE_4STAR, FILMS.RATE_5STAR FROM LISTS INNER JOIN FILMS " +
@@ -103,30 +102,30 @@ public class JdbcListDAO extends BaseDAO implements ListDao {
     // UPDATE
 
     /**
-     * @see ListDao#updateWatched(int, int)
+     * @see ListDao#setFilmAsWatched(int, int)
      */
     @Override
-    public boolean updateWatched(int filmId, int userId) {
+    public boolean setFilmAsWatched(int filmId, int userId) {
         final String updateQuery = "UPDATE LISTS SET IS_WATCHED = TRUE " +
                 "WHERE USER_ID = ? AND FILM_ID = ?";
         return (getJdbcTemplate().update(updateQuery, userId, filmId) == 1);
     }
 
     /**
-     * @see ListDao#updatePlanned(int, int)
+     * @see ListDao#setFilmAsPlanned(int, int)
      */
     @Override
-    public boolean updatePlanned(int filmId, int userId) {
+    public boolean setFilmAsPlanned(int filmId, int userId) {
         final String updateQuery = "UPDATE LISTS SET IS_WISHED = TRUE " +
                 "WHERE USER_ID = ? AND FILM_ID = ?";
         return (getJdbcTemplate().update(updateQuery, userId, filmId) == 1);
     }
 
     /**
-     * @see ListDao#changePrivacy(am.aca.orgflix.entity.Film, int, boolean)
+     * @see ListDao#setFilmPrivacy(am.aca.orgflix.entity.Film, int, boolean)
      */
     @Override
-    public boolean changePrivacy(Film film, int userId, boolean isPublic) {
+    public boolean setFilmPrivacy(Film film, int userId, boolean isPublic) {
         final String query = "UPDATE LISTS SET IS_PUBLIC = ? WHERE USER_ID = ? AND FILM_ID = ?;";
         return (getJdbcTemplate().update(query, isPublic, userId, film.getId()) == 1);
     }
@@ -134,19 +133,19 @@ public class JdbcListDAO extends BaseDAO implements ListDao {
     // DELETE
 
     /**
-     * @see ListDao#resetWatched(int, int)
+     * @see ListDao#setFilmAsNotWatched(int, int)
      */
     @Override
-    public boolean resetWatched(int filmId, int userId) {
+    public boolean setFilmAsNotWatched(int filmId, int userId) {
         final String updateQuery = "UPDATE LISTS SET IS_WATCHED = FALSE WHERE USER_ID = ? AND FILM_ID = ?";
         return (getJdbcTemplate().update(updateQuery, userId, filmId) == 1);
     }
 
     /**
-     * @see ListDao#resetPlanned(int, int)
+     * @see ListDao#setFilmAsNotPlanned(int, int)
      */
     @Override
-    public boolean resetPlanned(int filmId, int userId) {
+    public boolean setFilmAsNotPlanned(int filmId, int userId) {
         final String updateQuery = "UPDATE LISTS SET IS_WISHED = FALSE WHERE USER_ID = ? AND FILM_ID = ?";
         return (getJdbcTemplate().update(updateQuery, userId, filmId) == 1);
     }

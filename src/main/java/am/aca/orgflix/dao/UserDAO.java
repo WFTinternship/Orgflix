@@ -24,7 +24,7 @@ public interface UserDAO {
      * @param id the id of the user in DB
      * @return user object with the matched id
      */
-    User get(int id);
+    User getById(int id);
 
     /**
      * Return user by user user's email
@@ -33,8 +33,6 @@ public interface UserDAO {
      * @return user object with the matched id
      */
     User getByEmail(String email);
-
-    User getById(int id);
 
     /**
      * Return user by user user's nickname
@@ -51,7 +49,7 @@ public interface UserDAO {
      * @param pass  the password of the user in DB
      * @return user object with the matched details
      */
-    User authenticate(String email, String pass);
+    boolean authenticate(String email, String pass);
 
     //Update
 
@@ -107,4 +105,19 @@ public interface UserDAO {
      */
     boolean remove(User user);
 
+    /**
+     * Indicates the existence of a user with the given email
+     *
+     * @param email the email of the desired user
+     * @return true if a user with such email is in the DB, false otherwise
+     */
+    boolean emailIsUsed(String email);
+
+    /**
+     * Indicates the existence of a user with the given nickname
+     *
+     * @param nick the email of the desired user
+     * @return true if a user with such nickname is in the DB, false otherwise
+     */
+    boolean nickIsUsed(String nick);
 }

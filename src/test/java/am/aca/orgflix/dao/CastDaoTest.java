@@ -37,220 +37,220 @@ public class CastDaoTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see CastDAO#addCast(am.aca.orgflix.entity.Cast)
+     * @see CastDAO#add(am.aca.orgflix.entity.Cast)
      */
     @Test
     public void addCast_ValidCast_Success() {
         cast = new Cast("Woody Allen", true);
-        jdbcCastDAO.addCast(cast);
+        jdbcCastDAO.add(cast);
 
         int id = cast.getId();
         Assert.assertTrue(id > 0);
     }
 
     /**
-     * @see CastDAO#addCast(am.aca.orgflix.entity.Cast)
+     * @see CastDAO#add(am.aca.orgflix.entity.Cast)
      */
     @Test
     public void addCast_EmptyOscar_Success() {
         cast = new Cast("Woody Allen");
-        jdbcCastDAO.addCast(cast);
+        jdbcCastDAO.add(cast);
 
         int id = cast.getId();
         Assert.assertTrue(id > 0);
     }
 
     /**
-     * @see CastDAO#addCast(am.aca.orgflix.entity.Cast)
+     * @see CastDAO#add(am.aca.orgflix.entity.Cast)
      */
     @Test(expected = RuntimeException.class)
     public void addCast_NameRequired_Fail() {
         cast = new Cast(null, false);
-        jdbcCastDAO.addCast(cast);
+        jdbcCastDAO.add(cast);
     }
 
     /**
-     * @see CastDAO#addCastToFilm(am.aca.orgflix.entity.Cast, int)
+     * @see CastDAO#addToFilm(am.aca.orgflix.entity.Cast, int)
      */
     @Test
     public void addCastToFilm_ValidInput_Success() {
         cast = new Cast("Edward Norton");
-        jdbcCastDAO.addCast(cast);
+        jdbcCastDAO.add(cast);
         Film film = new Film("Fight Club", 1997);
-        jdbcFilmDAO.addFilm(film);
+        jdbcFilmDAO.add(film);
 
-        boolean status = jdbcCastDAO.addCastToFilm(cast, film.getId());
+        boolean status = jdbcCastDAO.addToFilm(cast, film.getId());
         Assert.assertTrue(status);
 
-        int id = jdbcFilmDAO.getFilmsByCast(cast.getId()).get(0).getId();
+        int id = jdbcFilmDAO.getByCast(cast.getId()).get(0).getId();
         Assert.assertEquals(film.getId(), id);
     }
 
     /**
-     * @see CastDAO#addCastToFilm(am.aca.orgflix.entity.Cast, int)
+     * @see CastDAO#addToFilm(am.aca.orgflix.entity.Cast, int)
      */
     @Test(expected = RuntimeException.class)
     public void addCastToFilm_SameAssociationTwice_Fail() {
         cast = new Cast("Edward Norton");
-        jdbcCastDAO.addCast(cast);
+        jdbcCastDAO.add(cast);
         Film film = new Film("Fight Club", 1997);
-        jdbcFilmDAO.addFilm(film);
+        jdbcFilmDAO.add(film);
 
-        boolean status = jdbcCastDAO.addCastToFilm(cast, film.getId());
+        boolean status = jdbcCastDAO.addToFilm(cast, film.getId());
         Assert.assertTrue(status);
 
-        jdbcCastDAO.addCastToFilm(cast, film.getId());
+        jdbcCastDAO.addToFilm(cast, film.getId());
     }
 
     /**
-     * @see CastDAO#addCastToFilm(am.aca.orgflix.entity.Cast, int)
+     * @see CastDAO#addToFilm(am.aca.orgflix.entity.Cast, int)
      */
     @Test(expected = RuntimeException.class)
     public void addCastToFilm_FilmNotExisting_Fail() {
         cast = new Cast("Edward Norton");
-        jdbcCastDAO.addCast(cast);
+        jdbcCastDAO.add(cast);
 
-        jdbcCastDAO.addCastToFilm(cast, 0);
+        jdbcCastDAO.addToFilm(cast, 0);
     }
 
     /**
-     * @see CastDAO#addCastToFilm(am.aca.orgflix.entity.Cast, int)
+     * @see CastDAO#addToFilm(am.aca.orgflix.entity.Cast, int)
      */
     @Test(expected = RuntimeException.class)
     public void addCastToFilm_CastNotExisting_Fail() {
         Film film = new Film("Fight Club", 1997);
-        jdbcFilmDAO.addFilm(film);
+        jdbcFilmDAO.add(film);
 
-        jdbcCastDAO.addCastToFilm(cast, film.getId());
+        jdbcCastDAO.addToFilm(cast, film.getId());
     }
 
     /**
-     * @see CastDAO#listCast()
+     * @see CastDAO#getAll()
      */
     @Test
     public void listCasts_Success() {
         cast = new Cast("Jesse Eisenberg");
-        jdbcCastDAO.addCast(cast);
+        jdbcCastDAO.add(cast);
         cast = new Cast("Steve Carell");
-        jdbcCastDAO.addCast(cast);
+        jdbcCastDAO.add(cast);
         cast = new Cast("Woody Allen");
-        jdbcCastDAO.addCast(cast);
+        jdbcCastDAO.add(cast);
 
-        int size = jdbcCastDAO.listCast().size();
+        int size = jdbcCastDAO.getAll().size();
         Assert.assertEquals(3, size);
 
-        Cast actualCast = jdbcCastDAO.listCast().get(2);
+        Cast actualCast = jdbcCastDAO.getAll().get(2);
         Assert.assertEquals(cast, actualCast);
     }
 
     /**
-     * @see CastDAO#listCast()
+     * @see CastDAO#getAll()
      */
     @Test
     public void listCast_EmptyList() {
-        int size = jdbcCastDAO.listCast().size();
+        int size = jdbcCastDAO.getAll().size();
         Assert.assertEquals(0, size);
     }
 
     /**
-     * @see CastDAO#getCastsByFilm(int)
+     * @see CastDAO#getByFilm(int)
      */
     @Test
     public void getCasts_ByFilm_Success() {
         cast = new Cast("Tom Hanks", true);
-        jdbcCastDAO.addCast(cast);
+        jdbcCastDAO.add(cast);
         Film film = new Film("Forrest Gump", 1990);
         ArrayList<Cast> list = new ArrayList<>();
         list.add(cast);
         film.setCasts(list);
-        jdbcFilmDAO.addFilm(film);
-        jdbcCastDAO.addCastToFilm(cast, film.getId());
+        jdbcFilmDAO.add(film);
+        jdbcCastDAO.addToFilm(cast, film.getId());
 
-        int size = jdbcCastDAO.getCastsByFilm(film.getId()).size();
+        int size = jdbcCastDAO.getByFilm(film.getId()).size();
         Assert.assertEquals(1, size);
 
-        Cast actualCast = jdbcCastDAO.getCastsByFilm(film.getId()).get(0);
+        Cast actualCast = jdbcCastDAO.getByFilm(film.getId()).get(0);
         Assert.assertEquals(cast, actualCast);
 
         cast = new Cast("Robin Wright");
-        jdbcCastDAO.addCast(cast);
-        jdbcCastDAO.addCastToFilm(cast, film.getId());
+        jdbcCastDAO.add(cast);
+        jdbcCastDAO.addToFilm(cast, film.getId());
 
-        size = jdbcCastDAO.getCastsByFilm(film.getId()).size();
+        size = jdbcCastDAO.getByFilm(film.getId()).size();
         Assert.assertEquals(2, size);
     }
 
     /**
-     * @see CastDAO#getCastsByFilm(int)
+     * @see CastDAO#getByFilm(int)
      */
     @Test
     public void getCastsByFilm_EmptyCastList_Fail() {
         Film film = new Film("Forrest Gump", 1990);
         film.addCast(cast);
-        jdbcFilmDAO.addFilm(film);
+        jdbcFilmDAO.add(film);
 
-        int size = jdbcCastDAO.getCastsByFilm(film.getId()).size();
+        int size = jdbcCastDAO.getByFilm(film.getId()).size();
         Assert.assertEquals(0, size);
     }
 
     /**
-     * @see CastDAO#getCastById(int)
+     * @see CastDAO#getById(int)
      */
     @Test
     public void getCastById_ValidId_Success() {
         cast = new Cast("Tom Hanks", true);
-        jdbcCastDAO.addCast(cast);
+        jdbcCastDAO.add(cast);
 
-        Cast actualCast = jdbcCastDAO.getCastById(cast.getId());
+        Cast actualCast = jdbcCastDAO.getById(cast.getId());
         Assert.assertEquals(cast, actualCast);
     }
 
     /**
-     * @see CastDAO#getCastById(int)
+     * @see CastDAO#getById(int)
      */
     @Test(expected = RuntimeException.class)
     public void getCastById_InvalidId_Success() {
-        jdbcCastDAO.getCastById(0);
+        jdbcCastDAO.getById(0);
     }
 
     /**
-     * @see CastDAO#editCast(am.aca.orgflix.entity.Cast)
+     * @see CastDAO#edit(am.aca.orgflix.entity.Cast)
      */
     @Test
     public void editCast_ValidUpdate_Success() {
         cast = new Cast("Tom Hanks", true);
-        jdbcCastDAO.addCast(cast);
+        jdbcCastDAO.add(cast);
         cast.setName("Russel Crowe");
 
-        boolean status = jdbcCastDAO.editCast(cast);
+        boolean status = jdbcCastDAO.edit(cast);
         Assert.assertTrue(status);
 
-        int size = jdbcCastDAO.listCast().size();
+        int size = jdbcCastDAO.getAll().size();
         Assert.assertEquals(1, size);
 
-        Cast actualCast = jdbcCastDAO.listCast().get(0);
+        Cast actualCast = jdbcCastDAO.getAll().get(0);
         Assert.assertEquals(cast, actualCast);
     }
 
     /**
-     * @see CastDAO#editCast(am.aca.orgflix.entity.Cast)
+     * @see CastDAO#edit(am.aca.orgflix.entity.Cast)
      */
     @Test(expected = RuntimeException.class)
     public void editCast_NameNull_Fail() {
         cast = new Cast("Woody Allen");
-        jdbcCastDAO.addCast(cast);
+        jdbcCastDAO.add(cast);
 
         cast.setName(null);
-        jdbcCastDAO.editCast(cast);
+        jdbcCastDAO.edit(cast);
     }
 
     /**
-     * @see CastDAO#editCast(am.aca.orgflix.entity.Cast)
+     * @see CastDAO#edit(am.aca.orgflix.entity.Cast)
      */
     @Test
     public void editCast_InvalidCast_Fail() {
         cast = new Cast("Woody Allen");
-        boolean status = jdbcCastDAO.editCast(cast);
+        boolean status = jdbcCastDAO.edit(cast);
         Assert.assertFalse(status);
     }
 
@@ -260,12 +260,12 @@ public class CastDaoTest extends BaseIntegrationTest {
     @Test
     public void remove_ValidCast_Success() {
         cast = new Cast("Woody Allen");
-        jdbcCastDAO.addCast(cast);
+        jdbcCastDAO.add(cast);
 
         boolean status = jdbcCastDAO.remove(cast);
         Assert.assertTrue(status);
 
-        java.util.List<Cast> casts = jdbcCastDAO.listCast();
+        java.util.List<Cast> casts = jdbcCastDAO.getAll();
         Assert.assertTrue(casts.isEmpty());
     }
 
@@ -281,47 +281,47 @@ public class CastDaoTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see CastDAO#isStarringIn(int, int)
+     * @see CastDAO#isRelatedToFilm(int, int)
      */
     @Test
     public void isStarringIn_ValidInput_Success() {
         cast = new Cast("Woody Allen");
-        jdbcCastDAO.addCast(cast);
+        jdbcCastDAO.add(cast);
         Film film = new Film("Fading Gigolo", 2013);
-        jdbcFilmDAO.addFilm(film);
-        jdbcCastDAO.addCastToFilm(cast, film.getId());
+        jdbcFilmDAO.add(film);
+        jdbcCastDAO.addToFilm(cast, film.getId());
 
-        boolean status = jdbcCastDAO.isStarringIn(cast.getId(), film.getId());
+        boolean status = jdbcCastDAO.isRelatedToFilm(cast.getId(), film.getId());
         Assert.assertTrue(status);
 
         film = new Film("Lord of the Rings", 2001);
-        jdbcFilmDAO.addFilm(film);
+        jdbcFilmDAO.add(film);
 
-        status = jdbcCastDAO.isStarringIn(cast.getId(), film.getId());
+        status = jdbcCastDAO.isRelatedToFilm(cast.getId(), film.getId());
         Assert.assertFalse(status);
     }
 
     /**
-     * @see CastDAO#isStarringIn(int, int)
+     * @see CastDAO#isRelatedToFilm(int, int)
      */
     @Test
     public void isStarringIn_InvalidCast_Fail() {
         Film film = new Film("Lord of the Rings", 2001);
-        jdbcFilmDAO.addFilm(film);
+        jdbcFilmDAO.add(film);
 
-        boolean status = jdbcCastDAO.isStarringIn(0, film.getId());
+        boolean status = jdbcCastDAO.isRelatedToFilm(0, film.getId());
         Assert.assertFalse(status);
     }
 
     /**
-     * @see CastDAO#isStarringIn(int, int)
+     * @see CastDAO#isRelatedToFilm(int, int)
      */
     @Test
     public void isStarringIn_InvalidFilm_Fail() {
         Cast cast = new Cast("Woody Allen", true);
-        jdbcCastDAO.addCast(cast);
+        jdbcCastDAO.add(cast);
 
-        boolean status = jdbcCastDAO.isStarringIn(cast.getId(), 0);
+        boolean status = jdbcCastDAO.isRelatedToFilm(cast.getId(), 0);
         Assert.assertFalse(status);
     }
 
@@ -331,7 +331,7 @@ public class CastDaoTest extends BaseIntegrationTest {
     @Test
     public void exists_ValidCast_Success() {
         cast = new Cast("Woody Allen");
-        jdbcCastDAO.addCast(cast);
+        jdbcCastDAO.add(cast);
 
         boolean status = jdbcCastDAO.exists(cast);
         Assert.assertTrue(status);

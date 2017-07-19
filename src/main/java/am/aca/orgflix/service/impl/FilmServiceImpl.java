@@ -40,16 +40,16 @@ public class FilmServiceImpl extends BaseService implements FilmService {
     }
 
     /**
-     * @see FilmService#addFilm(am.aca.orgflix.entity.Film)
+     * @see FilmService#add(am.aca.orgflix.entity.Film)
      */
     @Transactional
     @Override
-    public boolean addFilm(Film film) {
+    public boolean add(Film film) {
         checkRequiredFields(film.getTitle());
         validateYear(film.getProdYear());
 
         try {
-            return filmDao.addFilm(film) && optimizeRelations(film);
+            return filmDao.add(film) && optimizeRelations(film);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
             return false;
@@ -57,13 +57,13 @@ public class FilmServiceImpl extends BaseService implements FilmService {
     }
 
     /**
-     * @see FilmService#getFilmById(int)
+     * @see FilmService#getById(int)
      */
     @Override
-    public Film getFilmById(int id) {
+    public Film getById(int id) {
         Film film;
         try {
-            film = filmDao.getFilmById(id);
+            film = filmDao.getById(id);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
             return null;
@@ -72,13 +72,13 @@ public class FilmServiceImpl extends BaseService implements FilmService {
     }
 
     /**
-     * @see FilmService#getFilmsByCast(int)
+     * @see FilmService#getByCast(int)
      */
     @Override
-    public List<Film> getFilmsByCast(int castId) {
+    public List<Film> getByCast(int castId) {
         List<Film> list = new ArrayList<>();
         try {
-            list = filmDao.getFilmsByCast(castId);
+            list = filmDao.getByCast(castId);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
             return list;
@@ -87,16 +87,16 @@ public class FilmServiceImpl extends BaseService implements FilmService {
     }
 
     /**
-     * @see FilmService#getFilmsList(int, int)
+     * @see FilmService#getAll(int, int)
      */
     @Transactional
     @Override
-    public List<Film> getFilmsList(int startIndex, int itemsPerPage) {
+    public List<Film> getAll(int startIndex, int itemsPerPage) {
         List<Film> list = new ArrayList<>();
         try {
-            list = filmDao.getFilmsList(startIndex, 12);
+            list = filmDao.getAll(startIndex, 12);
             for (Film film : list) {
-                film.setCasts(castService.getCastsByFilm(film.getId()));
+                film.setCasts(castService.getByFilm(film.getId()));
             }
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
@@ -106,13 +106,13 @@ public class FilmServiceImpl extends BaseService implements FilmService {
     }
 
     /**
-     * @see FilmService#getFilmsByGenre(Genre)
+     * @see FilmService#getByGenre(Genre)
      */
     @Override
-    public List<Film> getFilmsByGenre(Genre genre) {
+    public List<Film> getByGenre(Genre genre) {
         List<Film> list = new ArrayList<>();
         try {
-            list = filmDao.getFilmsByGenre(genre);
+            list = filmDao.getByGenre(genre);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
             return list;
@@ -121,35 +121,19 @@ public class FilmServiceImpl extends BaseService implements FilmService {
     }
 
     /**
-     * @see FilmService#rateFilm(int, int)
+     * @see FilmService#rate(int, int)
      */
     @Transactional
     @Override
-    public boolean rateFilm(int filmId, int starType) {
+    public boolean rate(int filmId, int starType) {
         validateRating(starType);
 
         boolean state;
         try {
-            state = filmDao.rateFilm(filmId, starType);
+            state = filmDao.rate(filmId, starType);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
             return false;
-        }
-        return state;
-    }
-
-    /**
-     * @see FilmService#addGenreToFilm(Genre, int)
-     */
-    @Transactional
-    @Override
-    public boolean addGenreToFilm(Genre genre, int filmId) {
-        boolean state = false;
-        try {
-            state = filmDao.addGenreToFilm(genre, filmId);
-        } catch (RuntimeException e) {
-            LOGGER.warn(e.getMessage());
-//            return false;
         }
         return state;
     }
@@ -163,9 +147,10 @@ public class FilmServiceImpl extends BaseService implements FilmService {
         int ratingCount = 0;
 
         try {
-            for (int i = 1; i <= 5; i++) {
-                ratingCount += filmDao.getRating(filmId, i);
-                ratingSum += filmDao.getRating(filmId, i) * i;
+            int[] ratings = filmDao.getRating(filmId);
+            for (int i = 0; i <= 4; i++) {
+                ratingCount += ratings[i];
+                ratingSum += ratings[i] * (i + 1);
             }
 
             if (ratingCount == 0)
@@ -183,13 +168,13 @@ public class FilmServiceImpl extends BaseService implements FilmService {
     }
 
     /**
-     * @see FilmService#getAllRatings(int)
+     * @see FilmService#getAllRatings(int, int)
      */
     @Override
-    public String[] getAllRatings(int startIndex) {
+    public String[] getAllRatings(int startIndex, int itemsPerPage) {
         String[] ratings;
         try {
-            List<Film> filmList = getFilmsList(startIndex * 12, 12);
+            List<Film> filmList = getAll(startIndex * itemsPerPage, itemsPerPage);
             ratings = new String[filmList.size()];
             for (int i = 0; i < filmList.size(); ++i) {
                 ratings[i] = String.format("%.1f", getRating(filmList.get(i).getId()));
@@ -202,13 +187,13 @@ public class FilmServiceImpl extends BaseService implements FilmService {
     }
 
     /**
-     * @see FilmService#totalNumberOfFilms()
+     * @see FilmService#getTotalNumber()
      */
     @Override
-    public int totalNumberOfFilms() {
+    public int getTotalNumber() {
         int total;
         try {
-            total = filmDao.totalNumberOfFilms();
+            total = filmDao.getTotalNumber();
         } catch (RuntimeException e) {
             LOGGER.warn(e.toString());
             return 0;
@@ -236,20 +221,20 @@ public class FilmServiceImpl extends BaseService implements FilmService {
     }
 
     /**
-     * @see FilmService#editFilm(Film)
+     * @see FilmService#edit(Film)
      */
     @Transactional
     @Override
-    public boolean editFilm(Film film) {
+    public boolean edit(Film film) {
         checkRequiredFields(film.getTitle());
         validateYear(film.getProdYear());
 
         try {
-            if (!filmDao.editFilm(film))
+            if (!filmDao.edit(film))
                 return false;
 
-            filmDao.resetRelationGenres(film);
-            filmDao.resetRelationCasts(film);
+            filmDao.removeGenres(film);
+            filmDao.removeCasts(film);
 
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
@@ -273,7 +258,7 @@ public class FilmServiceImpl extends BaseService implements FilmService {
             }
 
             for (Cast cast : film.getCasts()) {
-                if (!castService.addCastToFilm(cast, film.getId()))
+                if (!castService.addToFilm(cast, film.getId()))
                     return false;
             }
         } catch (RuntimeException e) {

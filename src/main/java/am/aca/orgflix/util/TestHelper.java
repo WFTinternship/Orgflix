@@ -1,10 +1,7 @@
 package am.aca.orgflix.util;
 
-import am.aca.orgflix.dao.BaseDAO;
-import am.aca.orgflix.dao.impljdbc.JdbcUserDAO;
-import org.springframework.aop.framework.Advised;
-import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -14,10 +11,9 @@ import javax.sql.DataSource;
  */
 
 @Repository
-public class TestHelper extends BaseDAO {
+public class TestHelper extends NamedParameterJdbcDaoSupport {
     @Autowired
     public TestHelper(DataSource dataSource) {
-        super(JdbcUserDAO.class);
         this.setDataSource(dataSource);
     }
 

@@ -42,7 +42,7 @@ public interface ListDao {
      * @param page   index from desired pagination
      * @return the list of all films marked as watched by the current user
      */
-    List<Film> showOwnWatched(int userId, int page, int itemsPerPage);
+    List<Film> getOwnWatched(int userId, int page, int itemsPerPage);
 
     /**
      * Retrieves the list of all films marked as planned by the current user with pagination
@@ -51,7 +51,7 @@ public interface ListDao {
      * @param page   index from desired pagination
      * @return the list of all films marked as planned by the current user
      */
-    List<Film> showOwnPlanned(int userId, int page, int itemsPerPage);
+    List<Film> getOwnPlanned(int userId, int page, int itemsPerPage);
 
     /**
      * Retrieves the list of all films marked as watched by the selected user with pagination
@@ -60,7 +60,7 @@ public interface ListDao {
      * @param page   index from desired pagination
      * @return the list of all films marked as watched by the selected user
      */
-    List<Film> showOthersWatched(int userId, int page, int itemsPerPage);
+    List<Film> getOthersWatched(int userId, int page, int itemsPerPage);
 
     /**
      * Retrieves the list of all films marked as planned by the selected user with pagination
@@ -69,7 +69,7 @@ public interface ListDao {
      * @param page   index from desired pagination
      * @return the list of all films marked as planned by the selected user
      */
-    List<Film> showOthersPlanned(int userId, int page, int itemsPerPage);
+    List<Film> getOthersPlanned(int userId, int page, int itemsPerPage);
 
     // UPDATE
 
@@ -80,7 +80,7 @@ public interface ListDao {
      * @param userId the ID of the selected user
      * @return true if the association is successfully created, false otherwise
      */
-    boolean updateWatched(int filmId, int userId);
+    boolean setFilmAsWatched(int filmId, int userId);
 
     /**
      * Marks the film already associated as watched with the given user also as planned
@@ -89,7 +89,7 @@ public interface ListDao {
      * @param userId the ID of the selected user
      * @return true if the association is successfully created, false otherwise
      */
-    boolean updatePlanned(int filmId, int userId);
+    boolean setFilmAsPlanned(int filmId, int userId);
 
     /**
      * Changes the privacy of the association of the given film and the given user to the given privacy
@@ -99,7 +99,7 @@ public interface ListDao {
      * @param isPublic the new status which the association is to be updated to
      * @return true if the association is successfully updated, false otherwise
      */
-    boolean changePrivacy(Film film, int userId, boolean isPublic);
+    boolean setFilmPrivacy(Film film, int userId, boolean isPublic);
 
     // DELETE
 
@@ -111,7 +111,7 @@ public interface ListDao {
      * @param userId the ID of the given user
      * @return true if the association is successfully updated, false otherwise
      */
-    boolean resetWatched(int filmId, int userId);
+    boolean setFilmAsNotWatched(int filmId, int userId);
 
     /**
      * Sets the "planned" association of the given film and the given user as false in DB
@@ -121,7 +121,7 @@ public interface ListDao {
      * @param userId the ID of the given user
      * @return true if the association is successfully updated, false otherwise
      */
-    boolean resetPlanned(int filmId, int userId);
+    boolean setFilmAsNotPlanned(int filmId, int userId);
 
     /**
      * Deletes all associations of the given user and the given film

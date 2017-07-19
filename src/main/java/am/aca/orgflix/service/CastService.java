@@ -1,7 +1,6 @@
 package am.aca.orgflix.service;
 
 import am.aca.orgflix.entity.Cast;
-import am.aca.orgflix.entity.Film;
 
 import java.util.List;
 
@@ -16,23 +15,14 @@ public interface CastService {
      * @param cast the object to be created
      * @return true if the given cast is successfully created, false otherwise
      */
-    boolean addCast(Cast cast);
+    boolean add(Cast cast);
 
     /**
      * Shows all actors already created
      *
      * @return the List object of all actors already created
      */
-    List<Cast> listCasts();
-
-
-    /**
-     * Show all films starring the given actor
-     *
-     * @param castId the ID of the given actor
-     * @return the List object of all films starring the given actor
-     */
-    List<Film> listFilmsByCast(int castId);
+    List<Cast> getAll();
 
     /**
      * Show all actors starring in the given film
@@ -40,7 +30,7 @@ public interface CastService {
      * @param filmId the ID of the given film
      * @return the List object of all actors starring in the given film
      */
-    List<Cast> getCastsByFilm(int filmId);
+    List<Cast> getByFilm(int filmId);
 
     /**
      * Retrieves the cast having the given ID
@@ -48,7 +38,7 @@ public interface CastService {
      * @param castId the ID of the desired cast
      * @return the cast object having the given ID, null if not found
      */
-    Cast getCastById(int castId);
+    Cast getById(int castId);
 
     /**
      * Updates features of the given actor
@@ -56,7 +46,7 @@ public interface CastService {
      * @param cast the object to replace the previous version
      * @return true if successfully updated, false otherwise
      */
-    boolean editCast(Cast cast);
+    boolean edit(Cast cast);
 
     /**
      * Add the given actor to the given film's cast
@@ -65,5 +55,5 @@ public interface CastService {
      * @param cast   the cast to be added to the given film
      * @return true if the film is successfully updated, false otherwise
      */
-    boolean addCastToFilm(Cast cast, int filmId);
+    boolean addToFilm(Cast cast, int filmId);
 }

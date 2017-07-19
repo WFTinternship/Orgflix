@@ -34,9 +34,9 @@ public class UserServiceImpl extends BaseService implements UserService {
         validateEmail(user.getEmail());
         validatePassword(user.getPass());
 
-        if (userDao.getByEmail(user.getEmail()) != null)
+        if (userDao.emailIsUsed(user.getEmail()))
             throw new ServiceException("Email already used");
-        if (userDao.getByNick(user.getNick()) != null)
+        if (userDao.nickIsUsed(user.getNick()))
             throw new ServiceException("Nickname already used");
 
         try {
@@ -103,9 +103,10 @@ public class UserServiceImpl extends BaseService implements UserService {
     public User authenticate(String email, String pass) {
         User user;
         try {
-            user = userDao.authenticate(email, pass);
-        } catch (org.springframework.dao.EmptyResultDataAccessException e) {
-            return null;
+            if (userDao.authenticate(email, pass))
+                user = userDao.getByEmail(email);
+            else
+                user = null;
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
             throw new ServiceException(e.getMessage());
@@ -122,9 +123,9 @@ public class UserServiceImpl extends BaseService implements UserService {
         validateEmail(user.getEmail());
         validatePassword(user.getPass());
 
-        if (userDao.getByEmail(user.getEmail()) != null)
+        if (userDao.emailIsUsed(user.getEmail()))
             throw new ServiceException("Email already used");
-        if (userDao.getByNick(user.getNick()) != null)
+        if (userDao.nickIsUsed(user.getNick()))
             throw new ServiceException("Nickname already used");
         boolean state;
         try {

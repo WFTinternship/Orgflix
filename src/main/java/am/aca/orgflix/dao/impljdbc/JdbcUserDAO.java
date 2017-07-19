@@ -1,10 +1,10 @@
 package am.aca.orgflix.dao.impljdbc;
 
-import am.aca.orgflix.dao.BaseDAO;
 import am.aca.orgflix.dao.UserDAO;
 import am.aca.orgflix.dao.impljdbc.mapper.UserRowMapper;
 import am.aca.orgflix.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
@@ -18,11 +18,10 @@ import java.sql.Statement;
  */
 
 @Component
-public class JdbcUserDAO extends BaseDAO implements UserDAO {
+public class JdbcUserDAO extends NamedParameterJdbcDaoSupport implements UserDAO {
 
     @Autowired
     public JdbcUserDAO(DataSource dataSource) {
-        super(JdbcUserDAO.class);
         this.setDataSource(dataSource);
     }
 
@@ -59,15 +58,6 @@ public class JdbcUserDAO extends BaseDAO implements UserDAO {
     // READ
 
     /**
-     * @see UserDAO#get(int)
-     */
-    @Override
-    public User get(int id) {
-        final String query = "SELECT * FROM USERS WHERE ID = ? LIMIT 1";
-        return getJdbcTemplate().queryForObject(query, new Object[]{id}, new UserRowMapper());
-    }
-
-    /**
      * @see UserDAO#getByEmail(java.lang.String)
      */
     @Override
@@ -79,7 +69,7 @@ public class JdbcUserDAO extends BaseDAO implements UserDAO {
     @Override
     public User getById(int id) {
         final String query = "SELECT * FROM USERS WHERE ID = ?";
-        return getJdbcTemplate().queryForObject(query, new Object[] {id}, new UserRowMapper());
+        return getJdbcTemplate().queryForObject(query, new Object[]{id}, new UserRowMapper());
     }
 
     /**
@@ -95,10 +85,9 @@ public class JdbcUserDAO extends BaseDAO implements UserDAO {
      * @see UserDAO#authenticate(java.lang.String, java.lang.String)
      */
     @Override
-    public User authenticate(String email, String pass) {
-        final String query = "SELECT * FROM USERS WHERE EMAIL = ? AND USER_PASS = ? LIMIT 1";
-        Object obj = getJdbcTemplate().queryForObject(query, new Object[]{email, pass}, new UserRowMapper());
-        return (User) obj;
+    public boolean authenticate(String email, String pass) {
+        final String query = "SELECT count(*) FROM USERS WHERE EMAIL = ? AND USER_PASS = ?";
+        return getJdbcTemplate().queryForObject(query, new Object[]{email, pass}, Integer.class) == 1;
     }
 
     //UPDATE
@@ -146,5 +135,17 @@ public class JdbcUserDAO extends BaseDAO implements UserDAO {
     @Override
     public boolean remove(User user) {
         return remove(user.getId());
+    }
+
+    @Override
+    public boolean emailIsUsed(String email) {
+        final String query = "SELECT COUNT(*) FROM USERS WHERE EMAIL = ?";
+        return getJdbcTemplate().queryForObject(query, new Object[]{email}, Integer.class) == 1;
+    }
+
+    @Override
+    public boolean nickIsUsed(String nick) {
+        final String query = "SELECT COUNT(*) FROM USERS WHERE NICK = ?";
+        return getJdbcTemplate().queryForObject(query, new Object[]{nick}, Integer.class) == 1;
     }
 }

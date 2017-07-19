@@ -3,7 +3,6 @@ package am.aca.orgflix.service.impl;
 import am.aca.orgflix.dao.CastDAO;
 import am.aca.orgflix.dao.FilmDAO;
 import am.aca.orgflix.entity.Cast;
-import am.aca.orgflix.entity.Film;
 import am.aca.orgflix.service.CastService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,15 +37,15 @@ public class CastServiceImpl extends BaseService implements CastService {
     }
 
     /**
-     * @see CastService#addCast(am.aca.orgflix.entity.Cast)
+     * @see CastService#add(am.aca.orgflix.entity.Cast)
      */
     @Transactional
     @Override
-    public boolean addCast(Cast cast) {
+    public boolean add(Cast cast) {
         checkRequiredFields(cast.getName());
         boolean result;
         try {
-            result = castDAO.addCast(cast);
+            result = castDAO.add(cast);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
             return false;
@@ -55,17 +54,17 @@ public class CastServiceImpl extends BaseService implements CastService {
     }
 
     /**
-     * @see CastService#addCastToFilm(Cast, int)
+     * @see CastService#addToFilm(Cast, int)
      */
     @Transactional
     @Override
-    public boolean addCastToFilm(Cast cast, int filmId) {
+    public boolean addToFilm(Cast cast, int filmId) {
         boolean state;
         try {
-            if (castDAO.isStarringIn(cast.getId(), filmId))
+            if (castDAO.isRelatedToFilm(cast.getId(), filmId))
                 return false;
 
-            state = castDAO.addCastToFilm(cast, filmId);
+            state = castDAO.addToFilm(cast, filmId);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
             return false;
@@ -74,13 +73,13 @@ public class CastServiceImpl extends BaseService implements CastService {
     }
 
     /**
-     * @see CastService#listCasts()
+     * @see CastService#getAll()
      */
     @Override
-    public List<Cast> listCasts() {
+    public List<Cast> getAll() {
         List<Cast> list = new ArrayList<>();
         try {
-            list = castDAO.listCast();
+            list = castDAO.getAll();
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
             return list;
@@ -89,28 +88,13 @@ public class CastServiceImpl extends BaseService implements CastService {
     }
 
     /**
-     * @see CastService#listFilmsByCast(int)
+     * @see CastService#getByFilm(int)
      */
     @Override
-    public List<Film> listFilmsByCast(int castId) {
-        List<Film> list = new ArrayList<>();
-        try {
-            list = filmDAO.getFilmsByCast(castId);
-        } catch (RuntimeException e) {
-            LOGGER.warn(e.getMessage());
-            return list;
-        }
-        return list;
-    }
-
-    /**
-     * @see CastService#getCastsByFilm(int)
-     */
-    @Override
-    public List<Cast> getCastsByFilm(int filmId) {
+    public List<Cast> getByFilm(int filmId) {
         List<Cast> list = new ArrayList<>();
         try {
-            list = castDAO.getCastsByFilm(filmId);
+            list = castDAO.getByFilm(filmId);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
             return list;
@@ -119,13 +103,13 @@ public class CastServiceImpl extends BaseService implements CastService {
     }
 
     /**
-     * @see CastService#getCastById(int)
+     * @see CastService#getById(int)
      */
     @Override
-    public Cast getCastById(int castId) {
+    public Cast getById(int castId) {
         Cast cast;
         try {
-            cast = castDAO.getCastById(castId);
+            cast = castDAO.getById(castId);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
             return null;
@@ -134,17 +118,17 @@ public class CastServiceImpl extends BaseService implements CastService {
     }
 
     /**
-     * @see CastService#editCast(Cast)
+     * @see CastService#edit(Cast)
      */
     @Transactional
     @Override
-    public boolean editCast(Cast cast) {
+    public boolean edit(Cast cast) {
         checkRequiredFields(cast.getName());
         boolean state;
         try {
             if (!castDAO.exists(cast))
                 return false;
-            state = castDAO.editCast(cast);
+            state = castDAO.edit(cast);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
             return false;

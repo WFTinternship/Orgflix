@@ -1,10 +1,10 @@
 package am.aca.orgflix.dao.impljdbc;
 
-import am.aca.orgflix.dao.BaseDAO;
 import am.aca.orgflix.dao.CastDAO;
 import am.aca.orgflix.dao.impljdbc.mapper.CastRowMapper;
 import am.aca.orgflix.entity.Cast;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
@@ -18,21 +18,20 @@ import java.util.List;
  * DAO layer for Cast entity
  */
 @Component
-public class JdbcCastDAO extends BaseDAO implements CastDAO {
+public class JdbcCastDAO extends NamedParameterJdbcDaoSupport implements CastDAO {
 
     @Autowired
     public JdbcCastDAO(DataSource dataSource) {
-        super(JdbcCastDAO.class);
-        this.setDataSource(dataSource);
+        setDataSource(dataSource);
     }
 
     // CREATE
 
     /**
-     * @see CastDAO#addCast(am.aca.orgflix.entity.Cast)
+     * @see CastDAO#add(am.aca.orgflix.entity.Cast)
      */
     @Override
-    public boolean addCast(Cast cast) {
+    public boolean add(Cast cast) {
         KeyHolder holder = new GeneratedKeyHolder();
         final String query = "INSERT INTO CASTS (ACTOR_NAME, HAS_OSCAR) VALUES (?, ?)";
         int result = getJdbcTemplate().update(connection -> {
@@ -46,10 +45,10 @@ public class JdbcCastDAO extends BaseDAO implements CastDAO {
     }
 
     /**
-     * @see CastDAO#addCastToFilm(am.aca.orgflix.entity.Cast, int)
+     * @see CastDAO#addToFilm(am.aca.orgflix.entity.Cast, int)
      */
     @Override
-    public boolean addCastToFilm(Cast cast, int filmId) {
+    public boolean addToFilm(Cast cast, int filmId) {
         final String query = "INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES (? , ? ) ";
         return getJdbcTemplate().update(query, cast.getId(), filmId) == 1;
     }
@@ -57,19 +56,19 @@ public class JdbcCastDAO extends BaseDAO implements CastDAO {
     // READ
 
     /**
-     * @see am.aca.orgflix.dao.CastDAO#listCast()
+     * @see am.aca.orgflix.dao.CastDAO#getAll()
      */
     @Override
-    public List<Cast> listCast() {
+    public List<Cast> getAll() {
         final String query = "SELECT ID, ACTOR_NAME, HAS_OSCAR FROM CASTS ORDER BY ACTOR_NAME";
         return getJdbcTemplate().query(query, new CastRowMapper());
     }
 
     /**
-     * @see CastDAO#getCastsByFilm(int)
+     * @see CastDAO#getByFilm(int)
      */
     @Override
-    public List<Cast> getCastsByFilm(int filmId) {
+    public List<Cast> getByFilm(int filmId) {
         final String query = "SELECT CASTS.ID, CASTS.ACTOR_NAME, CASTS.HAS_OSCAR " +
                 " FROM CASTS " +
                 " INNER JOIN (" +
@@ -82,9 +81,9 @@ public class JdbcCastDAO extends BaseDAO implements CastDAO {
     }
 
     /**
-     * @see CastDAO#getCastById(int)
+     * @see CastDAO#getById(int)
      */
-    public Cast getCastById(int castId) {
+    public Cast getById(int castId) {
         final String query = "SELECT * FROM CASTS WHERE ID = ?";
         return getJdbcTemplate().queryForObject(query, new Object[]{castId}, new CastRowMapper());
     }
@@ -92,10 +91,10 @@ public class JdbcCastDAO extends BaseDAO implements CastDAO {
     // UPDATE
 
     /**
-     * @see CastDAO#editCast(am.aca.orgflix.entity.Cast)
+     * @see CastDAO#edit(am.aca.orgflix.entity.Cast)
      */
     @Override
-    public boolean editCast(Cast cast) {
+    public boolean edit(Cast cast) {
         final String query = "UPDATE CASTS SET ACTOR_NAME = ?, HAS_OSCAR = ? WHERE ID = ?";
         return getJdbcTemplate().update(query, cast.getName(), cast.isHasOscar(), cast.getId()) == 1;
     }
@@ -114,10 +113,10 @@ public class JdbcCastDAO extends BaseDAO implements CastDAO {
     // Support methods
 
     /**
-     * @see CastDAO#isStarringIn(int, int)
+     * @see CastDAO#isRelatedToFilm(int, int)
      */
     @Override
-    public boolean isStarringIn(int actorId, int filmId) {
+    public boolean isRelatedToFilm(int actorId, int filmId) {
         String query = "SELECT COUNT(*) FROM FILM_TO_CAST WHERE FILM_ID = ? AND ACTOR_ID = ?";
         return getJdbcTemplate().queryForObject(query,
                 new Object[]{filmId, actorId},

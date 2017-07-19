@@ -39,7 +39,7 @@ public class ListServiceIntegrationTest extends BaseIntegrationTest {
      */
     @Before
     public void setUp() {
-        filmService.addFilm(film);
+        filmService.add(film);
         filmId = film.getId();
         userService.add(user);
     }
@@ -180,7 +180,7 @@ public class ListServiceIntegrationTest extends BaseIntegrationTest {
     @Test
     public void showOthersPlanned_Success() {
         listService.addToPlanned(filmId, true, user.getId());
-        filmService.addFilm(film);
+        filmService.add(film);
         listService.addToPlanned(filmId, false, user.getId());
 
         int size = listService.showOthersPlanned(user.getId(), 0).size();
@@ -199,7 +199,7 @@ public class ListServiceIntegrationTest extends BaseIntegrationTest {
     @Test
     public void showOthersWatched_Success() {
         listService.addToWatched(filmId, true, user.getId());
-        filmService.addFilm(film);
+        filmService.add(film);
         listService.addToWatched(filmId, false, user.getId());
 
         int size = listService.showOthersWatched(user.getId(), 0).size();

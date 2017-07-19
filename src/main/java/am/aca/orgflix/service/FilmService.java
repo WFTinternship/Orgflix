@@ -16,7 +16,7 @@ public interface FilmService {
      * @param film the Film object to be created
      * @return true if the given film is successfully created, false otherwise
      */
-    boolean addFilm(Film film);
+    boolean add(Film film);
 
     /**
      * Shows the List object of all films already added, with pagination
@@ -25,7 +25,7 @@ public interface FilmService {
      * @param itemsPerPage the number of films per page
      * @return List object of films starting from given index
      */
-    List<Film> getFilmsList(int startIndex, int itemsPerPage);
+    List<Film> getAll(int startIndex, int itemsPerPage);
 
     /**
      * Retrieves the film having the given ID
@@ -33,7 +33,7 @@ public interface FilmService {
      * @param id the ID of the desired film
      * @return the Film object having the given ID, NULL if not found
      */
-    Film getFilmById(int id);
+    Film getById(int id);
 
     /**
      * Retrieves films starring the given actor
@@ -41,7 +41,7 @@ public interface FilmService {
      * @param castId the ID of the given actor
      * @return List object of all films starring the given actor
      */
-    List<Film> getFilmsByCast(int castId);
+    List<Film> getByCast(int castId);
 
     /**
      * Retrieves films of the given genre
@@ -49,7 +49,7 @@ public interface FilmService {
      * @param genre the genre to filter films by
      * @return List object of all films of the given genre
      */
-    List<Film> getFilmsByGenre(Genre genre);
+    List<Film> getByGenre(Genre genre);
 
     /**
      * Retrieves the user rating of the given film
@@ -63,16 +63,16 @@ public interface FilmService {
      * Calculates and retrieves average ratings for all films
      *
      * @param startIndex the index corresponding to the currently displayed page
-     * @return an array of avarage ratings for all films in order as in getFilmsList() method
+     * @return an array of avarage ratings for all films in order as in getAll() method
      */
-    String[] getAllRatings(int startIndex);
+    String[] getAllRatings(int startIndex, int itemsPerPage);
 
     /**
      * Retrieves the total number of all films already created
      *
      * @return the number of all films already created
      */
-    int totalNumberOfFilms();
+    int getTotalNumber();
 
     /**
      * Retrieves List object of film filtered by the given parameters
@@ -95,7 +95,7 @@ public interface FilmService {
      * @param film the film to be set as the updated version
      * @return true if the update was performed successfully, false otherwise
      */
-    boolean editFilm(Film film);
+    boolean edit(Film film);
 
     /**
      * Adds the given rating to the given film
@@ -105,14 +105,5 @@ public interface FilmService {
      * @param starType the rating to be set to the film
      * @return true if the rating is successfully updated, false otherwise
      */
-    boolean rateFilm(int filmId, int starType);
-
-    /**
-     * Assigns new genre to the given film
-     *
-     * @param filmId the ID of the film to be updated
-     * @param genre  the genre to be added to the film
-     * @return true if the film is successfully updated, false otherwise
-     */
-    boolean addGenreToFilm(Genre genre, int filmId);
+    boolean rate(int filmId, int starType);
 }

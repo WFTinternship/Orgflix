@@ -16,7 +16,7 @@ public interface CastDAO {
      * @param cast the actor object to be added
      * @return true if actor is added, otherwise false
      */
-    boolean addCast(Cast cast);
+    boolean add(Cast cast);
 
     /**
      * Add an association of actor with film in DB
@@ -25,7 +25,7 @@ public interface CastDAO {
      * @param filmId the id of film which will be associated with provided cast
      * @return true if the new association of cast to film was successful, otherwise false
      */
-    boolean addCastToFilm(Cast cast, int filmId);
+    boolean addToFilm(Cast cast, int filmId);
 
     // READ
 
@@ -34,7 +34,7 @@ public interface CastDAO {
      *
      * @return List of all casts currently in DB
      */
-    List<Cast> listCast();
+    List<Cast> getAll();
 
     /**
      * List all the casts assigned to the film with provided id
@@ -42,14 +42,14 @@ public interface CastDAO {
      * @param filmId the id
      * @return List of all casts assigned to the specific film
      */
-    List<Cast> getCastsByFilm(int filmId);
+    List<Cast> getByFilm(int filmId);
 
     /**
      * Return Cast object with corresponding Id
      * @param castId the id of the actor in DB
      * @return the Cast object
      */
-    Cast getCastById(int castId);
+    Cast getById(int castId);
 
     // UPDATE
 
@@ -59,7 +59,7 @@ public interface CastDAO {
      * @param cast the actor which fields will be updated in DB
      * @return true if the update was successful, otherwise false
      */
-    boolean editCast(Cast cast);
+    boolean edit(Cast cast);
 
     // DELETE
 
@@ -81,7 +81,7 @@ public interface CastDAO {
      * @return true if actor with the given ID is present in the cast list of the
      * given film, false otherwise
      */
-    boolean isStarringIn(int actorId, int filmId);
+    boolean isRelatedToFilm(int actorId, int filmId);
 
     /**
      * Check if the given cast is present in the DB

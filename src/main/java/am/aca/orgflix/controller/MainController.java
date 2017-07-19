@@ -34,9 +34,9 @@ public class MainController extends MVController {
                 User selUser = userService.getById(userId);
                 user = selUser.getNick() + " (" + selUser.getEmail() + ")";
             }
-            modelAndView.addObject("films", filmService.getFilmsList(page * 12, 12));
-            modelAndView.addObject("numOfPages", filmService.totalNumberOfFilms() / 12);
-            modelAndView.addObject("ratings", filmService.getAllRatings(page));
+            modelAndView.addObject("films", filmService.getAll(page * 12, 12));
+            modelAndView.addObject("numOfPages", filmService.getTotalNumber() / 12);
+            modelAndView.addObject("ratings", filmService.getAllRatings(page, 12));
             modelAndView.addObject("currPage", page);
             modelAndView.addObject("page", "index");
         } catch (RuntimeException e) {

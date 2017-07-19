@@ -41,13 +41,13 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see FilmService#addFilm(Film)
+     * @see FilmService#add(Film)
      */
     @Test
     public void addFilm_ValidInput_Success() {
         film = new Film("In Bruges", 2008);
 
-        boolean status = filmService.addFilm(film);
+        boolean status = filmService.add(film);
         Assert.assertTrue(status);
 
         status = film.getId() > 0;
@@ -55,172 +55,172 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
 
         film.addGeners(Genre.ACTION);
 
-        status = filmService.addFilm(film);
+        status = filmService.add(film);
         Assert.assertTrue(status);
 
-        Film actualFilm = filmService.getFilmsByGenre(Genre.ACTION).get(0);
+        Film actualFilm = filmService.getByGenre(Genre.ACTION).get(0);
         Assert.assertEquals(film, actualFilm);
 
         cast = new Cast("Ralph Fiennes");
         film.addCast(cast);
-        castService.addCast(cast);
-        status = filmService.addFilm(film);
+        castService.add(cast);
+        status = filmService.add(film);
         Assert.assertTrue(status);
 
-        actualFilm = filmService.getFilmsByCast(cast.getId()).get(0);
+        actualFilm = filmService.getByCast(cast.getId()).get(0);
         Assert.assertEquals(film, actualFilm);
     }
 
     /**
-     * @see FilmService#addFilm(Film)
+     * @see FilmService#add(Film)
      */
     @Test(expected = ServiceException.class)
     public void addFilm_NameNull_Fail() {
         film = new Film(null, 2008);
 
-        filmService.addFilm(film);
+        filmService.add(film);
     }
 
     /**
-     * @see FilmService#addFilm(Film)
+     * @see FilmService#add(Film)
      */
     @Test(expected = ServiceException.class)
     public void addFilm_NameEmpty_Fail() {
         film = new Film(null, 2066);
-        filmService.addFilm(film);
+        filmService.add(film);
     }
 
     /**
-     * @see FilmService#addFilm(Film)
+     * @see FilmService#add(Film)
      */
-    @Test (expected = ServiceException.class)
+    @Test(expected = ServiceException.class)
     public void addFilm_InvalidYear() {
         film = new Film("In Bruges", 456);
-        filmService.addFilm(film);
+        filmService.add(film);
     }
 
     /**
-     * @see FilmService#getFilmById(int)
+     * @see FilmService#getById(int)
      */
     @Test
     public void getFilmById_ValidId_Success() {
         film = new Film("In Bruges", 2008);
-        filmService.addFilm(film);
+        filmService.add(film);
 
         int id = film.getId();
 
-        Film actualFilm = filmService.getFilmById(id);
+        Film actualFilm = filmService.getById(id);
         Assert.assertEquals(film, actualFilm);
 
         film.setTitle("Vicky Christina Barcelona");
-        filmService.addFilm(film);
+        filmService.add(film);
 
-        actualFilm = filmService.getFilmById(id);
+        actualFilm = filmService.getById(id);
         Assert.assertEquals("In Bruges", actualFilm.getTitle());
 
-        actualFilm = filmService.getFilmById(film.getId());
+        actualFilm = filmService.getById(film.getId());
         Assert.assertEquals(film, actualFilm);
     }
 
     /**
-     * @see FilmService#getFilmById(int)
+     * @see FilmService#getById(int)
      */
     @Test
     public void getFilmById_InvalidId_Fail() {
-        Film actualFilm = filmService.getFilmById(-1);
+        Film actualFilm = filmService.getById(-1);
 
         Assert.assertEquals(null, actualFilm);
     }
 
     /**
-     * @see FilmService#getFilmsList(int, int)
+     * @see FilmService#getAll(int, int)
      */
     @Test
     public void getFilmsList_ValidPagination_Success() {
         Film film = new Film("Forrest Gump", 1990);
-        filmService.addFilm(film);
+        filmService.add(film);
 
-        List<Film> actualFilms = filmService.getFilmsList(0, 12);
+        List<Film> actualFilms = filmService.getAll(0, 12);
         Assert.assertEquals(1, actualFilms.size());
         Assert.assertEquals(film, actualFilms.get(0));
 
         film = new Film("In Bruges", 2008);
         for (int i = 0; i < 19; i++) {
-            filmService.addFilm(film);
+            filmService.add(film);
         }
 
-        actualFilms = filmService.getFilmsList(0, 12);
+        actualFilms = filmService.getAll(0, 12);
         Assert.assertEquals(12, actualFilms.size());
 
-        actualFilms = filmService.getFilmsList(12, 12);
+        actualFilms = filmService.getAll(12, 12);
         Assert.assertEquals(20 - 12, actualFilms.size());
 
-        actualFilms = filmService.getFilmsList(24, 12);
+        actualFilms = filmService.getAll(24, 12);
         Assert.assertEquals(0, actualFilms.size());
     }
 
     /**
-     * @see FilmService#getFilmsList(int, int)
+     * @see FilmService#getAll(int, int)
      */
     @Test
     public void getFilmsList_Empty() {
-        List<Film> actualFilms = filmService.getFilmsList(0, 12);
+        List<Film> actualFilms = filmService.getAll(0, 12);
         Assert.assertTrue(actualFilms.isEmpty());
     }
 
     /**
-     * @see FilmService#getFilmsByCast(int)
+     * @see FilmService#getByCast(int)
      */
     @Test
     public void getFilmsByCast_Success() {
         cast = new Cast("Collin Farrell");
-        castService.addCast(cast);
+        castService.add(cast);
 
         film = new Film("In Bruges", 2008);
-        filmService.addFilm(film);
+        filmService.add(film);
 
-        castService.addCastToFilm(cast, film.getId());
+        castService.addToFilm(cast, film.getId());
 
-        List<Film> actualFilms = filmService.getFilmsByCast(cast.getId());
+        List<Film> actualFilms = filmService.getByCast(cast.getId());
         Assert.assertEquals(film, actualFilms.get(0));
     }
 
     /**
-     * @see FilmService#getFilmsByCast(int)
+     * @see FilmService#getByCast(int)
      */
     @Test
     public void getFilmsByCast_Empty() {
-        int size = filmService.getFilmsByCast(0).size();
+        int size = filmService.getByCast(0).size();
         Assert.assertEquals(0, size);
     }
 
     /**
-     * @see FilmService#getFilmsByGenre(Genre)
+     * @see FilmService#getByGenre(Genre)
      */
     @Test
     public void getFilmsByGenre_ValidGenre_Success() {
         film = new Film("Fury", 2014);
         film.addGeners(Genre.WAR);
-        filmService.addFilm(film);
+        filmService.add(film);
 
         film = new Film("Schindler's List", 1993);
         film.addGeners(Genre.WAR);
-        filmService.addFilm(film);
+        filmService.add(film);
 
         film = new Film("LION", 2016);
         film.addGeners(Genre.BIOGRAPHY);
-        filmService.addFilm(film);
+        filmService.add(film);
 
-        List<Film> actualFilms = filmService.getFilmsByGenre(Genre.WAR);
+        List<Film> actualFilms = filmService.getByGenre(Genre.WAR);
         Assert.assertEquals(2, actualFilms.size());
     }
 
     /**
-     * @see FilmService#getFilmsByGenre(Genre)
+     * @see FilmService#getByGenre(Genre)
      */
     @Test
     public void getFilmsByGenre_Empty() {
-        List<Film> actualFilms = filmService.getFilmsByGenre(Genre.WAR);
+        List<Film> actualFilms = filmService.getByGenre(Genre.WAR);
         Assert.assertTrue(actualFilms.isEmpty());
     }
 
@@ -232,20 +232,20 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
         film = new Film("Fury", 2014);
         film.addGeners(Genre.WAR);
         film.setRate_4star(1);
-        filmService.addFilm(film);
+        filmService.add(film);
 
         double rating = filmService.getRating(film.getId());
         Assert.assertEquals(4.0, rating, 0.01);
 
-        filmService.rateFilm(film.getId(), 5);
+        filmService.rate(film.getId(), 5);
 
         rating = filmService.getRating(film.getId());
         Assert.assertEquals(4.5, rating, 0.01);
 
-        filmService.rateFilm(film.getId(), 5);
-        filmService.rateFilm(film.getId(), 5);
-        filmService.rateFilm(film.getId(), 5);
-        filmService.rateFilm(film.getId(), 5);
+        filmService.rate(film.getId(), 5);
+        filmService.rate(film.getId(), 5);
+        filmService.rate(film.getId(), 5);
+        filmService.rate(film.getId(), 5);
 
         rating = filmService.getRating(film.getId());
         Assert.assertEquals(4.8, rating, 0.1);
@@ -258,188 +258,173 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
     public void getRating_NaN_Success() {
         film = new Film("Fury", 2014);
         film.addGeners(Genre.WAR);
-        filmService.addFilm(film);
+        filmService.add(film);
 
         double rating = filmService.getRating(film.getId());
         Assert.assertEquals(0, rating, 0.01);
     }
 
     /**
-     * @see FilmService#getAllRatings(int)
+     * @see FilmService#getAllRatings(int, int)
      */
     @Test
     public void getAllRatings_CorrectSize_Success() {
         Film film1 = new Film("Film 1", 1990);
         Film film2 = new Film("Film 2", 1990);
-        filmService.addFilm(film1);
-        filmService.addFilm(film2);
-        Assert.assertEquals(2, filmService.getAllRatings(0).length);
+        filmService.add(film1);
+        filmService.add(film2);
+        Assert.assertEquals(2, filmService.getAllRatings(0, 12).length);
     }
 
     /**
-     * @see FilmService#getAllRatings(int)
+     * @see FilmService#getAllRatings(int, int)
      */
     @Test
     public void getAllRatings_CorrectAverages_Success() {
         Film film1 = new Film("Film 1", 1990);
         Film film2 = new Film("Film 2", 1990);
-        filmService.addFilm(film1);
-        filmService.rateFilm(film1.getId(), 3);
-        filmService.rateFilm(film1.getId(), 4);
-        filmService.addFilm(film2);
-        filmService.rateFilm(film2.getId(), 5);
-        filmService.rateFilm(film2.getId(), 1);
-        Assert.assertEquals("3.5", filmService.getAllRatings(0)[0]);
-        Assert.assertEquals("3.0", filmService.getAllRatings(0)[1]);
+        filmService.add(film1);
+        filmService.rate(film1.getId(), 3);
+        filmService.rate(film1.getId(), 4);
+        filmService.add(film2);
+        filmService.rate(film2.getId(), 5);
+        filmService.rate(film2.getId(), 1);
+        Assert.assertEquals("3.5", filmService.getAllRatings(0, 12)[0]);
+        Assert.assertEquals("3.0", filmService.getAllRatings(0, 12)[1]);
     }
 
     /**
-     * @see FilmService#totalNumberOfFilms()
+     * @see FilmService#getTotalNumber()
      */
     @Test
     public void totalNumber_Success() {
         film = new Film("In Bruges", 2008);
         for (int i = 0; i < 6; i++) {
-            filmService.addFilm(film);
+            filmService.add(film);
         }
 
-        int size = filmService.totalNumberOfFilms();
+        int size = filmService.getTotalNumber();
         Assert.assertEquals(6, size);
     }
 
     /**
-     * @see FilmService#totalNumberOfFilms()
+     * @see FilmService#getTotalNumber()
      */
     @Test
     public void totalNumber_Empty() {
-        int size = filmService.totalNumberOfFilms();
+        int size = filmService.getTotalNumber();
         Assert.assertEquals(0, size);
     }
 
     @Test
     public void editFilm_Success() {
         film = new Film("The Departed", 2004);
-        filmService.addFilm(film);
+        filmService.add(film);
         film.setHasOscar(true);
 
-        boolean status = filmService.editFilm(film);
+        boolean status = filmService.edit(film);
         Assert.assertTrue(status);
 
-        int size = filmService.totalNumberOfFilms();
+        int size = filmService.getTotalNumber();
         Assert.assertEquals(1, size);
     }
 
     /**
-     * @see FilmService#editFilm(Film)
+     * @see FilmService#edit(Film)
      */
     @Test
     public void editFilm_ValidFilm_Success() {
         film = new Film("The Departed", 2004);
-        filmService.addFilm(film);
+        filmService.add(film);
         film.setHasOscar(true);
-        filmService.editFilm(film);
+        filmService.edit(film);
 
-        int size = filmService.totalNumberOfFilms();
+        int size = filmService.getTotalNumber();
         Assert.assertEquals(1, size);
 
-        Film actualFilm = filmService.getFilmsList(0, 12).get(0);
+        Film actualFilm = filmService.getAll(0, 12).get(0);
         Assert.assertEquals(film, actualFilm);
     }
 
     /**
-     * @see FilmService#editFilm(Film)
+     * @see FilmService#edit(Film)
      */
     @Test
     public void editFilm_InvalidFilm_Success() {
         film = new Film("The Departed", 2004);
         film.setHasOscar(true);
 
-        boolean status = filmService.editFilm(film);
+        boolean status = filmService.edit(film);
         Assert.assertFalse(status);
     }
 
     /**
-     * @see FilmService#editFilm(Film)
+     * @see FilmService#edit(Film)
      */
     @Test(expected = ServiceException.class)
     public void editFilm_NameNull_Fail() {
         film = new Film("The Departed", 2004);
-        filmService.addFilm(film);
+        filmService.add(film);
 
         film.setTitle(null);
-        filmService.editFilm(film);
+        filmService.edit(film);
     }
 
     /**
-     * @see FilmService#editFilm(Film)
+     * @see FilmService#edit(Film)
      */
     @Test(expected = ServiceException.class)
     public void editFilm_NameEmpty_Fail() {
         film = new Film("The Departed", 2004);
-        filmService.addFilm(film);
+        filmService.add(film);
 
         film.setTitle("");
-        filmService.editFilm(film);
+        filmService.edit(film);
     }
 
     /**
-     * @see FilmService#editFilm(Film)
+     * @see FilmService#edit(Film)
      */
     @Test(expected = ServiceException.class)
     public void editFilm_InvalidYear_Fail() {
         film = new Film("The Departed", 2004);
-        filmService.addFilm(film);
+        filmService.add(film);
 
         film.setProdYear(-85);
-        filmService.editFilm(film);
+        filmService.edit(film);
     }
 
     /**
-     * @see FilmService#rateFilm(int, int)
+     * @see FilmService#rate(int, int)
      */
     @Test
     public void rateFilm_ValidRating_Success() {
         film = new Film("The Departed", 2004);
-        filmService.addFilm(film);
+        filmService.add(film);
 
-        boolean status = filmService.rateFilm(film.getId(), 5);
+        boolean status = filmService.rate(film.getId(), 5);
         Assert.assertTrue(status);
 
-        status = filmService.rateFilm(film.getId(), 5);
+        status = filmService.rate(film.getId(), 5);
         Assert.assertTrue(status);
 
-        int size = filmService.getFilmById(film.getId()).getRate_5star();
+        int size = filmService.getById(film.getId()).getRate_5star();
         Assert.assertEquals(2, size);
 
-        status = filmService.rateFilm(0, 5);
+        status = filmService.rate(0, 5);
         Assert.assertFalse(status);
     }
 
     /**
-     * @see FilmService#rateFilm(int, int)
+     * @see FilmService#rate(int, int)
      */
     @Test(expected = ServiceException.class)
     public void rateFilm_InvalidRating_Fail() {
         film = new Film("The Departed", 2004);
-        filmService.addFilm(film);
+        filmService.add(film);
 
-        boolean status = filmService.rateFilm(film.getId(), 9);
+        boolean status = filmService.rate(film.getId(), 9);
         Assert.assertFalse(status);
-    }
-
-    /**
-     * @see FilmService#addGenreToFilm(Genre, int)
-     */
-    @Test
-    public void addGenreToFilm_ValidInput_Success() {
-        film = new Film("La La Land", 2016);
-        filmService.addFilm(film);
-
-        boolean status = filmService.addGenreToFilm(Genre.MUSICAL, film.getId());
-        Assert.assertTrue(status);
-
-        Film actualFilm = filmService.getFilmsByGenre(Genre.MUSICAL).get(0);
-        Assert.assertEquals(film, actualFilm);
     }
 
     /**
@@ -453,17 +438,17 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
         film.setDirector("James Gray");
         film.addGeners(Genre.ADVENTURE);
         film.addGeners(Genre.BIOGRAPHY);
-        filmService.addFilm(film);
+        filmService.add(film);
         cast = new Cast("Charlie Hunnam");
-        castService.addCast(cast);
-        castService.addCastToFilm(cast, film.getId());
+        castService.add(cast);
+        castService.addToFilm(cast, film.getId());
 
         film = new Film();
         film.setTitle("City of God");
         film.setProdYear(2002);
         film.setDirector("Fernando Meirelles");
         film.addGeners(Genre.DRAMA);
-        filmService.addFilm(film);
+        filmService.add(film);
 
         film = new Film();
         film.setTitle("7");
@@ -472,10 +457,10 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
         film.addGeners(Genre.DRAMA);
         film.addGeners(Genre.CRIME);
         film.addGeners(Genre.THRILLER);
-        filmService.addFilm(film);
+        filmService.add(film);
         cast = new Cast("Brad Pitt");
-        castService.addCast(cast);
-        castService.addCastToFilm(cast, film.getId());
+        castService.add(cast);
+        castService.addToFilm(cast, film.getId());
 
         film = new Film();
         film.setTitle("Fight Club");
@@ -483,8 +468,8 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
         film.setDirector("David Fincher");
         film.addGeners(Genre.THRILLER);
         film.addGeners(Genre.MYSTERY);
-        filmService.addFilm(film);
-        castService.addCastToFilm(cast, film.getId());
+        filmService.add(film);
+        castService.addToFilm(cast, film.getId());
 
         film = new Film();
         film.setTitle("Crash");
@@ -494,10 +479,10 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
         film.addGeners(Genre.CRIME);
         film.addGeners(Genre.DRAMA);
         film.addGeners(Genre.THRILLER);
-        filmService.addFilm(film);
+        filmService.add(film);
         cast = new Cast("Sandra Bullock", true);
-        castService.addCast(cast);
-        castService.addCastToFilm(cast, film.getId());
+        castService.add(cast);
+        castService.addToFilm(cast, film.getId());
 
         film = new Film();
         film.setTitle("Gone Girl");
@@ -506,10 +491,10 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
         film.addGeners(Genre.CRIME);
         film.addGeners(Genre.DRAMA);
         film.addGeners(Genre.MYSTERY);
-        filmService.addFilm(film);
+        filmService.add(film);
         cast = new Cast("Rosamund Pike");
-        castService.addCast(cast);
-        castService.addCastToFilm(cast, film.getId());
+        castService.add(cast);
+        castService.addToFilm(cast, film.getId());
 
         //filters by nothing
         List<Film> filteredFilms = filmService.getFilteredFilms(null, 0, 0, false, null, null, 0);
@@ -551,7 +536,7 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
     @Test
     public void searchTitle_NotExisting_Empty() {
         film = new Film("In Bruges", 2008);
-        filmService.addFilm(film);
+        filmService.add(film);
 
         boolean status = filmService.getFilteredFilms("", 3000, 3000, false, null, null, 0).isEmpty();
         Assert.assertTrue(status);

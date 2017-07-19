@@ -18,7 +18,7 @@ public class ActorDataController extends DataController {
     @RequestMapping("/getList")
     public ResponseEntity getActorsList() {
         try {
-            List<Cast> actorsList = castService.listCasts();
+            List<Cast> actorsList = castService.getAll();
             int size = actorsList.size();
             StringBuilder sb = new StringBuilder();
             sb.append("[");

@@ -1,5 +1,6 @@
 package am.aca.orgflix.dao;
 
+import am.aca.orgflix.entity.Cast;
 import am.aca.orgflix.entity.Film;
 import am.aca.orgflix.entity.Genre;
 
@@ -18,7 +19,7 @@ public interface FilmDAO {
      * @param film the film object to be added
      * @return true if the film was added, otherwise false
      */
-    boolean addFilm(Film film);
+    boolean add(Film film);
 
     /**
      * Add an association of genre with film in DB
@@ -30,13 +31,22 @@ public interface FilmDAO {
     boolean addGenreToFilm(Genre genre, int filmId);
 
     /**
+     * Add an association of actor with film in DB
+     *
+     * @param cast   the cast with which the provided film will be associated
+     * @param filmId the id of film which will be associated with provided cast
+     * @return true if the new association of cast to film was successful, otherwise false
+     */
+    boolean addCastToFilm(Cast cast, int filmId);
+
+    /**
      * Increment by one the selected scale (from 1 to 5) of the film provided ID
      *
      * @param filmId   the id of the film subject to be rated
      * @param starType the selected scale of rates to be incremented by one
      * @return true if the rating was successful, otherwise false
      */
-    boolean rateFilm(int filmId, int starType);
+    boolean rate(int filmId, int starType);
 
     // READ
 
@@ -46,7 +56,7 @@ public interface FilmDAO {
      * @param id the id of the requested film
      * @return the film matching the provided id
      */
-    Film getFilmById(int id);
+    Film getById(int id);
 
     /**
      * Get one page of lists of films from DB, each page contains 12 films
@@ -55,7 +65,7 @@ public interface FilmDAO {
      * @param pageSize maximum number of films per page
      * @return a list of films for the requested page
      */
-    List<Film> getFilmsList(int startIndex, int pageSize);
+    List<Film> getAll(int startIndex, int pageSize);
 
     /**
      * Return the list of all films associated with provided genre
@@ -63,7 +73,7 @@ public interface FilmDAO {
      * @param genre the genre object which films should be returned
      * @return A list of all films associated to the provided genre
      */
-    List<Film> getFilmsByGenre(Genre genre);
+    List<Film> getByGenre(Genre genre);
 
     /**
      * Return the list of all films associated with provided actors id
@@ -71,7 +81,7 @@ public interface FilmDAO {
      * @param actorId the id of actor who's films should be returned
      * @return A list of all films associated to the actor with provided id
      */
-    List<Film> getFilmsByCast(int actorId);
+    List<Film> getByCast(int actorId);
 
     /**
      * Get the overall current rating of the provided film, each scale of 1 to 5 has appropriate
@@ -80,22 +90,14 @@ public interface FilmDAO {
      * @param filmId the id of film which rate is requested
      * @return the current overall rate of the film
      */
-    double getRating(int filmId);
-
-    /**
-     * Retrieves the number of times the desired film was rated 1 star
-     *
-     * @param filmId the ID of the desired film
-     * @return the number of times the film with given ID was rated 1 star
-     */
-    int getRating(int filmId, int starType);
+    int[] getRating(int filmId);
 
     /**
      * Provide the current total number of films in DB
      *
      * @return the current total number of films in DB
      */
-    int totalNumberOfFilms();
+    int getTotalNumber();
 
     /**
      * Provide films filtered by user's desired parameters
@@ -119,7 +121,7 @@ public interface FilmDAO {
      * @param film the film which fields will be updated in DB
      * @return true if the update was successful, otherwise false
      */
-    boolean editFilm(Film film);
+    boolean edit(Film film);
 
     // DELETE
 
@@ -129,7 +131,7 @@ public interface FilmDAO {
      * @param film the film which relations with actors are being removed
      * @return true if the relation was removed, otherwise false
      */
-    boolean resetRelationCasts(Film film);
+    boolean removeCasts(Film film);
 
     /**
      * Remove the all relations of provided film with any genre
@@ -137,7 +139,7 @@ public interface FilmDAO {
      * @param film the film which relations with genres are being removed
      * @return true if the relation was removed, otherwise false
      */
-    boolean resetRelationGenres(Film film);
+    boolean removeGenres(Film film);
 
     /**
      * Remove the provided film from DB

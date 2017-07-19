@@ -137,12 +137,27 @@ public class JdbcUserDAO extends NamedParameterJdbcDaoSupport implements UserDAO
         return remove(user.getId());
     }
 
+    /**
+     * @see UserDAO#reset(int)
+     */
+    @Override
+    public boolean reset(int id) {
+        final String query = "UPDATE USERS SET NICK = '', USER_NAME = '', USER_PASS = '', EMAIL = '' WHERE ID = ?";
+        return getJdbcTemplate().update(query, id) == 1;
+    }
+
+    /**
+     * @see UserDAO#emailIsUsed(String)
+     */
     @Override
     public boolean emailIsUsed(String email) {
         final String query = "SELECT COUNT(*) FROM USERS WHERE EMAIL = ?";
         return getJdbcTemplate().queryForObject(query, new Object[]{email}, Integer.class) == 1;
     }
 
+    /**
+     * @see UserDAO#nickIsUsed(String)
+     */
     @Override
     public boolean nickIsUsed(String nick) {
         final String query = "SELECT COUNT(*) FROM USERS WHERE NICK = ?";

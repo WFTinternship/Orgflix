@@ -106,6 +106,14 @@ public interface UserDAO {
     boolean remove(User user);
 
     /**
+     * Dumps the given user's information (everything besides ID)
+     *
+     * @param id the ID of the given user
+     * @return true if user info is successfully dumped, false otherwise
+     */
+    boolean reset(int id);
+
+    /**
      * Indicates the existence of a user with the given email
      *
      * @param email the email of the desired user

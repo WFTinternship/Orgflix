@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class UserServiceIntegrationTest extends BaseIntegrationTest {
 
-    private final User standardUser = new User("dave", "Gagik Petrosyan", "davit.abovyan@gmail.com", "passssss");
+    private final User standardUser = new User("scarface", "Tony Montana", "scarface@miami.com", "elvira");
 
     @Autowired
     private UserService userService;
@@ -42,8 +42,8 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
      */
     @Test
     public void addUser_Success() {
-        boolean status = userService.add(standardUser) > 0;
-        Assert.assertTrue(status);
+        int id = userService.add(standardUser);
+        Assert.assertTrue(id > 0);
     }
 
     /**
@@ -51,9 +51,9 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
      */
     @Test
     public void addUser_EmptyUserName_Success() {
-        user = new User("gago", "", "gagik1@gmail.com", "pass");
-        boolean status = userService.add(user) > 0;
-        Assert.assertTrue(status);
+        user = new User("scarface", "", "scarface@miami.com", "elvira");
+        int id = userService.add(user);
+        Assert.assertTrue(id > 0);
     }
 
     /**
@@ -61,7 +61,7 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
      */
     @Test(expected = ServiceException.class)
     public void addUser_EmptyNick_Fail() {
-        userService.add(new User("", "Gagik Petrosyan", "gagik2@gmail.com", "pass"));
+        userService.add(new User("", "Tony Montana", "scarface@miami.com", "elvira"));
     }
 
     /**
@@ -69,7 +69,7 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
      */
     @Test(expected = ServiceException.class)
     public void addUser_EmptyEmail_Fail() {
-        userService.add(new User("gago", "Gagik Petrosyan", "", "pass"));
+        userService.add(new User("scarface", "Tony Montana", "", "elvira"));
     }
 
     /**
@@ -77,7 +77,7 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
      */
     @Test(expected = ServiceException.class)
     public void addUser_EmptyPass_Fail() {
-        userService.add(new User("gago", "Gagik Petrosyan", "gagik3@gmail.com", ""));
+        userService.add(new User("scarface", "Tony Montana", "scarface@gmail.com", ""));
     }
 
     /**
@@ -85,7 +85,7 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
      */
     @Test(expected = ServiceException.class)
     public void addUser_NullNick_Fail() {
-        userService.add(new User(null, "Gagik Petrosyan", "gagik2@gmail.com", "pass"));
+        userService.add(new User(null, "Tony Montana", "scarface@miami.com", "elvira"));
     }
 
     /**
@@ -93,7 +93,7 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
      */
     @Test(expected = ServiceException.class)
     public void addUser_NullEmail_Fail() {
-        userService.add(new User("gago", "Gagik Petrosyan", null, "pass"));
+        userService.add(new User("scarface", "Tony Montana", null, "elvira"));
     }
 
     /**
@@ -101,7 +101,7 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
      */
     @Test(expected = ServiceException.class)
     public void addUser_NullPass_Fail() {
-        userService.add(new User("gago", "Gagik Petrosyan", "gagik3@gmail.com", null));
+        userService.add(new User("scarface", "Tony Montana", "scarface@miami.com", null));
     }
 
     /**
@@ -111,7 +111,37 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
     public void addUser_EmailAlreadyExists_Fail() {
         userService.add(standardUser);
 
-        userService.add(new User("armen", "Armen Hakobyan", "davit.abovyan@gmail.com", "pass1"));
+        userService.add(new User("smurf", "Manny Ribera", "scarface@miami.com", "elvira"));
+    }
+
+    /**
+     * @see UserServiceImpl#add(am.aca.orgflix.entity.User)
+     */
+    @Test(expected = ServiceException.class)
+    public void addUser_BadEmailFormat_Fail() {
+        userService.add(standardUser);
+
+        userService.add(new User("scarface", "Tony Montana", "someFakeEmail", "elvira"));
+    }
+
+    /**
+     * @see UserServiceImpl#add(am.aca.orgflix.entity.User)
+     */
+    @Test(expected = ServiceException.class)
+    public void addUser_ShortPassword_Fail() {
+        userService.add(standardUser);
+
+        userService.add(new User("scarface", "Tony Montana", "scarface@miami.com", "1"));
+    }
+
+    /**
+     * @see UserServiceImpl#add(am.aca.orgflix.entity.User)
+     */
+    @Test(expected = ServiceException.class)
+    public void addUser_SpaceInPassword_Fail() {
+        userService.add(standardUser);
+
+        userService.add(new User("scarface", "Tony Montana", "scarface@miami.com", "elvira <3"));
     }
 
     /**
@@ -120,10 +150,9 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
     @Test
     public void getUser_ById_Success() {
         int id = userService.add(standardUser);
-        User gotUser = userService.getById(id);
+        User actualUser = userService.getById(id);
 
-        boolean status = standardUser.equals(gotUser);
-        Assert.assertTrue(status);
+        Assert.assertEquals(standardUser, actualUser);
     }
 
     /**
@@ -132,32 +161,32 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
     @Test
     public void getUser_ByWrongId_Fail() {
         userService.add(standardUser);
-        int id = userService.add(new User("gago", "Gagik Petrosyan", "davit.abovyan1@gmail.com", "pass"));
+        int id = userService.add(new User("scarface1", "Tony Montana", "scarface1@miami.com", "elvira"));
 
-        boolean status = standardUser.equals(userService.getById(id));
-        Assert.assertFalse(status);
+        User actualUser = userService.getById(id);
+        Assert.assertNotEquals(standardUser, actualUser);
     }
 
     /**
-     * @see UserServiceImpl#getByEmail(java.lang.String)
+     * @see UserServiceImpl#getByEmail(String)
      */
     @Test
     public void getUser_ByEmail_Success() {
         userService.add(standardUser);
 
-        boolean status = standardUser.equals(userService.getByEmail("davit.abovyan@gmail.com"));
-        Assert.assertTrue(status);
+        User actualUser = userService.getByEmail("scarface@miami.com");
+        Assert.assertEquals(standardUser, actualUser);
     }
 
     /**
-     * @see UserServiceImpl#getByEmail(java.lang.String)
+     * @see UserServiceImpl#getByEmail(String)
      */
-    @Test(expected = RuntimeException.class)
+    @Test
     public void getUser_ByWrongEmail_Fail() {
         userService.add(standardUser);
 
-        boolean status = user.equals(userService.getByEmail("davit.abovyan1@gmail.com"));
-        Assert.assertFalse(status);
+        User actualUser = userService.getByEmail("scarface@gmail.com");
+        Assert.assertNotEquals(standardUser, actualUser);
     }
 
     /**
@@ -167,7 +196,7 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
     public void getByNick_Success() {
         userService.add(standardUser);
 
-        User actualUser = userService.getByNick("dave");
+        User actualUser = userService.getByNick("scarface");
         Assert.assertEquals(standardUser, actualUser);
     }
 
@@ -176,8 +205,8 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
      */
     @Test
     public void getByNick_Empty_Fail() {
-        User actualUser = userService.getByNick("gabo");
-        Assert.assertNull(actualUser);
+        User actualUser = userService.getByNick("smurf");
+        Assert.assertNotEquals(standardUser, actualUser);
     }
 
     /**
@@ -207,11 +236,13 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
      */
     @Test
     public void editUser_Email_Success() {
-        user = new User("gago1", "Gagik Petrosyan", "davit.abovyan@gmail.com", "pass");
+        user = new User("scarface", "Tony Montana", "scarface@miami.com", "elvira");
         userService.add(user);
-        final String newEmail = "gagik@gmail.com";
+        final String newEmail = "scarface@gmail.com";
         user.setEmail(newEmail);
-        userService.edit(user);
+
+        boolean status = userService.edit(user);
+        Assert.assertTrue(status);
 
         String actualEmail = userService.getByEmail(newEmail).getEmail();
         Assert.assertEquals(newEmail, actualEmail);
@@ -222,12 +253,13 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
      */
     @Test
     public void editUser_Nick_Success() {
-        user = new User("gago1", "Gagik Petrosyan", "davit.abovyan@gmail.com", "pass");
+        user = new User("scarface", "Tony Montana", "scarface@miami.com", "elvira");
         int id = userService.add(user);
-
-        final String newNick = "davo";
+        final String newNick = "scarface/";
         user.setNick(newNick);
-        userService.edit(user);
+
+        boolean status = userService.edit(user);
+        Assert.assertTrue(status);
 
         String actualNick = userService.getById(id).getNick();
         Assert.assertEquals(newNick, actualNick);
@@ -239,12 +271,14 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
      */
     @Test
     public void editUser_UserName_Success() {
-        user = new User("gago1", "Gagik Petrosyan", "davit.abovyan@gmail.com", "pass");
+        user = new User("scarface", "Tony Montana", "scarface@miami.com", "elvira");
         int id = userService.add(user);
 
-        final String newUserName = "Davit Abovyan";
+        final String newUserName = "Tony Montana Jr";
         user.setUserName(newUserName);
-        userService.edit(user);
+
+        boolean status = userService.edit(user);
+        Assert.assertTrue(status);
 
         String actualUserName = userService.getById(id).getUserName();
         Assert.assertEquals(newUserName, actualUserName);
@@ -255,12 +289,14 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
      */
     @Test
     public void editUser_Pass_Success() {
-        user = new User("gago1", "Gagik Petrosyan", "davit.abovyan@gmail.com", "pass");
+        user = new User("scarface", "Tony Montana", "scarface@miami.com", "elvira");
         int id = userService.add(user);
 
-        final String newPass = "password";
+        final String newPass = "elvira<3";
         user.setPass(newPass);
-        userService.edit(user);
+
+        boolean status = userService.edit(user);
+        Assert.assertTrue(status);
 
         String actualPass = userService.getById(id).getPass();
         Assert.assertEquals(newPass, actualPass);
@@ -272,10 +308,10 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
     @Test(expected = ServiceException.class)
     public void editUser_EmailNonUnique_Fail() {
         userService.add(standardUser);
-        User otherUser = new User("gago1", "Gagik Petrosyan", "gagik.petrosyan@gmail.com", "pass");
+        User otherUser = new User("manny", "Manny Ribera", "manny@miami.com", "elvira");
 
         userService.add(otherUser);
-        otherUser.setEmail("davit.abovyan@gmail.com");
+        otherUser.setEmail("scarface@miami.com");
 
         userService.edit(otherUser);
     }
@@ -285,7 +321,7 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
      */
     @Test(expected = ServiceException.class)
     public void editUser_EmailNULL_Fail() {
-        user = new User("davit", "Davit Abvoyan", "davit.abovyan@gmail.com", "pass");
+        user = new User("scarface", "Tony Montana", "scarface@miami.com", "elvira");
         userService.add(user);
         user.setEmail(null);
 
@@ -297,7 +333,7 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
      */
     @Test(expected = ServiceException.class)
     public void editUser_NickNULL_Fail() {
-        user = new User("davit", "Davit Abvoyan", "davit.abovyan@gmail.com", "pass");
+        user = new User("scarface", "Tony Montana", "scarface@miami.com", "elvira");
         userService.add(user);
         user.setNick(null);
 
@@ -309,7 +345,7 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
      */
     @Test(expected = ServiceException.class)
     public void editUser_PassNULL_Fail() {
-        user = new User("davit", "Davit Abvoyan", "davit.abovyan@gmail.com", "pass");
+        user = new User("scarface", "Tony Montana", "scarface@miami.com", "elvira");
         userService.add(user);
         user.setPass(null);
 
@@ -321,7 +357,7 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
      */
     @Test(expected = ServiceException.class)
     public void editUser_EmailEmpty_Fail() {
-        user = new User("davit", "Davit Abvoyan", "davit.abovyan@gmail.com", "pass");
+        user = new User("scarface", "Tony Montana", "scarface@miami.com", "elvira");
         userService.add(user);
         user.setEmail("");
 
@@ -333,7 +369,7 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
      */
     @Test(expected = ServiceException.class)
     public void editUser_NickEmpty_Fail() {
-        user = new User("davit", "Davit Abvoyan", "davit.abovyan@gmail.com", "pass");
+        user = new User("scarface", "Tony Montana", "scarface@miami.com", "elvira");
         userService.add(user);
         user.setNick("");
 
@@ -345,7 +381,7 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
      */
     @Test(expected = ServiceException.class)
     public void editUser_PassEmpty_Fail() {
-        user = new User("davit", "Davit Abvoyan", "davit.abovyan@gmail.com", "pass");
+        user = new User("scarface", "Tony Montana", "scarface@miami.com", "elvira");
         userService.add(user);
         user.setPass("");
 

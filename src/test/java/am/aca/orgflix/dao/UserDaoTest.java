@@ -332,4 +332,30 @@ public class UserDaoTest extends BaseIntegrationTest {
         status = jdbcUserDAO.nickIsUsed(standardUser.getNick());
         Assert.assertTrue(status);
     }
+
+    /**
+     * @see UserDAO#reset(int)
+     */
+    @Test
+    public void reset_ValidUser_Success() {
+        int id = jdbcUserDAO.add(standardUser);
+
+        boolean status = jdbcUserDAO.reset(id);
+        Assert.assertTrue(status);
+
+        User actualUser = jdbcUserDAO.getById(id);
+        Assert.assertEquals("", actualUser.getEmail());
+        Assert.assertEquals("", actualUser.getNick());
+        Assert.assertEquals("", actualUser.getPass());
+        Assert.assertEquals("", actualUser.getUserName());
+    }
+
+    /**
+     * @see UserDAO#reset(int)
+     */
+    @Test
+    public void reset_InvalidUser_Fail() {
+        boolean status = jdbcUserDAO.reset(0);
+        Assert.assertFalse(status);
+    }
 }

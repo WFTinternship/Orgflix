@@ -250,33 +250,46 @@ public class UserServiceMockTest extends BaseUnitTest {
         verify(userDaoMock, times(1)).edit(user);
         verify(userDaoMock, times(1)).nickIsUsed(user.getNick());
         verify(userDaoMock, times(1)).emailIsUsed(user.getEmail());
+        verify(userDaoMock, times(1)).reset(user.getId());
     }
 
     /**
      * @see UserServiceImpl#edit(User)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void editUser_InvalidEmail_Fail() {
         user.setEmail("some invalid string");
-        userService.edit(user);
+        try {
+            userService.edit(user);
+        } catch (RuntimeException e) {
+            verify(userDaoMock, times(1)).reset(user.getId());
+        }
     }
 
     /**
      * @see UserServiceImpl#edit(User)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void editUser_EmptyEmail_Fail() {
         user.setEmail("");
-        userService.edit(user);
+        try {
+            userService.edit(user);
+        } catch (RuntimeException e) {
+            verify(userDaoMock, times(1)).reset(user.getId());
+        }
     }
 
     /**
      * @see UserServiceImpl#edit(User)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void editUser_NullEmail_Fail() {
         user.setEmail(null);
-        userService.edit(user);
+        try {
+            userService.edit(user);
+        } catch (RuntimeException e) {
+            verify(userDaoMock, times(1)).reset(user.getId());
+        }
     }
 
     /**
@@ -289,25 +302,34 @@ public class UserServiceMockTest extends BaseUnitTest {
             userService.edit(user);
         } catch (RuntimeException e) {
             verify(userDaoMock, times(1)).emailIsUsed(user.getEmail());
+            verify(userDaoMock, times(1)).reset(user.getId());
         }
     }
 
     /**
      * @see UserServiceImpl#edit(User)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void editUser_EmptyNick_Fail() {
         user.setNick("");
-        userService.edit(user);
+        try {
+            userService.edit(user);
+        } catch (RuntimeException e) {
+            verify(userDaoMock, times(1)).reset(user.getId());
+        }
     }
 
     /**
      * @see UserServiceImpl#edit(User)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void editUser_NullNick_Fail() {
         user.setNick(null);
-        userService.edit(user);
+        try {
+            userService.edit(user);
+        } catch (RuntimeException e) {
+            verify(userDaoMock, times(1)).reset(user.getId());
+        }
     }
 
     /**
@@ -322,33 +344,46 @@ public class UserServiceMockTest extends BaseUnitTest {
         } catch (RuntimeException e) {
             verify(userDaoMock, times(1)).emailIsUsed(user.getEmail());
             verify(userDaoMock, times(1)).nickIsUsed(user.getNick());
+            verify(userDaoMock, times(1)).reset(user.getId());
         }
     }
 
     /**
      * @see UserServiceImpl#edit(User)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void editUser_InvalidPass_Fail() {
         user.setPass("some invalid string");
-        userService.edit(user);
+        try {
+            userService.edit(user);
+        } catch (RuntimeException e) {
+            verify(userDaoMock, times(1)).reset(user.getId());
+        }
     }
 
     /**
      * @see UserServiceImpl#edit(User)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void editUser_EmptyPass_Fail() {
         user.setPass("");
-        userService.edit(user);
+        try {
+            userService.edit(user);
+        } catch (RuntimeException e) {
+            verify(userDaoMock, times(1)).reset(user.getId());
+        }
     }
 
     /**
      * @see UserServiceImpl#edit(User)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void editUser_NullPass_Fail() {
         user.setPass(null);
-        userService.edit(user);
+        try {
+            userService.edit(user);
+        } catch (RuntimeException e) {
+            verify(userDaoMock, times(1)).reset(user.getId());
+        }
     }
 }

@@ -119,6 +119,11 @@ public class UserServiceImpl extends BaseService implements UserService {
      */
     @Override
     public boolean edit(User user) {
+        try {
+            userDao.reset(user.getId());
+        } catch (RuntimeException e) {
+            return false;
+        }
         checkRequiredFields(user.getNick(), user.getEmail(), user.getPass());
         validateEmail(user.getEmail());
         validatePassword(user.getPass());

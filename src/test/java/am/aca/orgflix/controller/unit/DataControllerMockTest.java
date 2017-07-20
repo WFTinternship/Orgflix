@@ -1,10 +1,10 @@
 package am.aca.orgflix.controller.unit;
 
 import am.aca.orgflix.BaseUnitTest;
-import am.aca.orgflix.controller.ActorDataController;
 import am.aca.orgflix.controller.FilmDataController;
-import am.aca.orgflix.entity.Cast;
-import am.aca.orgflix.service.*;
+import am.aca.orgflix.service.FilmService;
+import am.aca.orgflix.service.ListService;
+import am.aca.orgflix.service.ServiceException;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -17,31 +17,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.mockito.Mockito.*;
 
 /**
  * Unit tests for Data Controller
  */
 public class DataControllerMockTest extends BaseUnitTest {
+
     @Autowired
     private FilmDataController filmDataController;
-    @Autowired
-    private ActorDataController actorDataController;
 
-    @Mock
-    private UserService userServiceMock;
-    @Mock
-    private CastService castServiceMock;
     @Mock
     private FilmService filmServiceMock;
     @Mock
     private ListService listServiceMock;
-
-    private Cast cast = new Cast("Thandie Newton");
-    private List<Cast> casts = new ArrayList<>();
 
     /**
      * Configures Mockito
@@ -50,14 +39,8 @@ public class DataControllerMockTest extends BaseUnitTest {
     @SuppressWarnings("Duplicates")
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        ReflectionTestUtils.setField(filmDataController, "userService", userServiceMock);
-        ReflectionTestUtils.setField(filmDataController, "castService", castServiceMock);
         ReflectionTestUtils.setField(filmDataController, "filmService", filmServiceMock);
         ReflectionTestUtils.setField(filmDataController, "listService", listServiceMock);
-        ReflectionTestUtils.setField(actorDataController, "userService", userServiceMock);
-        ReflectionTestUtils.setField(actorDataController, "castService", castServiceMock);
-        ReflectionTestUtils.setField(actorDataController, "filmService", filmServiceMock);
-        ReflectionTestUtils.setField(actorDataController, "listService", listServiceMock);
     }
 
     /**
@@ -65,51 +48,8 @@ public class DataControllerMockTest extends BaseUnitTest {
      */
     @After
     public void tearDown() {
-        verifyNoMoreInteractions(userServiceMock);
-        verifyNoMoreInteractions(castServiceMock);
         verifyNoMoreInteractions(filmServiceMock);
         verifyNoMoreInteractions(listServiceMock);
-    }
-
-    /**
-     * @see ActorDataController#getActorsList()
-     */
-    @Test
-    public void getActorsList_Success() {
-        casts.add(cast);
-        when(castServiceMock.getAll()).thenReturn(casts);
-
-        ResponseEntity actualRE = actorDataController.getActorsList();
-        Assert.assertEquals(new ResponseEntity("[{\"id\":\"0\", \"name\":\"Thandie Newton\", \"oscar\":\"false\"}]", HttpStatus.OK), actualRE);
-
-        verify(castServiceMock, times(1)).getAll();
-    }
-
-    /**
-     * @see ActorDataController#getActorsList()
-     */
-    @Test
-    public void getActorsList_Fail() {
-        casts.add(cast);
-        when(castServiceMock.getAll()).thenThrow(ServiceException.class);
-
-        ResponseEntity actualRE = actorDataController.getActorsList();
-        Assert.assertEquals(new ResponseEntity(HttpStatus.BAD_REQUEST), actualRE);
-
-        verify(castServiceMock, times(1)).getAll();
-    }
-
-    /**
-     * @see ActorDataController#getActorsList()
-     */
-    @Test
-    public void getActorsList_Empty_Success() {
-        when(castServiceMock.getAll()).thenReturn(casts);
-
-        ResponseEntity actualRE = actorDataController.getActorsList();
-        Assert.assertEquals(new ResponseEntity("[]", HttpStatus.OK), actualRE);
-
-        verify(castServiceMock, times(1)).getAll();
     }
 
     /**

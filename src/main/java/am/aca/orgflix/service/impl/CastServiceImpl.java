@@ -4,6 +4,7 @@ import am.aca.orgflix.dao.CastDAO;
 import am.aca.orgflix.dao.FilmDAO;
 import am.aca.orgflix.entity.Cast;
 import am.aca.orgflix.service.CastService;
+import am.aca.orgflix.service.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,6 +46,8 @@ public class CastServiceImpl extends BaseService implements CastService {
         checkRequiredFields(cast.getName());
         boolean result;
         try {
+            if (castDAO.exists(cast.getName()))
+                throw new ServiceException("Actor with the ame name already exists");
             result = castDAO.add(cast);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());

@@ -49,21 +49,21 @@ public class MainController {
         ModelAndView modelAndView = new ModelAndView("index");
         modelAndView.addObject("films", filmService.getAll(0, 12));
         modelAndView.addObject("ratings", filmService.getAllRatings(0, 12));
-        modelAndView.addObject("currPage", 0);
+        modelAndView.addObject("currentPage", 0);
         modelAndView.addObject("page", "index");
         modelAndView.addObject("numOfPages", filmService.getTotalNumber()/12);
         return modelAndView;
     }
 
     @RequestMapping("/index")
-    public ModelAndView indexPage(@RequestParam("currPage") int page) {
+    public ModelAndView indexPage(@RequestParam("currentPage") int page) {
         ModelAndView modelAndView;
         try {
             modelAndView = new ModelAndView("index");
             modelAndView.addObject("films", filmService.getAll(page * 12, 12));
             modelAndView.addObject("numOfPages", filmService.getTotalNumber() / 12);
             modelAndView.addObject("ratings", filmService.getAllRatings(page, 12));
-            modelAndView.addObject("currPage", page);
+            modelAndView.addObject("currentPage", page);
             modelAndView.addObject("page", "index");
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
@@ -74,16 +74,16 @@ public class MainController {
 
     @RequestMapping("/watch_list")
     public ModelAndView watchList(HttpSession session,
-                                  @RequestParam("currPage") int currPage) {
+                                  @RequestParam("currentPage") int currentPage) {
 
         ModelAndView modelAndView;
         try {
             int userId = (int) session.getAttribute("userId");
             if (userId != -1) {
                 modelAndView = new ModelAndView("index");
-                modelAndView.addObject("films", listService.showOwnWatched(userId, currPage * 12));
+                modelAndView.addObject("films", listService.showOwnWatched(userId, currentPage * 12));
                 modelAndView.addObject("numOfPages", listService.totalNumberOfFilmsInAList(userId, true) / 12);
-                modelAndView.addObject("currPage", currPage);
+                modelAndView.addObject("currentPage", currentPage);
                 modelAndView.addObject("page", "watch_list");
             }else{
                 modelAndView = new ModelAndView("error","message","You are not logged in, please first login");
@@ -97,16 +97,16 @@ public class MainController {
 
     @RequestMapping("/wish_list")
     public ModelAndView wishList(HttpSession session,
-                                 @RequestParam("currPage") int currPage) {
+                                 @RequestParam("currentPage") int currentPage) {
 
         ModelAndView modelAndView = new ModelAndView("index");
 
         try {
             int userId = (int) session.getAttribute("userId");
             if (userId != -1) {
-                modelAndView.addObject("films", listService.showOwnPlanned(userId, currPage * 12));
+                modelAndView.addObject("films", listService.showOwnPlanned(userId, currentPage * 12));
                 modelAndView.addObject("numOfPages", listService.totalNumberOfFilmsInAList(userId, false) / 12);
-                modelAndView.addObject("currPage", currPage);
+                modelAndView.addObject("currentPage", currentPage);
                 modelAndView.addObject("page", "wish_list");
             }else{
                 modelAndView = new ModelAndView("error","message","You are not logged in, please first login");
@@ -152,7 +152,7 @@ public class MainController {
             if (userId != -1) {
                 modelAndView.addObject("films",
                         listService.showOthersPlanned(userService.getByNick(nick).getId(), page));
-                modelAndView.addObject("currPage", page);
+                modelAndView.addObject("currentPage", page);
                 modelAndView.addObject("page", "OthersPlanned");
             }else{
                 modelAndView = new ModelAndView("error","message","You are not logged in, please first login");

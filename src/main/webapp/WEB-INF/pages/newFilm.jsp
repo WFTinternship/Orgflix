@@ -23,7 +23,7 @@
             </header>
             <section>
                 <h3 style="color:#4581ff">${filesuccess}</h3>
-                <form id="newFilm" method="POST" action="addResult" enctype="multipart/form-data">
+                <form id="newFilm" method="POST" action="addFilmResult" enctype="multipart/form-data">
                     <div>
                         <span>Film Title</span>
                         <input type="text" id="title" name="title" class="inputField"/>
@@ -50,8 +50,8 @@
                         </div>
                         <div class="tableCell textCentered">
                             <span>Awards(Oscar)</span><br />
-                            <a onclick="hasOscar()"><i id="oscarCheck" class="fa fa-square-o fa-fw"></i></a>
-                            <input type="hidden" id="hasOscar" name="hasOscar" value="0" class="pointerA"/>
+                            <a onclick="setHasOscar('Film')"><i id="oscarCheckFilm" class="fa fa-square-o fa-fw"></i></a>
+                            <input type="hidden" id="hasOscarFilm" name="hasOscar" value="0" class="pointerA"/>
                         </div>
                         <div class="tableCell">
                             <span>Add image</span>
@@ -76,13 +76,21 @@
                         </div>
                         <input type="hidden" id="buffer" />
                         <input type="hidden" id="numOfActors" name="numOfActors" value="1"/>
-                        <input type="button" onclick="newActor()" value="New actor" />
-                        <div class="hiddenElement" id="tempNewActor">
-                            <input type="text" class="inputField" id="newActorName" name="newActorName" />
-                            <input type="button" value="Add" onclick="addNewActor()">
+
+
+                    </div>
+                    <div id="outer-pop-up">
+                        <div id="inner-pop-up" style="padding:20px">
+                                <span>Actor name: </span><input type="text" class="inputField" id="newActorName" name="newActorName" value=""   /></br>
+                                <span>Has oscar: </span>
+                                <a onclick="setHasOscar('Cast')"><i id="oscarCheckCast" class="fa fa-square-o fa-fw"></i></a>
+                                <input type="hidden" id="hasOscarCast" name="hasOscar" value="0" class="pointerA"/> <br /><br />
+                                <input type="button" value="Add" onclick="addNewActor()">
+                                <input type="button" value="Cancel" onclick="closeNewCast()">
                         </div>
                     </div>
                     <div>
+                        <br /><br /><br />
                         <input type="button" onclick="submitNewFilm()" value="Submit"/>
                     </div>
                 </form>

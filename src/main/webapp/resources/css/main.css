@@ -2160,7 +2160,7 @@
 		padding: 0;
 		text-decoration: none;
 		width: 100%;
-        margin-bottom: 30px;
+        margin-bottom: 10px;
 	}
 
 		input[type="text"]:invalid,
@@ -2219,7 +2219,7 @@
 	input[type="password"],
 	input[type="email"],
 	select {
-		height: 3em;
+		height: 1.5em;
 	}
 
 	textarea {

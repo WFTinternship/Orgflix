@@ -21,7 +21,7 @@
             <section>
                 <div>
                     <h1>${fileSuccess}</h1>
-                    <form:form method="post" action="filmSaved" enctype="multipart/form-data">
+                    <form:form method="post" action="" enctype="multipart/form-data">
                         <a href="/">Back to Homepage</a>
                     </form:form>
                 </div>

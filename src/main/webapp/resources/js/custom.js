@@ -96,9 +96,19 @@ function getActorsList(elem, state) {
         for (var i = 0; i < obj.length; i++) {
             if (show > 10) return;
             if (new RegExp(input, "i").test(obj[i].name)) { //
-                str = str + '<div onclick="selActor(this)" class="row' + show % 2 + ' pointerA" id="act_' + obj[i].id + '">' + obj[i].name + '</div>';
+                if(obj[i].oscar == "true"){
+                    hasOscar = "<span class=\"oscarSign\"><i class=\"fa fa-trophy fa-fw\"></i></span>";
+                }else{
+                    hasOscar = "<span class=\"oscarSign\"> </span>";
+                }
+                str = str + '<div class="row' + show % 2 + ' pointerA">'
+                    + hasOscar
+                    + '<span id="act_' + obj[i].id + '" onclick="selActor(this)">' + obj[i].name + '</span></div>';
                 show++;
             }
+        }
+        if(show == 0){
+            str = "No match found, <a class=\"inline-command\" onclick=\"newActor()\">add</a> new actor";
         }
         $(elem).siblings("div:nth-of-type(1)").html(str);
     }
@@ -109,16 +119,22 @@ function addNewActor() {
         url: "/data/actor/add",
         type: "POST",
         data:{
-            actor:$("#newActorName").val()
+            actor:$("#newActorName").val(),
+            hasOscar:$("#hasOscarCast").val()==1
         },
         success: function (result) {
+            $("#newActorName").val("");
+            $("#oscarCheckCast").removeClass("fa-check-square-o");
+            $("#oscarCheckCast").addClass("fa-square-o");
+            $("#outer-pop-up").css("display", "none");
             $("#buffer").val(result);
         }
     });
+
 }
 
 function selActor(elem) {
-    var parent = $(elem).parent();
+    var parent = $(elem).parent().parent();
     parent.siblings(".inputField").val($("#" + elem.id).html());
     var idNumber = elem.id.split("_");
     parent.siblings(".actorId").val(idNumber[1]);
@@ -182,18 +198,22 @@ function starFilm(star, isClick, id) {
 }
 
 function newActor() {
-    $("#pop-up-result").html($("#tempNewActor").html());
-    $("#pop-up-result").css("display", "block");
+    $("#outer-pop-up").css("display", "block");
 }
 
-function hasOscar() {
-    if ($("#hasOscar").val() == 0) {
+function closeNewCast() {
+    $("#outer-pop-up").css("display","none");
+}
+
+function setHasOscar(objectType) {
+    console.log(objectType);
+    if ($("#hasOscar"+objectType).val() == 0) {
         var oscar = 1;
     } else {
         var oscar = 0;
     }
-    $("#hasOscar").val(oscar);
-    $("#oscarCheck").toggleClass("fa-square-o fa-check-square-o");
+    $("#hasOscar"+objectType).val(oscar);
+    $("#oscarCheck"+objectType).toggleClass("fa-square-o fa-check-square-o");
 }
 
 function isPublic(id) {

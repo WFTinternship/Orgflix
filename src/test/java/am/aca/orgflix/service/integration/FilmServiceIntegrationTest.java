@@ -428,7 +428,7 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see FilmService#getFilteredFilms(String, int, int, boolean, String, String, int)
+     * @see FilmService#getFilteredFilms(String, int, int, boolean, String, int, int)
      */
     @Test
     public void filterFilms_ValidInput_Success() {
@@ -497,48 +497,48 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
         castService.addToFilm(cast, film.getId());
 
         //filters by nothing
-        List<Film> filteredFilms = filmService.getFilteredFilms(null, 0, 0, false, null, null, 0);
+        List<Film> filteredFilms = filmService.getFilteredFilms(null, 0, 0, false, null, 0, 0);
         Assert.assertEquals(6, filteredFilms.size());
 
         //filters by title only
-        filteredFilms = filmService.getFilteredFilms("city of", 0, 0, false, null, null, 0);
+        filteredFilms = filmService.getFilteredFilms("city of", 0, 0, false, null, 0, 0);
         Assert.assertEquals(2, filteredFilms.size());
 
         //filters by production year constraints only
-        filteredFilms = filmService.getFilteredFilms(null, 2000, 0, false, null, null, 0);
+        filteredFilms = filmService.getFilteredFilms(null, 2000, 0, false, null, 0, 0);
         Assert.assertEquals(4, filteredFilms.size());
 
         //filters by oscar wins only
-        filteredFilms = filmService.getFilteredFilms(null, 0, 0, true, null, null, 0);
+        filteredFilms = filmService.getFilteredFilms(null, 0, 0, true, null, 0, 0);
         Assert.assertEquals(1, filteredFilms.size());
 
         //filters by director only
-        filteredFilms = filmService.getFilteredFilms(null, 0, 0, false, "david fincher", null, 0);
+        filteredFilms = filmService.getFilteredFilms(null, 0, 0, false, "david fincher", 0, 0);
         Assert.assertEquals(3, filteredFilms.size());
 
         //filters by cast only
-        filteredFilms = filmService.getFilteredFilms(null, 0, 0, false, null, "brad pitt", 0);
+        filteredFilms = filmService.getFilteredFilms(null, 0, 0, false, null, 1, 0);
         Assert.assertEquals(2, filteredFilms.size());
 
         //filters by genre only
-        filteredFilms = filmService.getFilteredFilms(null, 0, 0, false, null, null, Genre.DRAMA.getValue());
+        filteredFilms = filmService.getFilteredFilms(null, 0, 0, false, null, 0, Genre.DRAMA.getValue());
         Assert.assertEquals(4, filteredFilms.size());
 
         //filters by everything
-        filteredFilms = filmService.getFilteredFilms("gone girl", 2014, 2014, false, "david fincher", "rosamund pike", Genre.MYSTERY.getValue());
+        filteredFilms = filmService.getFilteredFilms("gone girl", 2014, 2014, false, "david fincher", 1, Genre.MYSTERY.getValue());
         Assert.assertEquals(1, filteredFilms.size());
         Assert.assertEquals(film, filteredFilms.get(0));
     }
 
     /**
-     * @see FilmService#getFilteredFilms(String, int, int, boolean, String, String, int)
+     * @see FilmService#getFilteredFilms(String, int, int, boolean, String, int, int)
      */
     @Test
     public void searchTitle_NotExisting_Empty() {
         film = new Film("In Bruges", 2008);
         filmService.add(film);
 
-        boolean status = filmService.getFilteredFilms("", 3000, 3000, false, null, null, 0).isEmpty();
+        boolean status = filmService.getFilteredFilms("", 3000, 3000, false, null, 0, 0).isEmpty();
         Assert.assertTrue(status);
     }
 }

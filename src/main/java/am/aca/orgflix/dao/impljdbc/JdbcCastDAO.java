@@ -135,4 +135,16 @@ public class JdbcCastDAO extends NamedParameterJdbcDaoSupport implements CastDAO
                 Integer.class
         ) == 1;
     }
+
+    /**
+     * @see CastDAO#exists(String)
+     */
+    @Override
+    public boolean exists(String castName) {
+        String query = "SELECT COUNT(*) FROM CASTS WHERE ACTOR_NAME = ?";
+        return getJdbcTemplate().queryForObject(query,
+                new Object[]{castName},
+                Integer.class
+        ) == 1;
+    }
 }

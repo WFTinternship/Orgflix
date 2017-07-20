@@ -510,42 +510,42 @@ public class FilmServiceMockTest extends BaseUnitTest {
     }
 
     /**
-     * @see FilmServiceImpl#getFilteredFilms(String, int, int, boolean, String, String, int)
+     * @see FilmServiceImpl#getFilteredFilms(String, int, int, boolean, String, int, int)
      */
     @Test
     public void filterByEverything_ValidInput_Success() {
-        when(filmDaoMock.getFilteredFilms("test", 1000, 3000, false, "testDir", "testCast", 1)).thenReturn(films);
+        when(filmDaoMock.getFilteredFilms("test", 1000, 3000, false, "testDir", 1, 1)).thenReturn(films);
 
-        List<Film> actualFilms = filmService.getFilteredFilms("test", 1000, 3000, false, "testDir", "testCast", 1);
+        List<Film> actualFilms = filmService.getFilteredFilms("test", 1000, 3000, false, "testDir", 1, 1);
         Assert.assertEquals(films, actualFilms);
 
-        verify(filmDaoMock, times(1)).getFilteredFilms("test", 1000, 3000, false, "testDir", "testCast", 1);
+        verify(filmDaoMock, times(1)).getFilteredFilms("test", 1000, 3000, false, "testDir", 1, 1);
     }
 
     /**
-     * @see FilmServiceImpl#getFilteredFilms(String, int, int, boolean, String, String, int)
+     * @see FilmServiceImpl#getFilteredFilms(String, int, int, boolean, String, int, int)
      */
 
     @Test
     public void filterByEverything_RuntimeException_Fail() {
-        when(filmDaoMock.getFilteredFilms("test", 1000, 3000, false, "testDir", "testCast", 1)).thenThrow(RuntimeException.class);
+        when(filmDaoMock.getFilteredFilms("test", 1000, 3000, false, "testDir", 1, 1)).thenThrow(RuntimeException.class);
 
-        List<Film> actualFilms = filmService.getFilteredFilms("test", 1000, 3000, false, "testDir", "testCast", 1);
+        List<Film> actualFilms = filmService.getFilteredFilms("test", 1000, 3000, false, "testDir", 1, 1);
         Assert.assertTrue(actualFilms.isEmpty());
 
-        verify(filmDaoMock, times(1)).getFilteredFilms("test", 1000, 3000, false, "testDir", "testCast", 1);
+        verify(filmDaoMock, times(1)).getFilteredFilms("test", 1000, 3000, false, "testDir", 1, 1);
     }
 
     /**
-     * @see FilmServiceImpl#getFilteredFilms(String, int, int, boolean, String, String, int)
+     * @see FilmServiceImpl#getFilteredFilms(String, int, int, boolean, String, int, int)
      */
     @Test
     public void filterByEverything_TitleNull_Success() {
-        when(filmDaoMock.getFilteredFilms("", 1000, 3000, false, "testDir", "testCast", 1)).thenReturn(films);
+        when(filmDaoMock.getFilteredFilms("", 1000, 3000, false, "testDir", 1, 1)).thenReturn(films);
 
-        List<Film> actualFilms = filmService.getFilteredFilms(null, 1000, 3000, false, "testDir", "testCast", 1);
+        List<Film> actualFilms = filmService.getFilteredFilms(null, 1000, 3000, false, "testDir", 1, 1);
         Assert.assertEquals(films, actualFilms);
 
-        verify(filmDaoMock, times(1)).getFilteredFilms("", 1000, 3000, false, "testDir", "testCast", 1);
+        verify(filmDaoMock, times(1)).getFilteredFilms("", 1000, 3000, false, "testDir", 1, 1);
     }
 }

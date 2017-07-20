@@ -350,7 +350,7 @@ public class FilmDaoTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see FilmDAO#getFilteredFilms(String, int, int, boolean, String, String, int)
+     * @see FilmDAO#getFilteredFilms(String, int, int, boolean, String, int, int)
      */
     @Test
     public void searchFilter_ValidInputs_Success() {
@@ -418,45 +418,45 @@ public class FilmDaoTest extends BaseIntegrationTest {
         jdbcCastDAO.addToFilm(cast, film.getId());
 
         //filters by nothing
-        List<Film> filteredFilms = jdbcFilmDAO.getFilteredFilms("", 0, 0, false, null, null, 0);
+        List<Film> filteredFilms = jdbcFilmDAO.getFilteredFilms("", 0, 0, false, null, 0, 0);
         Assert.assertEquals(6, filteredFilms.size());
 
         //filters by title only
-        filteredFilms = jdbcFilmDAO.getFilteredFilms("city of", 0, 0, false, null, null, 0);
+        filteredFilms = jdbcFilmDAO.getFilteredFilms("city of", 0, 0, false, null, 0, 0);
         Assert.assertEquals(2, filteredFilms.size());
 
         //filters by production year constraints only
-        filteredFilms = jdbcFilmDAO.getFilteredFilms("", 2000, 0, false, null, null, 0);
+        filteredFilms = jdbcFilmDAO.getFilteredFilms("", 2000, 0, false, null, 0, 0);
         Assert.assertEquals(4, filteredFilms.size());
 
         //filters by oscar wins only
-        filteredFilms = jdbcFilmDAO.getFilteredFilms("", 0, 0, true, null, null, 0);
+        filteredFilms = jdbcFilmDAO.getFilteredFilms("", 0, 0, true, null, 0, 0);
         Assert.assertEquals(1, filteredFilms.size());
 
         //filters by director only
-        filteredFilms = jdbcFilmDAO.getFilteredFilms("", 0, 0, false, "david fincher", null, 0);
+        filteredFilms = jdbcFilmDAO.getFilteredFilms("", 0, 0, false, "david fincher", 0, 0);
         Assert.assertEquals(3, filteredFilms.size());
 
         //filters by cast only
-        filteredFilms = jdbcFilmDAO.getFilteredFilms("", 0, 0, false, null, "brad pitt", 0);
+        filteredFilms = jdbcFilmDAO.getFilteredFilms("", 0, 0, false, null, 1, 0);
         Assert.assertEquals(2, filteredFilms.size());
 
         //filters by genre only
-        filteredFilms = jdbcFilmDAO.getFilteredFilms("", 0, 0, false, null, null, Genre.DRAMA.getValue());
+        filteredFilms = jdbcFilmDAO.getFilteredFilms("", 0, 0, false, null, 0, Genre.DRAMA.getValue());
         Assert.assertEquals(4, filteredFilms.size());
 
         //filters by everything
-        filteredFilms = jdbcFilmDAO.getFilteredFilms("gone girl", 2014, 2014, false, "david fincher", "rosamund pike", Genre.MYSTERY.getValue());
+        filteredFilms = jdbcFilmDAO.getFilteredFilms("gone girl", 2014, 2014, false, "david fincher", 1, Genre.MYSTERY.getValue());
         Assert.assertEquals(1, filteredFilms.size());
         Assert.assertEquals(film, filteredFilms.get(0));
     }
 
     /**
-     * @see FilmDAO#getFilteredFilms(String, int, int, boolean, String, String, int)
+     * @see FilmDAO#getFilteredFilms(String, int, int, boolean, String, int, int)
      */
     @Test
     public void getFilteredFilms_Empty_Success() {
-        List<Film> filteredFilms = jdbcFilmDAO.getFilteredFilms("gone girl", 2014, 2014, false, "david fincher", "rosamund pike", Genre.MYSTERY.getValue());
+        List<Film> filteredFilms = jdbcFilmDAO.getFilteredFilms("gone girl", 2014, 2014, false, "david fincher", 1, Genre.MYSTERY.getValue());
         Assert.assertTrue(filteredFilms.isEmpty());
     }
 

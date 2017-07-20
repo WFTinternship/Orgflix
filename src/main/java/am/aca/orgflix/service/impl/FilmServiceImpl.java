@@ -202,11 +202,11 @@ public class FilmServiceImpl extends BaseService implements FilmService {
     }
 
     /**
-     * @see FilmService#getFilteredFilms(String, int, int, boolean, String, String, int)
+     * @see FilmService#getFilteredFilms(String, int, int, boolean, String, int, int)
      */
     @Override
     public List<Film> getFilteredFilms(String title, int startYear, int finishYear,
-                                       boolean hasOscar, String director, String cast, int genre) {
+                                       boolean hasOscar, String director, int cast, int genre) {
         List<Film> films = new ArrayList<>();
         if (title == null)
             title = "";

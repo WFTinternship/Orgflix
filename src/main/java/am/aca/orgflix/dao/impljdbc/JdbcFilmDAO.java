@@ -171,11 +171,11 @@ public class JdbcFilmDAO extends NamedParameterJdbcDaoSupport implements FilmDAO
     }
 
     /**
-     * @see FilmDAO#getFilteredFilms(String, int, int, boolean, String, String, int)
+     * @see FilmDAO#getFilteredFilms(String, int, int, boolean, String, int, int)
      */
     @Override
     public List<Film> getFilteredFilms(String title, int startYear, int finishYear,
-                                       boolean hasOscar, String director, String castName, int genreId) {
+                                       boolean hasOscar, String director, int castId, int genreId) {
 
         StringBuilder queryBuilder = new StringBuilder();
 
@@ -213,9 +213,9 @@ public class JdbcFilmDAO extends NamedParameterJdbcDaoSupport implements FilmDAO
             paramsList.add("%" + director + "%");
         }
 
-        if (castName != null) {
-            queryBuilder.append("AND CASTS.ACTOR_NAME LIKE ? ");
-            paramsList.add("%" + castName + "%");
+        if (castId > 0) {
+            queryBuilder.append("AND CASTS.ID = ? ");
+            paramsList.add(castId);
         }
 
         if (genreId > 0) {

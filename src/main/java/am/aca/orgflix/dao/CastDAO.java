@@ -90,4 +90,12 @@ public interface CastDAO {
      * @return true if the given cast is in the DB, false otherwise
      */
     boolean exists(Cast cast);
+
+    /**
+     * Check if there already exist actor with the same name in the DB
+     *
+     * @param castName the name of the actor to be found in the DB
+     * @return true if the given cast is in the DB, false otherwise
+     */
+    boolean exists(String castName);
 }

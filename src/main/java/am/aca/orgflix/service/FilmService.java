@@ -87,7 +87,7 @@ public interface FilmService {
      * @return List object of all films satisfying the given filter parameters
      */
     List<Film> getFilteredFilms(String title, int startYear, int finishYear,
-                                boolean hasOscar, String director, String cast, int genreId);
+                                boolean hasOscar, String director, int cast, int genreId);
 
     /**
      * Updates the selected film to the given film

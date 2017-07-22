@@ -6,7 +6,7 @@ import am.aca.orgflix.dao.FilmDAO;
 import am.aca.orgflix.entity.Cast;
 import am.aca.orgflix.entity.Film;
 import am.aca.orgflix.service.CastService;
-import am.aca.orgflix.service.ServiceException;
+import am.aca.orgflix.exception.ServiceException;
 import am.aca.orgflix.service.impl.CastServiceImpl;
 import org.junit.After;
 import org.junit.Assert;

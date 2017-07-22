@@ -121,7 +121,7 @@ public class UserController {
             if (user == null) {
                 modelAndView = new ModelAndView("error", "message", "Wrong email/or password, please try again");
                 session.setAttribute("userId", -1);
-                session.setAttribute("user", "");
+                session.setAttribute("user", " ");
             } else {
                 modelAndView = new ModelAndView("home");
                 modelAndView.addObject("films", filmService.getAll(0, 12));
@@ -134,7 +134,7 @@ public class UserController {
             }
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
-            modelAndView = new ModelAndView("error", "message", e);
+            modelAndView = new ModelAndView("error", "message", "Authentication failed");
         }
         return modelAndView;
     }

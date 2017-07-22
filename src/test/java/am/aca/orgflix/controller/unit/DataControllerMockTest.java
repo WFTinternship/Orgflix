@@ -4,7 +4,7 @@ import am.aca.orgflix.BaseUnitTest;
 import am.aca.orgflix.controller.FilmDataController;
 import am.aca.orgflix.service.FilmService;
 import am.aca.orgflix.service.ListService;
-import am.aca.orgflix.service.ServiceException;
+import am.aca.orgflix.exception.ServiceException;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;

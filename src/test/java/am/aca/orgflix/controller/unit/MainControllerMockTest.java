@@ -6,7 +6,7 @@ import am.aca.orgflix.entity.Film;
 import am.aca.orgflix.entity.User;
 import am.aca.orgflix.service.FilmService;
 import am.aca.orgflix.service.ListService;
-import am.aca.orgflix.service.ServiceException;
+import am.aca.orgflix.exception.ServiceException;
 import am.aca.orgflix.service.UserService;
 import org.junit.*;
 import org.mockito.Mock;

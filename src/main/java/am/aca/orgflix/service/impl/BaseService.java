@@ -1,6 +1,6 @@
 package am.aca.orgflix.service.impl;
 
-import am.aca.orgflix.service.ServiceException;
+import am.aca.orgflix.exception.ServiceException;
 import org.apache.log4j.Logger;
 
 import java.time.Year;

@@ -1,4 +1,4 @@
-package am.aca.orgflix.service;
+package am.aca.orgflix.exception;
 
 /**
  * Service layer exception

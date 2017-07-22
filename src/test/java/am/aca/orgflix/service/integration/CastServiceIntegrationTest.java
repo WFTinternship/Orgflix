@@ -5,7 +5,7 @@ import am.aca.orgflix.entity.Cast;
 import am.aca.orgflix.entity.Film;
 import am.aca.orgflix.service.CastService;
 import am.aca.orgflix.service.FilmService;
-import am.aca.orgflix.service.ServiceException;
+import am.aca.orgflix.exception.ServiceException;
 import am.aca.orgflix.service.impl.CastServiceImpl;
 import am.aca.orgflix.util.TestHelper;
 import org.junit.After;

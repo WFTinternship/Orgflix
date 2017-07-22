@@ -229,7 +229,7 @@ public class MainControllerMockTest extends BaseUnitTest {
     @Test
     public void watchList_Success() {
         when(listServiceMock.showOwnWatched(1, 12)).thenReturn(films);
-        when(listServiceMock.totalNumberOfFilmsInAList(1, true)).thenReturn(new int[0]);
+        when(listServiceMock.filmPrivacyList(1, true)).thenReturn(new int[0]);
         when(userServiceMock.getById(1)).thenReturn(user);
 
         ModelAndView actualMV = mainController.watchList(new MockHttpSession(), 1);
@@ -243,7 +243,7 @@ public class MainControllerMockTest extends BaseUnitTest {
         Assert.assertEquals("watch_list", actualMV.getModel().get("page"));
 
         verify(listServiceMock, times(1)).showOwnWatched(1, 12);
-        verify(listServiceMock, times(1)).totalNumberOfFilmsInAList(1, true);
+        verify(listServiceMock, times(1)).filmPrivacyList(1, true);
         verify(userServiceMock, times(1)).getById(1);
     }
 
@@ -279,7 +279,7 @@ public class MainControllerMockTest extends BaseUnitTest {
         Assert.assertEquals("wish_list", actualMV.getModel().get("page"));
 
         verify(listServiceMock, times(1)).showOwnPlanned(1, 12);
-        verify(listServiceMock, times(1)).totalNumberOfFilmsInAList(1, false);
+        verify(listServiceMock, times(1)).filmPrivacyList(1, false);
         verify(userServiceMock, times(1)).getById(1);
     }
 

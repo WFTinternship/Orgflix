@@ -75,6 +75,12 @@
                                 </c:if>
                                 <c:if test="${page == 'watch_list'}">
                                     <a href="#" class="no_link" onclick="RemoveFromList('watch','${film.id}')"><i class="fa fa-trash-o fa-fw"></i></a>
+                                    <c:if test="${privacyList[loop.index] == 0}">
+                                        <a href="#" class="no_link" data-privacy="true" onclick="invertPrivacy(this,'${film.id}')"><i class="fa fa-lock fa-fw"></i></a>
+                                    </c:if>
+                                    <c:if test="${privacyList[loop.index] == 1}">
+                                        <a href="#" class="no_link" data-privacy="false" onclick="invertPrivacy(this,'${film.id}')"><i class="fa fa-unlock fa-fw"></i></a>
+                                    </c:if>
                                 </c:if>
                                 <c:if test="${page == 'wish_list'}">
                                     <a href="#" class="no_link" onclick="RemoveFromList('wish','${film.id}')"><i class="fa fa-trash-o fa-fw"></i></a>

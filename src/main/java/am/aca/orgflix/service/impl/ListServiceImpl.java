@@ -192,10 +192,10 @@ public class ListServiceImpl extends BaseService implements ListService {
     }
 
     /**
-     * @see ListService#totalNumberOfFilmsInAList(int, boolean)
+     * @see ListService#filmPrivacyList(int, boolean)
      */
     @Override
-    public int[] totalNumberOfFilmsInAList(int userId, boolean isWatched) {
+    public int[] filmPrivacyList(int userId, boolean isWatched) {
         int[] privacyList;
         try {
             if (isWatched) {

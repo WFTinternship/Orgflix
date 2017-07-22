@@ -37,7 +37,7 @@
                                         <c:forEach begin="1900" end="2024" var="val">
                                             <option><c:out value="${val}"/></option>
                                         </c:forEach>
-                                        <option selected="selected"></option>
+                                        <option selected="selected">0</option>
                                     </select>
                                 </div>
                                 <div class="tableCell"> - </div>
@@ -46,7 +46,7 @@
                                         <c:forEach begin="1900" end="2024" var="val">
                                             <option><c:out value="${val}"/></option>
                                         </c:forEach>
-                                        <option selected="selected"></option>
+                                        <option selected="selected">0</option>
                                     </select>
                                 </div>
                             </div>
@@ -63,7 +63,7 @@
                         <div class="tableCell">
                             <span>Genre</span>
                             <select id="genre" name="genre" class="dateField">
-                                <option value="${genre.value}">${genre.title}</option>
+                                <option value="0" selected="selected"></option>
                                 <c:forEach items="${genres}" var="genre">
                                     <option value="${genre.value}">${genre.title}</option>
                                 </c:forEach>
@@ -74,7 +74,7 @@
                             <div class="container">
                                 <div class="elem longElem">
                                     <input type="text" onclick="getActorsList(this,true)" onkeyup="getActorsList(this,false)" class="inputField" style="margin-bottom: 0px"/>
-                                    <input type="hidden" name="actorId" class="actorId" value="-1">
+                                    <input type="hidden" name="actorId" class="actorId" value="0">
                                     <div></div>
                                 </div>
                             </div>

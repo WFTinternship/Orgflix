@@ -32,7 +32,7 @@ public class FilmDataController{
         this.filmService = filmService;
     }
 
-    @PostMapping("/watch/addToList")
+    @RequestMapping("/watch/addToList")
     public ResponseEntity addFilmToWatchList(
             HttpSession session,
             @RequestParam("film") int filmId,
@@ -49,7 +49,7 @@ public class FilmDataController{
         }
     }
 
-    @PostMapping("/wish/addToList")
+    @RequestMapping("/wish/addToList")
     public ResponseEntity addFilmToWishList(
             HttpSession session,
             @RequestParam("film") int filmId,
@@ -66,7 +66,7 @@ public class FilmDataController{
         }
     }
 
-    @PostMapping("/wish/removeFromList")
+    @RequestMapping("/wish/removeFromList")
     public ResponseEntity removeFromWishList(
             HttpSession session,
             @RequestParam("film") int filmId) {
@@ -82,7 +82,7 @@ public class FilmDataController{
         }
     }
 
-    @PostMapping("/watch/removeFromList")
+    @RequestMapping("/watch/removeFromList")
     public ResponseEntity removeFromWatchList(
             HttpSession session,
             @RequestParam("film") int filmId) {
@@ -98,7 +98,7 @@ public class FilmDataController{
         }
     }
 
-    @PostMapping("/star")
+    @RequestMapping("/star")
     public ResponseEntity starFilm(@RequestParam("film") int filmId,
                                    @RequestParam("star") int star) {
         try {

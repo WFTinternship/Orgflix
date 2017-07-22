@@ -4,7 +4,10 @@ import am.aca.orgflix.BaseUnitTest;
 import am.aca.orgflix.controller.MainController;
 import am.aca.orgflix.entity.Film;
 import am.aca.orgflix.entity.User;
-import am.aca.orgflix.service.*;
+import am.aca.orgflix.service.FilmService;
+import am.aca.orgflix.service.ListService;
+import am.aca.orgflix.service.ServiceException;
+import am.aca.orgflix.service.UserService;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -14,6 +17,9 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
@@ -21,22 +27,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 /**
  * Unit tests for Main Controller
  */
 public class MainControllerMockTest extends BaseUnitTest {
     @Autowired
+    private WebApplicationContext wac;
+
+    @Autowired
+    private MockHttpSession session;
+
+    @Autowired
     private MainController mainController;
 
     @Mock
     private UserService userServiceMock;
-    @Mock
-    private CastService castServiceMock;
+
     @Mock
     private FilmService filmServiceMock;
+
     @Mock
     private ListService listServiceMock;
+
+    private MockMvc mockMvc;
 
     private List<Film> films = new ArrayList<>();
     private String[] ratings = new String[0];
@@ -50,9 +65,9 @@ public class MainControllerMockTest extends BaseUnitTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         ReflectionTestUtils.setField(mainController, "userService", userServiceMock);
-        ReflectionTestUtils.setField(mainController, "castService", castServiceMock);
         ReflectionTestUtils.setField(mainController, "filmService", filmServiceMock);
         ReflectionTestUtils.setField(mainController, "listService", listServiceMock);
+        mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
 
         user.setId(1);
     }
@@ -63,7 +78,6 @@ public class MainControllerMockTest extends BaseUnitTest {
     @After
     public void tearDown() {
         verifyNoMoreInteractions(userServiceMock);
-        verifyNoMoreInteractions(castServiceMock);
         verifyNoMoreInteractions(filmServiceMock);
         verifyNoMoreInteractions(listServiceMock);
     }
@@ -72,10 +86,12 @@ public class MainControllerMockTest extends BaseUnitTest {
      * @see MainController#indexPageFirtVisit(HttpSession)
      */
     @Test
-    public void index_Success() {
+    public void index_Success() throws Exception {
         when(filmServiceMock.getAll(0, 12)).thenReturn(films);
         when(filmServiceMock.getTotalNumber()).thenReturn(0);
         when(filmServiceMock.getAllRatings(0, 12)).thenReturn(ratings);
+
+        mockMvc.perform(get("/").session(session))
 
         ModelAndView actualMV = mainController.indexPageFirtVisit(new MockHttpSession());
 
@@ -109,7 +125,7 @@ public class MainControllerMockTest extends BaseUnitTest {
 
 
     /**
-     * @see MainController#indexPage( int)
+     * @see MainController#indexPage(int)
      */
     @Test
     public void paging_Authenticated_Success() {
@@ -117,7 +133,7 @@ public class MainControllerMockTest extends BaseUnitTest {
         when(filmServiceMock.getTotalNumber()).thenReturn(0);
         when(userServiceMock.getById(1)).thenReturn(user);
 
-        ModelAndView actualMV = mainController.indexPage( 1);
+        ModelAndView actualMV = mainController.indexPage(1);
 
         Assert.assertEquals("index", actualMV.getViewName());
         Assert.assertEquals(films, actualMV.getModel().get("films"));

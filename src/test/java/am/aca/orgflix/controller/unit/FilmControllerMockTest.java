@@ -27,7 +27,6 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 /**
@@ -175,7 +174,7 @@ public class FilmControllerMockTest extends BaseUnitTest {
                 .param("genre", "0")
                 .session(session)).andExpect(view().name("home"))
                 .andExpect(model().attribute("films", films))
-                .andExpect(model().attribute("page", "home"));
+                .andExpect(model().attribute("page", "index"));
 
         verify(filmServiceMock, times(1)).getFilteredFilms("test", 0, 0, false, "test", 0, 0);
     }

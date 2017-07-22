@@ -118,19 +118,19 @@ public class MainController {
         return modelAndView;
     }
 
-    @RequestMapping("/watch_list/getWatchedBy{nick}/{page}")
-    public ModelAndView getWatchedByOtherUser(HttpSession session,
-                                              @PathVariable("nick") String nick,
-                                              @PathVariable("page") int page) {
+    @RequestMapping("/watchListUserOther")
+    public ModelAndView getWatchedByOtherUser(HttpSession session, @RequestParam("otherUser") int otherUser,
+                                              @RequestParam("currentPage") int currentPage) {
+
         ModelAndView modelAndView = new ModelAndView("index");
 
         try {
             int userId = (int) session.getAttribute("userId");
             if (userId != -1) {
-                modelAndView.addObject("films",
-                        listService.showOthersWatched(userService.getByNick(nick).getId(), page));
-                modelAndView.addObject("currPage", page);
-                modelAndView.addObject("page", "OthersWatched");
+                modelAndView.addObject("films", listService.showOthersWatched(otherUser, currentPage));
+                modelAndView.addObject("currentPage", currentPage);
+                modelAndView.addObject("page", "watchListUserOther");
+                modelAndView.addObject("otherUser", otherUser);
             }else{
                 modelAndView = new ModelAndView("error","message","You are not logged in, please first login");
             }
@@ -141,19 +141,19 @@ public class MainController {
         return modelAndView;
     }
 
-    @RequestMapping("/wish_list/getPlannedBy{nick}/{page}")
-    public ModelAndView getPlannedByOtherUser(HttpSession session,
-                                              @PathVariable("nick") String nick,
-                                              @PathVariable("page") int page) {
+    @RequestMapping("/wishListUserOther")
+    public ModelAndView getPlannedByOtherUser(HttpSession session, @RequestParam("otherUser") int otherUser,
+                                              @RequestParam("currentPage") int currentPage) {
+
         ModelAndView modelAndView = new ModelAndView("index");
 
         try {
             int userId = (int) session.getAttribute("userId");
             if (userId != -1) {
-                modelAndView.addObject("films",
-                        listService.showOthersPlanned(userService.getByNick(nick).getId(), page));
-                modelAndView.addObject("currentPage", page);
-                modelAndView.addObject("page", "OthersPlanned");
+                modelAndView.addObject("films", listService.showOthersPlanned(otherUser, currentPage));
+                modelAndView.addObject("currentPage", currentPage);
+                modelAndView.addObject("page", "wishListUserOther");
+                modelAndView.addObject("otherUser", otherUser);
             }else{
                 modelAndView = new ModelAndView("error","message","You are not logged in, please first login");
             }
@@ -161,7 +161,6 @@ public class MainController {
             LOGGER.warn(e.getMessage());
             modelAndView = new ModelAndView("error","message",e);
         }
-
         return modelAndView;
     }
 }

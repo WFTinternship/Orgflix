@@ -297,15 +297,15 @@ public class MainControllerMockTest extends BaseUnitTest {
     }
 
     /**
-     * @see MainController#getWatchedByOtherUser(javax.servlet.http.HttpSession, java.lang.String, int)
+     * @see MainController#getWatchedByOtherUser(javax.servlet.http.HttpSession, int, int)
      */
     @Test
     public void othersWatched_Success() {
         when(userServiceMock.getById(1)).thenReturn(user);
-        when(userServiceMock.getByNick("hulk")).thenReturn(user);
+//        when(userServiceMock.getByNick("hulk")).thenReturn(user);
         when(listServiceMock.showOthersWatched(user.getId(), 2)).thenReturn(films);
 
-        ModelAndView actualMV = mainController.getWatchedByOtherUser(new MockHttpSession(), "hulk", 2);
+        ModelAndView actualMV = mainController.getWatchedByOtherUser(new MockHttpSession(), 1, 2);
 
         Assert.assertEquals("index", actualMV.getViewName());
         Assert.assertEquals(films, actualMV.getModel().get("films"));
@@ -316,33 +316,33 @@ public class MainControllerMockTest extends BaseUnitTest {
         Assert.assertEquals("OthersWatched", actualMV.getModel().get("page"));
 
         verify(userServiceMock, times(1)).getById(1);
-        verify(userServiceMock, times(1)).getByNick("hulk");
+//        verify(userServiceMock, times(1)).getByNick("hulk");
         verify(listServiceMock, times(1)).showOthersWatched(user.getId(), 2);
     }
 
     /**
-     * @see MainController#getWatchedByOtherUser(javax.servlet.http.HttpSession, java.lang.String, int)
+     * @see MainController#getWatchedByOtherUser(javax.servlet.http.HttpSession, int, int)
      */
     @Test
     public void othersWatched_InternalError_Fail() {
         when(userServiceMock.getById(1)).thenThrow(ServiceException.class);
 
-        ModelAndView actualMV = mainController.getWatchedByOtherUser(new MockHttpSession(), "hulk", 1);
+        ModelAndView actualMV = mainController.getWatchedByOtherUser(new MockHttpSession(), 1, 1);
         Assert.assertEquals("error", actualMV.getViewName());
 
         verify(userServiceMock, times(1)).getById(1);
     }
 
     /**
-     * @see MainController#getPlannedByOtherUser(javax.servlet.http.HttpSession, String, int)
+     * @see MainController#getPlannedByOtherUser(javax.servlet.http.HttpSession, int, int)
      */
     @Test
     public void othersPlanneded_Success() {
         when(userServiceMock.getById(1)).thenReturn(user);
-        when(userServiceMock.getByNick("hulk")).thenReturn(user);
+//        when(userServiceMock.getByNick("hulk")).thenReturn(user);
         when(listServiceMock.showOthersPlanned(user.getId(), 2)).thenReturn(films);
 
-        ModelAndView actualMV = mainController.getPlannedByOtherUser(new MockHttpSession(), "hulk", 2);
+        ModelAndView actualMV = mainController.getPlannedByOtherUser(new MockHttpSession(), 1, 2);
 
         Assert.assertEquals("index", actualMV.getViewName());
         Assert.assertEquals(films, actualMV.getModel().get("films"));
@@ -353,18 +353,18 @@ public class MainControllerMockTest extends BaseUnitTest {
         Assert.assertEquals("OthersPlanned", actualMV.getModel().get("page"));
 
         verify(userServiceMock, times(1)).getById(1);
-        verify(userServiceMock, times(1)).getByNick("hulk");
+//        verify(userServiceMock, times(1)).getByNick("hulk");
         verify(listServiceMock, times(1)).showOthersPlanned(user.getId(), 2);
     }
 
     /**
-     * @see MainController#getPlannedByOtherUser(javax.servlet.http.HttpSession, String, int)
+     * @see MainController#getPlannedByOtherUser(javax.servlet.http.HttpSession, int, int)
      */
     @Test
     public void othersPlanned_InternalError_Fail() {
         when(userServiceMock.getById(1)).thenThrow(ServiceException.class);
 
-        ModelAndView actualMV = mainController.getPlannedByOtherUser(new MockHttpSession(), "hulk", 1);
+        ModelAndView actualMV = mainController.getPlannedByOtherUser(new MockHttpSession(), 1, 1);
         Assert.assertEquals("error", actualMV.getViewName());
 
         verify(userServiceMock, times(1)).getById(1);

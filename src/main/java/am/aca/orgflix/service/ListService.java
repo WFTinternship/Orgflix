@@ -72,7 +72,7 @@ public interface ListService {
      * @param page   index from desired pagination
      * @return the list of all films marked as watched by the selected user
      */
-    List<Film> showOthersWatched(int userId, int page);
+    List<Film> showOthersWatched(int otherUserId, int page);
 
     /**
      * Retrieves the list of all films marked as planned by the selected user with pagination

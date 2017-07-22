@@ -58,26 +58,41 @@
                             <p><input name="file" id="fileToUpload" type="file" accept="image/*"/></p>
                         </div>
                     </div>
-                    <div>
-                        <span>Director of the film</span>
-                        <input type="text" id="director" name="director" class="inputField"/>
-                    </div>
-                    <div>
-                        <span>Mian actors</span>
-                        <div class="container">
-                            <div class="elem longElem">
-                                <input type="text" onclick="getActorsList(this,true)" onkeyup="getActorsList(this,false)" class="inputField" style="margin-bottom: 0px"/>
-                                <input type="hidden" name="actorId" class="actorId" value="-1">
-                                <div></div>
-                            </div>
-                            <div class="elem">
-                                <a onclick="addActor()"><i id="addActor" class="fa fa-plus-square fa-2x"></i></a>
+                    <div style="display: table;width:100%">
+                        <div class="tableCell">
+                            <span>Director of the film</span>
+                            <input type="text" id="director" name="director" class="inputField"/>
+                        </div>
+                        <div class="tableCell">
+                            <span>Film genre</span>
+                            <div class="container">
+                                <div id="genreContainer" class="elem longElem">
+                                    <select id="genre" name="genre" class="dateField">
+                                        <c:forEach items="${genres}" var="genre">
+                                            <option value="${genre}">${genre.title}</option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                                <div class="elem">
+                                    <a onclick="addGenre()"><i id="addGenre" class="fa fa-plus-square fa-2x"></i></a>
+                                </div>
                             </div>
                         </div>
-                        <input type="hidden" id="buffer" />
-                        <input type="hidden" id="numOfActors" name="numOfActors" value="1"/>
-
-
+                        <div class="tableCell">
+                            <span>Mian actors</span>
+                            <div class="container">
+                                <div class="elem longElem">
+                                    <input type="text" onclick="getActorsList(this,true)" onkeyup="getActorsList(this,false)" class="inputField" style="margin-bottom: 0px"/>
+                                    <input type="hidden" name="actorId" class="actorId" value="-1">
+                                    <div></div>
+                                </div>
+                                <div class="elem">
+                                    <a onclick="addActor()"><i id="addActor" class="fa fa-plus-square fa-2x"></i></a>
+                                </div>
+                            </div>
+                            <input type="hidden" id="buffer" />
+                            <input type="hidden" id="numOfActors" name="numOfActors" value="1"/>
+                        </div>
                     </div>
                     <div id="outer-pop-up">
                         <div id="inner-pop-up" style="padding:20px">

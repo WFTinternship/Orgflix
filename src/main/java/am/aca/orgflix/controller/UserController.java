@@ -42,7 +42,7 @@ public class UserController{
             modelAndView = new ModelAndView("signup");
             modelAndView.addObject("films", filmService.getAll(0, 12));
             modelAndView.addObject("ratings", filmService.getAllRatings(0, 12));
-            modelAndView.addObject("currPage", 0);
+            modelAndView.addObject("currentPage", 0);
             modelAndView.addObject("page", "index");
             modelAndView.addObject("numOfPages", filmService.getTotalNumber()/12);
         } catch (RuntimeException e) {
@@ -60,7 +60,7 @@ public class UserController{
                                      @RequestParam("pass") String pass) {
 
         ModelAndView modelAndView;
-        User user = new User(nick, userName, email, pass);
+        User user = new User(nick, userName, email, pass.hashCode()+email);
 
         try {
             int userId = userService.add(user);
@@ -71,7 +71,7 @@ public class UserController{
                 modelAndView = new ModelAndView("index");
                 modelAndView.addObject("films", filmService.getAll(0, 12));
                 modelAndView.addObject("numOfPages", filmService.getTotalNumber() / 12);
-                modelAndView.addObject("currPage", 0);
+                modelAndView.addObject("currentPage", 0);
                 modelAndView.addObject("page", "index");
             } else {
                 modelAndView = new ModelAndView("error", "message", "You are not logged in, please first login");
@@ -117,7 +117,7 @@ public class UserController{
 
         ModelAndView modelAndView;
         try {
-            User user = userService.authenticate(email, pass);
+            User user = userService.authenticate(email, pass.hashCode()+email);
             if (user == null) {
                 modelAndView = new ModelAndView("error","message","Wrong email/or password, please try again");
                 session.setAttribute("userId", -1);
@@ -126,7 +126,7 @@ public class UserController{
                 modelAndView = new ModelAndView("index");
                 modelAndView.addObject("films", filmService.getAll(0, 12));
                 modelAndView.addObject("numOfPages", filmService.getTotalNumber() / 12);
-                modelAndView.addObject("currPage", 0);
+                modelAndView.addObject("currentPage", 0);
                 modelAndView.addObject("page", "index");
 
                 session.setAttribute("userId", user.getId());

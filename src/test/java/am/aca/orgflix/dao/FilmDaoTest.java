@@ -381,6 +381,7 @@ public class FilmDaoTest extends BaseIntegrationTest {
         jdbcFilmDAO.addGenreToFilm(Genre.THRILLER, film.getId());
         cast = new Cast("Brad Pitt");
         jdbcCastDAO.add(cast);
+        int id = cast.getId();
         jdbcCastDAO.addToFilm(cast, film.getId());
 
         film = new Film();
@@ -438,7 +439,7 @@ public class FilmDaoTest extends BaseIntegrationTest {
         Assert.assertEquals(3, filteredFilms.size());
 
         //filters by cast only
-        filteredFilms = jdbcFilmDAO.getFilteredFilms("", 0, 0, false, null, 1, 0);
+        filteredFilms = jdbcFilmDAO.getFilteredFilms("", 0, 0, false, null, id, 0);
         Assert.assertEquals(2, filteredFilms.size());
 
         //filters by genre only
@@ -446,7 +447,7 @@ public class FilmDaoTest extends BaseIntegrationTest {
         Assert.assertEquals(4, filteredFilms.size());
 
         //filters by everything
-        filteredFilms = jdbcFilmDAO.getFilteredFilms("gone girl", 2014, 2014, false, "david fincher", 1, Genre.MYSTERY.getValue());
+        filteredFilms = jdbcFilmDAO.getFilteredFilms("gone girl", 2014, 2014, false, "david fincher", cast.getId(), Genre.MYSTERY.getValue());
         Assert.assertEquals(1, filteredFilms.size());
         Assert.assertEquals(film, filteredFilms.get(0));
     }

@@ -18,6 +18,7 @@ public class FilmRowMapper implements RowMapper<Film> {
         film.setTitle(rs.getString("TITLE"));
         film.setProdYear(rs.getInt("PROD_YEAR"));
         film.setImage(rs.getString("IMAGE_REF"));
+        film.setHasOscar(rs.getBoolean("HAS_OSCAR"));
         film.setDirector(rs.getString("DIRECTOR"));
         film.setRate_1star(rs.getInt("RATE_1STAR"));
         film.setRate_2star(rs.getInt("RATE_2STAR"));

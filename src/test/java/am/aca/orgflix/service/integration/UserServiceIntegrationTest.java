@@ -11,6 +11,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
+
 
 /**
  * Integration Tests for User Service Layer
@@ -18,7 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class UserServiceIntegrationTest extends BaseIntegrationTest {
 
-    private final User standardUser = new User("scarface", "Tony Montana", "scarface@miami.com", "elvira");
+    private final User standardUser = new User("Davit", "Davit Abovyan", "davit.abovyan@gmail.com", "123456");
 
     @Autowired
     private UserService userService;
@@ -111,7 +113,7 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
     public void addUser_EmailAlreadyExists_Fail() {
         userService.add(standardUser);
 
-        userService.add(new User("smurf", "Manny Ribera", "scarface@miami.com", "elvira"));
+        userService.add(new User("smurf", "Manny Ribera", "davit.abovyan@gmail.com", "elvira"));
     }
 
     /**
@@ -174,7 +176,7 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
     public void getUser_ByEmail_Success() {
         userService.add(standardUser);
 
-        User actualUser = userService.getByEmail("scarface@miami.com");
+        User actualUser = userService.getByEmail("davit.abovyan@gmail.com");
         Assert.assertEquals(standardUser, actualUser);
     }
 
@@ -196,7 +198,7 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
     public void getByNick_Success() {
         userService.add(standardUser);
 
-        User actualUser = userService.getByNick("scarface");
+        User actualUser = userService.getByNick("Davit");
         Assert.assertEquals(standardUser, actualUser);
     }
 
@@ -207,6 +209,16 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
     public void getByNick_Empty_Fail() {
         User actualUser = userService.getByNick("smurf");
         Assert.assertNotEquals(standardUser, actualUser);
+    }
+
+    /**
+     * @see UserServiceImpl#getAll()
+     */
+    @Test
+    public void getAll_OneUser_Success() {
+        userService.add(standardUser);
+        List<User> list = userService.getAll();
+        Assert.assertEquals("Davit",list.get(0).getNick());
     }
 
     /**
@@ -311,7 +323,7 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
         User otherUser = new User("manny", "Manny Ribera", "manny@miami.com", "elvira");
 
         userService.add(otherUser);
-        otherUser.setEmail("scarface@miami.com");
+        otherUser.setEmail("davit.abovyan@gmail.com");
 
         userService.edit(otherUser);
     }

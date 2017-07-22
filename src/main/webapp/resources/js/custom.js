@@ -23,7 +23,7 @@ function timeOuter(id, isDel) {
 
 function AddToList(type, filmId) {
     $.ajax({
-        url: "/data/film/"+type+ "/addToList",
+        url: "/data/film/" + type + "/addToList",
         type: "POST",
         data: {
             film: filmId,
@@ -41,7 +41,7 @@ function AddToList(type, filmId) {
 
 function RemoveFromList(type, id) {
     $.ajax({
-        url: "/data/film/"+type+"/removeFromList",
+        url: "/data/film/" + type + "/removeFromList",
         type: "POST",
         data: {
             film: id,
@@ -94,11 +94,11 @@ function getActorsList(elem, state) {
         var input = $(elem).val();
         var show = 0;
         for (var i = 0; i < obj.length; i++) {
-            if (show > 10) return;
+            if (show > 10) continue;
             if (new RegExp(input, "i").test(obj[i].name)) { //
-                if(obj[i].oscar == "true"){
+                if (obj[i].oscar == "true") {
                     hasOscar = "<span class=\"oscarSign\"><i class=\"fa fa-trophy fa-fw\"></i></span>";
-                }else{
+                } else {
                     hasOscar = "<span class=\"oscarSign\"> </span>";
                 }
                 str = str + '<div class="row' + show % 2 + ' pointerA">'
@@ -107,7 +107,7 @@ function getActorsList(elem, state) {
                 show++;
             }
         }
-        if(show == 0){
+        if (show == 0) {
             str = "No match found, <a class=\"inline-command\" onclick=\"newActor()\">add</a> new actor";
         }
         $(elem).siblings("div:nth-of-type(1)").html(str);
@@ -118,9 +118,9 @@ function addNewActor() {
     $.ajax({
         url: "/data/actor/add",
         type: "POST",
-        data:{
-            actor:$("#newActorName").val(),
-            hasOscar:$("#hasOscarCast").val()==1
+        data: {
+            actor: $("#newActorName").val(),
+            hasOscar: $("#hasOscarCast").val() == 1
         },
         success: function (result) {
             $("#newActorName").val("");
@@ -148,13 +148,17 @@ function addActor() {
         + '<input type="hidden" name="actorId" class="actorId" value="-1">'
         + '<div></div>'
         + '</div><div class="elem">'
-        + '<a onclick="addActor()"><i id="addActor" class="fa fa-plus-square fa-2x"></i></a>'
+        + '<a onclick="removeActor()"><i class="fa fa-minus-square fa-2x"></i></a>'
         + '</div></div>';
     $("#buffer").before(html);
     $("#numOfActors").val($("#numOfActors").val() + 1);
 }
 function removeActor() {
-    $("#numOfActors").val($("#numOfActors").val() - 1);
+
+}
+
+function addGenre() {
+    $('#genre').clone().appendTo('#genreContainer');
 
 }
 
@@ -202,34 +206,69 @@ function newActor() {
 }
 
 function closeNewCast() {
-    $("#outer-pop-up").css("display","none");
+    $("#outer-pop-up").css("display", "none");
 }
 
 function setHasOscar(objectType) {
-    console.log(objectType);
-    if ($("#hasOscar"+objectType).val() == 0) {
+    var hasOscar = $("#hasOscar" + objectType);
+    if (hasOscar.val() == 0) {
         var oscar = 1;
     } else {
         var oscar = 0;
     }
-    $("#hasOscar"+objectType).val(oscar);
-    $("#oscarCheck"+objectType).toggleClass("fa-square-o fa-check-square-o");
+    hasOscar.val(oscar);
+    $("#oscarCheck" + objectType).toggleClass("fa-square-o fa-check-square-o");
 }
 
 function isPublic(id) {
-    if ($("#isPublic" + id).val() == 0) {
-        var public = 1;
-    } else {
-        var public = 0;
+    var isPublic = $("#isPublic" + id);
+    var publicVal = 0;
+    if (isPublic.val() == 0) {
+        publicVal = 1;
     }
-    $("#isPublic" + id).val(public);
+    isPublic.val(publicVal);
     $("#publicCheck_" + id).toggleClass("fa-square-o fa-check-square-o");
 }
 
+function getUsersList(elem, state) {
+    var usersBufferElem = $("#usersBuffer");
+    if (state) {
+        $.ajax({
+            url: "/data/user/getList", type: "GET", success: function (result) {
+                usersBufferElem.val(result);
+            }
+        });
+    }
+    if (usersBufferElem.val() != "") {
+        var obj = eval("(" + usersBufferElem.val() + ")");
+        var str = '';
+        var input = $(elem).val();
+        var show = 0;
+        for (var i = 0; i < obj.length; i++) {
+            if (show > 10) continue;
+            if (new RegExp(input, "i").test(obj[i].nick)) { //
+                str = str + '<div class="row' + show % 2 + ' pointerA">'
+                    + '<span id="user_' + obj[i].id + '_' + $(elem).attr('id') +'" onclick="selUser(this)">'
+                    + obj[i].nick + '</span></div>';
+                show++;
+            }
+        }
+        $(elem).siblings("div").html(str);
+    }
+}
+
+function selUser(elem) {
+    var idNumber = elem.id.split("_");
+    $("#otherUser").val(idNumber[1]);
+    $('#navigator').attr('action', idNumber[2]+'Other');
+    $("#navigator").submit();
+}
+
 function submitLogin() {
-    $("#error").html(" ");
+    var errorElem = $("#error");
+    errorElem.html(" ");
     if ($("#pass").val() == "" || $("#email").val() == "") {
-        $("#error").html("Email and pass are required fields !");
+        errorElem.html("Email and pass are required fields !");
     } else {
         console.log("pass not match");
         $("#loginForm").submit();
@@ -244,6 +283,17 @@ $(document).ready(function () {
         $("#contact-section").css("display", "none");
         $("#touch-section").css("display", "table-cell");
 
-    })
+    });
 
+    var getOtherUserNickElem = $(".get-other-user-nick");
+    getOtherUserNickElem.on("click", function () {
+        if (getOtherUserNickElem.val() == "Enter other user's nick") {
+            getOtherUserNickElem.val("");
+        }
+    });
+    getOtherUserNickElem.on("blur", function () {
+        if (getOtherUserNickElem.val() == "") {
+            getOtherUserNickElem.val("Enter other user's nick");
+        }
+    });
 });

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.List;
 
 /**
  * DAO layer for User entity
@@ -66,6 +67,9 @@ public class JdbcUserDAO extends NamedParameterJdbcDaoSupport implements UserDAO
         return getJdbcTemplate().queryForObject(query, new Object[]{email}, new UserRowMapper());
     }
 
+    /**
+     * @see UserDAO#getById(int)
+     */
     @Override
     public User getById(int id) {
         final String query = "SELECT * FROM USERS WHERE ID = ?";
@@ -79,6 +83,14 @@ public class JdbcUserDAO extends NamedParameterJdbcDaoSupport implements UserDAO
     public User getByNick(String nick) {
         final String query = "SELECT * FROM USERS WHERE NICK = ? LIMIT 1";
         return getJdbcTemplate().queryForObject(query, new Object[]{nick}, new UserRowMapper());
+    }
+
+    /**
+     * @see UserDAO#getAll()
+     */
+    @Override
+    public List<User> getAll() {
+        return getJdbcTemplate().query("SELECT * FROM USERS", new UserRowMapper());
     }
 
     /**

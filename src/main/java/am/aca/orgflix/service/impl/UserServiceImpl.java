@@ -7,6 +7,8 @@ import am.aca.orgflix.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Service layer for user related methods
  */
@@ -60,6 +62,22 @@ public class UserServiceImpl extends BaseService implements UserService {
             throw new ServiceException(e.getMessage());
         }
         return user;
+    }
+
+    /**
+     * @see UserService#getAll()
+     */
+    @Override
+    public List<User> getAll() {
+        List<User> list;
+        try {
+            list = userDao.getAll();
+            if(list.size() == 0) throw new ServiceException("There is no registered user");
+        } catch (RuntimeException e) {
+            LOGGER.warn(e.getMessage());
+            throw new ServiceException(e.getMessage());
+        }
+        return list;
     }
 
     /**

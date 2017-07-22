@@ -8,6 +8,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
+
 
 /**
  * Integration tests for user DAO
@@ -15,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class UserDaoTest extends BaseIntegrationTest {
 
-    private final User standardUser = new User("scarface", "Tony Montana", "scarface@miami.com", "elvira");
+    private final User standardUser = new User("Davit", "Davit Abovyan", "davit.abovyan@gmail.com", "123456");
 
     @Autowired
     private UserDAO jdbcUserDAO;
@@ -83,7 +85,7 @@ public class UserDaoTest extends BaseIntegrationTest {
     @Test(expected = RuntimeException.class)
     public void addUser_EmailAlreadyExists_Fail() {
         jdbcUserDAO.add(standardUser);
-        jdbcUserDAO.add(new User("scarface6", "Tony Montana", "scarface@miami.com", "elvira"));
+        jdbcUserDAO.add(new User("scarface", "Tony Montana", "davit.abovyan@gmail.com", "elvira"));
     }
 
     /**
@@ -114,7 +116,7 @@ public class UserDaoTest extends BaseIntegrationTest {
     public void getUser_ByEmail_Success() {
         jdbcUserDAO.add(standardUser);
 
-        User actualUser = jdbcUserDAO.getByEmail("scarface@miami.com");
+        User actualUser = jdbcUserDAO.getByEmail("davit.abovyan@gmail.com");
         Assert.assertEquals(standardUser, actualUser);
     }
 
@@ -133,7 +135,7 @@ public class UserDaoTest extends BaseIntegrationTest {
     @Test
     public void getByNick_Success() {
         jdbcUserDAO.add(standardUser);
-        User actualUser = jdbcUserDAO.getByNick("scarface");
+        User actualUser = jdbcUserDAO.getByNick("Davit");
         Assert.assertEquals(standardUser, actualUser);
     }
 
@@ -143,6 +145,16 @@ public class UserDaoTest extends BaseIntegrationTest {
     @Test(expected = RuntimeException.class)
     public void getByNick_NotExisting_Fail() {
         jdbcUserDAO.getByNick("scarface");
+    }
+
+    /**
+     * @see UserDAO#getAll()
+     */
+    @Test
+    public void getAll_OneUser_Success() {
+        jdbcUserDAO.add(standardUser);
+        List<User> list = jdbcUserDAO.getAll();
+        Assert.assertEquals("Davit",list.get(0).getNick());
     }
 
     /**

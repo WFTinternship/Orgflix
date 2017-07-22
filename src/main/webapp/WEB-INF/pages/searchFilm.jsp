@@ -60,6 +60,14 @@
                             <span>Director of the film</span>
                             <input type="text" id="director" name="director" class="inputField"/>
                         </div>
+                        <div class="tableCell">
+                            <span>Genre</span>
+                            <select id="genre" name="genre" class="dateField">
+                                <c:forEach items="${genres}" var="genre">
+                                    <option value="${genre.value}">${genre.title}</option>
+                                </c:forEach>
+                            </select>
+                        </div>
                         <div class="tableCell" style="width:300px">
                             <span>Actor</span>
                             <div class="container">

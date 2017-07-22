@@ -73,6 +73,9 @@
 .hiddenElement{
     display:none;
 }
+.showElement{
+    display:block;
+}
 
 .dateField{
     width:80px !important;
@@ -117,6 +120,9 @@ a.starSelect:hover{
 .longElem{
     width:80%;
 }
+.keep-right{
+    text-align: right;
+}
 .oscarSign{
     width:30px;
     text-align:left;
@@ -151,6 +157,35 @@ a.no_link:hover{
     font-weight: bold;
     font-style: italic;
 }
+.genreStyle{
+    font-style: italic;
+}
+.get-other-user-nick{
+    width:150px !important;
+    float:right;
+    text-indent:3px;
+    color:gray !important;
+}
+/* Overriding styles*/
+#menu > .inner > ul > li a{
+    display:inline !important;
+    padding: 1em 0;
+    line-height: 2 !important;
+    cursor:pointer !important;
+}
+input[type="radio"] {
+    -moz-appearance: initial !important;
+    -webkit-appearance: initial !important;
+    -ms-appearance: initial !important;
+    appearance: initial !important;
+    display: block;
+    float: none !important;
+    margin-right: 0 !important;
+    opacity: 1 !important;
+    width: 1em;
+    z-index: -1;
+}
+
 @font-face {
     font-family: 'FontAwesome';
     src: url('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/fonts/fontawesome-webfont.eot?v=4.7.0');
@@ -240,6 +275,9 @@ a.no_link:hover{
 }
 .fa-plus-square:before {
     content: "\f0fe";
+}
+.fa-minus-square:before {
+    content: "\f146";
 }
 .fa-star:before {
     content: "\f005";

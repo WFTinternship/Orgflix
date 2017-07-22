@@ -2,6 +2,8 @@ package am.aca.orgflix.dao;
 
 import am.aca.orgflix.entity.User;
 
+import java.util.List;
+
 /**
  * Interface for user DAO
  */
@@ -41,6 +43,13 @@ public interface UserDAO {
      * @return user object with the matched id
      */
     User getByNick(String nick);
+
+    /**
+     * Return all users
+     *
+     * @return list of user user objects registered in DB
+     */
+    List<User> getAll();
 
     /**
      * Return user authenticated by user's email and password

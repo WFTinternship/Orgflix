@@ -460,6 +460,7 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
         filmService.add(film);
         cast = new Cast("Brad Pitt");
         castService.add(cast);
+        int id = cast.getId();
         castService.addToFilm(cast, film.getId());
 
         film = new Film();
@@ -517,7 +518,7 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
         Assert.assertEquals(3, filteredFilms.size());
 
         //filters by cast only
-        filteredFilms = filmService.getFilteredFilms(null, 0, 0, false, null, 1, 0);
+        filteredFilms = filmService.getFilteredFilms(null, 0, 0, false, null, id, 0);
         Assert.assertEquals(2, filteredFilms.size());
 
         //filters by genre only
@@ -525,7 +526,7 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
         Assert.assertEquals(4, filteredFilms.size());
 
         //filters by everything
-        filteredFilms = filmService.getFilteredFilms("gone girl", 2014, 2014, false, "david fincher", 1, Genre.MYSTERY.getValue());
+        filteredFilms = filmService.getFilteredFilms("gone girl", 2014, 2014, false, "david fincher", cast.getId(), Genre.MYSTERY.getValue());
         Assert.assertEquals(1, filteredFilms.size());
         Assert.assertEquals(film, filteredFilms.get(0));
     }

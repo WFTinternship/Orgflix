@@ -65,12 +65,14 @@ public class CastServiceMockTest extends BaseUnitTest {
      */
     @Test
     public void addCast_ValidCast_Success() {
+        when(castDaoMock.exists(cast.getName())).thenReturn(false);
         when(castDaoMock.add(cast)).thenReturn(true);
 
         boolean status = castService.add(cast);
         Assert.assertTrue(status);
 
         verify(castDaoMock, times(1)).add(cast);
+        verify(castDaoMock, times(1)).exists(cast.getName());
     }
 
     /**
@@ -98,12 +100,14 @@ public class CastServiceMockTest extends BaseUnitTest {
      */
     @Test
     public void addCast_DaoException_Fail() {
+        when(castDaoMock.exists(cast.getName())).thenReturn(false);
         when(castDaoMock.add(cast)).thenThrow(RuntimeException.class);
 
         boolean status = castService.add(cast);
         Assert.assertFalse(status);
 
         verify(castDaoMock, times(1)).add(cast);
+        verify(castDaoMock, times(1)).exists(cast.getName());
     }
 
     /**

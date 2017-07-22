@@ -2,6 +2,7 @@ package am.aca.orgflix.controller;
 
 import am.aca.orgflix.entity.Cast;
 import am.aca.orgflix.entity.Film;
+import am.aca.orgflix.entity.Genre;
 import am.aca.orgflix.service.CastService;
 import am.aca.orgflix.service.FilmService;
 import org.apache.log4j.Logger;
@@ -17,6 +18,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -51,6 +53,7 @@ public class FilmController {
             if (userId != -1) {
                 modelAndView = new ModelAndView("newFilm");
                 modelAndView.addObject("actors", castService.getAll());
+                modelAndView.addObject("genres", Genre.values());
             } else {
                 modelAndView = new ModelAndView("error", "message", "You are not logged in, please first login");
             }
@@ -65,7 +68,8 @@ public class FilmController {
     public ModelAndView createFilm(@RequestParam CommonsMultipartFile file, HttpSession session,
                                   @RequestParam("title") String title, @RequestParam("year") int year,
                                   @RequestParam("stars") int star, @RequestParam("hasOscar") int hasOscar,
-                                  @RequestParam("actorId") int[] actorIds, @RequestParam("director") String director) throws IOException {
+                                  @RequestParam("actorId") int[] actorIds, @RequestParam("director") String director,
+                                   @RequestParam("genre") String[] genres) throws IOException {
 
         ModelAndView modelAndView;
 
@@ -84,6 +88,12 @@ public class FilmController {
 
                 List<Cast> castList = castService.addCastsToFilm(filmId,actorIds);
                 film.setCasts(castList);
+
+                List<Genre> genreList = new ArrayList<>();
+                for(String g : genres){
+                   genreList.add(Genre.valueOf(g));
+                }
+                film.setGenres(genreList);
                 film.setImage(filmId + "/" + filmId + ".jpg");
                 // write updated fields of film into DB
                 filmService.edit(film);
@@ -112,6 +122,8 @@ public class FilmController {
             if (userId != -1) {
                 modelAndView = new ModelAndView("searchFilm");
                 modelAndView.addObject("actors", castService.getAll());
+                modelAndView.addObject("genres", Genre.values());
+
             } else {
                 modelAndView = new ModelAndView("error", "message", "You are not logged in, please first login");
             }
@@ -126,7 +138,7 @@ public class FilmController {
     public ModelAndView searchFilm(HttpSession session, @RequestParam("title") String title,
                                    @RequestParam("startYear") int startYear, @RequestParam("finishYear") int finishYear,
                                    @RequestParam("hasOscar") int hasOscar, @RequestParam("director") String director,
-                                   @RequestParam("actorId") int actorId ) {
+                                   @RequestParam("actorId") int actorId, @RequestParam("genre") int genre ) {
 
         ModelAndView modelAndView;
 
@@ -136,7 +148,7 @@ public class FilmController {
             if (userId != -1) {
                 modelAndView = new ModelAndView("index");
                 modelAndView.addObject("films", filmService.getFilteredFilms(title,startYear, finishYear,
-                        hasOscar == 1, director, actorId,1));
+                        hasOscar == 1, director, actorId, genre));
                 modelAndView.addObject("page", "index");
 
             } else {

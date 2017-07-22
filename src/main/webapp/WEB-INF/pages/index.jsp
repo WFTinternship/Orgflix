@@ -61,6 +61,11 @@
                                         <a onmouseover="starFilm(5,false,${film.id})" onmouseout="starFilm(0,false,${film.id})" onclick="recordStar(5,${film.id})" class="starSelect pointerA"><i class="fa fa-star fa-sm"></i></a>
                                         <input type="hidden" id="stars_${film.id}" value="1" />
                                     </div>
+                                    <c:if test="${film.hasOscar}">
+                                        <div class="keep-right">
+                                            <i class="fa fa-trophy fa-fw"></i>
+                                        </div>
+                                    </c:if>
                                 </c:if>
                                 <c:if test="${page == 'watch_list'}">
                                     <a href="#" class="no_link" onclick="RemoveFromList('watch','${film.id}')"><i class="fa fa-trash-o fa-fw"></i></a>
@@ -72,6 +77,12 @@
                         </c:if>
                         <div class="film-ref">
                             <h2><c:out value="${film.title}" /></h2>
+                            <div class="genreStyle">
+                                <c:forEach items="${film.genres}" var="genre" varStatus="loop" >
+                                    <c:out value="${genre}"/>
+                                    <c:if test="${loop.index+1 == film.genres.size()}">, </c:if>
+                                </c:forEach>
+                            </div>
                             <c:forEach items="${film.casts}" var="cast" >
                                 <div class="castStyle"><c:out value="${cast.name}"/></div>
                             </c:forEach>

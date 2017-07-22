@@ -2,6 +2,8 @@ package am.aca.orgflix.service;
 
 import am.aca.orgflix.entity.User;
 
+import java.util.List;
+
 /**
  * Interface for user service layer
  */
@@ -23,6 +25,13 @@ public interface UserService {
      * @return the User object having the given ID
      */
     User getById(int id);
+
+    /**
+     * Retrieves all users
+     *
+     * @return list of all User objects registered in DB
+     */
+    List<User> getAll();
 
     /**
      * Retrieves the User object passed the authentication by email and password

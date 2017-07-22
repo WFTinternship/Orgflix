@@ -419,19 +419,19 @@ public class FilmDaoTest extends BaseIntegrationTest {
         jdbcCastDAO.addToFilm(cast, film.getId());
 
         //filters by nothing
-        List<Film> filteredFilms = jdbcFilmDAO.getFilteredFilms("", 0, 0, false, null, 0, 0);
+        List<Film> filteredFilms = jdbcFilmDAO.getFilteredFilms("", 0, 0, false, "", 0, 0);
         Assert.assertEquals(6, filteredFilms.size());
 
         //filters by title only
-        filteredFilms = jdbcFilmDAO.getFilteredFilms("city of", 0, 0, false, null, 0, 0);
+        filteredFilms = jdbcFilmDAO.getFilteredFilms("city of", 0, 0, false, "", 0, 0);
         Assert.assertEquals(2, filteredFilms.size());
 
         //filters by production year constraints only
-        filteredFilms = jdbcFilmDAO.getFilteredFilms("", 2000, 0, false, null, 0, 0);
+        filteredFilms = jdbcFilmDAO.getFilteredFilms("", 2000, 0, false, "", 0, 0);
         Assert.assertEquals(4, filteredFilms.size());
 
         //filters by oscar wins only
-        filteredFilms = jdbcFilmDAO.getFilteredFilms("", 0, 0, true, null, 0, 0);
+        filteredFilms = jdbcFilmDAO.getFilteredFilms("", 0, 0, true, "", 0, 0);
         Assert.assertEquals(1, filteredFilms.size());
 
         //filters by director only
@@ -439,11 +439,11 @@ public class FilmDaoTest extends BaseIntegrationTest {
         Assert.assertEquals(3, filteredFilms.size());
 
         //filters by cast only
-        filteredFilms = jdbcFilmDAO.getFilteredFilms("", 0, 0, false, null, id, 0);
+        filteredFilms = jdbcFilmDAO.getFilteredFilms("", 0, 0, false, "", id, 0);
         Assert.assertEquals(2, filteredFilms.size());
 
         //filters by genre only
-        filteredFilms = jdbcFilmDAO.getFilteredFilms("", 0, 0, false, null, 0, Genre.DRAMA.getValue());
+        filteredFilms = jdbcFilmDAO.getFilteredFilms("", 0, 0, false, "", 0, Genre.DRAMA.getValue());
         Assert.assertEquals(4, filteredFilms.size());
 
         //filters by everything

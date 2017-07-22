@@ -540,10 +540,10 @@ public class FilmServiceMockTest extends BaseUnitTest {
      * @see FilmServiceImpl#getFilteredFilms(String, int, int, boolean, String, int, int)
      */
     @Test
-    public void filterByEverything_TitleNull_Success() {
+    public void filterByEverything_TitleEmtpy_Success() {
         when(filmDaoMock.getFilteredFilms("", 1000, 3000, false, "testDir", 1, 1)).thenReturn(films);
 
-        List<Film> actualFilms = filmService.getFilteredFilms(null, 1000, 3000, false, "testDir", 1, 1);
+        List<Film> actualFilms = filmService.getFilteredFilms("", 1000, 3000, false, "testDir", 1, 1);
         Assert.assertEquals(films, actualFilms);
 
         verify(filmDaoMock, times(1)).getFilteredFilms("", 1000, 3000, false, "testDir", 1, 1);

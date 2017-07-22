@@ -208,8 +208,6 @@ public class FilmServiceImpl extends BaseService implements FilmService {
     public List<Film> getFilteredFilms(String title, int startYear, int finishYear,
                                        boolean hasOscar, String director, int cast, int genre) {
         List<Film> films = new ArrayList<>();
-        if (title == null)
-            title = "";
         try {
             films = filmDao.getFilteredFilms(title, startYear,
                     finishYear, hasOscar, director, cast, genre);

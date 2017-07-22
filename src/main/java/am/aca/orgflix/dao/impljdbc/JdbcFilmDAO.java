@@ -17,6 +17,7 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * DAO layer for Film entity
@@ -206,7 +207,7 @@ public class JdbcFilmDAO extends NamedParameterJdbcDaoSupport implements FilmDAO
         if (hasOscar)
             queryBuilder.append("AND FILMS.HAS_OSCAR = TRUE ");
 
-        if (director != null) {
+        if (!Objects.equals(director, "")) {
             queryBuilder.append("AND FILMS.DIRECTOR LIKE ? ");
             paramsList.add("%" + director + "%");
         }

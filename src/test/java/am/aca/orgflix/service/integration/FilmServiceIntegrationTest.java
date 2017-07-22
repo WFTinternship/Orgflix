@@ -498,31 +498,31 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
         castService.addToFilm(cast, film.getId());
 
         //filters by nothing
-        List<Film> filteredFilms = filmService.getFilteredFilms(null, 0, 0, false, null, 0, 0);
+        List<Film> filteredFilms = filmService.getFilteredFilms("", 0, 0, false, "", 0, 0);
         Assert.assertEquals(6, filteredFilms.size());
 
         //filters by title only
-        filteredFilms = filmService.getFilteredFilms("city of", 0, 0, false, null, 0, 0);
+        filteredFilms = filmService.getFilteredFilms("city of", 0, 0, false, "", 0, 0);
         Assert.assertEquals(2, filteredFilms.size());
 
         //filters by production year constraints only
-        filteredFilms = filmService.getFilteredFilms(null, 2000, 0, false, null, 0, 0);
+        filteredFilms = filmService.getFilteredFilms("", 2000, 0, false, "", 0, 0);
         Assert.assertEquals(4, filteredFilms.size());
 
         //filters by oscar wins only
-        filteredFilms = filmService.getFilteredFilms(null, 0, 0, true, null, 0, 0);
+        filteredFilms = filmService.getFilteredFilms("", 0, 0, true, "", 0, 0);
         Assert.assertEquals(1, filteredFilms.size());
 
         //filters by director only
-        filteredFilms = filmService.getFilteredFilms(null, 0, 0, false, "david fincher", 0, 0);
+        filteredFilms = filmService.getFilteredFilms("", 0, 0, false, "david fincher", 0, 0);
         Assert.assertEquals(3, filteredFilms.size());
 
         //filters by cast only
-        filteredFilms = filmService.getFilteredFilms(null, 0, 0, false, null, id, 0);
+        filteredFilms = filmService.getFilteredFilms("", 0, 0, false, "", id, 0);
         Assert.assertEquals(2, filteredFilms.size());
 
         //filters by genre only
-        filteredFilms = filmService.getFilteredFilms(null, 0, 0, false, null, 0, Genre.DRAMA.getValue());
+        filteredFilms = filmService.getFilteredFilms("", 0, 0, false, "", 0, Genre.DRAMA.getValue());
         Assert.assertEquals(4, filteredFilms.size());
 
         //filters by everything

@@ -1,14 +1,13 @@
 package am.aca.orgflix.controller;
 
-import am.aca.orgflix.entity.User;
 import am.aca.orgflix.service.FilmService;
 import am.aca.orgflix.service.ListService;
 import am.aca.orgflix.service.UserService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
@@ -44,14 +43,14 @@ public class MainController {
 
     @RequestMapping("/")
     public ModelAndView indexPageFirtVisit(HttpSession session) {
-        if(!session.getAttributeNames().hasMoreElements() )
+        if (!session.getAttributeNames().hasMoreElements())
             session.setAttribute("userId", -1);
         ModelAndView modelAndView = new ModelAndView("index");
         modelAndView.addObject("films", filmService.getAll(0, 12));
         modelAndView.addObject("ratings", filmService.getAllRatings(0, 12));
         modelAndView.addObject("currentPage", 0);
         modelAndView.addObject("page", "index");
-        modelAndView.addObject("numOfPages", filmService.getTotalNumber()/12);
+        modelAndView.addObject("numOfPages", filmService.getTotalNumber() / 12);
         return modelAndView;
     }
 
@@ -67,7 +66,7 @@ public class MainController {
             modelAndView.addObject("page", "index");
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
-            modelAndView = new ModelAndView("error","message",e);
+            modelAndView = new ModelAndView("error", "message", e);
         }
         return modelAndView;
     }
@@ -82,15 +81,15 @@ public class MainController {
             if (userId != -1) {
                 modelAndView = new ModelAndView("index");
                 modelAndView.addObject("films", listService.showOwnWatched(userId, currentPage * 12));
-                modelAndView.addObject("numOfPages", listService.totalNumberOfFilmsInAList(userId, true) / 12);
+                modelAndView.addObject("numOfPages", listService.totalNumberOfFilmsInAList(userId, true).length / 12);
                 modelAndView.addObject("currentPage", currentPage);
                 modelAndView.addObject("page", "watch_list");
-            }else{
-                modelAndView = new ModelAndView("error","message","You are not logged in, please first login");
+            } else {
+                modelAndView = new ModelAndView("error", "message", "You are not logged in, please first login");
             }
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
-            modelAndView = new ModelAndView("error","message",e);
+            modelAndView = new ModelAndView("error", "message", e);
         }
         return modelAndView;
     }
@@ -105,15 +104,15 @@ public class MainController {
             int userId = (int) session.getAttribute("userId");
             if (userId != -1) {
                 modelAndView.addObject("films", listService.showOwnPlanned(userId, currentPage * 12));
-                modelAndView.addObject("numOfPages", listService.totalNumberOfFilmsInAList(userId, false) / 12);
+                modelAndView.addObject("numOfPages", listService.totalNumberOfFilmsInAList(userId, false).length / 12);
                 modelAndView.addObject("currentPage", currentPage);
                 modelAndView.addObject("page", "wish_list");
-            }else{
-                modelAndView = new ModelAndView("error","message","You are not logged in, please first login");
+            } else {
+                modelAndView = new ModelAndView("error", "message", "You are not logged in, please first login");
             }
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
-            modelAndView = new ModelAndView("error","message",e);
+            modelAndView = new ModelAndView("error", "message", e);
         }
         return modelAndView;
     }
@@ -131,13 +130,13 @@ public class MainController {
                 modelAndView.addObject("currentPage", currentPage);
                 modelAndView.addObject("page", "watchListUserOther");
                 modelAndView.addObject("otherUser", otherUser);
-                modelAndView.addObject("title", "Watch list of user "+userService.getById(otherUser).getNick());
-            }else{
-                modelAndView = new ModelAndView("error","message","You are not logged in, please first login");
+                modelAndView.addObject("title", "Watch list of user " + userService.getById(otherUser).getNick());
+            } else {
+                modelAndView = new ModelAndView("error", "message", "You are not logged in, please first login");
             }
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
-            modelAndView = new ModelAndView("error","message",e);
+            modelAndView = new ModelAndView("error", "message", e);
         }
         return modelAndView;
     }
@@ -155,13 +154,13 @@ public class MainController {
                 modelAndView.addObject("currentPage", currentPage);
                 modelAndView.addObject("page", "wishListUserOther");
                 modelAndView.addObject("otherUser", otherUser);
-                modelAndView.addObject("title", "Wish list of user "+userService.getById(otherUser).getNick());
-            }else{
-                modelAndView = new ModelAndView("error","message","You are not logged in, please first login");
+                modelAndView.addObject("title", "Wish list of user " + userService.getById(otherUser).getNick());
+            } else {
+                modelAndView = new ModelAndView("error", "message", "You are not logged in, please first login");
             }
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
-            modelAndView = new ModelAndView("error","message",e);
+            modelAndView = new ModelAndView("error", "message", e);
         }
         return modelAndView;
     }

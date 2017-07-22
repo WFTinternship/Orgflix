@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -34,6 +35,8 @@ public class ListServiceMockTest extends BaseUnitTest {
     private Film film = new Film("Babel", 2006);
     private User user = new User("hulk", "Bruce Banner", "bbanner@avenger.com", "natasha");
     private List<Film> films = new ArrayList<>();
+
+    private Integer[] totalFilms = {0, 1, 1, 1, 0, 1, 1, 0};
 
     /**
      * Configures Mockito
@@ -458,12 +461,12 @@ public class ListServiceMockTest extends BaseUnitTest {
      */
     @Test
     public void totalNumber_Watched_Success() {
-        when(listDaoMock.totalNumberOfWatched(user.getId())).thenReturn(8);
+        when(listDaoMock.watchedFilmPrivacyList(user.getId())).thenReturn(Arrays.asList(totalFilms));
 
-        int size = listService.totalNumberOfFilmsInAList(user.getId(), true);
-        Assert.assertEquals(8, size);
+        int[] result = listService.totalNumberOfFilmsInAList(user.getId(), true);
+        Assert.assertEquals(8, result.length);
 
-        verify(listDaoMock, times(1)).totalNumberOfWatched(user.getId());
+        verify(listDaoMock, times(1)).watchedFilmPrivacyList(user.getId());
     }
 
     /**
@@ -471,11 +474,11 @@ public class ListServiceMockTest extends BaseUnitTest {
      */
     @Test
     public void totalNumber_Watched_Fail() {
-        when(listDaoMock.totalNumberOfWatched(user.getId())).thenThrow(RuntimeException.class);
+        when(listDaoMock.watchedFilmPrivacyList(user.getId())).thenThrow(RuntimeException.class);
 
-        int size = listService.totalNumberOfFilmsInAList(user.getId(), true);
-        Assert.assertEquals(0, size);
-        verify(listDaoMock, times(1)).totalNumberOfWatched(user.getId());
+        int[] result = listService.totalNumberOfFilmsInAList(user.getId(), true);
+        Assert.assertEquals(0, result.length);
+        verify(listDaoMock, times(1)).watchedFilmPrivacyList(user.getId());
     }
 
     /**
@@ -483,12 +486,12 @@ public class ListServiceMockTest extends BaseUnitTest {
      */
     @Test
     public void totalNumber_Planned_Success() {
-        when(listDaoMock.totalNumberOfPlanned(user.getId())).thenReturn(8);
+        when(listDaoMock.plannedFilmPrivacyList(user.getId())).thenReturn(Arrays.asList(totalFilms));
 
-        int size = listService.totalNumberOfFilmsInAList(user.getId(), false);
-        Assert.assertEquals(8, size);
+        int[] result = listService.totalNumberOfFilmsInAList(user.getId(), false);
+        Assert.assertEquals(8, result.length);
 
-        verify(listDaoMock, times(1)).totalNumberOfPlanned(user.getId());
+        verify(listDaoMock, times(1)).plannedFilmPrivacyList(user.getId());
     }
 
     /**
@@ -496,10 +499,10 @@ public class ListServiceMockTest extends BaseUnitTest {
      */
     @Test
     public void totalNumber_Planned_Fail() {
-        when(listDaoMock.totalNumberOfPlanned(user.getId())).thenThrow(RuntimeException.class);
+        when(listDaoMock.plannedFilmPrivacyList(user.getId())).thenThrow(RuntimeException.class);
 
-        int size = listService.totalNumberOfFilmsInAList(user.getId(), false);
-        Assert.assertEquals(0, size);
-        verify(listDaoMock, times(1)).totalNumberOfPlanned(user.getId());
+        int[] result = listService.totalNumberOfFilmsInAList(user.getId(), false);
+        Assert.assertEquals(0, result.length);
+        verify(listDaoMock, times(1)).plannedFilmPrivacyList(user.getId());
     }
 }

@@ -79,6 +79,7 @@
                                 </div>
                             </div>
                             <input type="hidden" id="buffer" />
+                            <input type="hidden" id="numOfActors" name="numOfActors" value="1"/>
                         </div>
                     </div>
 

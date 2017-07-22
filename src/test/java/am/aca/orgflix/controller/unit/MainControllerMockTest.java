@@ -229,7 +229,7 @@ public class MainControllerMockTest extends BaseUnitTest {
     @Test
     public void watchList_Success() {
         when(listServiceMock.showOwnWatched(1, 12)).thenReturn(films);
-        when(listServiceMock.totalNumberOfFilmsInAList(1, true)).thenReturn(0);
+        when(listServiceMock.totalNumberOfFilmsInAList(1, true)).thenReturn(new int[0]);
         when(userServiceMock.getById(1)).thenReturn(user);
 
         ModelAndView actualMV = mainController.watchList(new MockHttpSession(), 1);

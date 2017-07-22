@@ -151,7 +151,11 @@ public class FilmControllerMockTest extends BaseUnitTest {
     public void searchFilmResult_Valid_Success() throws Exception {
         session.setAttribute("userId", 1);
 
-//        mockMvc.perform(post("/searchFilmResult").param("title", "test")
-//        .param("startYear", "0").param("finishYear", ""))
+//        when(filmServiceMock.getFilteredFilms())
+
+        mockMvc.perform(post("/searchFilmResult").param("title", "test")
+                .param("startYear", "0").param("finishYear", "0")
+                .param("director", "test").param("actorId", "0")
+                .param("genre", "0")).andExpect(view().name("index"));
     }
 }

@@ -519,7 +519,7 @@ public class ListDaoTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see ListDao#totalNumberOfWatched(int)
+     * @see ListDao#watchedFilmPrivacyList(int)
      */
     @Test
     public void totalNumberWatched_Multiple_Success() {
@@ -528,21 +528,21 @@ public class ListDaoTest extends BaseIntegrationTest {
             listDaoJdbc.insertWatched(film.getId(), userId, true);
         }
 
-        int size = listDaoJdbc.totalNumberOfWatched(userId);
+        int size = listDaoJdbc.watchedFilmPrivacyList(userId).size();
         Assert.assertEquals(7, size);
     }
 
     /**
-     * @see ListDao#totalNumberOfWatched(int)
+     * @see ListDao#watchedFilmPrivacyList(int) (int)
      */
     @Test
     public void totalNumberWatched_Empty() {
-        int size = listDaoJdbc.totalNumberOfWatched(userId);
+        int size = listDaoJdbc.watchedFilmPrivacyList(userId).size();
         Assert.assertEquals(0, size);
     }
 
     /**
-     * @see ListDao#totalNumberOfPlanned(int)
+     * @see ListDao#plannedFilmPrivacyList(int) (int)
      */
     @Test
     public void totalNumberPlanned_Multiple_Success() {
@@ -551,16 +551,16 @@ public class ListDaoTest extends BaseIntegrationTest {
             listDaoJdbc.insertPlanned(film.getId(), userId, true);
         }
 
-        int size = listDaoJdbc.totalNumberOfPlanned(userId);
+        int size = listDaoJdbc.plannedFilmPrivacyList(userId).size();
         Assert.assertEquals(5, size);
     }
 
     /**
-     * @see ListDao#totalNumberOfPlanned(int)
+     * @see ListDao#plannedFilmPrivacyList(int)
      */
     @Test
     public void totalNumberPlanned_Empty() {
-        int size = listDaoJdbc.totalNumberOfPlanned(userId);
+        int size = listDaoJdbc.plannedFilmPrivacyList(userId).size();
         Assert.assertEquals(0, size);
     }
 }

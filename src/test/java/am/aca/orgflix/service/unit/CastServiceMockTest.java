@@ -39,7 +39,6 @@ public class CastServiceMockTest extends BaseUnitTest {
     private Cast cast = new Cast("Cate Blanchett", true);
     private List<Cast> casts = new ArrayList<>();
     private Film film = new Film("Babel", 2006);
-    private List<Film> films = new ArrayList<>();
 
     /**
      * Configures Mockito
@@ -67,6 +66,7 @@ public class CastServiceMockTest extends BaseUnitTest {
     public void addCast_ValidCast_Success() {
         when(castDaoMock.exists(cast.getName())).thenReturn(false);
         when(castDaoMock.add(cast)).thenReturn(true);
+        when(castDaoMock.exists(cast.getName())).thenReturn(false);
 
         boolean status = castService.add(cast);
         Assert.assertTrue(status);

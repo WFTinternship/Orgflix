@@ -187,8 +187,6 @@ public class JdbcFilmDAO extends NamedParameterJdbcDaoSupport implements FilmDAO
                 "FILMS.RATE_4STAR, FILMS.RATE_5STAR FROM FILMS " +
                 "LEFT JOIN FILM_TO_CAST " +
                 "ON FILMS.ID = FILM_TO_CAST.FILM_ID " +
-                "LEFT JOIN CASTS " +
-                "ON FILM_TO_CAST.ACTOR_ID = CASTS.ID " +
                 "LEFT JOIN FILM_TO_GENRE " +
                 "ON FILM_TO_GENRE.FILM_ID = FILMS.ID " +
                 "WHERE FILMS.TITLE LIKE ? ");
@@ -214,7 +212,7 @@ public class JdbcFilmDAO extends NamedParameterJdbcDaoSupport implements FilmDAO
         }
 
         if (castId > 0) {
-            queryBuilder.append("AND CASTS.ID = ? ");
+            queryBuilder.append("AND FILM_TO_CAST.ACTOR_ID = ? ");
             paramsList.add(castId);
         }
 

@@ -5,9 +5,9 @@ import am.aca.orgflix.service.FilmService;
 import am.aca.orgflix.service.UserService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
@@ -17,7 +17,7 @@ import javax.servlet.http.HttpSession;
  */
 @Controller
 @RequestMapping("/")
-public class UserController{
+public class UserController {
 
     private Logger LOGGER = Logger.getLogger(UserController.class);
 
@@ -38,16 +38,16 @@ public class UserController{
     @RequestMapping("/signup")
     public ModelAndView signup() {
         ModelAndView modelAndView;
-        try{
+        try {
             modelAndView = new ModelAndView("signup");
             modelAndView.addObject("films", filmService.getAll(0, 12));
             modelAndView.addObject("ratings", filmService.getAllRatings(0, 12));
             modelAndView.addObject("currentPage", 0);
             modelAndView.addObject("page", "index");
-            modelAndView.addObject("numOfPages", filmService.getTotalNumber()/12);
+            modelAndView.addObject("numOfPages", filmService.getTotalNumber() / 12);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
-            modelAndView = new ModelAndView("error","message",e);
+            modelAndView = new ModelAndView("error", "message", e);
         }
         return modelAndView;
     }
@@ -60,7 +60,7 @@ public class UserController{
                                      @RequestParam("pass") String pass) {
 
         ModelAndView modelAndView;
-        User user = new User(nick, userName, email, pass.hashCode()+email);
+        User user = new User(nick, userName, email, pass.hashCode() + email);
 
         try {
             int userId = userService.add(user);
@@ -78,7 +78,7 @@ public class UserController{
             }
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
-            modelAndView = new ModelAndView("error","message",e);
+            modelAndView = new ModelAndView("error", "message", e);
         }
         return modelAndView;
     }
@@ -87,11 +87,11 @@ public class UserController{
     @RequestMapping("/login")
     public ModelAndView login() {
         ModelAndView modelAndView;
-        try{
+        try {
             modelAndView = new ModelAndView("login");
-        }catch (RuntimeException e){
+        } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
-            modelAndView = new ModelAndView("error","message",e);
+            modelAndView = new ModelAndView("error", "message", e);
         }
         return modelAndView;
     }
@@ -99,13 +99,13 @@ public class UserController{
     @RequestMapping("/logout")
     public ModelAndView logout(HttpSession session) {
         ModelAndView modelAndView;
-        try{
+        try {
             session.setAttribute("userId", -1);
             session.removeAttribute("user");
             modelAndView = new ModelAndView("login");
-        }catch (RuntimeException e){
+        } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
-            modelAndView = new ModelAndView("error","message",e);
+            modelAndView = new ModelAndView("error", "message", e);
         }
         return modelAndView;
     }
@@ -117,9 +117,9 @@ public class UserController{
 
         ModelAndView modelAndView;
         try {
-            User user = userService.authenticate(email, pass.hashCode()+email);
+            User user = userService.authenticate(email, pass.hashCode() + email);
             if (user == null) {
-                modelAndView = new ModelAndView("error","message","Wrong email/or password, please try again");
+                modelAndView = new ModelAndView("error", "message", "Wrong email/or password, please try again");
                 session.setAttribute("userId", -1);
                 session.setAttribute("user", "");
             } else {
@@ -132,9 +132,9 @@ public class UserController{
                 session.setAttribute("userId", user.getId());
                 session.setAttribute("user", user.getNick() + " (" + user.getEmail() + ")");
             }
-        }catch (RuntimeException e){
+        } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
-            modelAndView = new ModelAndView("error","message",e);
+            modelAndView = new ModelAndView("error", "message", e);
         }
         return modelAndView;
     }

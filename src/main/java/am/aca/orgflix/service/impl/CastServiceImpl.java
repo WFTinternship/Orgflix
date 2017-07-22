@@ -47,7 +47,7 @@ public class CastServiceImpl extends BaseService implements CastService {
         boolean result;
         try {
             if (castDAO.exists(cast.getName()))
-                throw new ServiceException("Actor with the ame name already exists");
+                throw new ServiceException("Actor with the same name already exists");
             result = castDAO.add(cast);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());

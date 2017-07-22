@@ -10,7 +10,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.test.context.ContextConfiguration;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,7 +20,6 @@ import java.util.List;
  * Created by karine on 6/27/2017
  */
 @Component
-@ContextConfiguration(locations = {"classpath:applicationContext-test.xml"})
 public class DataGenerator {
     @Autowired
     FilmService filmService;

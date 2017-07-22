@@ -457,51 +457,51 @@ public class ListServiceMockTest extends BaseUnitTest {
     }
 
     /**
-     * @see ListServiceImpl#totalNumberOfFilmsInAList(int, boolean)
+     * @see ListServiceImpl#filmPrivacyList(int, boolean)
      */
     @Test
     public void totalNumber_Watched_Success() {
         when(listDaoMock.watchedFilmPrivacyList(user.getId())).thenReturn(Arrays.asList(totalFilms));
 
-        int[] result = listService.totalNumberOfFilmsInAList(user.getId(), true);
+        int[] result = listService.filmPrivacyList(user.getId(), true);
         Assert.assertEquals(8, result.length);
 
         verify(listDaoMock, times(1)).watchedFilmPrivacyList(user.getId());
     }
 
     /**
-     * @see ListServiceImpl#totalNumberOfFilmsInAList(int, boolean)
+     * @see ListServiceImpl#filmPrivacyList(int, boolean)
      */
     @Test
     public void totalNumber_Watched_Fail() {
         when(listDaoMock.watchedFilmPrivacyList(user.getId())).thenThrow(RuntimeException.class);
 
-        int[] result = listService.totalNumberOfFilmsInAList(user.getId(), true);
+        int[] result = listService.filmPrivacyList(user.getId(), true);
         Assert.assertEquals(0, result.length);
         verify(listDaoMock, times(1)).watchedFilmPrivacyList(user.getId());
     }
 
     /**
-     * @see ListServiceImpl#totalNumberOfFilmsInAList(int, boolean)
+     * @see ListServiceImpl#filmPrivacyList(int, boolean)
      */
     @Test
     public void totalNumber_Planned_Success() {
         when(listDaoMock.plannedFilmPrivacyList(user.getId())).thenReturn(Arrays.asList(totalFilms));
 
-        int[] result = listService.totalNumberOfFilmsInAList(user.getId(), false);
+        int[] result = listService.filmPrivacyList(user.getId(), false);
         Assert.assertEquals(8, result.length);
 
         verify(listDaoMock, times(1)).plannedFilmPrivacyList(user.getId());
     }
 
     /**
-     * @see ListServiceImpl#totalNumberOfFilmsInAList(int, boolean)
+     * @see ListServiceImpl#filmPrivacyList(int, boolean)
      */
     @Test
     public void totalNumber_Planned_Fail() {
         when(listDaoMock.plannedFilmPrivacyList(user.getId())).thenThrow(RuntimeException.class);
 
-        int[] result = listService.totalNumberOfFilmsInAList(user.getId(), false);
+        int[] result = listService.filmPrivacyList(user.getId(), false);
         Assert.assertEquals(0, result.length);
         verify(listDaoMock, times(1)).plannedFilmPrivacyList(user.getId());
     }

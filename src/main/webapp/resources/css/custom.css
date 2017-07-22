@@ -300,3 +300,9 @@ input[type="radio"] {
 .fa-search:before {
     content: "\f002";
 }
+.fa-unlock:before {
+    content: "\f09c";
+}
+.fa-lock:before {
+    content: "\f023";
+}

@@ -110,6 +110,6 @@ public interface ListService {
      *                  false if planned films are to be retrieved
      * @return the number of films associated in the given way with the given user
      */
-    int[] totalNumberOfFilmsInAList(int userId, boolean isWatched);
+    int[] filmPrivacyList(int userId, boolean isWatched);
 
 }

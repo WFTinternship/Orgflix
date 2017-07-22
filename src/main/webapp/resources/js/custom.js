@@ -73,14 +73,15 @@ function recordStar(star, filmId) {
         }
     });
 }
-function ajaxSupport(result) {
+
+function ajaxSupport(result, filmId ) {
     $("#inner-pop-up").html(result);
     $("#outer-pop-up").css("display", "block");
     setTimeout(function () {
         timeOuter(filmId, false);
     }, 900);
 }
-function getActorsList(elem, state) {
+function getActorsList(elem, state, isAdd) {
     if (state) {
         $.ajax({
             url: "/data/actor/getList", type: "GET", success: function (result) {
@@ -107,7 +108,7 @@ function getActorsList(elem, state) {
                 show++;
             }
         }
-        if (show == 0) {
+        if (show == 0 && isAdd) {
             str = "No match found, <a class=\"inline-command\" onclick=\"newActor()\">add</a> new actor";
         }
         $(elem).siblings("div:nth-of-type(1)").html(str);
@@ -262,6 +263,32 @@ function selUser(elem) {
     $("#otherUser").val(idNumber[1]);
     $('#navigator').attr('action', idNumber[2]+'Other');
     $("#navigator").submit();
+}
+
+function invertPrivacy(elem, id) {
+    var state = elem.getAttribute("data-privacy");
+    $.ajax({
+        url: "/data/film/privacy",
+        type: "POST",
+        data: {
+            filmId: id,
+            isPublic: state
+        },
+        success: function (result) {
+            if(state) {
+                elem.setAttribute("data-privacy", "false");
+                $(elem).html('<i class="fa fa-unlock fa-fw"></i>');
+            } else {
+                elem.setAttribute("data-privacy", "true");
+                $(elem).html('<i class="fa fa-lock fa-fw"></i>');
+            }
+            $("#inner-pop-up").html(result);
+            $("#outer-pop-up").css("display", "block");
+            setTimeout(function () {
+                $("#outer-pop-up").css("display", "none");
+            }, 900);
+        }
+    });
 }
 
 function submitLogin() {

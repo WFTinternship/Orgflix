@@ -81,7 +81,8 @@ public class MainController {
             if (userId != -1) {
                 modelAndView = new ModelAndView("index");
                 modelAndView.addObject("films", listService.showOwnWatched(userId, currentPage * 12));
-                modelAndView.addObject("numOfPages", listService.totalNumberOfFilmsInAList(userId, true).length / 12);
+                modelAndView.addObject("numOfPages", listService.filmPrivacyList(userId, true).length / 12);
+                modelAndView.addObject("privacyList", listService.filmPrivacyList(userId, false));
                 modelAndView.addObject("currentPage", currentPage);
                 modelAndView.addObject("page", "watch_list");
             } else {
@@ -104,7 +105,8 @@ public class MainController {
             int userId = (int) session.getAttribute("userId");
             if (userId != -1) {
                 modelAndView.addObject("films", listService.showOwnPlanned(userId, currentPage * 12));
-                modelAndView.addObject("numOfPages", listService.totalNumberOfFilmsInAList(userId, false).length / 12);
+                modelAndView.addObject("numOfPages", listService.filmPrivacyList(userId, false).length / 12);
+                modelAndView.addObject("privacyList", listService.filmPrivacyList(userId, false));
                 modelAndView.addObject("currentPage", currentPage);
                 modelAndView.addObject("page", "wish_list");
             } else {

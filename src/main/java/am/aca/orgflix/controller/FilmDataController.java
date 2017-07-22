@@ -112,4 +112,25 @@ public class FilmDataController{
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PostMapping("/privacy")
+    public ResponseEntity setFilmPrivacy(HttpSession session, @RequestParam("filmId") int filmId,
+                                   @RequestParam("isPublic") boolean isPublic) {
+        try {
+            boolean state;
+            if(!isPublic)
+                state = listService.makePrivate((int) session.getAttribute("userId"), filmService.getById(filmId));
+            else
+                state = listService.makePublic((int) session.getAttribute("userId"), filmService.getById(filmId));
+
+            if (state)
+                return new ResponseEntity("Film privacy is updated", HttpStatus.OK);
+            else
+                return new ResponseEntity("Not succeeded", HttpStatus.BAD_REQUEST);
+        } catch (RuntimeException e) {
+            LOGGER.warn(e.getMessage());
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }

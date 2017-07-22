@@ -68,7 +68,7 @@ public class UserController {
                 session.setAttribute("userId", userId);
                 session.setAttribute("user", user.getNick() + " (" + email + ")");
 
-                modelAndView = new ModelAndView("index");
+                modelAndView = new ModelAndView("home");
                 modelAndView.addObject("films", filmService.getAll(0, 12));
                 modelAndView.addObject("numOfPages", filmService.getTotalNumber() / 12);
                 modelAndView.addObject("currentPage", 0);
@@ -123,7 +123,7 @@ public class UserController {
                 session.setAttribute("userId", -1);
                 session.setAttribute("user", "");
             } else {
-                modelAndView = new ModelAndView("index");
+                modelAndView = new ModelAndView("home");
                 modelAndView.addObject("films", filmService.getAll(0, 12));
                 modelAndView.addObject("numOfPages", filmService.getTotalNumber() / 12);
                 modelAndView.addObject("currentPage", 0);

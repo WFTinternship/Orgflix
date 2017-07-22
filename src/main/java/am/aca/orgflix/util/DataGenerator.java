@@ -11,6 +11,8 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,11 +22,16 @@ import java.util.List;
  * Created by karine on 6/27/2017
  */
 @Component
-public class DataGenerator {
-    @Autowired
-    FilmService filmService;
+public class DataGenerator implements ServletContextListener {
 
-    public List<Film> generate() throws IOException {
+    private final FilmService filmService;
+
+    @Autowired
+    public DataGenerator(FilmService filmService) {
+        this.filmService = filmService;
+    }
+
+    private List<Film> generate() throws IOException {
         Document doc = Jsoup.connect("http://www.imdb.com/search/title?groups=top_250&sort=user_rating").get();
         Elements movieDivs = doc.getElementsByClass("lister-item");
 
@@ -49,5 +56,19 @@ public class DataGenerator {
 
         System.out.println(movieList);
         return movieList;
+    }
+
+    @Override
+    public void contextInitialized(ServletContextEvent servletContextEvent) {
+        try {
+            generate();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void contextDestroyed(ServletContextEvent servletContextEvent) {
+
     }
 }

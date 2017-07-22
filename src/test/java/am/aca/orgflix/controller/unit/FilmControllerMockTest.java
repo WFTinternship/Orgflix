@@ -173,9 +173,9 @@ public class FilmControllerMockTest extends BaseUnitTest {
                 .param("hasOscar", "0")
                 .param("director", "test").param("actorId", "0")
                 .param("genre", "0")
-                .session(session)).andExpect(view().name("index"))
+                .session(session)).andExpect(view().name("home"))
                 .andExpect(model().attribute("films", films))
-                .andExpect(model().attribute("page", "index"));
+                .andExpect(model().attribute("page", "home"));
 
         verify(filmServiceMock, times(1)).getFilteredFilms("test", 0, 0, false, "test", 0, 0);
     }

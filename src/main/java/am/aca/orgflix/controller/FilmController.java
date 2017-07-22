@@ -166,10 +166,10 @@ public class FilmController {
             int userId = (int) session.getAttribute("userId");
 
             if (userId != -1) {
-                modelAndView = new ModelAndView("index");
+                modelAndView = new ModelAndView("home");
                 modelAndView.addObject("films", filmService.getFilteredFilms(title, startYear, finishYear,
                         hasOscar == 1, director, actorId, genre));
-                modelAndView.addObject("page", "index");
+                modelAndView.addObject("page", "home");
 
             } else {
                 modelAndView = new ModelAndView("error", "message", "You are not logged in, please first login");

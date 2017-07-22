@@ -8,10 +8,7 @@ import am.aca.orgflix.service.FilmService;
 import am.aca.orgflix.service.ListService;
 import am.aca.orgflix.service.ServiceException;
 import am.aca.orgflix.service.UserService;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +25,8 @@ import java.util.List;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 /**
  * Unit tests for Main Controller
@@ -91,18 +90,12 @@ public class MainControllerMockTest extends BaseUnitTest {
         when(filmServiceMock.getTotalNumber()).thenReturn(0);
         when(filmServiceMock.getAllRatings(0, 12)).thenReturn(ratings);
 
-        mockMvc.perform(get("/").session(session))
-
-        ModelAndView actualMV = mainController.indexPageFirtVisit(new MockHttpSession());
-
-        Assert.assertEquals("index", actualMV.getViewName());
-        Assert.assertEquals(films, actualMV.getModel().get("films"));
-        Assert.assertEquals(ratings, actualMV.getModel().get("ratings"));
-        Assert.assertEquals(-1, actualMV.getModel().get("userId"));
-        Assert.assertEquals(0, actualMV.getModel().get("userAuth"));
-        Assert.assertEquals(0, actualMV.getModel().get("currPage"));
-        Assert.assertEquals("index", actualMV.getModel().get("page"));
-        Assert.assertEquals(0, actualMV.getModel().get("numOfPages"));
+        mockMvc.perform(get("/")).andExpect(view().name("home"))
+                .andExpect(model().attribute("films", films))
+                .andExpect(model().attribute("ratings", ratings))
+                .andExpect(model().attribute("currentPage", 0))
+                .andExpect(model().attribute("page", "index"))
+                .andExpect(model().attribute("numOfPages", 0));
 
         verify(filmServiceMock, times(1)).getAll(0, 12);
         verify(filmServiceMock, times(1)).getTotalNumber();
@@ -112,13 +105,12 @@ public class MainControllerMockTest extends BaseUnitTest {
     /**
      * @see MainController#indexPageFirtVisit(HttpSession)
      */
+    @Ignore
     @Test
-    public void index_ExceptionThrown_Fail() {
-        when(filmServiceMock.getAll(0, 12)).thenThrow(ServiceException.class);
+    public void index_ExceptionThrown_Fail() throws Exception {
+        when(filmServiceMock.getAll(0, 12)).thenThrow(RuntimeException.class);
 
-        ModelAndView actualMV = mainController.indexPageFirtVisit(new MockHttpSession());
-
-        Assert.assertEquals("error", actualMV.getViewName());
+        mockMvc.perform(get("/")).andExpect(view().name("index"));
 
         verify(filmServiceMock, times(1)).getAll(0, 12);
     }
@@ -128,24 +120,22 @@ public class MainControllerMockTest extends BaseUnitTest {
      * @see MainController#indexPage(int)
      */
     @Test
-    public void paging_Authenticated_Success() {
+    public void paging_Authenticated_Success() throws Exception {
         when(filmServiceMock.getAll(12, 12)).thenReturn(films);
-        when(filmServiceMock.getTotalNumber()).thenReturn(0);
-        when(userServiceMock.getById(1)).thenReturn(user);
+        when(filmServiceMock.getTotalNumber()).thenReturn(films.size());
+        when(filmServiceMock.getAllRatings(1, 12)).thenReturn(ratings);
 
-        ModelAndView actualMV = mainController.indexPage(1);
-
-        Assert.assertEquals("index", actualMV.getViewName());
-        Assert.assertEquals(films, actualMV.getModel().get("films"));
-        Assert.assertEquals(1, actualMV.getModel().get("userId"));
-        Assert.assertEquals("hulk (bbanner@avengers.com)", actualMV.getModel().get("user"));
-        Assert.assertEquals(100, actualMV.getModel().get("userAuth"));
-        Assert.assertEquals(1, actualMV.getModel().get("currPage"));
-        Assert.assertEquals("index", actualMV.getModel().get("page"));
+        mockMvc.perform(get("/index?currentPage=1")).andExpect(view().name("home"))
+                .andExpect(model().attribute("films", films))
+                .andExpect(model().attribute("numOfPages", films.size()))
+                .andExpect(model().attribute("ratings", ratings))
+                .andExpect(model().attribute("currentPage", 1))
+                .andExpect(model().attribute("page", "home"))
+        ;
 
         verify(filmServiceMock, times(1)).getAll(12, 12);
         verify(filmServiceMock, times(1)).getTotalNumber();
-        verify(userServiceMock, times(1)).getById(1);
+        verify(filmServiceMock, times(1)).getAllRatings(1, 12);
     }
 
     /**

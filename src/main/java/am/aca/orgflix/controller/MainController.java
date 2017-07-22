@@ -45,11 +45,11 @@ public class MainController {
     public ModelAndView indexPageFirtVisit(HttpSession session) {
         if (!session.getAttributeNames().hasMoreElements())
             session.setAttribute("userId", -1);
-        ModelAndView modelAndView = new ModelAndView("index");
+        ModelAndView modelAndView = new ModelAndView("home");
         modelAndView.addObject("films", filmService.getAll(0, 12));
         modelAndView.addObject("ratings", filmService.getAllRatings(0, 12));
         modelAndView.addObject("currentPage", 0);
-        modelAndView.addObject("page", "index");
+        modelAndView.addObject("page", "home");
         modelAndView.addObject("numOfPages", filmService.getTotalNumber() / 12);
         return modelAndView;
     }
@@ -58,12 +58,12 @@ public class MainController {
     public ModelAndView indexPage(@RequestParam("currentPage") int page) {
         ModelAndView modelAndView;
         try {
-            modelAndView = new ModelAndView("index");
+            modelAndView = new ModelAndView("home");
             modelAndView.addObject("films", filmService.getAll(page * 12, 12));
             modelAndView.addObject("numOfPages", filmService.getTotalNumber() / 12);
             modelAndView.addObject("ratings", filmService.getAllRatings(page, 12));
             modelAndView.addObject("currentPage", page);
-            modelAndView.addObject("page", "index");
+            modelAndView.addObject("page", "home");
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
             modelAndView = new ModelAndView("error", "message", e);
@@ -79,7 +79,7 @@ public class MainController {
         try {
             int userId = (int) session.getAttribute("userId");
             if (userId != -1) {
-                modelAndView = new ModelAndView("index");
+                modelAndView = new ModelAndView("home");
                 modelAndView.addObject("films", listService.showOwnWatched(userId, currentPage * 12));
                 modelAndView.addObject("numOfPages", listService.filmPrivacyList(userId, true).length / 12);
                 modelAndView.addObject("privacyList", listService.filmPrivacyList(userId, false));
@@ -99,7 +99,7 @@ public class MainController {
     public ModelAndView wishList(HttpSession session,
                                  @RequestParam("currentPage") int currentPage) {
 
-        ModelAndView modelAndView = new ModelAndView("index");
+        ModelAndView modelAndView = new ModelAndView("home");
 
         try {
             int userId = (int) session.getAttribute("userId");
@@ -123,7 +123,7 @@ public class MainController {
     public ModelAndView getWatchedByOtherUser(HttpSession session, @RequestParam("otherUser") int otherUser,
                                               @RequestParam("currentPage") int currentPage) {
 
-        ModelAndView modelAndView = new ModelAndView("index");
+        ModelAndView modelAndView = new ModelAndView("home");
 
         try {
             int userId = (int) session.getAttribute("userId");
@@ -147,7 +147,7 @@ public class MainController {
     public ModelAndView getPlannedByOtherUser(HttpSession session, @RequestParam("otherUser") int otherUser,
                                               @RequestParam("currentPage") int currentPage) {
 
-        ModelAndView modelAndView = new ModelAndView("index");
+        ModelAndView modelAndView = new ModelAndView("home");
 
         try {
             int userId = (int) session.getAttribute("userId");

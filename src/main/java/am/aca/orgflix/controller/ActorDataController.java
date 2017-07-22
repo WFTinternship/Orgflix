@@ -2,7 +2,6 @@ package am.aca.orgflix.controller;
 
 import am.aca.orgflix.entity.Cast;
 import am.aca.orgflix.service.CastService;
-import am.aca.orgflix.service.ServiceException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,6 +39,7 @@ public class ActorDataController {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
     }
+
     @RequestMapping("/add")
     public ResponseEntity addNewActor(@RequestParam("actor") String actorName,
                                       @RequestParam("hasOscar") boolean hasOscar) {
@@ -55,7 +55,7 @@ public class ActorDataController {
         }
     }
 
-    private String getActorsListJSON(){
+    private String getActorsListJSON() {
         List<Cast> actorsList = castService.getAll();
         int size = actorsList.size();
         StringBuilder sb = new StringBuilder();

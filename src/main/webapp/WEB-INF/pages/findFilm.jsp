@@ -34,19 +34,19 @@
                             <div style="display: table">
                                 <div class="tableCell">
                                     <select id="startYear" name="startYear" class="dateField">
-                                        <c:forEach begin="1900" end="2016" var="val">
+                                        <c:forEach begin="1900" end="2024" var="val">
                                             <option><c:out value="${val}"/></option>
                                         </c:forEach>
-                                        <option selected="selected">2017</option>
+                                        <option selected="selected"></option>
                                     </select>
                                 </div>
                                 <div class="tableCell"> - </div>
                                 <div class="tableCell">
                                     <select id="finishYear" name="finishYear" class="dateField">
-                                        <c:forEach begin="1900" end="2016" var="val">
+                                        <c:forEach begin="1900" end="2024" var="val">
                                             <option><c:out value="${val}"/></option>
                                         </c:forEach>
-                                        <option selected="selected">2017</option>
+                                        <option selected="selected"></option>
                                     </select>
                                 </div>
                             </div>
@@ -63,6 +63,7 @@
                         <div class="tableCell">
                             <span>Genre</span>
                             <select id="genre" name="genre" class="dateField">
+                                <option value="${genre.value}">${genre.title}</option>
                                 <c:forEach items="${genres}" var="genre">
                                     <option value="${genre.value}">${genre.title}</option>
                                 </c:forEach>

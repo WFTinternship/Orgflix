@@ -107,6 +107,9 @@ public class FilmControllerMockTest extends BaseUnitTest {
         mockMvc.perform(post("/film/addResult?title=").session(session));
     }
 
+    /**
+     * @see FilmController#searchFilm(HttpSession)
+     */
     @Test
     public void searchFilm_Valid_Success() throws Exception {
         session.setAttribute("userId", 1);
@@ -117,5 +120,38 @@ public class FilmControllerMockTest extends BaseUnitTest {
                 .andExpect(view().name("findFilm"))
                 .andExpect(model().attribute("actors", casts))
                 .andExpect(model().attribute("genres", Genre.values()));
+    }
+
+    /**
+     * @see FilmController#searchFilm(HttpSession)
+     */
+    @Test
+    public void searchFilm_InvalidUser_Fail() throws Exception {
+        session.setAttribute("userId", -1);
+
+        mockMvc.perform(post("/searchFilm").session(session))
+                .andExpect(view().name("error"))
+                .andExpect(model().attribute("message", "You are not logged in, please first login"));
+    }
+
+    /**
+     * @see FilmController#searchFilm(HttpSession)
+     */
+    @Test
+    public void searchFilm_ServiceException_Fail() throws Exception {
+        session.setAttribute("userId", 1);
+
+        when(castServiceMock.getAll()).thenThrow(RuntimeException.class);
+        mockMvc.perform(get("/searchFilm").session(session))
+                .andExpect(view().name("error"))
+                .andExpect(model().attributeExists("message"));
+    }
+
+    @Test
+    public void searchFilmResult_Valid_Success() throws Exception {
+        session.setAttribute("userId", 1);
+
+//        mockMvc.perform(post("/searchFilmResult").param("title", "test")
+//        .param("startYear", "0").param("finishYear", ""))
     }
 }

@@ -57,17 +57,16 @@ public class FilmDataControllerMockTest extends BaseUnitTest {
     }
 
     @Test
-    public void addToWatched_Valid_Success() throws Exception {
+    public void addToWatchedValidSuccess() throws Exception {
         session.setAttribute("userId", 1);
 
         when(listServiceMock.addToWatched(1, true, 1)).thenReturn(true);
 
         mockMvc.perform(post("/data/film/watch/addToList")
-                .param("film", "1").param("isPublic", "true")
+                .param("film", "1")
+                .param("isPublic", "true")
                 .session(session))
                 .andExpect(status().isOk());
-
-        Assert.assertTrue(true);
     }
 
     @Test

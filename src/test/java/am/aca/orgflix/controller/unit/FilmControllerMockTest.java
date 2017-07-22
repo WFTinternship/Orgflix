@@ -7,6 +7,7 @@ import am.aca.orgflix.entity.Film;
 import am.aca.orgflix.entity.Genre;
 import am.aca.orgflix.service.CastService;
 import am.aca.orgflix.service.FilmService;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -22,11 +23,11 @@ import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 /**
@@ -62,6 +63,12 @@ public class FilmControllerMockTest extends BaseUnitTest {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
     }
 
+    @After
+    public void tearDown() {
+        verifyZeroInteractions(castServiceMock);
+        verifyZeroInteractions(filmServiceMock);
+    }
+
     /**
      * @see FilmController#addFilm(HttpSession)
      */
@@ -76,7 +83,7 @@ public class FilmControllerMockTest extends BaseUnitTest {
                 .andExpect(view().name("newFilm"))
                 .andExpect(model().attribute("actors", casts));
 
-//        verify(castServiceMock, tm)
+        verify(castServiceMock, times(1)).getAll();
     }
 
     /**
@@ -99,9 +106,12 @@ public class FilmControllerMockTest extends BaseUnitTest {
         session.setAttribute("userId", 1);
 
         when(castServiceMock.getAll()).thenThrow(RuntimeException.class);
+
         mockMvc.perform(get("/addFilm").session(session))
                 .andExpect(view().name("error"))
                 .andExpect(model().attributeExists("message"));
+
+        verify(castServiceMock, times(1)).getAll();
     }
 
     /**
@@ -117,6 +127,8 @@ public class FilmControllerMockTest extends BaseUnitTest {
                 .andExpect(view().name("findFilm"))
                 .andExpect(model().attribute("actors", casts))
                 .andExpect(model().attribute("genres", Genre.values()));
+
+        verify(castServiceMock, times(1)).getAll();
     }
 
     /**
@@ -139,9 +151,12 @@ public class FilmControllerMockTest extends BaseUnitTest {
         session.setAttribute("userId", 1);
 
         when(castServiceMock.getAll()).thenThrow(RuntimeException.class);
+
         mockMvc.perform(get("/searchFilm").session(session))
                 .andExpect(view().name("error"))
                 .andExpect(model().attributeExists("message"));
+
+        verify(castServiceMock, times(1)).getAll();
     }
 
     /**
@@ -161,6 +176,8 @@ public class FilmControllerMockTest extends BaseUnitTest {
                 .session(session)).andExpect(view().name("index"))
                 .andExpect(model().attribute("films", films))
                 .andExpect(model().attribute("page", "index"));
+
+        verify(filmServiceMock, times(1)).getFilteredFilms("test", 0, 0, false, "test", 0, 0);
     }
 
     /**
@@ -194,5 +211,7 @@ public class FilmControllerMockTest extends BaseUnitTest {
                 .param("director", "test").param("actorId", "0")
                 .param("genre", "0")
                 .session(session)).andExpect(view().name("error"));
+
+        verify(filmServiceMock, times(1)).getFilteredFilms("test", 0, 0, false, "test", 0, 0);
     }
 }

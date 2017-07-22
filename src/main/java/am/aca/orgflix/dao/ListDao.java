@@ -165,16 +165,16 @@ public interface ListDao {
      * Provide the current total number of watched films of the selected user
      *
      * @param userId id of the current user
-     * @return the current total number of watched films
+     * @return array of int showing public status of each film in the list (0 - private, 1 - public)
      */
-    int totalNumberOfWatched(int userId);
+    List<Integer> watchedFilmPrivacyList(int userId);
 
     /**
      * Provide the current total number of wished films of the selected user
      *
      * @param userId id of the current user
-     * @return the current total number of wished films
+     * @return array of int showing public status of each film in the list (0 - private, 1 - public)
      */
-    int totalNumberOfPlanned(int userId);
+    List<Integer> plannedFilmPrivacyList(int userId);
 
 }

@@ -131,6 +131,7 @@ public class MainController {
                 modelAndView.addObject("currentPage", currentPage);
                 modelAndView.addObject("page", "watchListUserOther");
                 modelAndView.addObject("otherUser", otherUser);
+                modelAndView.addObject("title", "Watch list of user "+userService.getById(otherUser).getNick());
             }else{
                 modelAndView = new ModelAndView("error","message","You are not logged in, please first login");
             }
@@ -154,6 +155,7 @@ public class MainController {
                 modelAndView.addObject("currentPage", currentPage);
                 modelAndView.addObject("page", "wishListUserOther");
                 modelAndView.addObject("otherUser", otherUser);
+                modelAndView.addObject("title", "Wish list of user "+userService.getById(otherUser).getNick());
             }else{
                 modelAndView = new ModelAndView("error","message","You are not logged in, please first login");
             }

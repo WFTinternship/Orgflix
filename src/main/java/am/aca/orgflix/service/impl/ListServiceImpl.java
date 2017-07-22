@@ -195,19 +195,19 @@ public class ListServiceImpl extends BaseService implements ListService {
      * @see ListService#totalNumberOfFilmsInAList(int, boolean)
      */
     @Override
-    public int totalNumberOfFilmsInAList(int userId, boolean isWatched) {
-        int total;
+    public int[] totalNumberOfFilmsInAList(int userId, boolean isWatched) {
+        int[] privacyList;
         try {
             if (isWatched) {
-                total = listDao.totalNumberOfWatched(userId);
+                privacyList = converterIntegerToIntArr(listDao.watchedFilmPrivacyList(userId));
             } else {
-                total = listDao.totalNumberOfPlanned(userId);
+                privacyList = converterIntegerToIntArr(listDao.plannedFilmPrivacyList(userId));
             }
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
-            return 0;
+            return new int[0];
         }
-        return total;
+        return privacyList;
     }
 
     /**
@@ -248,5 +248,12 @@ public class ListServiceImpl extends BaseService implements ListService {
             return false;
         }
         return state;
+    }
+
+    private int[] converterIntegerToIntArr(List<Integer> list) {
+        int[] ret = new int[list.size()];
+        for (int i = 0; i < ret.length; i++)
+            ret[i] = list.get(i);
+        return ret;
     }
 }

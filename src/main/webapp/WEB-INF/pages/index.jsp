@@ -31,6 +31,12 @@
                 <c:if test="${page == 'wish_list'}">
                     <h1>Wish list</h1>
                 </c:if>
+                <c:if test="${page == 'watchListUserOther'}">
+                    <h1>${title}</h1>
+                </c:if>
+                <c:if test="${page == 'wishListUserOther'}">
+                    <h1>${title}</h1>
+                </c:if>
             </header>
             <section class="tiles">
                 <c:forEach items="${films}" var="film" varStatus="loop">

@@ -200,22 +200,22 @@ public class JdbcListDAO extends NamedParameterJdbcDaoSupport implements ListDao
     }
 
     /**
-     * @see ListDao#totalNumberOfWatched(int)
+     * @see ListDao#watchedFilmPrivacyList(int)
      */
     @Override
-    public int totalNumberOfWatched(int userId) {
-        final String query = "SELECT COUNT(FILM_ID) AS total FROM LISTS " +
+    public List<Integer> watchedFilmPrivacyList(int userId) {
+        final String query = "SELECT IS_PUBLIC AS total FROM LISTS " +
                 "WHERE USER_ID = ? AND IS_WATCHED = TRUE";
-        return getJdbcTemplate().queryForObject(query, new Object[]{userId}, Integer.class);
+        return getJdbcTemplate().queryForList(query, new Object[]{userId}, Integer.class);
     }
 
     /**
-     * @see ListDao#totalNumberOfPlanned(int)
+     * @see ListDao#plannedFilmPrivacyList(int)
      */
     @Override
-    public int totalNumberOfPlanned(int userId) {
-        final String query = "SELECT COUNT(FILM_ID) AS total FROM LISTS " +
+    public List<Integer> plannedFilmPrivacyList(int userId) {
+        final String query = "SELECT IS_PUBLIC AS total FROM LISTS " +
                 "WHERE USER_ID = ? AND IS_WISHED = TRUE";
-        return getJdbcTemplate().queryForObject(query, new Object[]{userId}, Integer.class);
+        return getJdbcTemplate().queryForList(query, new Object[]{userId}, Integer.class);
     }
 }

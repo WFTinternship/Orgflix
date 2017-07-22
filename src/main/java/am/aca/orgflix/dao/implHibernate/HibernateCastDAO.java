@@ -3,11 +3,11 @@ package am.aca.orgflix.dao.implHibernate;
 import am.aca.orgflix.dao.CastDAO;
 import am.aca.orgflix.entity.Cast;
 import am.aca.orgflix.entity.Film;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -17,8 +17,8 @@ import java.util.List;
 @Component
 public class HibernateCastDAO implements CastDAO {
 
-    private EntityManagerFactory emf = Persistence.createEntityManagerFactory("Orgflix_PU");
-    private EntityManager em = emf.createEntityManager();
+    private SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+    private EntityManager em;
 
     //CREATE
 

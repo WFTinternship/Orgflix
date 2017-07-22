@@ -127,7 +127,7 @@ public class UserController {
                 modelAndView.addObject("films", filmService.getAll(0, 12));
                 modelAndView.addObject("numOfPages", filmService.getTotalNumber() / 12);
                 modelAndView.addObject("currentPage", 0);
-                modelAndView.addObject("page", "index");
+                modelAndView.addObject("page", "main");
 
                 session.setAttribute("userId", user.getId());
                 session.setAttribute("user", user.getNick() + " (" + user.getEmail() + ")");

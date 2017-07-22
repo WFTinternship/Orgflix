@@ -75,6 +75,7 @@ public class FilmController {
                 modelAndView = new ModelAndView("newFilm");
                 modelAndView.addObject("actors", castService.getAll());
                 modelAndView.addObject("genres", Genre.values());
+                modelAndView.addObject("currentPage", 0);
             } else {
                 modelAndView = new ModelAndView("error", "message", "You are not logged in, please first login");
             }
@@ -143,7 +144,7 @@ public class FilmController {
                 modelAndView = new ModelAndView("findFilm");
                 modelAndView.addObject("actors", castService.getAll());
                 modelAndView.addObject("genres", Genre.values());
-
+                modelAndView.addObject("currentPage", 0);
             } else {
                 modelAndView = new ModelAndView("error", "message", "You are not logged in, please first login");
             }
@@ -169,8 +170,8 @@ public class FilmController {
                 modelAndView = new ModelAndView("home");
                 modelAndView.addObject("films", filmService.getFilteredFilms(title, startYear, finishYear,
                         hasOscar == 1, director, actorId, genre));
-                modelAndView.addObject("page", "home");
-
+                modelAndView.addObject("page", "index");
+                modelAndView.addObject("currentPage", 0);
             } else {
                 modelAndView = new ModelAndView("error", "message", "You are not logged in, please first login");
             }

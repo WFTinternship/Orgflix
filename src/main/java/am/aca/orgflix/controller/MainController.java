@@ -49,7 +49,7 @@ public class MainController {
         modelAndView.addObject("films", filmService.getAll(0, 12));
         modelAndView.addObject("ratings", filmService.getAllRatings(0, 12));
         modelAndView.addObject("currentPage", 0);
-        modelAndView.addObject("page", "home");
+        modelAndView.addObject("page", "index");
         modelAndView.addObject("numOfPages", filmService.getTotalNumber() / 12);
         return modelAndView;
     }
@@ -63,7 +63,7 @@ public class MainController {
             modelAndView.addObject("numOfPages", filmService.getTotalNumber() / 12);
             modelAndView.addObject("ratings", filmService.getAllRatings(page, 12));
             modelAndView.addObject("currentPage", page);
-            modelAndView.addObject("page", "home");
+            modelAndView.addObject("page", "index");
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
             modelAndView = new ModelAndView("error", "message", e);

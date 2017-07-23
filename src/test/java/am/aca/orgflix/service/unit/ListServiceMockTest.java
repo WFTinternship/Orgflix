@@ -4,6 +4,7 @@ import am.aca.orgflix.BaseUnitTest;
 import am.aca.orgflix.dao.ListDao;
 import am.aca.orgflix.entity.Film;
 import am.aca.orgflix.entity.User;
+import am.aca.orgflix.exception.ServiceException;
 import am.aca.orgflix.service.ListService;
 import am.aca.orgflix.service.impl.ListServiceImpl;
 import org.junit.After;
@@ -475,10 +476,12 @@ public class ListServiceMockTest extends BaseUnitTest {
     @Test
     public void totalNumber_Watched_Fail() {
         when(listDaoMock.watchedFilmPrivacyList(user.getId())).thenThrow(RuntimeException.class);
-
-        int[] result = listService.filmPrivacyList(user.getId(), true);
-        Assert.assertEquals(0, result.length);
-        verify(listDaoMock, times(1)).watchedFilmPrivacyList(user.getId());
+        try {
+            listService.filmPrivacyList(user.getId(), true);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof ServiceException);
+            verify(listDaoMock, times(1)).watchedFilmPrivacyList(user.getId());
+        }
     }
 
     /**
@@ -500,9 +503,11 @@ public class ListServiceMockTest extends BaseUnitTest {
     @Test
     public void totalNumber_Planned_Fail() {
         when(listDaoMock.plannedFilmPrivacyList(user.getId())).thenThrow(RuntimeException.class);
-
-        int[] result = listService.filmPrivacyList(user.getId(), false);
-        Assert.assertEquals(0, result.length);
-        verify(listDaoMock, times(1)).plannedFilmPrivacyList(user.getId());
+        try {
+            listService.filmPrivacyList(user.getId(), false);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof ServiceException);
+            verify(listDaoMock, times(1)).plannedFilmPrivacyList(user.getId());
+        }
     }
 }

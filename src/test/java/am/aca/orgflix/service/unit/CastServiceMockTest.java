@@ -2,11 +2,10 @@ package am.aca.orgflix.service.unit;
 
 import am.aca.orgflix.BaseUnitTest;
 import am.aca.orgflix.dao.CastDAO;
-import am.aca.orgflix.dao.FilmDAO;
 import am.aca.orgflix.entity.Cast;
 import am.aca.orgflix.entity.Film;
-import am.aca.orgflix.service.CastService;
 import am.aca.orgflix.exception.ServiceException;
+import am.aca.orgflix.service.CastService;
 import am.aca.orgflix.service.impl.CastServiceImpl;
 import org.junit.After;
 import org.junit.Assert;
@@ -33,9 +32,6 @@ public class CastServiceMockTest extends BaseUnitTest {
     @Mock
     private CastDAO castDaoMock;
 
-    @Mock
-    private FilmDAO filmDaoMock;
-
     private Cast cast = new Cast("Cate Blanchett", true);
     private List<Cast> casts = new ArrayList<>();
     private Film film = new Film("Babel", 2006);
@@ -47,7 +43,6 @@ public class CastServiceMockTest extends BaseUnitTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         ReflectionTestUtils.setField(castService, "castDAO", castDaoMock);
-        ReflectionTestUtils.setField(castService, "filmDAO", filmDaoMock);
     }
 
     /**
@@ -56,7 +51,6 @@ public class CastServiceMockTest extends BaseUnitTest {
     @After
     public void tearDown() {
         verifyNoMoreInteractions(castDaoMock);
-        verifyNoMoreInteractions(filmDaoMock);
     }
 
     /**

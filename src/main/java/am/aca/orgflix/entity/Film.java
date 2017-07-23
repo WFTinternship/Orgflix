@@ -60,7 +60,7 @@ public class Film {
         rate_5star = 0;
         genres = new ArrayList<>();
         casts = new ArrayList<>();
-        image = "00000";
+        image = "0/0.jpg";
     }
 
     public Film(String title, int prodYear) {

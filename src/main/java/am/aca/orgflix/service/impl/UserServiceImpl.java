@@ -90,7 +90,7 @@ public class UserServiceImpl extends BaseService implements UserService {
         try {
             user = userDao.getByEmail(email);
         } catch (org.springframework.dao.EmptyResultDataAccessException e) {
-            throw new ServiceException("No user with such email");
+            return null;
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
             throw new ServiceException("Request for user by email failed");
@@ -107,7 +107,7 @@ public class UserServiceImpl extends BaseService implements UserService {
         try {
             user = userDao.getByNick(nick);
         } catch (org.springframework.dao.EmptyResultDataAccessException e) {
-            throw new ServiceException("No user with such nick");
+            return null;
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
             throw new ServiceException("Request for user by nick failed");

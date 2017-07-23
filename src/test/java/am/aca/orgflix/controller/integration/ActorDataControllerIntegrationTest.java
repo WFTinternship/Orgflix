@@ -36,20 +36,21 @@ public class ActorDataControllerIntegrationTest extends BaseIntegrationTest {
 
     private Cast cast = new Cast();
 
+    /**
+     * Initializes mockMvc
+     */
     @Before
     public void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
     }
 
+    /**
+     * Reverts all the changes occurred in the DB due to tests
+     */
     @After
     public void tearDown() {
         helper.emptyTable(new String[]{
-                "LISTS",
-                "USERS",
-                "FILM_TO_GENRE",
-                "FILM_TO_CAST",
-                "CASTS",
-                "FILMS"});
+                "CASTS"});
     }
 
     /**

@@ -45,6 +45,9 @@ public class ActorDataControllerMockTest extends BaseUnitTest {
     private Cast cast = new Cast("Thandie Newton");
     private List<Cast> casts = new ArrayList<>();
 
+    /**
+     * Configures Mockito
+     */
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
@@ -52,6 +55,9 @@ public class ActorDataControllerMockTest extends BaseUnitTest {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
     }
 
+    /**
+     * Assures no more methods of Service mocks are invoked
+     */
     @After
     public void tearDown() {
         verifyNoMoreInteractions(castServiceMock);

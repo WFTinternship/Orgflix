@@ -4,7 +4,6 @@ import am.aca.orgflix.BaseIntegrationTest;
 import am.aca.orgflix.entity.Film;
 import am.aca.orgflix.entity.User;
 import am.aca.orgflix.service.FilmService;
-import am.aca.orgflix.service.ListService;
 import am.aca.orgflix.service.UserService;
 import am.aca.orgflix.util.TestHelper;
 import org.junit.After;
@@ -43,9 +42,6 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private ListService listService;
 
     private MockMvc mockMvc;
 

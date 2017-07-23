@@ -45,6 +45,9 @@ public class FilmDataControllerMockTest extends BaseUnitTest {
 
     private MockMvc mockMvc;
 
+    /**
+     * Configures Mockito
+     */
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
@@ -53,6 +56,9 @@ public class FilmDataControllerMockTest extends BaseUnitTest {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
     }
 
+    /**
+     * Assures no more methods of Service mocks are invoked
+     */
     @After
     public void tearDown() {
         verifyNoMoreInteractions(filmServiceMock);

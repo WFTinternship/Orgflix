@@ -12,6 +12,7 @@ import am.aca.orgflix.service.UserService;
 import am.aca.orgflix.util.TestHelper;
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,7 @@ import org.springframework.mock.web.MockHttpSession;
 /**
  * Integration tests for Data controller
  */
+@Ignore
 public class DataControllerIntegrationTest extends BaseIntegrationTest {
     @Autowired
     private FilmDataController filmDataController;

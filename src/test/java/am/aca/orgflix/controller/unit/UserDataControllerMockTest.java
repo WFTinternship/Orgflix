@@ -10,7 +10,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -34,9 +33,6 @@ public class UserDataControllerMockTest extends BaseUnitTest {
     private WebApplicationContext wac;
 
     @Autowired
-    private MockHttpSession session;
-
-    @Autowired
     private UserDataController userDataController;
 
     @Mock
@@ -45,7 +41,6 @@ public class UserDataControllerMockTest extends BaseUnitTest {
     private MockMvc mockMvc;
 
     private List<User> users = new ArrayList<>();
-    private String[] ratings = new String[8];
     private User user = new User("hulk", "Bruce Banner", "bbanner@avengers.com", "natasha");
 
     /**

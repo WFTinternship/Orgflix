@@ -3,7 +3,6 @@ package am.aca.orgflix.entity;
 /**
  * Fixed enumeration for types of film genres
  */
-@SuppressWarnings("unused")
 public enum Genre {
     FAMILY(1, "Family"),
     HISTORY(2, "History"),

@@ -1,25 +1,14 @@
 package am.aca.orgflix.entity;
 
-import org.hibernate.annotations.ColumnDefault;
-
-import javax.persistence.*;
 import java.util.List;
 
 /**
  * Actor entity class
  */
-@Entity(name = "CASTS")
 public class Cast {
-    @Id
-    @GeneratedValue
-    @Column(name = "ID")
     private int id;
-    @Column(name = "ACTOR_NAME", columnDefinition = "VARCHAR(250)", nullable = false)
     private String name;
-    @Column(name = "HAS_OSCAR", columnDefinition = "BOOLEAN", nullable = false)
-    @ColumnDefault("false")
     private boolean hasOscar;
-    @ManyToMany(mappedBy = "casts", cascade = CascadeType.REFRESH)
     private List<Film> films;
 
     public Cast() {

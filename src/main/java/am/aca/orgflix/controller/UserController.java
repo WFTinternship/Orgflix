@@ -74,7 +74,7 @@ public class UserController {
                 modelAndView.addObject("currentPage", 0);
                 modelAndView.addObject("page", "index");
             } else {
-                modelAndView = new ModelAndView("error", "message", "You are not logged in, please first login");
+                    modelAndView = new ModelAndView("error", "message", "You are not logged in, please first login");
             }
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());

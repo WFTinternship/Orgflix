@@ -19,8 +19,8 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -168,9 +168,84 @@ public class UserControllerMockTest extends BaseUnitTest {
      * @see UserController#login()
      */
     @Test
-    public void login_Success() throws Exception {
+    public void login_Valid_Success() throws Exception {
         mockMvc.perform(get("/login")).andExpect(view().name("signIn"));
     }
 
+    /**
+     * @see UserController#logout(HttpSession)
+     */
+    @Test
+    public void logout_Valid_Success() throws Exception {
+        session.setAttribute("userId", 1);
 
+        mockMvc.perform(get("/logout").session(session))
+                .andExpect(view().name("signIn"));
+
+        Assert.assertEquals(-1, (int) session.getAttribute("userId"));
+    }
+
+    /**
+     * @see UserController#paging(HttpSession, String, String)
+     */
+    @Test
+    public void paging_Valid_Success() throws Exception {
+
+        when(userServiceMock.authenticate(user.getEmail(), user.getPass().hashCode() + user.getEmail())).thenReturn(user);
+        when(filmServiceMock.getAll(0, 12)).thenReturn(films);
+        when(filmServiceMock.getTotalNumber()).thenReturn(0);
+
+        mockMvc.perform(get("/loggedIn?email=bbanner@avengers.com&pass=natasha")
+                .session(session))
+                .andExpect(view().name("home"))
+        .andExpect(model().attribute("films", films))
+        .andExpect(model().attribute("numOfPages", 0))
+        .andExpect(model().attribute("currentPage", 0))
+        .andExpect(model().attribute("page", "main"));
+
+        Assert.assertEquals(user.getId(), session.getAttribute("userId"));
+        Assert.assertEquals("hulk (bbanner@avengers.com)", session.getAttribute("user"));
+
+        verify(filmServiceMock, times(1)).getAll(0, 12);
+        verify(filmServiceMock, times(1)).getTotalNumber();
+        verify(userServiceMock, times(1)).authenticate(user.getEmail(), user.getPass().hashCode() + user.getEmail());
+    }
+
+    /**
+     * @see UserController#paging(HttpSession, String, String)
+     */
+    @Test
+    public void paging_InvalidUser_Fail() throws Exception {
+
+        when(userServiceMock.authenticate(user.getEmail(), user.getPass().hashCode() + user.getEmail())).thenReturn(null);
+
+        mockMvc.perform(get("/loggedIn?email=bbanner@avengers.com&pass=natasha")
+                .session(session))
+                .andExpect(view().name("error"))
+                .andExpect(model().attribute("message", "Wrong email/or password, please try again"));
+
+        Assert.assertEquals(-1, session.getAttribute("userId"));
+        Assert.assertEquals(" ", session.getAttribute("user"));
+
+        verify(userServiceMock, times(1)).authenticate(user.getEmail(), user.getPass().hashCode() + user.getEmail());
+    }
+
+    /**
+     * @see UserController#paging(HttpSession, String, String)
+     */
+    @Test
+    public void paging_Exception_Fail() throws Exception {
+
+        when(userServiceMock.authenticate(user.getEmail(), user.getPass().hashCode() + user.getEmail())).thenReturn(user);
+        when(filmServiceMock.getAll(0, 12)).thenReturn(films);
+        when(filmServiceMock.getTotalNumber()).thenThrow(RuntimeException.class);
+
+        mockMvc.perform(get("/loggedIn?email=bbanner@avengers.com&pass=natasha")
+                .session(session))
+                .andExpect(view().name("error"));
+
+        verify(filmServiceMock, times(1)).getAll(0, 12);
+        verify(filmServiceMock, times(1)).getTotalNumber();
+        verify(userServiceMock, times(1)).authenticate(user.getEmail(), user.getPass().hashCode() + user.getEmail());
+    }
 }

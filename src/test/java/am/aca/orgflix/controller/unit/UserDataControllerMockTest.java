@@ -1,12 +1,10 @@
 package am.aca.orgflix.controller.unit;
 
 import am.aca.orgflix.BaseUnitTest;
-import am.aca.orgflix.controller.UserController;
 import am.aca.orgflix.controller.UserDataController;
 import am.aca.orgflix.entity.User;
 import am.aca.orgflix.service.UserService;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -21,9 +19,11 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -37,7 +37,7 @@ public class UserDataControllerMockTest extends BaseUnitTest {
     private MockHttpSession session;
 
     @Autowired
-    private UserController userController;
+    private UserDataController userDataController;
 
     @Mock
     private UserService userServiceMock;
@@ -54,7 +54,7 @@ public class UserDataControllerMockTest extends BaseUnitTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        ReflectionTestUtils.setField(userController, "userService", userServiceMock);
+        ReflectionTestUtils.setField(userDataController, "userService", userServiceMock);
         mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
 
         user.setId(1);
@@ -77,7 +77,26 @@ public class UserDataControllerMockTest extends BaseUnitTest {
 
         when(userServiceMock.getAll()).thenReturn(users);
 
-        mockMvc.perform(post("/data/user/getList"));
+        mockMvc.perform(post("/data/user/getList"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(1)))
+                .andExpect(jsonPath("$[0].id", is("1")))
+                .andExpect(jsonPath("$[0].nick", is("hulk")));
+
+        verify(userServiceMock, times(1)).getAll();
+    }
+
+    /**
+     * @see UserDataController#getUsersList()
+     */
+    @Test
+    public void getUsersList_Exception_Fail() throws Exception {
+        users.add(user);
+
+        when(userServiceMock.getAll()).thenThrow(RuntimeException.class);
+
+        mockMvc.perform(post("/data/user/getList"))
+                .andExpect(status().isBadRequest());
 
         verify(userServiceMock, times(1)).getAll();
     }

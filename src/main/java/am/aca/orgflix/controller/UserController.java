@@ -39,7 +39,7 @@ public class UserController {
     public ModelAndView signup() {
         ModelAndView modelAndView;
         try {
-            modelAndView = new ModelAndView("signup");
+            modelAndView = new ModelAndView("register");
             modelAndView.addObject("films", filmService.getAll(0, 12));
             modelAndView.addObject("ratings", filmService.getAllRatings(0, 12));
             modelAndView.addObject("currentPage", 0);
@@ -88,7 +88,7 @@ public class UserController {
     public ModelAndView login() {
         ModelAndView modelAndView;
         try {
-            modelAndView = new ModelAndView("login");
+            modelAndView = new ModelAndView("signIn");
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
             modelAndView = new ModelAndView("error", "message", e);
@@ -102,7 +102,7 @@ public class UserController {
         try {
             session.setAttribute("userId", -1);
             session.removeAttribute("user");
-            modelAndView = new ModelAndView("login");
+            modelAndView = new ModelAndView("signIn");
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
             modelAndView = new ModelAndView("error", "message", e);

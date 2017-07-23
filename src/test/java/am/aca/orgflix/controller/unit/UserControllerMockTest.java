@@ -4,8 +4,8 @@ import am.aca.orgflix.BaseUnitTest;
 import am.aca.orgflix.controller.UserController;
 import am.aca.orgflix.entity.Film;
 import am.aca.orgflix.entity.User;
-import am.aca.orgflix.service.FilmService;
 import am.aca.orgflix.exception.ServiceException;
+import am.aca.orgflix.service.FilmService;
 import am.aca.orgflix.service.UserService;
 import org.junit.After;
 import org.junit.Assert;
@@ -26,6 +26,7 @@ import java.util.List;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 /**
@@ -80,22 +81,17 @@ public class UserControllerMockTest extends BaseUnitTest {
      * @see UserController#signup()
      */
     @Test
-    public void signUp_Success() throws Exception {
+    public void signUp_Valid_Success() throws Exception {
         when(filmServiceMock.getAll(0, 12)).thenReturn(films);
         when(filmServiceMock.getTotalNumber()).thenReturn(0);
         when(filmServiceMock.getAllRatings(0, 12)).thenReturn(ratings);
 
-        mockMvc.perform(get("/signup")).andExpect(view().name("signup"));
-
-//        ModelAndView actualMV = userController.signup();
-//
-//        Assert.assertEquals("signup", actualMV.getViewName());
-//        Assert.assertEquals(films, actualMV.getModel().get("films"));
-//        Assert.assertEquals(ratings, actualMV.getModel().get("ratings"));
-//        Assert.assertEquals(-1, actualMV.getModel().get("userId"));
-//        Assert.assertEquals(0, actualMV.getModel().get("userAuth"));
-//        Assert.assertEquals(0, actualMV.getModel().get("currPage"));
-//        Assert.assertEquals("index", actualMV.getModel().get("page"));
+        mockMvc.perform(get("/signup")).andExpect(view().name("register"))
+                .andExpect(model().attribute("films", films))
+                .andExpect(model().attribute("ratings", ratings))
+                .andExpect(model().attribute("currentPage", 0))
+                .andExpect(model().attribute("page", "index"))
+                .andExpect(model().attribute("numOfPages", 0));
 
         verify(filmServiceMock, times(1)).getAll(0, 12);
         verify(filmServiceMock, times(1)).getTotalNumber();
@@ -106,12 +102,10 @@ public class UserControllerMockTest extends BaseUnitTest {
      * @see UserController#signup()
      */
     @Test
-    public void signUp_Exception_Fail() {
+    public void signUp_Exception_Fail() throws Exception {
         when(filmServiceMock.getAll(0, 12)).thenThrow(ServiceException.class);
 
-        ModelAndView actualMV = userController.signup();
-
-        Assert.assertEquals("error", actualMV.getViewName());
+        mockMvc.perform(get("/signup")).andExpect(view().name("error"));
 
         verify(filmServiceMock, times(1)).getAll(0, 12);
     }
@@ -120,22 +114,21 @@ public class UserControllerMockTest extends BaseUnitTest {
      * @see UserController#signupResult(javax.servlet.http.HttpSession, String, String, String, String)
      */
     @Test
-    public void signUpResult_Success() {
+    public void signUpResult_Success() throws Exception {
         when(userServiceMock.add(user)).thenReturn(2);
         when(filmServiceMock.getAll(0, 12)).thenReturn(films);
+        when(filmServiceMock.getTotalNumber()).thenReturn(0);
 
-        ModelAndView actualMV = userController.signupResult
-                (new MockHttpSession(), user.getNick(), user.getUserName(), user.getEmail(), user.getPass());
 
-        Assert.assertEquals("index", actualMV.getViewName());
-        Assert.assertEquals(films, actualMV.getModel().get("films"));
-        Assert.assertEquals(2, actualMV.getModel().get("userId"));
-        Assert.assertEquals("hulk (bbanner@avengers.com)", actualMV.getModel().get("user"));
-        Assert.assertEquals(user.getPass().hashCode() + user.getEmail().hashCode(), actualMV.getModel().get("userAuth"));
-        Assert.assertEquals(0, actualMV.getModel().get("currPage"));
-        Assert.assertEquals("index", actualMV.getModel().get("page"));
+        mockMvc.perform(get("/signed?nick=hulk&userName=Bruce%20Banner&email=bbanner@avengers.com&pass=natasha"))
+                .andExpect(view().name("home"))
+                .andExpect(model().attribute("films", films))
+                .andExpect(model().attribute("numOfPages", 0))
+                .andExpect(model().attribute("currentPage", 0))
+                .andExpect(model().attribute("page", "index"));
 
         verify(filmServiceMock, times(1)).getAll(0, 12);
+        verify(filmServiceMock, times(1)).getTotalNumber();
         verify(userServiceMock, times(1)).add(user);
     }
 
@@ -143,12 +136,12 @@ public class UserControllerMockTest extends BaseUnitTest {
      * @see UserController#signupResult(javax.servlet.http.HttpSession, String, String, String, String)
      */
     @Test
-    public void signUpResult_AuthenticationError_Fail() {
+    public void signUpResult_AuthenticationError_Fail() throws Exception {
         when(userServiceMock.add(user)).thenReturn(-1);
 
-        ModelAndView actualMV = userController.signupResult
-                (new MockHttpSession(), user.getNick(), user.getUserName(), user.getEmail(), user.getPass());
-        Assert.assertEquals("error", actualMV.getViewName());
+        mockMvc.perform(get("/signed?nick=hulk&userName=Bruce%20Banner&email=bbanner@avengers.com&pass=natasha"))
+                .andExpect(view().name("error"))
+                .andExpect(model().attribute("message", "You are not logged in, please first login"));
 
         verify(userServiceMock, times(1)).add(user);
 
@@ -158,13 +151,16 @@ public class UserControllerMockTest extends BaseUnitTest {
      * @see UserController#signupResult(javax.servlet.http.HttpSession, String, String, String, String)
      */
     @Test
-    public void signUpResult_InternalError_Fail() {
-        when(userServiceMock.add(user)).thenThrow(ServiceException.class);
+    public void signUpResult_Exception_Fail() throws Exception {
+        when(userServiceMock.add(user)).thenReturn(2);
+        when(filmServiceMock.getAll(0, 12)).thenReturn(films);
+        when(filmServiceMock.getTotalNumber()).thenThrow(RuntimeException.class);
 
-        ModelAndView actualMV = userController.signupResult
-                (new MockHttpSession(), user.getNick(), user.getUserName(), user.getEmail(), user.getPass());
-        Assert.assertEquals("error", actualMV.getViewName());
+        mockMvc.perform(get("/signed?nick=hulk&userName=Bruce%20Banner&email=bbanner@avengers.com&pass=natasha"))
+                .andExpect(view().name("error"));
 
+        verify(filmServiceMock, times(1)).getAll(0, 12);
+        verify(filmServiceMock, times(1)).getTotalNumber();
         verify(userServiceMock, times(1)).add(user);
     }
 
@@ -172,9 +168,8 @@ public class UserControllerMockTest extends BaseUnitTest {
      * @see UserController#login()
      */
     @Test
-    public void login_Success() {
-        ModelAndView actualMV = userController.login();
-        Assert.assertEquals(("login"), actualMV.getViewName());
+    public void login_Success() throws Exception {
+        mockMvc.perform(get("/login")).andExpect(view().name("signIn"));
     }
 
 

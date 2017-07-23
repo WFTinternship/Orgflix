@@ -201,7 +201,7 @@ public class UserControllerMockTest extends BaseUnitTest {
         .andExpect(model().attribute("films", films))
         .andExpect(model().attribute("numOfPages", 0))
         .andExpect(model().attribute("currentPage", 0))
-        .andExpect(model().attribute("page", "main"));
+        .andExpect(model().attribute("page", "index"));
 
         Assert.assertEquals(user.getId(), session.getAttribute("userId"));
         Assert.assertEquals("hulk (bbanner@avengers.com)", session.getAttribute("user"));

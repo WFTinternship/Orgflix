@@ -1,10 +1,9 @@
 package am.aca.orgflix.service.impl;
 
 import am.aca.orgflix.dao.CastDAO;
-import am.aca.orgflix.dao.FilmDAO;
 import am.aca.orgflix.entity.Cast;
 import am.aca.orgflix.service.CastService;
-import am.aca.orgflix.service.ServiceException;
+import am.aca.orgflix.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +19,6 @@ import java.util.List;
 public class CastServiceImpl extends BaseService implements CastService {
 
     private CastDAO castDAO;
-    private FilmDAO filmDAO;
 
     public CastServiceImpl() {
         // class name to include in logging
@@ -30,11 +28,6 @@ public class CastServiceImpl extends BaseService implements CastService {
     @Autowired
     public void setCastDAO(CastDAO castDAO) {
         this.castDAO = castDAO;
-    }
-
-    @Autowired
-    public void setFilmDAO(FilmDAO filmDAO) {
-        this.filmDAO = filmDAO;
     }
 
     /**

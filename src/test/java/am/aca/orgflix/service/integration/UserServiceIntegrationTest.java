@@ -2,7 +2,7 @@ package am.aca.orgflix.service.integration;
 
 import am.aca.orgflix.BaseIntegrationTest;
 import am.aca.orgflix.entity.User;
-import am.aca.orgflix.service.ServiceException;
+import am.aca.orgflix.exception.ServiceException;
 import am.aca.orgflix.service.UserService;
 import am.aca.orgflix.service.impl.UserServiceImpl;
 import am.aca.orgflix.util.TestHelper;

@@ -3,7 +3,7 @@ package am.aca.orgflix.service.unit;
 import am.aca.orgflix.BaseUnitTest;
 import am.aca.orgflix.dao.UserDAO;
 import am.aca.orgflix.entity.User;
-import am.aca.orgflix.service.ServiceException;
+import am.aca.orgflix.exception.ServiceException;
 import am.aca.orgflix.service.UserService;
 import am.aca.orgflix.service.impl.UserServiceImpl;
 import org.junit.After;

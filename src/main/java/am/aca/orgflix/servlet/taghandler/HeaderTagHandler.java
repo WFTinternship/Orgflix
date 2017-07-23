@@ -16,10 +16,10 @@ public class HeaderTagHandler extends TagSupport {
 
         JspWriter out = pageContext.getOut();//returns the instance of JspWriter
         try {
-            Object obj = pageContext.getSession().getAttribute("user");
+            int id = (int) pageContext.getSession().getAttribute("userId");
             String userName = "";
-            if(obj != null){
-                String tmp =((String) obj);
+            if(id != -1){
+                String tmp = (String) pageContext.getSession().getAttribute("user");
                 userName = "<i class=\"fa fa-user fa-fw\"></i> "+tmp.substring(0,tmp.indexOf('('));
             }
             final String header = "" +

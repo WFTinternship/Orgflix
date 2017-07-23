@@ -2,6 +2,7 @@ package am.aca.orgflix.service.impl;
 
 import am.aca.orgflix.dao.ListDao;
 import am.aca.orgflix.entity.Film;
+import am.aca.orgflix.exception.ServiceException;
 import am.aca.orgflix.service.CastService;
 import am.aca.orgflix.service.ListService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -205,7 +206,7 @@ public class ListServiceImpl extends BaseService implements ListService {
             }
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
-            return new int[0];
+            throw new ServiceException("System failed gating privacy list");
         }
         return privacyList;
     }

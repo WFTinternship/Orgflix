@@ -4,7 +4,7 @@ import am.aca.orgflix.BaseUnitTest;
 import am.aca.orgflix.controller.ActorDataController;
 import am.aca.orgflix.entity.Cast;
 import am.aca.orgflix.service.CastService;
-import am.aca.orgflix.service.ServiceException;
+import am.aca.orgflix.exception.ServiceException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

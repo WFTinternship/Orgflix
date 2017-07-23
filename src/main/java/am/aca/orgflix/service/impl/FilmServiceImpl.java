@@ -6,7 +6,7 @@ import am.aca.orgflix.entity.Film;
 import am.aca.orgflix.entity.Genre;
 import am.aca.orgflix.service.CastService;
 import am.aca.orgflix.service.FilmService;
-import am.aca.orgflix.service.ServiceException;
+import am.aca.orgflix.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -248,6 +248,7 @@ public class FilmServiceImpl extends BaseService implements FilmService {
      * @param film the film to be associated with its own cast and genres
      * @return true if relations are successfully associated, false otherwise
      */
+    @Transactional
     private boolean optimizeRelations(Film film) {
         try {
             for (Genre genre : film.getGenres()) {

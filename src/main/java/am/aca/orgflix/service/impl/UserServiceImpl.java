@@ -2,11 +2,12 @@ package am.aca.orgflix.service.impl;
 
 import am.aca.orgflix.dao.UserDAO;
 import am.aca.orgflix.entity.User;
-import am.aca.orgflix.service.ServiceException;
+import am.aca.orgflix.exception.ServiceException;
 import am.aca.orgflix.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,7 +46,7 @@ public class UserServiceImpl extends BaseService implements UserService {
             return userDao.add(user);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
-            throw new ServiceException(e.getMessage());
+            throw new ServiceException("Adding user failed");
         }
     }
 
@@ -59,7 +60,7 @@ public class UserServiceImpl extends BaseService implements UserService {
             user = userDao.getById(id);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
-            throw new ServiceException(e.getMessage());
+            throw new ServiceException("No user with such ID");
         }
         return user;
     }
@@ -75,7 +76,7 @@ public class UserServiceImpl extends BaseService implements UserService {
             if(list.size() == 0) throw new ServiceException("There is no registered user");
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
-            throw new ServiceException(e.getMessage());
+            return new ArrayList<User>();
         }
         return list;
     }
@@ -89,10 +90,10 @@ public class UserServiceImpl extends BaseService implements UserService {
         try {
             user = userDao.getByEmail(email);
         } catch (org.springframework.dao.EmptyResultDataAccessException e) {
-            return null;
+            throw new ServiceException("No user with such email");
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
-            throw new ServiceException(e.getMessage());
+            throw new ServiceException("Request for user by email failed");
         }
         return user;
     }
@@ -106,10 +107,10 @@ public class UserServiceImpl extends BaseService implements UserService {
         try {
             user = userDao.getByNick(nick);
         } catch (org.springframework.dao.EmptyResultDataAccessException e) {
-            return null;
+            throw new ServiceException("No user with such nick");
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
-            throw new ServiceException(e.getMessage());
+            throw new ServiceException("Request for user by nick failed");
         }
         return user;
     }
@@ -127,7 +128,7 @@ public class UserServiceImpl extends BaseService implements UserService {
                 user = null;
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
-            throw new ServiceException(e.getMessage());
+            throw new ServiceException("Authentication failed!");
         }
         return user;
     }
@@ -155,7 +156,7 @@ public class UserServiceImpl extends BaseService implements UserService {
             state = userDao.edit(user);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
-            throw new ServiceException(e.getMessage());
+            throw new ServiceException("Fail to edit user");
         }
         return state;
     }

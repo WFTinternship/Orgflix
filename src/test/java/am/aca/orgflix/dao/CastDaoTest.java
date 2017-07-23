@@ -32,7 +32,7 @@ public class CastDaoTest extends BaseIntegrationTest {
      */
     @After
     public void tearDown() {
-        helper.emptyTable(new String[]{"film_to_cast", "casts", "films"});
+        helper.emptyTable(new String[]{"FILM_TO_CAST", "CASTS", "FILMS"});
         cast = null;
     }
 

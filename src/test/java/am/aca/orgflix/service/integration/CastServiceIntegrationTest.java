@@ -38,7 +38,7 @@ public class CastServiceIntegrationTest extends BaseIntegrationTest {
     @After
     public void tearDown() {
         helper.emptyTable(new String[]{
-                "film_to_cast", "casts", "films"
+                "FILM_TO_CAST", "CASTS", "FILMS"
         });
     }
 
@@ -186,7 +186,7 @@ public class CastServiceIntegrationTest extends BaseIntegrationTest {
 
 
     /**
-     * @see CastServiceImpl#listFilmsByCast(int)
+     * @see FilmService#getByCast(int)
      */
     @Test
     public void listFilmsByCast_ValidCast_Success() {

@@ -35,7 +35,7 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
      */
     @After
     public void tearDown() {
-        testHelper.emptyTable(new String[]{"users"});
+        testHelper.emptyTable(new String[]{"USERS"});
         user = null;
     }
 

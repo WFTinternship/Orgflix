@@ -1,8 +1,9 @@
 function pagination(page, type) {
+    var navigatorElem = $('#navigator');
     var id = page.split("_");
     $("#currPage").val(id[1]);
-    $('#navigator').attr('action', type);
-    $("#navigator").submit();
+    navigatorElem.attr('action', type);
+    navigatorElem.submit();
 }
 
 function filmControlMenu(state, filmId) {
@@ -143,6 +144,7 @@ function selActor(elem) {
 }
 
 function addActor() {
+    var numOfActorsElem = $("#numOfActors");
     var html = '<div class="container">'
         + '<div class="elem longElem">'
         + '<input type="text" name="actor" onclick="getActorsList(this,true)" onkeyup="getActorsList(this,false)" class="inputField" style="margin-bottom: 0px"/>'
@@ -152,7 +154,7 @@ function addActor() {
         + '<a onclick="removeActor()"><i class="fa fa-minus-square fa-2x"></i></a>'
         + '</div></div>';
     $("#buffer").before(html);
-    $("#numOfActors").val($("#numOfActors").val() + 1);
+    numOfActorsElem.val(numOfActorsElem.val() + 1);
 }
 function removeActor() {
 
@@ -169,15 +171,18 @@ function submitNewFilm() {
 
 }
 function navigator(page) {
-    $('#navigator').attr('action', page);
-    $("#navigator").submit();
+    var navigatorElem = $('#navigator');
+    navigatorElem.attr('action', page);
+    navigatorElem.submit();
 }
 function submitSignUp() {
-    $("#error").html(" ");
-    if ($("#nick").val() == "" || $("#email").val() == "" || $("#pass").val() == "") {
-        $("#error").html("Nick, email and pass are required fields !");
-    } else if ($("#pass").val() != $("#pass_check").val()) {
-        $("#error").html($("#error").html() + "<br />Passwords don't match !");
+    var errerElem = $("#error");
+    var password = $("#pass").val();
+    errerElem.html(" ");
+    if ($("#nick").val() == "" || $("#email").val() == "" || password == "") {
+        errerElem.html("Nick, email and pass are required fields !");
+    } else if (password != $("#pass_check").val()) {
+        errerElem.html(errerElem.html() + "<br />Passwords don't match !");
         console.log("pass not match");
     } else {
         $("#signUpForm").submit();
@@ -185,18 +190,19 @@ function submitSignUp() {
 }
 
 function starFilm(star, isClick, id) {
+    var starElement = $("#stars_" + id);
     if (isClick) {
-        $("#stars_" + id).val(star);
-        $("#stars_" + id).siblings("span:nth-of-type(2)").html("(" + star + " star)");
+        starElement.val(star);
+        starElement.siblings("span:nth-of-type(2)").html("(" + star + " star)");
     } else {
         if (star == 0) {
-            $("#stars_" + id).siblings("a").css("color", "gray");
-            for (i = 1; i <= $("#stars_" + id).val(); i++) {
-                $("#stars_" + id).siblings("a:nth-of-type(" + i + ")").css("color", "#ffe415");
+            starElement.siblings("a").css("color", "gray");
+            for (i = 1; i <= starElement.val(); i++) {
+                starElement.siblings("a:nth-of-type(" + i + ")").css("color", "#ffe415");
             }
         } else {
             for (i = 1; i < star; i++) {
-                $("#stars_" + id).siblings("a:nth-of-type(" + i + ")").css("color", "red");
+                starElement.siblings("a:nth-of-type(" + i + ")").css("color", "red");
             }
         }
     }
@@ -259,10 +265,11 @@ function getUsersList(elem, state) {
 }
 
 function selUser(elem) {
+    var navigatorElem = $('#navigator');
     var idNumber = elem.id.split("_");
     $("#otherUser").val(idNumber[1]);
-    $('#navigator').attr('action', idNumber[2]+'Other');
-    $("#navigator").submit();
+    navigatorElem.attr('action', idNumber[2]+'Other');
+    navigatorElem.submit();
 }
 
 function invertPrivacy(elem, id) {

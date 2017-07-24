@@ -65,8 +65,8 @@ public class ActorDataController {
     }
 
     /**
-     * converts list of actor object to strin in JSON format
-     * @return
+     * converts list of actor object to string in JSON format
+     * @return json containing info of all actors added
      */
     private String getActorsListJSON() {
         List<Cast> actorsList = castService.getAll();

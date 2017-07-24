@@ -38,7 +38,7 @@ public class FilmController {
      * @param session current session
      * @param file file object representing the uploading image
      * @param filmId the id of film for which the image is uploaded, is user for image name
-     * @throws IOException
+     * @throws IOException if problem encountered during writing the image file
      */
     private static void doImageUpload(HttpSession session, CommonsMultipartFile file, int filmId)
             throws IOException {
@@ -75,7 +75,7 @@ public class FilmController {
     /**
      * View for adding new film
      * @param session current session
-     * @return
+     * @return the view for film adding page
      */
     @RequestMapping("/addFilm")
     public ModelAndView addFilm(HttpSession session) {
@@ -109,7 +109,7 @@ public class FilmController {
      * @param actorIds the array of ints for id's of main actors in the film
      * @param director the name of the director of the film
      * @param genres the genre of the film
-     * @throws IOException
+     * @throws IOException if image upload is failed
      */
     @RequestMapping("/addFilmResult")
     public ModelAndView createFilm(@RequestParam CommonsMultipartFile file, HttpSession session,

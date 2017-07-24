@@ -2,7 +2,6 @@ package am.aca.orgflix.dao.impljdbc;
 
 import am.aca.orgflix.dao.FilmDAO;
 import am.aca.orgflix.dao.impljdbc.mapper.FilmRowMapper;
-import am.aca.orgflix.entity.Cast;
 import am.aca.orgflix.entity.Film;
 import am.aca.orgflix.entity.Genre;
 import org.springframework.beans.factory.annotation.Autowired;

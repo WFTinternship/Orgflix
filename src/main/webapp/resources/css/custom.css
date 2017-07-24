@@ -251,10 +251,10 @@ input[type="radio"] {
     text-align: center;
 }
 .fa-wishList:before {
-    content: "\f274";
+    content: "\f008";
 }
 .fa-watchList:before {
-    content: "\f008";
+    content: "\f274";
 }
 .fa-user:before {
     content: "\f2bd";

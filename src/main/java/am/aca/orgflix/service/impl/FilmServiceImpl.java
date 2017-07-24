@@ -248,7 +248,6 @@ public class FilmServiceImpl extends BaseService implements FilmService {
      * @param film the film to be associated with its own cast and genres
      * @return true if relations are successfully associated, false otherwise
      */
-    @Transactional
     private boolean optimizeRelations(Film film) {
         try {
             for (Genre genre : film.getGenres()) {

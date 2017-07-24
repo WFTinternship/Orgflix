@@ -53,8 +53,6 @@ public class DataGenerator implements ServletContextListener {
             movieList.add(film);
             filmService.add(film);
         }
-
-        System.out.println(movieList);
         return movieList;
     }
 

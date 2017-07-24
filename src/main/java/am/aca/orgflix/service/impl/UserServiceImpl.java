@@ -76,7 +76,7 @@ public class UserServiceImpl extends BaseService implements UserService {
             if(list.size() == 0) throw new ServiceException("There is no registered user");
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
-            return new ArrayList<User>();
+            return new ArrayList<>();
         }
         return list;
     }

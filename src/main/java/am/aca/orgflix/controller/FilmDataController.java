@@ -55,7 +55,7 @@ public class FilmDataController{
             @RequestParam("film") int filmId,
             @RequestParam("isPublic") boolean isPublic) {
         try {
-            boolean state = listService.addToPlanned(filmId, true, (int) session.getAttribute("userId"));
+            boolean state = listService.addToPlanned(filmId, isPublic, (int) session.getAttribute("userId"));
             if (state)
                 return new ResponseEntity("Film added to wish list", HttpStatus.OK);
             else

@@ -31,15 +31,6 @@ public interface FilmDAO {
     boolean addGenreToFilm(Genre genre, int filmId);
 
     /**
-     * Add an association of actor with film in DB
-     *
-     * @param cast   the cast with which the provided film will be associated
-     * @param filmId the id of film which will be associated with provided cast
-     * @return true if the new association of cast to film was successful, otherwise false
-     */
-    boolean addCastToFilm(Cast cast, int filmId);
-
-    /**
      * Increment by one the selected scale (from 1 to 5) of the film provided ID
      *
      * @param filmId   the id of the film subject to be rated

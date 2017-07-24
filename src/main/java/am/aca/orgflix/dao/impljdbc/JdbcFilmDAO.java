@@ -72,12 +72,6 @@ public class JdbcFilmDAO extends NamedParameterJdbcDaoSupport implements FilmDAO
         return getJdbcTemplate().update(query, genre.getValue(), filmId) == 1;
     }
 
-    @Override
-    public boolean addCastToFilm(Cast cast, int filmId) {
-        final String query = "INSERT INTO FILM_TO_CAST(ACTOR_ID,FILM_ID) VALUES (? , ? ) ";
-        return getJdbcTemplate().update(query, cast.getId(), filmId) == 1;
-    }
-
     /**
      * @see FilmDAO#rate(int, int)
      */

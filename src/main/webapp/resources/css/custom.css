@@ -1,0 +1,309 @@
+
+/*  Our customisation */
+
+.pagination {
+    margin: 5px;
+    float: left;
+    width: 50px;
+    text-align: center;
+    color: red;
+    font-weight: bold;
+    border: 1px solid blue;
+    cursor:pointer;
+}
+
+.pagintion_container{
+    margin: 20px auto 20px auto;
+    padding: 5px;
+    width: 100%;
+}
+.error {
+    color:red;
+    font-weight: bold;
+}
+.film-buttons{
+    z-index:10;
+    position:absolute;
+    top:0;
+    left:0;
+    background-color: black;
+    opacity:0.7;
+    filter:alpha(opacity=70);
+    padding:5px;
+    display:none;
+    color:white;
+    font-size:20px;
+}
+.film-ref{
+    z-index:10;
+    position:absolute;
+    top:61px;
+    width:80%;
+    left:0;
+    padding:10px;
+    margin:40px;
+    background-color: #c9c9c9;
+    opacity:0.5;
+    filter:alpha(opacity=50);
+    text-align: center;
+    color:black;
+    font-size:16px;
+}
+#outer-pop-up{
+    display:none;
+    position:fixed;
+    z-index:10;
+    width:100%;
+    top:200px;
+    left:0;
+}
+#inner-pop-up{
+    width:500px;
+    margin: 0px auto 0px auto ;
+    height:250px;
+    border:1px solid blue;
+    background-color: gray;
+    opacity:0.9;
+    filter:alpha(opacity=90);
+    text-align: center;
+    color: white;
+    font-weight: bold;
+    padding:100px;
+}
+
+.hiddenElement{
+    display:none;
+}
+.showElement{
+    display:block;
+}
+
+.dateField{
+    width:80px !important;
+}
+
+.tableCell{
+    display: table-cell;
+    padding-right:30px;
+    margin-top:20px;
+}
+
+a.starSelect:link,
+a.starSelect:visited{
+    color:gray;
+}
+a.starSelect:hover{
+    color:red;
+}
+
+/* Custom properties*/
+.pointerA{
+    cursor:pointer;
+}
+.textCentered{
+    text-align:center;
+}
+.hiddenElem{
+    display: none;
+}
+.row1{
+    background-color: white;
+}
+.row0{
+    background-color: #F0FFFF;
+}
+.continer{
+    overflow: hidden;
+}
+.elem{
+    float: left;
+}
+.longElem{
+    width:80%;
+}
+.keep-right{
+    text-align: right;
+}
+.oscarSign{
+    width:30px;
+    text-align:left;
+    display:inline-block;
+}
+.inline-command{
+    color:red;
+    text-decoration: underline;
+    font-weight: bold;
+    cursor:pointer;
+}
+.average-star{
+    color:#e78800 !important;
+    font-weight: bold;
+    padding-left:20px;
+    display: block !important;
+}
+/* END Custom properties*/
+a.no_link,
+a.no_link:link,
+a.no_link:visited{
+    color:#fff;
+    text-decoration:none !important;
+}
+a.no_link:hover{
+    color:#e78800 !important;
+    text-decoration:none !important;
+}
+.castStyle{
+    color:#672050;
+    background-color: white;
+    font-weight: bold;
+    font-style: italic;
+}
+.genreStyle{
+    font-style: italic;
+}
+.get-other-user-nick{
+    width:150px !important;
+    float:right;
+    text-indent:3px;
+    color:gray !important;
+}
+/* Overriding styles*/
+#menu > .inner > ul > li a{
+    display:inline !important;
+    padding: 1em 0;
+    line-height: 2 !important;
+    cursor:pointer !important;
+}
+input[type="radio"] {
+    -moz-appearance: initial !important;
+    -webkit-appearance: initial !important;
+    -ms-appearance: initial !important;
+    appearance: initial !important;
+    display: block;
+    float: none !important;
+    margin-right: 0 !important;
+    opacity: 1 !important;
+    width: 1em;
+    z-index: -1;
+}
+
+@font-face {
+    font-family: 'FontAwesome';
+    src: url('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/fonts/fontawesome-webfont.eot?v=4.7.0');
+    src: url('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/fonts/fontawesome-webfont.eot?#iefix&v=4.7.0') format('embedded-opentype'), url('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/fonts/fontawesome-webfont.woff2?v=4.7.0') format('woff2'), url('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/fonts/fontawesome-webfont.woff?v=4.7.0') format('woff'), url('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/fonts/fontawesome-webfont.ttf?v=4.7.0') format('truetype'), url('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/fonts/fontawesome-webfont.svg?v=4.7.0#fontawesomeregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+/* general class */
+.fa {
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ico size */
+.fa-sm {
+    font-size: 1em;
+    line-height: 0.75em;
+    vertical-align: -15%;
+}
+.fa-lg {
+    font-size: 1.33333333em;
+    line-height: 0.75em;
+    vertical-align: -15%;
+}
+.fa-2x {
+    font-size: 2em;
+}
+.fa-3x {
+    font-size: 3em;
+}
+.fa-4x {
+    font-size: 4em;
+}
+.fa-5x {
+    font-size: 5em;
+}
+
+/* make icos equal */
+.fa-fw {
+    width: 1.28571429em;
+    text-align: center;
+}
+
+/* ico as list bullet */
+.fa-ul {
+    padding-left: 0;
+    margin-left: 2.14285714em;
+    list-style-type: none;
+}
+.fa-ul > li {
+    position: relative;
+}
+.fa-li {
+    position: absolute;
+    left: -2.14285714em;
+    width: 2.14285714em;
+    top: 0.14285714em;
+    text-align: center;
+}
+.fa-wishList:before {
+    content: "\f274";
+}
+.fa-watchList:before {
+    content: "\f008";
+}
+.fa-user:before {
+    content: "\f2bd";
+}
+.fa-home:before{
+    content: "\f015";
+}
+.fa-login:before {
+    content: "\f090";
+}
+.fa-user-plus:before {
+    content: "\f234";
+}
+.fa-star:before {
+     content: "\f005";
+ }
+.fa-logout:before {
+    content: "\f011";
+}
+.fa-plus-square:before {
+    content: "\f0fe";
+}
+.fa-minus-square:before {
+    content: "\f146";
+}
+.fa-star:before {
+    content: "\f005";
+}
+.fa-trash-o:before {
+    content: "\f014";
+}
+.fa-square-o:before {
+    content: "\f096";
+}
+.fa-check-square-o:before {
+    content: "\f046";
+}
+.fa-window-close:before {
+    content: "\f2d3";
+}
+.fa-trophy:before {
+    content: "\f091";
+}
+.fa-search:before {
+    content: "\f002";
+}
+.fa-unlock:before {
+    content: "\f09c";
+}
+.fa-lock:before {
+    content: "\f023";
+}

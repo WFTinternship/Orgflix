@@ -136,7 +136,6 @@ public class HibernateUserDAO implements UserDAO {
         try {
             User actualUser = em.find(User.class, id);
             em.remove(actualUser);
-            em.flush();
             return true;
         } catch (RuntimeException e) {
             return false;

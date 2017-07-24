@@ -1,7 +1,5 @@
 package am.aca.orgflix.entity;
 
-import org.hibernate.annotations.ColumnDefault;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,46 +7,70 @@ import java.util.List;
 /**
  * Film entity class
  */
-@Entity(name = "FILMS")
+@Entity
 @Table(name = "FILMS")
 public class Film {
+    @Id
+    @GeneratedValue
+    @Column(name = "ID")
     private int id;
 
+    @Column(name = "TITLE")
     private String title;
 
+    @Column(name = "PROD_YEAR")
     private int prodYear;
 
+    @Column(name = "HAS_OSCAR")
     private boolean hasOscar;
 
+    @Column(name = "IMAGE_REF")
     private String image;
 
+    @Column(name = "DIRECTOR")
     private String director;
 
+    @Column(name = "RATE_1STAR")
     private int rate_1star;
 
+    @Column(name = "RATE_2STAR")
     private int rate_2star;
 
+    @Column(name = "RATE_3STAR")
     private int rate_3star;
 
+    @Column(name = "RATE_4STAR")
     private int rate_4star;
 
+    @Column(name = "RATE_5STAR")
     private int rate_5star;
 
+    @ManyToMany(targetEntity = Cast.class, cascade = {
+            CascadeType.ALL
+    })
+    @JoinTable(name = "FILM_TO_CAST", joinColumns = {
+            @JoinColumn(name = "FILM_ID")
+    }, inverseJoinColumns = {
+            @JoinColumn(name = "ACTOR_ID")
+    })
     private List<Cast> casts;
 
+    @ElementCollection(targetClass = Genre.class)
+    @CollectionTable(name = "FILM_TO_GENRE",
+            joinColumns = @JoinColumn(name = "FILM_ID"))
+    @Column(name = "GENRE_ID")
     private List<Genre> genres;
 
-
     public Film() {
-        hasOscar = false;
-        rate_1star = 0;
-        rate_2star = 0;
-        rate_3star = 0;
-        rate_4star = 0;
-        rate_5star = 0;
-        genres = new ArrayList<>();
-        casts = new ArrayList<>();
-        image = "00000";
+//        hasOscar = false;
+//        rate_1star = 0;
+//        rate_2star = 0;
+//        rate_3star = 0;
+//        rate_4star = 0;
+//        rate_5star = 0;
+//        genres = new ArrayList<>();
+//        casts = new ArrayList<>();
+//        image = "0/0.jpg";
     }
 
     public Film(String title, int prodYear) {
@@ -99,9 +121,6 @@ public class Film {
                 '}';
     }
 
-    @Id
-    @GeneratedValue
-    @Column(name = "ID")
     public int getId() {
         return id;
     }
@@ -110,7 +129,6 @@ public class Film {
         this.id = id;
     }
 
-    @Column(name = "TITLE", columnDefinition = "VARCHAR(50)", nullable = false)
     public String getTitle() {
         return title;
     }
@@ -119,7 +137,6 @@ public class Film {
         this.title = title;
     }
 
-    @Column(name = "PROD_YEAR", nullable = false)
     public int getProdYear() {
         return prodYear;
     }
@@ -128,8 +145,6 @@ public class Film {
         this.prodYear = prodYear;
     }
 
-    @Column(name = "HAS_OSCAR", nullable = false)
-    @ColumnDefault("false")
     public boolean isHasOscar() {
         return hasOscar;
     }
@@ -138,7 +153,6 @@ public class Film {
         this.hasOscar = hasOscar;
     }
 
-    @Column(name = "IMAGE_REF", columnDefinition = "VARCHAR(250)")
     public String getImage() {
         return image;
     }
@@ -147,7 +161,6 @@ public class Film {
         this.image = image;
     }
 
-    @Column(name = "DIRECTOR", columnDefinition = "VARCHAR(250)")
     public String getDirector() {
         return director;
     }
@@ -156,8 +169,6 @@ public class Film {
         this.director = director;
     }
 
-    @Column(name = "RATE_1STAR")
-    @ColumnDefault("0")
     public int getRate_1star() {
         return rate_1star;
     }
@@ -166,8 +177,6 @@ public class Film {
         this.rate_1star = rate_1star;
     }
 
-    @Column(name = "RATE_2STAR")
-    @ColumnDefault("0")
     public int getRate_2star() {
         return rate_2star;
     }
@@ -176,8 +185,6 @@ public class Film {
         this.rate_2star = rate_2star;
     }
 
-    @Column(name = "RATE_3STAR")
-    @ColumnDefault("0")
     public int getRate_3star() {
         return rate_3star;
     }
@@ -186,8 +193,6 @@ public class Film {
         this.rate_3star = rate_3star;
     }
 
-    @Column(name = "RATE_4STAR")
-    @ColumnDefault("0")
     public int getRate_4star() {
         return rate_4star;
     }
@@ -196,8 +201,6 @@ public class Film {
         this.rate_4star = rate_4star;
     }
 
-    @Column(name = "RATE_5STAR")
-    @ColumnDefault("0")
     public int getRate_5star() {
         return rate_5star;
     }
@@ -206,26 +209,20 @@ public class Film {
         this.rate_5star = rate_5star;
     }
 
-    @ManyToMany(cascade = CascadeType.REFRESH)
-    @JoinTable(name = "FILM_TO_CAST",
-            joinColumns = @JoinColumn(name = "FILM_ID"),
-            inverseJoinColumns = @JoinColumn(name = "ACTOR_ID"))
     public List<Cast> getCasts() {
         return casts;
     }
 
-    public void setCasts(List<Cast> casts) {
-        this.casts = casts;
+    public void setCasts(List<Cast> castList) {
+        this.casts = castList;
     }
 
     public void addCast(Cast cast) {
+        if (this.casts == null)
+            casts = new ArrayList<>();
         this.casts.add(cast);
     }
 
-    @ElementCollection(targetClass = Genre.class)
-    @CollectionTable(name = "GENRE_TO_FILM",
-            joinColumns = @JoinColumn(name = "FILM_ID"))
-    @Column(name = "GENRE_ID")
     public List<Genre> getGenres() {
         return genres;
     }
@@ -235,6 +232,8 @@ public class Film {
     }
 
     public void addGeners(Genre gener) {
+        if (genres == null)
+            genres = new ArrayList<>();
         genres.add(gener);
     }
 }

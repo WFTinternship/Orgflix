@@ -1,6 +1,7 @@
 package am.aca.orgflix.dao;
 
 import am.aca.orgflix.entity.Cast;
+import am.aca.orgflix.entity.Film;
 
 import java.util.List;
 
@@ -34,7 +35,7 @@ public interface CastDAO {
      * @param filmId the ID of the given film
      * @return true if association is successfully created, false otherwise
      */
-    boolean addCastToFilm(Cast cast, int filmId);
+    boolean addCastToFilm(Cast cast, Film film);
 
     // READ
 

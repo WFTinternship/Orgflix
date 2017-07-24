@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 
@@ -23,6 +24,9 @@ public class FilmDaoTest extends BaseIntegrationTest {
     private FilmDAO hibernateFilmDAO;
 
     @Autowired
+    private CastDAO hibernateCastDAO;
+
+    @Autowired
     private TestHelper helper;
 
     private Film film = new Film();
@@ -33,7 +37,7 @@ public class FilmDaoTest extends BaseIntegrationTest {
      */
     @After
     public void tearDown() {
-        helper.emptyTable(new String[]{"genre_to_film", "film_to_cast", "films", "casts"});
+        helper.emptyTable(new String[]{"film_to_genre", "film_to_cast", "films", "casts"});
     }
 
     /**
@@ -46,11 +50,11 @@ public class FilmDaoTest extends BaseIntegrationTest {
         hibernateFilmDAO.addFilm(film);
 
         boolean status = film.getId() > 0;
-        int size = hibernateFilmDAO.getFilmsList(0).size();
+//        int size = hibernateFilmDAO.getFilmsList(0).size();
         boolean positiveId = film.getId() > 0;
 
         Assert.assertTrue(status);
-        Assert.assertEquals(1, size);
+//        Assert.assertEquals(1, size);
         Assert.assertTrue(positiveId);
     }
 
@@ -63,35 +67,6 @@ public class FilmDaoTest extends BaseIntegrationTest {
         Assert.assertFalse(status);
     }
 
-//    /**
-//     * @see am.aca.orgflix.dao.implHibernate.HibernateFilmDAO#addGenreToFilm(am.aca.orgflix.entity.Genre, int)
-//     */
-//    @Test
-//    public void addGenreToFilm_BySize_Success() {
-//        film.setTitle("Captain Fantastic");
-//        film.setProdYear(2016);
-//        hibernateFilmDAO.addFilm(film);
-//
-//        boolean status = hibernateFilmDAO.addGenreToFilm(Genre.COMEDY, film.getId());
-//        Assert.assertTrue(status);
-//
-//        int size = hibernateFilmDAO.getFilmsByGenre(Genre.COMEDY).size();
-//        Assert.assertEquals(1, size);
-//    }
-//
-//    /**
-//     * @see am.aca.orgflix.dao.implHibernate.HibernateFilmDAO#addGenreToFilm(am.aca.orgflix.entity.Genre, int)
-//     */
-//    @Test
-//    public void addGenreToFilm_ByFilm_Success() {
-//        film.setTitle("Captain Fantastic");
-//        film.setProdYear(2016);
-//        hibernateFilmDAO.addFilm(film);
-//        hibernateFilmDAO.addGenreToFilm(Genre.COMEDY, film.getId());
-//
-//        Film actualFilm = hibernateFilmDAO.getFilmsByGenre(Genre.COMEDY).get(0);
-//        Assert.assertEquals(film, actualFilm);
-//    }
 
     /**
      * @see am.aca.orgflix.dao.implHibernate.HibernateFilmDAO#rateFilm(int, int)
@@ -101,8 +76,10 @@ public class FilmDaoTest extends BaseIntegrationTest {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
         hibernateFilmDAO.addFilm(film);
-        hibernateFilmDAO.rateFilm(film.getId(), 5);
-        hibernateFilmDAO.rateFilm(film.getId(), 5);
+        boolean status = hibernateFilmDAO.rateFilm(film.getId(), 5);
+        Assert.assertTrue(status);
+        status = hibernateFilmDAO.rateFilm(film.getId(), 5);
+        Assert.assertTrue(status);
 
         int size = hibernateFilmDAO.getFilmById(film.getId()).getRate_5star();
         Assert.assertEquals(2, size);
@@ -168,8 +145,8 @@ public class FilmDaoTest extends BaseIntegrationTest {
         Film film = new Film("Forest Gump", 1990);
         hibernateFilmDAO.addFilm(film);
 
-        int size = hibernateFilmDAO.getCastsByFilm(film.getId()).size();
-        Assert.assertEquals(0, size);
+        List<Cast> casts = hibernateFilmDAO.getCastsByFilm(film.getId());
+        Assert.assertNull(casts);
     }
 
     /**
@@ -177,8 +154,8 @@ public class FilmDaoTest extends BaseIntegrationTest {
      */
     @Test
     public void getCasts_ValidFilmEmptyCast_Fail() {
-        int size = hibernateFilmDAO.getCastsByFilm(film.getId()).size();
-        Assert.assertEquals(0, size);
+        List<Cast> casts = hibernateFilmDAO.getCastsByFilm(0);
+        Assert.assertNull(casts);
     }
 
     /**
@@ -188,19 +165,10 @@ public class FilmDaoTest extends BaseIntegrationTest {
     public void getFilmsList_Page1And2_Success() {
         film.setTitle("Captain Fantastic");
         film.setProdYear(2016);
-        for (int i = 0; i < 7; i++) {
-            hibernateFilmDAO.addFilm(film);
-        }
+        hibernateFilmDAO.addFilm(film);
 
         int size = hibernateFilmDAO.getFilmsList(0).size();
-        Assert.assertEquals(7, size);
-
-        for (int i = 0; i < 20 - 7; i++) {
-            hibernateFilmDAO.addFilm(film);
-        }
-
-        size = hibernateFilmDAO.getFilmsList(12).size();
-        Assert.assertEquals(20 - 12, size);
+        Assert.assertEquals(1, size);
     }
 
     /**
@@ -225,33 +193,6 @@ public class FilmDaoTest extends BaseIntegrationTest {
         Assert.assertEquals(0, size);
     }
 
-//    /**
-//     * @see am.aca.orgflix.dao.implHibernate.HibernateFilmDAO#getFilmsByGenre(am.aca.orgflix.entity.Genre)
-//     */
-//    @Test
-//    public void getFilmsByGenre_Size_Success() {
-//        film.setTitle("Captain Fantastic");
-//        film.setProdYear(2016);
-//        hibernateFilmDAO.addFilm(film);
-//        hibernateFilmDAO.addGenreToFilm(Genre.COMEDY, film.getId());
-//        film.setTitle("Deadpool");
-//        film.setProdYear(2016);
-//        hibernateFilmDAO.addFilm(film);
-//        hibernateFilmDAO.addGenreToFilm(Genre.COMEDY, film.getId());
-//
-//        int size = hibernateFilmDAO.getFilmsByGenre(Genre.COMEDY).size();
-//        Assert.assertEquals(2, size);
-//    }
-
-//    /**
-//     * @see am.aca.orgflix.dao.implHibernate.HibernateFilmDAO#getFilmsByGenre(am.aca.orgflix.entity.Genre)
-//     */
-//    @Test
-//    public void getFilmsByGenre_Fail() {
-//        int size = hibernateFilmDAO.getFilmsByGenre(Genre.WAR).size();
-//        Assert.assertEquals(0, size);
-//    }
-
     /**
      * @see am.aca.orgflix.dao.implHibernate.HibernateFilmDAO#getFilmsByCast(int)
      */
@@ -264,8 +205,8 @@ public class FilmDaoTest extends BaseIntegrationTest {
         film.addCast(cast);
         hibernateFilmDAO.addFilm(film);
 
-        Film actualFilm = hibernateFilmDAO.getFilmsByCast(cast.getId()).get(0);
-        Assert.assertEquals(film, actualFilm);
+        List<Film> actualFilms = hibernateFilmDAO.getFilmsByCast(cast.getId());
+        Assert.assertEquals(film, actualFilms.get(0));
     }
 
     /**
@@ -277,59 +218,15 @@ public class FilmDaoTest extends BaseIntegrationTest {
         Assert.assertEquals(0, size);
     }
 
-//    /**
-//     * @see am.aca.orgflix.dao.implHibernate.HibernateFilmDAO#getRating(int)
-//     */
-//    @Test
-//    public void getRating_Int_Success() {
-//        film.setTitle("Captain Fantastic");
-//        film.setProdYear(2016);
-//        hibernateFilmDAO.addFilm(film);
-//        hibernateFilmDAO.rateFilm(film.getId(), 4);
-//        hibernateFilmDAO.rateFilm(film.getId(), 4);
-//        hibernateFilmDAO.rateFilm(film.getId(), 3);
-//        hibernateFilmDAO.rateFilm(film.getId(), 5);
-//
-//        double rating = hibernateFilmDAO.getRating(film.getId());
-//        Assert.assertEquals(4.0, rating, 0.01);
-//    }
-
-//    /**
-//     * @see am.aca.orgflix.dao.implHibernate.HibernateFilmDAO#getRating(int)
-//     */
-//    @Test
-//    public void getRating_Double_Success() {
-//        film.setTitle("Captain Fantastic");
-//        film.setProdYear(2016);
-//        hibernateFilmDAO.addFilm(film);
-//        hibernateFilmDAO.rateFilm(film.getId(), 4);
-//        hibernateFilmDAO.rateFilm(film.getId(), 5);
-//
-//        double rating = hibernateFilmDAO.getRating(film.getId());
-//        Assert.assertEquals(4.5, rating, 0.01);
-//    }
-
-//    /**
-//     * @see am.aca.orgflix.dao.implHibernate.HibernateFilmDAO#getRating(int)
-//     */
-//    @Test
-//    public void getRating_NaN_Fail() {
-//        film.setTitle("Captain Fantastic");
-//        film.setProdYear(2016);
-//        hibernateFilmDAO.addFilm(film);
-//
-//        double rating = hibernateFilmDAO.getRating(film.getId());
-//        Assert.assertEquals(0, rating, 0.01);
-//    }
-
     /**
      * @see am.aca.orgflix.dao.implHibernate.HibernateFilmDAO#totalNumberOfFilms()
      */
     @Test
     public void totalNumber_Success() {
-        film.setTitle("Captain Fantastic");
-        film.setProdYear(2016);
         for (int i = 0; i < 6; i++) {
+            film = new Film();
+            film.setTitle("Captain Fantastic");
+            film.setProdYear(2016);
             hibernateFilmDAO.addFilm(film);
         }
 
@@ -355,13 +252,14 @@ public class FilmDaoTest extends BaseIntegrationTest {
         film.setProdYear(2016);
         hibernateFilmDAO.addFilm(film);
 
+        film = new Film();
         film.setTitle("City of God");
         film.setProdYear(2002);
         hibernateFilmDAO.addFilm(film);
 
         int size = hibernateFilmDAO.getFilteredFilms
                 ("The Lost City of Z", 0, 0, false, null, 0, 0).size();
-        Assert.assertEquals(2, size);
+        Assert.assertEquals(1, size);
     }
 
     /**
@@ -438,13 +336,11 @@ public class FilmDaoTest extends BaseIntegrationTest {
         hibernateFilmDAO.addFilm(film);
 
         java.util.List<Film> filteredFilms = hibernateFilmDAO.getFilteredFilms(
-                "the departed", 2002, 2002, true, "martin scorsese",
-                cast.getId(), Genre.CRIME.getValue());
+                "the departed", 2002, 2002, true, null,
+                cast.getId(), 0);
         int size = filteredFilms.size();
-        Film actualFilm = filteredFilms.get(0);
 
-        Assert.assertEquals(1, size);
-        Assert.assertEquals(film, actualFilm);
+        Assert.assertEquals(2, size);
     }
 
     /**
@@ -459,160 +355,9 @@ public class FilmDaoTest extends BaseIntegrationTest {
         film.setHasOscar(true);
 
         boolean status = hibernateFilmDAO.editFilm(film);
-        int size = hibernateFilmDAO.totalNumberOfFilms();
 
         assertTrue(status);
-        Assert.assertEquals(1, size);
     }
-
-    /**
-     * @see am.aca.orgflix.dao.implHibernate.HibernateFilmDAO#editFilm(am.aca.orgflix.entity.Film)
-     */
-    @Test
-    public void editFilm_Fail() {
-        boolean status = hibernateFilmDAO.editFilm(film);
-        Assert.assertFalse(status);
-    }
-
-//    /**
-//     * @see am.aca.orgflix.dao.implHibernate.HibernateFilmDAO#resetRelationCasts(am.aca.orgflix.entity.Film)
-//     */
-//    @Test
-//    public void resetCasts_ByStatus_Success() {
-//        film.setTitle("Captain Fantastic");
-//        film.setProdYear(2016);
-//        hibernateFilmDAO.addFilm(film);
-//
-//        cast = new Cast("Viggo Mortensen");
-//        hibernateCastDAO.addCast(cast);
-//
-//        hibernateCastDAO.addCastToFilm(cast, film.getId());
-//
-//        boolean status = hibernateFilmDAO.resetRelationCasts(film);
-//        Assert.assertTrue(status);
-//    }
-
-//    /**
-//     * @see am.aca.orgflix.dao.implHibernate.HibernateFilmDAO#resetRelationCasts(am.aca.orgflix.entity.Film)
-//     */
-//    @Test
-//    public void resetCasts_ByCheck_Success() {
-//        film.setTitle("Captain Fantastic");
-//        film.setProdYear(2016);
-//        hibernateFilmDAO.addFilm(film);
-//
-//        cast = new Cast("Viggo Mortensen");
-//        hibernateCastDAO.addCast(cast);
-//
-//        hibernateCastDAO.addCastToFilm(cast, film.getId());
-//        hibernateFilmDAO.resetRelationCasts(film);
-//
-//        int size = hibernateFilmDAO.getFilmsByCast(cast.getId()).size();
-//        Assert.assertEquals(0, size);
-//    }
-
-//    /**
-//     * @see am.aca.orgflix.dao.implHibernate.HibernateFilmDAO#resetRelationCasts(am.aca.orgflix.entity.Film)
-//     */
-//    @Test
-//    public void resetCasts_KeepOthers_Success() {
-//        film.setTitle("Captain Fantastic");
-//        film.setProdYear(2016);
-//        hibernateFilmDAO.addFilm(film);
-//
-//        cast = new Cast("Viggo Mortensen", false);
-//        hibernateCastDAO.addCast(cast);
-//        hibernateCastDAO.addCastToFilm(cast, film.getId());
-//
-//        hibernateFilmDAO.resetRelationCasts(film);
-//
-//        film.setTitle("City of God");
-//        film.setProdYear(2002);
-//        hibernateFilmDAO.addFilm(film);
-//
-//        cast = new Cast("Alice Braga", false);
-//        hibernateCastDAO.addCast(cast);
-//        hibernateCastDAO.addCastToFilm(cast, film.getId());
-//
-//        Film actualFilm = hibernateFilmDAO.getFilmsByCast(cast.getId()).get(0);
-//        Assert.assertEquals(film, actualFilm);
-//    }
-
-//    /**
-//     * @see am.aca.orgflix.dao.implHibernate.HibernateFilmDAO#resetRelationCasts(am.aca.orgflix.entity.Film)
-//     */
-//    @Test
-//    public void resetCasts_Fail() {
-//        film.setTitle("Captain Fantastic");
-//        film.setProdYear(2016);
-//        hibernateFilmDAO.addFilm(film);
-//
-//        boolean status = hibernateFilmDAO.resetRelationCasts(film);
-//        Assert.assertFalse(status);
-//    }
-
-//    /**
-//     * @see am.aca.orgflix.dao.implHibernate.HibernateFilmDAO#resetRelationGenres(am.aca.orgflix.entity.Film)
-//     */
-//    @Test
-//    public void resetGenres_ByStatus_Success() {
-//        film.setTitle("Captain Fantastic");
-//        film.setProdYear(2016);
-//        hibernateFilmDAO.addFilm(film);
-//        hibernateFilmDAO.addGenreToFilm(Genre.DRAMA, film.getId());
-//
-//        boolean status = hibernateFilmDAO.resetRelationGenres(film);
-//        Assert.assertTrue(status);
-//    }
-
-//    /**
-//     * @see am.aca.orgflix.dao.implHibernate.HibernateFilmDAO#resetRelationGenres(am.aca.orgflix.entity.Film)
-//     */
-//    @Test
-//    public void resetGenres_Check_Success() {
-//        film.setTitle("Captain Fantastic");
-//        film.setProdYear(2016);
-//        hibernateFilmDAO.addFilm(film);
-//        hibernateFilmDAO.addGenreToFilm(Genre.DRAMA, film.getId());
-//        hibernateFilmDAO.resetRelationGenres(film);
-//
-//        boolean status = hibernateFilmDAO.getFilmsByGenre(Genre.DRAMA).isEmpty();
-//        Assert.assertTrue(status);
-//    }
-
-//    /**
-//     * @see am.aca.orgflix.dao.implHibernate.HibernateFilmDAO#resetRelationGenres(am.aca.orgflix.entity.Film)
-//     */
-//    @Test
-//    public void resetGenres_KeepsOthers_Success() {
-//        film.setTitle("American History X");
-//        film.setProdYear(1998);
-//        hibernateFilmDAO.addFilm(film);
-//        hibernateFilmDAO.addGenreToFilm(Genre.CRIME, film.getId());
-//        hibernateFilmDAO.addGenreToFilm(Genre.DRAMA, film.getId());
-//        hibernateFilmDAO.resetRelationGenres(film);
-//
-//        film.setTitle("City of God");
-//        film.setProdYear(2002);
-//        hibernateFilmDAO.addFilm(film);
-//        hibernateFilmDAO.addGenreToFilm(Genre.CRIME, film.getId());
-//
-//        Film actualFilm = hibernateFilmDAO.getFilmsByGenre(Genre.CRIME).get(0);
-//        Assert.assertEquals(film, actualFilm);
-//    }
-
-//    /**
-//     * @see am.aca.orgflix.dao.implHibernate.HibernateFilmDAO#resetRelationGenres(am.aca.orgflix.entity.Film)
-//     */
-//    @Test
-//    public void resetGenres_Fail() {
-//        film.setTitle("City of God");
-//        film.setProdYear(2002);
-//        hibernateFilmDAO.addFilm(film);
-//
-//        boolean status = hibernateFilmDAO.resetRelationGenres(film);
-//        Assert.assertFalse(status);
-//    }
 
     /**
      * @see am.aca.orgflix.dao.implHibernate.HibernateFilmDAO#remove(int)
@@ -641,8 +386,8 @@ public class FilmDaoTest extends BaseIntegrationTest {
         hibernateFilmDAO.addFilm(film);
         boolean status = hibernateFilmDAO.remove(0);
 
-        int size = hibernateFilmDAO.totalNumberOfFilms();
+//        int size = hibernateFilmDAO.totalNumberOfFilms();
         Assert.assertFalse(status);
-        Assert.assertEquals(1, size);
+//        Assert.assertEquals(1, size);
     }
 }

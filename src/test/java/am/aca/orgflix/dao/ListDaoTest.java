@@ -66,6 +66,16 @@ public class ListDaoTest extends BaseIntegrationTest {
      */
     @Test
     public void insertWatched_ValidInputs_Success() {
+        film = new Film();
+        film.setTitle("Scarface");
+        film.setProdYear(1983);
+
+        hibernateFilmDAO.addFilm(film);
+        filmId = film.getId();
+        //setUp User and User DAO
+
+        userId = hibernateUserDAO.add(new User("MrSmith", "John Smith", "JhonSmith@gmail.com", "pass"));
+
         hibernateListDAO.insertWatched(filmId, userId, true);
 
         boolean status = hibernateListDAO.isWatched(filmId, userId);

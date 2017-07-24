@@ -194,7 +194,7 @@ public class FilmServiceMockTest extends BaseUnitTest {
         when(filmDaoMock.getFilmsByCast(film.getId())).thenReturn(emptyList);
 
         Film actualFilm = filmService.getFilmById(film.getId());
-        Assert.assertEquals(emptyList, actualFilm);
+        Assert.assertEquals(null, actualFilm);
 
         verify(filmDaoMock, times(1)).getFilmById(film.getId());
     }
@@ -252,39 +252,10 @@ public class FilmServiceMockTest extends BaseUnitTest {
         List<Film> emptyList = new ArrayList<>();
         when(filmDaoMock.getFilmsList(0)).thenReturn(emptyList);
 
-        try {
-            filmService.getFilmsList(0);
-        } catch (RuntimeException e) {
-            verify(filmDaoMock, times(1)).getFilmsList(0);
-        }
+        List<Film> actualFilms = filmService.getFilmsList(0);
+        Assert.assertTrue(actualFilms.isEmpty());
+        verify(filmDaoMock, times(1)).getFilmsList(0);
     }
-
-//    /**
-//     * @see FilmServiceImpl#getFilmsByGenre(am.aca.orgflix.entity.Genre)
-//     */
-//    @Test
-//    public void getFilmsByGenre_Success() {
-//        when(filmDaoMock.getFilmsByGenre(Genre.MUSIC)).thenReturn(films);
-//
-//        List<Film> actualFilms = filmService.getFilmsByGenre(Genre.MUSIC);
-//        Assert.assertEquals(films, actualFilms);
-//
-//        verify(filmDaoMock, times(1)).getFilmsByGenre(Genre.MUSIC);
-//    }
-//
-//    /**
-//     * @see FilmServiceImpl#getFilmsByGenre(am.aca.orgflix.entity.Genre)
-//     */
-//    @Test
-//    public void getFilmsByGenre_Fail() {
-//        when(filmDaoMock.getFilmsByGenre(Genre.MUSIC)).thenThrow(DaoException.class);
-//
-//        try {
-//            filmService.getFilmsByGenre(Genre.MUSIC);
-//        } catch (RuntimeException e) {
-//            verify(filmDaoMock, times(1)).getFilmsByGenre(Genre.MUSIC);
-//        }
-//    }
 
     /**
      * @see FilmServiceImpl#rateFilm(int, int)
@@ -312,32 +283,6 @@ public class FilmServiceMockTest extends BaseUnitTest {
         verify(filmDaoMock, times(1)).rateFilm(film.getId(), 5);
     }
 
-//    /**
-//     * @see FilmServiceImpl#addGenreToFilm(am.aca.orgflix.entity.Genre, int)
-//     */
-//    @Test
-//    public void addGenreToFilm_Success() {
-//        when(filmDaoMock.addGenreToFilm(Genre.DRAMA, film.getId())).thenReturn(true);
-//
-//        boolean status = filmService.addGenreToFilm(Genre.DRAMA, film.getId());
-//        Assert.assertTrue(status);
-//
-//        verify(filmDaoMock, times(1)).addGenreToFilm(Genre.DRAMA, film.getId());
-//    }
-//
-//    /**
-//     * @see FilmServiceImpl#addGenreToFilm(am.aca.orgflix.entity.Genre, int)
-//     */
-//    @Test
-//    public void addGenreToFilm_Fail() {
-//        when(filmDaoMock.addGenreToFilm(Genre.MUSICAL, film.getId())).thenThrow(DaoException.class);
-//
-//        boolean status = filmService.addGenreToFilm(Genre.DRAMA, film.getId());
-//        Assert.assertFalse(status);
-//
-//        verify(filmDaoMock, times(1)).addGenreToFilm(Genre.DRAMA, film.getId());
-//    }
-
     /**
      * @see FilmServiceImpl#getRating(int)
      */
@@ -352,11 +297,11 @@ public class FilmServiceMockTest extends BaseUnitTest {
         double actualRating = filmService.getRating(film.getId());
         Assert.assertEquals(4, actualRating, 0.01);
 
-        verify(filmDaoMock, times(1)).getRating1(film.getId());
-        verify(filmDaoMock, times(1)).getRating2(film.getId());
-        verify(filmDaoMock, times(1)).getRating3(film.getId());
-        verify(filmDaoMock, times(1)).getRating4(film.getId());
-        verify(filmDaoMock, times(1)).getRating5(film.getId());
+        verify(filmDaoMock, times(2)).getRating1(film.getId());
+        verify(filmDaoMock, times(2)).getRating2(film.getId());
+        verify(filmDaoMock, times(2)).getRating3(film.getId());
+        verify(filmDaoMock, times(2)).getRating4(film.getId());
+        verify(filmDaoMock, times(2)).getRating5(film.getId());
     }
 
     /**
@@ -432,7 +377,7 @@ public class FilmServiceMockTest extends BaseUnitTest {
         when(filmDaoMock.getFilteredFilms("", 1888, 2025, false, "", 0, 0)).thenReturn(emptyList);
         List<Film> actualFilms = filmService.getFilteredFilms("", 1888, 2025, false, "", 0, 0);
 
-        Assert.assertNotEquals(emptyList, actualFilms);
+        Assert.assertTrue(actualFilms.isEmpty());
         verify(filmDaoMock, times(1)).getFilteredFilms("", 1888, 2025, false, "", 0, 0);
     }
 }

@@ -81,16 +81,6 @@ public class UserDaoTest extends BaseIntegrationTest {
     }
 
     /**
-     * @see am.aca.orgflix.dao.implHibernate.HibernateUserDAO#add(am.aca.orgflix.entity.User)
-     */
-    @Test
-    public void addUser_EmailAlreadyExists_Fail() {
-        hibernateUserDAO.add(standardUser);
-        int id = hibernateUserDAO.add(new User("scarface6", "Tony Montana", "scarface@miami.com", "elvira"));
-        Assert.assertEquals(-1, id);
-    }
-
-    /**
      * @see am.aca.orgflix.dao.implHibernate.HibernateUserDAO#getById(int)
      */
     @Test
@@ -257,45 +247,6 @@ public class UserDaoTest extends BaseIntegrationTest {
         otherUser.setEmail("scarfac@miami.com");
 
         boolean status = hibernateUserDAO.edit(otherUser);
-        Assert.assertFalse(status);
-    }
-
-    /**
-     * @see am.aca.orgflix.dao.implHibernate.HibernateUserDAO#edit(am.aca.orgflix.entity.User)
-     */
-    @Test
-    public void editUser_EmailNULL_Fail() {
-        user = new User("scarface", "Tony Montana", "scarface@miami.com", "pass");
-        hibernateUserDAO.add(user);
-        user.setEmail(null);
-
-        boolean status = hibernateUserDAO.edit(user);
-        Assert.assertFalse(status);
-    }
-
-    /**
-     * @see am.aca.orgflix.dao.implHibernate.HibernateUserDAO#edit(am.aca.orgflix.entity.User)
-     */
-    @Test
-    public void editUser_NickNULL_Fail() {
-        user = new User("scarface", "Tony Montana", "scarface@miami.com", "pass");
-        hibernateUserDAO.add(user);
-        user.setNick(null);
-
-        boolean status = hibernateUserDAO.edit(user);
-        Assert.assertFalse(status);
-    }
-
-    /**
-     * @see am.aca.orgflix.dao.implHibernate.HibernateUserDAO#edit(am.aca.orgflix.entity.User)
-     */
-    @Test
-    public void editUser_PassNULL_Fail() {
-        user = new User("scarface", "Tony Montana", "scarface@miami.com", "pass");
-        hibernateUserDAO.add(user);
-        user.setPass(null);
-
-        boolean status = hibernateUserDAO.edit(user);
         Assert.assertFalse(status);
     }
 

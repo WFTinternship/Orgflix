@@ -3,13 +3,13 @@ package am.aca.orgflix.dao.implHibernate;
 import am.aca.orgflix.dao.FilmDAO;
 import am.aca.orgflix.entity.Cast;
 import am.aca.orgflix.entity.Film;
+import am.aca.orgflix.entity.Genre;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,50 +23,53 @@ public class HibernateFilmDAO implements FilmDAO {
     private EntityManagerFactory emf = Persistence.createEntityManagerFactory("Orgflix_PU");
     private EntityManager em = emf.createEntityManager();
 
-    @Transactional
     @Override
+    @SuppressWarnings({"duplicates", "duplicate"})
     public boolean addFilm(Film film) {
         try {
+            em.getTransaction().begin();
             em.persist(film);
             em.flush();
+            em.getTransaction().commit();
             return true;
         } catch (RuntimeException e) {
+            em.getTransaction().rollback();
             return false;
         }
     }
 
-    @Transactional
     @Override
     public boolean rateFilm(int filmId, int starType) {
         try {
+            em.getTransaction().begin();
             Query query;
+            Film film = em.find(Film.class, filmId);
             switch (starType) {
                 case 1:
-                    query = em.createQuery("update FILMS set rate_1star = rate_1star + 1 where id = ?1")
-                            .setParameter(1, filmId);
+                    film.setRate_1star(film.getRate_1star() + 1);
                     break;
                 case 2:
-                    query = em.createQuery("update FILMS set rate_2star = rate_2star + 1 where id = ?1")
-                            .setParameter(1, filmId);
+                    film.setRate_2star(film.getRate_2star() + 1);
                     break;
                 case 3:
-                    query = em.createQuery("update FILMS set rate_3star = rate_3star + 1 where id = ?1")
-                            .setParameter(1, filmId);
+                    film.setRate_3star(film.getRate_3star() + 1);
                     break;
                 case 4:
-                    query = em.createQuery("update FILMS set rate_4star = rate_4star + 1 where id = ?1")
-                            .setParameter(1, filmId);
+                    film.setRate_4star(film.getRate_4star() + 1);
                     break;
                 case 5:
-                    query = em.createQuery("update FILMS set rate_5star = rate_5star + 1 where id = ?1")
-                            .setParameter(1, filmId);
+                    film.setRate_5star(film.getRate_5star() + 1);
                     break;
                 default:
+                    em.getTransaction().rollback();
                     return false;
-
             }
-            return query.executeUpdate() == 1;
+
+            em.merge(film);
+            em.getTransaction().commit();
+            return true;
         } catch (RuntimeException e) {
+            em.getTransaction().rollback();
             return false;
         }
     }
@@ -83,36 +86,23 @@ public class HibernateFilmDAO implements FilmDAO {
     @Override
     public List<Cast> getCastsByFilm(int filmId) {
         Film film = em.find(Film.class, filmId);
+        if (film == null)
+            return null;
         return film.getCasts();
     }
 
     @Override
     public List<Film> getFilmsList(int startIndex) {
         try {
-            Query query = em.createQuery("from FILMS");
+            Query query = em.createQuery("from Film", Film.class);
             query.setFirstResult(startIndex);
             query.setMaxResults(FIXED_NUMBER_OF_FILMS_PER_PAGE);
             return query.getResultList();
         } catch (RuntimeException e) {
+            e.printStackTrace();
             return new ArrayList<>();
         }
     }
-
-//    /**
-//     * @see FilmDAO#getFilmsByGenre(Genre)
-//     */
-//    @Override
-//    public List<Film> getFilmsByGenre(Genre genre) {
-//        List<Film> result = new ArrayList<>();
-//        try {
-//            Query query = em.createQuery("select film from FILMS film " +
-//                    "join film.genres genre where genre = :givenGenre");
-//            query.setParameter("givenGenre", genre);
-//            result = query.getResultList();
-//        } catch (RuntimeException ignored) {
-//        }
-//        return result;
-//    }
 
     /**
      * @see FilmDAO#getFilmsByCast(int)
@@ -121,32 +111,19 @@ public class HibernateFilmDAO implements FilmDAO {
     public List<Film> getFilmsByCast(int actorId) {
         List<Film> result = new ArrayList<>();
         try {
-            Query query = em.createQuery("select film from FILMS film " +
-                    "join film.casts cast where cast.id = :givenCast");
-            query.setParameter("givenCast", actorId);
-            result = query.getResultList();
+            List<Film> resultList = em.createQuery("from Film", Film.class).getResultList();
+            outerloop:
+            for (Film film : resultList) {
+                for (Cast cast : film.getCasts()) {
+                    if (cast.getId() == actorId)
+                        result.add(film);
+                    continue outerloop;
+                }
+            }
         } catch (RuntimeException ignored) {
         }
         return result;
     }
-
-//    @Override
-//    public double getRating(int filmId) {
-//        try {
-//            Film actualFilm = em.find(Film.class, filmId);
-//            int ratingSum = actualFilm.getRate_1star() + 2 * actualFilm.getRate_2star() +
-//                    3 * actualFilm.getRate_3star() + 4 * actualFilm.getRate_4star() + 5 * actualFilm.getRate_5star();
-//            if (ratingSum == 0)
-//                return 0;
-//
-//            int ratingCount = actualFilm.getRate_1star() + actualFilm.getRate_2star() +
-//                    actualFilm.getRate_3star() + actualFilm.getRate_4star() + actualFilm.getRate_5star();
-//
-//            return ratingSum / ratingCount;
-//        } catch (RuntimeException e) {
-//            return 0;
-//        }
-//    }
 
     /**
      * @see FilmDAO#getRating5(int)
@@ -216,8 +193,7 @@ public class HibernateFilmDAO implements FilmDAO {
     @Override
     public int totalNumberOfFilms() {
         try {
-            Query query = em.createQuery("SELECT count(*) FROM FILMS");
-            return (int) query.getSingleResult();
+            return em.createQuery("from Film", Film.class).getResultList().size();
         } catch (RuntimeException e) {
             return 0;
         }
@@ -226,67 +202,105 @@ public class HibernateFilmDAO implements FilmDAO {
     @Override
     public List<Film> getFilteredFilms(String title, int startYear, int finishYear, boolean hasOscar,
                                        String director, int castId, int genreId) {
-        List<Film> resultList = new ArrayList<>();
-        StringBuilder queryBuilder = new StringBuilder();
-
-        queryBuilder.append("select film from FILMS film " +
-                "join film.casts cast " +
-                "join film.genres genre " +
-                "where film.title like :title ");
-        if (startYear != 0)
-            queryBuilder.append("and film.prodYear <= :startYear ");
-        if (finishYear != 0)
-            queryBuilder.append("and film.prodYear >= :finishYear ");
-        if (hasOscar)
-            queryBuilder.append("and film.hasOscar = :hasOscar ");
-        if (director != null)
-            queryBuilder.append("and film.director like :director ");
-        if (castId > 0)
-            queryBuilder.append("and cast.id = :castId ");
-        if (genreId > 0)
-            queryBuilder.append("and genre.id = :genreId ");
-        try {
-            Query query = em.createQuery(queryBuilder.toString());
-
-//            Query query = em.createQuery("select film from FILMS film " +
-//                    "join film.casts cast " +
-//                    "join film.genres genre " +
-//                    "where film.title like :title " +
-//                    "and film.prodYear <= :startYear " +
-//                    "and film.prodYear >= :finishYear " +
-//                    "and film.hasOscar = :hasOscar " +
-//                    "and film.director like :director " +
-//                    "and cast.id = :castId " +
-//                    "and genre.id = :genreId");
-            query.setParameter("title", "%" + title + "%");
-
+        List<Film> resultList;
+        List<Film> result = new ArrayList<>();
+        resultList = em.createQuery("from Film", Film.class).getResultList();
+        for (Film film : resultList) {
+            if (title!= null && !title.equals(""))
+                if (film.getTitle().equals(title))
+                    result.add(film);
             if (startYear != 0)
-                query.setParameter("startYear", startYear);
+                if (film.getProdYear() < startYear)
+                    result.add(film);
             if (finishYear != 0)
-                query.setParameter("finishYear", finishYear);
+                if (film.getProdYear() > finishYear)
+                    result.add(film);
             if (hasOscar)
-                query.setParameter("hasOscar", true);
+                if (film.isHasOscar())
+                    result.add(film);
             if (director != null)
-                query.setParameter("director", "%" + director + "%");
-            if (castId > 0)
-                query.setParameter("castId", castId);
-            if (genreId > 0)
-                query.setParameter("genreId", genreId);
+                if (film.getDirector().equals(director))
+                    result.add(film);
+            if (castId != 0) {
+                for (Film actualFilm : resultList) {
+                    for (Cast cast : film.getCasts()) {
+                        if (cast.getId() == castId)
+                            result.add(actualFilm);
+                    }
+                }
+            }
+            if (genreId != 0) {
+                for (Film actualFilm : resultList) {
+                    for (Genre genre : film.getGenres()) {
+                        if (genre.getValue() == genreId)
+                            result.add(actualFilm);
+                    }
+                }
+            }
+//        StringBuilder queryBuilder = new StringBuilder();
+//
+//        queryBuilder.append("select film from FILMS film " +
+//                "join film.casts cast " +
+//                "join film.genres genre " +
+//                "where film.title like :title ");
+//        if (startYear != 0)
+//            queryBuilder.append("and film.prodYear <= :startYear ");
+//        if (finishYear != 0)
+//            queryBuilder.append("and film.prodYear >= :finishYear ");
+//        if (hasOscar)
+//            queryBuilder.append("and film.hasOscar = :hasOscar ");
+//        if (director != null)
+//            queryBuilder.append("and film.director like :director ");
+//        if (castId > 0)
+//            queryBuilder.append("and cast.id = :castId ");
+//        if (genreId > 0)
+//            queryBuilder.append("and genre.id = :genreId ");
+//        try {
+//            Query query = em.createQuery(queryBuilder.toString());
+//
+////            Query query = em.createQuery("select film from FILMS film " +
+////                    "join film.casts cast " +
+////                    "join film.genres genre " +
+////                    "where film.title like :title " +
+////                    "and film.prodYear <= :startYear " +
+////                    "and film.prodYear >= :finishYear " +
+////                    "and film.hasOscar = :hasOscar " +
+////                    "and film.director like :director " +
+////                    "and cast.id = :castId " +
+////                    "and genre.id = :genreId");
+//            query.setParameter("title", "%" + title + "%");
+//
+//            if (startYear != 0)
+//                query.setParameter("startYear", startYear);
+//            if (finishYear != 0)
+//                query.setParameter("finishYear", finishYear);
+//            if (hasOscar)
+//                query.setParameter("hasOscar", true);
+//            if (director != null)
+//                query.setParameter("director", "%" + director + "%");
+//            if (castId > 0)
+//                query.setParameter("castId", castId);
+//            if (genreId > 0)
+//                query.setParameter("genreId", genreId);
+//
+//            resultList = query.getResultList();
 
-            resultList = query.getResultList();
-            return resultList;
-        } catch (RuntimeException e) {
-            return resultList;
+//        } catch (RuntimeException e) {
+//            e.printStackTrace();
+//            return resultList;
         }
+        return result;
     }
 
-    @Transactional
     @Override
     public boolean editFilm(Film film) {
         try {
+            em.getTransaction().begin();
             em.merge(film);
+            em.getTransaction().commit();
             return true;
         } catch (RuntimeException e) {
+            em.getTransaction().rollback();
             return false;
         }
     }
@@ -297,23 +311,14 @@ public class HibernateFilmDAO implements FilmDAO {
     @Override
     public boolean remove(int filmId) {
         try {
+            em.getTransaction().begin();
             Film actualFilm = em.find(Film.class, filmId);
             em.remove(actualFilm);
+            em.getTransaction().commit();
             return true;
         } catch (RuntimeException e) {
+            em.getTransaction().rollback();
             return false;
         }
     }
-
-//    @Transactional
-//    @Override
-//    public boolean remove(Film film) {
-//        try {
-//            em.remove(film);
-//            em.flush();
-//            return true;
-//        } catch (RuntimeException e) {
-//            return false;
-//        }
-//    }
 }

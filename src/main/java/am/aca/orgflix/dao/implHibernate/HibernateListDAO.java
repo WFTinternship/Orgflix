@@ -34,12 +34,13 @@ public class HibernateListDAO implements ListDao {
             list.setWatched(true);
             list.setPublic(isPublic);
             list.setFilm(film);
-            list.setUser(user);                                         ////////??????????????????????
+            list.setUser(user);
 
             user.getLists().add(list);
             em.merge(user);
             return true;
         } catch (RuntimeException e) {
+            e.printStackTrace();
             return false;
         }
     }

@@ -33,6 +33,13 @@ public class FilmController {
     private FilmService filmService;
     private CastService castService;
 
+    /**
+     * Helper method for saving uploaded image
+     * @param session current session
+     * @param file file object representing the uploading image
+     * @param filmId the id of film for which the image is uploaded, is user for image name
+     * @throws IOException
+     */
     private static void doImageUpload(HttpSession session, CommonsMultipartFile file, int filmId)
             throws IOException {
 
@@ -65,6 +72,11 @@ public class FilmController {
         this.castService = castService;
     }
 
+    /**
+     * View for adding new film
+     * @param session current session
+     * @return
+     */
     @RequestMapping("/addFilm")
     public ModelAndView addFilm(HttpSession session) {
 
@@ -86,6 +98,19 @@ public class FilmController {
         return modelAndView;
     }
 
+    /**
+     * Adds new film
+     * @param file file object representing the uploading image
+     * @param session current session
+     * @param title film title
+     * @param year year when the film published
+     * @param star the number of stars for rating
+     * @param hasOscar flag whether the film has oscar
+     * @param actorIds the array of ints for id's of main actors in the film
+     * @param director the name of the director of the film
+     * @param genres the genre of the film
+     * @throws IOException
+     */
     @RequestMapping("/addFilmResult")
     public ModelAndView createFilm(@RequestParam CommonsMultipartFile file, HttpSession session,
                                    @RequestParam("title") String title, @RequestParam("year") int year,
@@ -134,6 +159,9 @@ public class FilmController {
         return modelAndView;
     }
 
+    /**
+     * View for search film page
+     */
     @RequestMapping("/searchFilm")
     public ModelAndView searchFilm(HttpSession session) {
 
@@ -155,6 +183,17 @@ public class FilmController {
         return modelAndView;
     }
 
+    /**
+     * View for film Search result
+     * @param session current session
+     * @param title part of title of the searching films
+     * @param startYear start period in year of films production years
+     * @param finishYear start period in year of films production years
+     * @param hasOscar flag whether the searching films have oscar
+     * @param director part of director name
+     * @param actorId id's of actors in the searching films
+     * @param genre genre of searching films
+     */
     @RequestMapping("/searchFilmResult")
     public ModelAndView searchFilm(HttpSession session, @RequestParam("title") String title,
                                    @RequestParam("startYear") int startYear, @RequestParam("finishYear") int finishYear,

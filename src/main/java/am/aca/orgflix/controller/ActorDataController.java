@@ -29,6 +29,9 @@ public class ActorDataController {
     }
 
 
+    /**
+     *  Returns list of all actors in JSON format
+     */
     @RequestMapping("/getList")
     public ResponseEntity getActorsList() {
         try {
@@ -40,6 +43,12 @@ public class ActorDataController {
         }
     }
 
+    /**
+     * Adds new actor
+     * @param actorName Name of the actor
+     * @param hasOscar flag whether the actor has oscar
+     * @return updated list of all actors
+     */
     @RequestMapping("/add")
     public ResponseEntity addNewActor(@RequestParam("actor") String actorName,
                                       @RequestParam("hasOscar") boolean hasOscar) {
@@ -55,6 +64,10 @@ public class ActorDataController {
         }
     }
 
+    /**
+     * converts list of actor object to strin in JSON format
+     * @return
+     */
     private String getActorsListJSON() {
         List<Cast> actorsList = castService.getAll();
         int size = actorsList.size();

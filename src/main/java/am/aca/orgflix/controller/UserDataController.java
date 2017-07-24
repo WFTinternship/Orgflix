@@ -28,6 +28,10 @@ public class UserDataController {
     }
 
 
+    /**
+     * Provides user's list in JSON format
+     * @return string in JSON format and Http OK status if succeeded
+     */
     @RequestMapping("/getList")
     public ResponseEntity getUsersList() {
         try {
@@ -39,6 +43,10 @@ public class UserDataController {
         }
     }
 
+    /**
+     * Helper method the convert the list of user objects to string in JSON format
+     * @return string in JSON format
+     */
     private String getUsersListJSON(){
         List<User> usersList = userService.getAll();
         int size = usersList.size();

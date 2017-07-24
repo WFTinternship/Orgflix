@@ -23,7 +23,7 @@
         <div class="inner">
             <header>
                 <c:if test="${ (page == 'index') || (sessionScope.userId==-1)}">
-                    <h1>This is OrgFlix, a free film list organizer</h1>
+                    <h1>This is OrgFlix, a free organizer for your flix</h1>
                 </c:if>
                 <c:if test="${page == 'watch_list'}">
                     <h1>Watch list</h1>

@@ -24,6 +24,8 @@ public class UserController {
     private UserService userService;
     private FilmService filmService;
 
+    private static final int FIXED_ITEMS_PER_PAGE = 12;
+
     @Autowired
     public void setUserService(UserService userService) {
         this.userService = userService;
@@ -43,11 +45,11 @@ public class UserController {
         ModelAndView modelAndView;
         try {
             modelAndView = new ModelAndView("register");
-            modelAndView.addObject("films", filmService.getAll(0, 12));
-            modelAndView.addObject("ratings", filmService.getAllRatings(0, 12));
+            modelAndView.addObject("films", filmService.getAll(0, FIXED_ITEMS_PER_PAGE));
+            modelAndView.addObject("ratings", filmService.getAllRatings(0, FIXED_ITEMS_PER_PAGE));
             modelAndView.addObject("currentPage", 0);
             modelAndView.addObject("page", "index");
-            modelAndView.addObject("numOfPages", filmService.getTotalNumber() / 12);
+            modelAndView.addObject("numOfPages", filmService.getTotalNumber() / FIXED_ITEMS_PER_PAGE);
         } catch (RuntimeException e) {
             LOGGER.warn(e.getMessage());
             modelAndView = new ModelAndView("error", "message", e);
@@ -80,8 +82,8 @@ public class UserController {
                 session.setAttribute("user", user.getNick() + " (" + email + ")");
 
                 modelAndView = new ModelAndView("home");
-                modelAndView.addObject("films", filmService.getAll(0, 12));
-                modelAndView.addObject("numOfPages", filmService.getTotalNumber() / 12);
+                modelAndView.addObject("films", filmService.getAll(0, FIXED_ITEMS_PER_PAGE));
+                modelAndView.addObject("numOfPages", filmService.getTotalNumber() / FIXED_ITEMS_PER_PAGE);
                 modelAndView.addObject("currentPage", 0);
                 modelAndView.addObject("page", "index");
             } else {
@@ -148,8 +150,8 @@ public class UserController {
                 session.setAttribute("user", " ");
             } else {
                 modelAndView = new ModelAndView("home");
-                modelAndView.addObject("films", filmService.getAll(0, 12));
-                modelAndView.addObject("numOfPages", filmService.getTotalNumber() / 12);
+                modelAndView.addObject("films", filmService.getAll(0, FIXED_ITEMS_PER_PAGE));
+                modelAndView.addObject("numOfPages", filmService.getTotalNumber() / FIXED_ITEMS_PER_PAGE);
                 modelAndView.addObject("currentPage", 0);
                 modelAndView.addObject("page", "index");
 

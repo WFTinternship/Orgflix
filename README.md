@@ -1,3 +1,3 @@
 # Orgflix
 Project of Karine, Davit and Vardan <br/>
-The final version
+A web-based tool for finding and organizing films 

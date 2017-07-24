@@ -3,9 +3,9 @@ package am.aca.orgflix.service.integration;
 import am.aca.orgflix.BaseIntegrationTest;
 import am.aca.orgflix.entity.Cast;
 import am.aca.orgflix.entity.Film;
+import am.aca.orgflix.exception.ServiceException;
 import am.aca.orgflix.service.CastService;
 import am.aca.orgflix.service.FilmService;
-import am.aca.orgflix.exception.ServiceException;
 import am.aca.orgflix.service.impl.CastServiceImpl;
 import am.aca.orgflix.util.TestHelper;
 import org.junit.After;
@@ -63,19 +63,29 @@ public class CastServiceIntegrationTest extends BaseIntegrationTest {
     /**
      * @see CastServiceImpl#add(am.aca.orgflix.entity.Cast)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void addCast_NameNull_Fail() {
         cast = new Cast(null);
-        castService.add(cast);
+        try {
+            castService.add(cast);
+
+        } catch (ServiceException e) {
+            Assert.assertTrue(e instanceof ServiceException);
+        }
     }
 
     /**
      * @see CastServiceImpl#add(am.aca.orgflix.entity.Cast)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void addCast_NameEmpty_Fail() {
         cast = new Cast("");
-        castService.add(cast);
+
+        try {
+            castService.add(cast);
+        } catch (ServiceException e) {
+            Assert.assertTrue(e instanceof ServiceException);
+        }
     }
 
     /**
@@ -135,23 +145,31 @@ public class CastServiceIntegrationTest extends BaseIntegrationTest {
     /**
      * @see CastServiceImpl#edit(am.aca.orgflix.entity.Cast)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void editCast_NameNull_Fail() {
         cast = new Cast("Edward Norton");
-        castService.add(cast);
-        cast.setName(null);
-        castService.edit(cast);
+        try {
+            castService.add(cast);
+            cast.setName(null);
+            castService.edit(cast);
+        } catch (ServiceException e) {
+            Assert.assertTrue(e instanceof ServiceException);
+        }
     }
 
     /**
      * @see CastServiceImpl#edit(am.aca.orgflix.entity.Cast)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void editCast_NameEmpty_Fail() {
         cast = new Cast("Edward Norton");
-        castService.add(cast);
-        cast.setName("");
-        castService.edit(cast);
+        try {
+            castService.add(cast);
+            cast.setName("");
+            castService.edit(cast);
+        } catch (ServiceException e) {
+            Assert.assertTrue(e instanceof ServiceException);
+        }
     }
 
     /**

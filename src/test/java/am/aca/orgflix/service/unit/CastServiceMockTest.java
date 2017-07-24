@@ -72,21 +72,29 @@ public class CastServiceMockTest extends BaseUnitTest {
     /**
      * @see CastServiceImpl#add(am.aca.orgflix.entity.Cast)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void addCast_NameNull_Fail() {
-        cast.setName(null);
-        boolean status = castService.add(cast);
-        Assert.assertFalse(status);
+        try {
+            cast.setName(null);
+            boolean status = castService.add(cast);
+            Assert.assertFalse(status);
+        } catch (ServiceException e) {
+            Assert.assertTrue(e instanceof ServiceException);
+        }
     }
 
     /**
      * @see CastServiceImpl#add(am.aca.orgflix.entity.Cast)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void addCast_NameEmpty_Fail() {
-        cast.setName("");
-        boolean status = castService.add(cast);
-        Assert.assertFalse(status);
+        try {
+            cast.setName("");
+            boolean status = castService.add(cast);
+            Assert.assertFalse(status);
+        } catch (ServiceException e) {
+            Assert.assertTrue(e instanceof ServiceException);
+        }
     }
 
     /**
@@ -216,11 +224,15 @@ public class CastServiceMockTest extends BaseUnitTest {
     /**
      * @see CastServiceImpl#edit(am.aca.orgflix.entity.Cast)
      */
-    @Test(expected = RuntimeException.class)
+    @Test
     public void editCast_NameEmpty_Fail() {
-        cast.setName("");
+        try {
+            cast.setName("");
 
-        castService.edit(cast);
+            castService.edit(cast);
+        } catch (ServiceException e) {
+            Assert.assertTrue(e instanceof ServiceException);
+        }
     }
 
     /**

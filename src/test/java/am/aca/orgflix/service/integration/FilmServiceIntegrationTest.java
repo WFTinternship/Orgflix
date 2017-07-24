@@ -4,9 +4,9 @@ import am.aca.orgflix.BaseIntegrationTest;
 import am.aca.orgflix.entity.Cast;
 import am.aca.orgflix.entity.Film;
 import am.aca.orgflix.entity.Genre;
+import am.aca.orgflix.exception.ServiceException;
 import am.aca.orgflix.service.CastService;
 import am.aca.orgflix.service.FilmService;
-import am.aca.orgflix.exception.ServiceException;
 import am.aca.orgflix.util.TestHelper;
 import org.junit.After;
 import org.junit.Assert;
@@ -74,29 +74,41 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
     /**
      * @see FilmService#add(Film)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void addFilm_NameNull_Fail() {
         film = new Film(null, 2008);
 
-        filmService.add(film);
+        try {
+            filmService.add(film);
+        } catch (ServiceException e) {
+            Assert.assertTrue(e instanceof ServiceException);
+        }
     }
 
     /**
      * @see FilmService#add(Film)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void addFilm_NameEmpty_Fail() {
         film = new Film(null, 2066);
-        filmService.add(film);
+        try {
+            filmService.add(film);
+        } catch (ServiceException e) {
+            Assert.assertTrue(e instanceof ServiceException);
+        }
     }
 
     /**
      * @see FilmService#add(Film)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void addFilm_InvalidYear() {
         film = new Film("In Bruges", 456);
-        filmService.add(film);
+        try {
+            filmService.add(film);
+        } catch (ServiceException e) {
+            Assert.assertTrue(e instanceof ServiceException);
+        }
     }
 
     /**
@@ -361,37 +373,49 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
     /**
      * @see FilmService#edit(Film)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void editFilm_NameNull_Fail() {
         film = new Film("The Departed", 2004);
-        filmService.add(film);
+        try {
+            filmService.add(film);
+            film.setTitle(null);
+            filmService.edit(film);
+        } catch (ServiceException e) {
+            Assert.assertTrue(e instanceof ServiceException);
+        }
 
-        film.setTitle(null);
-        filmService.edit(film);
     }
 
     /**
      * @see FilmService#edit(Film)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void editFilm_NameEmpty_Fail() {
         film = new Film("The Departed", 2004);
-        filmService.add(film);
+        try {
+            filmService.add(film);
+            film.setTitle("");
+            filmService.edit(film);
+        } catch (ServiceException e) {
+            Assert.assertTrue(e instanceof ServiceException);
+        }
 
-        film.setTitle("");
-        filmService.edit(film);
     }
 
     /**
      * @see FilmService#edit(Film)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void editFilm_InvalidYear_Fail() {
         film = new Film("The Departed", 2004);
-        filmService.add(film);
+        try {
+            filmService.add(film);
+            film.setProdYear(-85);
+            filmService.edit(film);
+        } catch (ServiceException e) {
+            Assert.assertTrue(e instanceof ServiceException);
+        }
 
-        film.setProdYear(-85);
-        filmService.edit(film);
     }
 
     /**
@@ -418,13 +442,17 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
     /**
      * @see FilmService#rate(int, int)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void rateFilm_InvalidRating_Fail() {
         film = new Film("The Departed", 2004);
-        filmService.add(film);
+        try {
+            filmService.add(film);
+            boolean status = filmService.rate(film.getId(), 9);
+            Assert.assertFalse(status);
+        } catch (ServiceException e) {
+            Assert.assertTrue(e instanceof ServiceException);
+        }
 
-        boolean status = filmService.rate(film.getId(), 9);
-        Assert.assertFalse(status);
     }
 
     /**

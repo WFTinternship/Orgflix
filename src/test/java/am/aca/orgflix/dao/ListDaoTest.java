@@ -76,26 +76,38 @@ public class ListDaoTest extends BaseIntegrationTest {
     /**
      * @see ListDao#insertWatched(int, int, boolean)
      */
-    @Test(expected = RuntimeException.class)
+    @Test
     public void insertWatched_InvalidFilm_Fail() {
-        listDaoJdbc.insertWatched(0, userId, true);
+        try {
+            listDaoJdbc.insertWatched(0, userId, true);
+        } catch (RuntimeException e) {
+            Assert.assertTrue(e instanceof RuntimeException);
+        }
     }
 
     /**
      * @see ListDao#insertWatched(int, int, boolean)
      */
-    @Test(expected = RuntimeException.class)
+    @Test
     public void insertWatched_InvalidUser_Fail() {
-        listDaoJdbc.insertWatched(filmId, 0, true);
+        try {
+            listDaoJdbc.insertWatched(filmId, 0, true);
+        } catch (RuntimeException e) {
+            Assert.assertTrue(e instanceof RuntimeException);
+        }
     }
 
     /**
      * @see ListDao#insertWatched(int, int, boolean)
      */
-    @Test(expected = RuntimeException.class)
+    @Test
     public void insertWatched_Duplicate_Fail() {
-        listDaoJdbc.insertWatched(filmId, userId, true);
-        listDaoJdbc.insertWatched(filmId, userId, true);
+        try {
+            listDaoJdbc.insertWatched(filmId, userId, true);
+            listDaoJdbc.insertWatched(filmId, userId, true);
+        } catch (RuntimeException e) {
+            Assert.assertTrue(e instanceof RuntimeException);
+        }
     }
 
     /**
@@ -113,26 +125,38 @@ public class ListDaoTest extends BaseIntegrationTest {
     /**
      * @see ListDao#insertPlanned(int, int, boolean)
      */
-    @Test(expected = RuntimeException.class)
+    @Test
     public void insertPlanned_InvalidUser_Fail() {
-        listDaoJdbc.insertPlanned(filmId, 0, false);
+        try {
+            listDaoJdbc.insertPlanned(filmId, 0, false);
+        } catch (RuntimeException e) {
+            Assert.assertTrue(e instanceof RuntimeException);
+        }
     }
 
     /**
      * @see ListDao#insertPlanned(int, int, boolean)
      */
-    @Test(expected = RuntimeException.class)
+    @Test
     public void insertPlanned_InvalidFilm_Fail() {
-        listDaoJdbc.insertPlanned(0, userId, false);
+        try {
+            listDaoJdbc.insertPlanned(0, userId, false);
+        } catch (RuntimeException e) {
+            Assert.assertTrue(e instanceof RuntimeException);
+        }
     }
 
     /**
      * @see ListDao#insertPlanned(int, int, boolean)
      */
-    @Test(expected = RuntimeException.class)
+    @Test
     public void insertPlanned_Duplicate_Fail() {
-        listDaoJdbc.insertPlanned(filmId, userId, false);
-        listDaoJdbc.insertPlanned(filmId, userId, false);
+        try {
+            listDaoJdbc.insertPlanned(filmId, userId, false);
+            listDaoJdbc.insertPlanned(filmId, userId, false);
+        } catch (RuntimeException e) {
+            Assert.assertTrue(e instanceof RuntimeException);
+        }
     }
 
     /**

@@ -61,9 +61,13 @@ public class FilmDaoTest extends BaseIntegrationTest {
     /**
      * @see FilmDAO#add(am.aca.orgflix.entity.Film)
      */
-    @Test(expected = RuntimeException.class)
+    @Test
     public void addFilm_InvalidFilm_Fail() {
-        jdbcFilmDAO.add(film);
+        try {
+            jdbcFilmDAO.add(film);
+        } catch (RuntimeException e) {
+            Assert.assertTrue(e instanceof RuntimeException);
+        }
     }
 
     /**
@@ -88,21 +92,29 @@ public class FilmDaoTest extends BaseIntegrationTest {
     /**
      * @see FilmDAO#addGenreToFilm(am.aca.orgflix.entity.Genre, int)
      */
-    @Test(expected = RuntimeException.class)
+    @Test
     public void addGenreToFilm_SameAssociationTwice_Fail() {
-        film.setTitle("Captain Fantastic");
-        film.setProdYear(2016);
-        jdbcFilmDAO.add(film);
-        jdbcFilmDAO.addGenreToFilm(Genre.COMEDY, film.getId());
-        jdbcFilmDAO.addGenreToFilm(Genre.COMEDY, film.getId());
+        try {
+            film.setTitle("Captain Fantastic");
+            film.setProdYear(2016);
+            jdbcFilmDAO.add(film);
+            jdbcFilmDAO.addGenreToFilm(Genre.COMEDY, film.getId());
+            jdbcFilmDAO.addGenreToFilm(Genre.COMEDY, film.getId());
+        } catch (RuntimeException e) {
+            Assert.assertTrue(e instanceof RuntimeException);
+        }
     }
 
     /**
      * @see FilmDAO#addGenreToFilm(am.aca.orgflix.entity.Genre, int)
      */
-    @Test(expected = RuntimeException.class)
+    @Test
     public void addGenreToFilm_InvalidFilm_Fail() {
-        jdbcFilmDAO.addGenreToFilm(Genre.COMEDY, film.getId());
+        try {
+            jdbcFilmDAO.addGenreToFilm(Genre.COMEDY, film.getId());
+        } catch (RuntimeException e) {
+            Assert.assertTrue(e instanceof RuntimeException);
+        }
     }
 
     /**
@@ -138,12 +150,16 @@ public class FilmDaoTest extends BaseIntegrationTest {
     /**
      * @see FilmDAO#rate(int, int)
      */
-    @Test(expected = RuntimeException.class)
+    @Test
     public void rateFilm_InvalidRating_Fail() {
-        film.setTitle("Captain Fantastic");
-        film.setProdYear(2016);
-        jdbcFilmDAO.add(film);
-        jdbcFilmDAO.rate(film.getId(), 9);
+        try {
+            film.setTitle("Captain Fantastic");
+            film.setProdYear(2016);
+            jdbcFilmDAO.add(film);
+            jdbcFilmDAO.rate(film.getId(), 9);
+        } catch (RuntimeException e) {
+            Assert.assertTrue(e instanceof RuntimeException);
+        }
     }
 
     /**
@@ -171,9 +187,13 @@ public class FilmDaoTest extends BaseIntegrationTest {
     /**
      * @see FilmDAO#getById(int)
      */
-    @Test(expected = RuntimeException.class)
+    @Test
     public void getFilmById_InvalidId_Fail() {
-        jdbcFilmDAO.getById(-1);
+        try {
+            jdbcFilmDAO.getById(-1);
+        } catch (RuntimeException e) {
+            Assert.assertTrue(e instanceof RuntimeException);
+        }
     }
 
     /**
@@ -248,9 +268,13 @@ public class FilmDaoTest extends BaseIntegrationTest {
     /**
      * @see FilmDAO#getByGenre(am.aca.orgflix.entity.Genre)
      */
-    @Test(expected = RuntimeException.class)
+    @Test
     public void getFilmsByGenre_InvalidGenre_Fail() {
-        jdbcFilmDAO.getByGenre(Genre.getByTitle("invalid"));
+        try {
+            jdbcFilmDAO.getByGenre(Genre.getByTitle("invalid"));
+        } catch (RuntimeException e) {
+            Assert.assertTrue(e instanceof RuntimeException);
+        }
     }
 
     /**

@@ -61,89 +61,128 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
     /**
      * @see UserServiceImpl#add(am.aca.orgflix.entity.User)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void addUser_EmptyNick_Fail() {
-        userService.add(new User("", "Tony Montana", "scarface@miami.com", "elvira"));
+        try {
+            userService.add(new User("", "Tony Montana", "scarface@miami.com", "elvira"));
+        } catch (ServiceException e) {
+            Assert.assertTrue(e instanceof ServiceException);
+        }
     }
 
     /**
      * @see UserServiceImpl#add(am.aca.orgflix.entity.User)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void addUser_EmptyEmail_Fail() {
-        userService.add(new User("scarface", "Tony Montana", "", "elvira"));
+        try {
+            userService.add(new User("scarface", "Tony Montana", "", "elvira"));
+        } catch (ServiceException e) {
+            Assert.assertTrue(e instanceof ServiceException);
+        }
     }
 
     /**
      * @see UserServiceImpl#add(am.aca.orgflix.entity.User)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void addUser_EmptyPass_Fail() {
-        userService.add(new User("scarface", "Tony Montana", "scarface@gmail.com", ""));
+        try {
+            userService.add(new User("scarface", "Tony Montana", "scarface@gmail.com", ""));
+        } catch (ServiceException e) {
+            Assert.assertTrue(e instanceof ServiceException);
+        }
     }
 
     /**
      * @see UserServiceImpl#add(am.aca.orgflix.entity.User)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void addUser_NullNick_Fail() {
-        userService.add(new User(null, "Tony Montana", "scarface@miami.com", "elvira"));
+        try {
+            userService.add(new User(null, "Tony Montana", "scarface@miami.com", "elvira"));
+        } catch (ServiceException e) {
+            Assert.assertTrue(e instanceof ServiceException);
+        }
     }
 
     /**
      * @see UserServiceImpl#add(am.aca.orgflix.entity.User)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void addUser_NullEmail_Fail() {
-        userService.add(new User("scarface", "Tony Montana", null, "elvira"));
+        try {
+            userService.add(new User("scarface", "Tony Montana", null, "elvira"));
+        } catch (ServiceException e) {
+            Assert.assertTrue(e instanceof ServiceException);
+        }
     }
 
     /**
      * @see UserServiceImpl#add(am.aca.orgflix.entity.User)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void addUser_NullPass_Fail() {
-        userService.add(new User("scarface", "Tony Montana", "scarface@miami.com", null));
+        try {
+            userService.add(new User("scarface", "Tony Montana", "scarface@miami.com", null));
+        } catch (ServiceException e) {
+            Assert.assertTrue(e instanceof ServiceException);
+        }
     }
 
     /**
      * @see UserServiceImpl#add(am.aca.orgflix.entity.User)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void addUser_EmailAlreadyExists_Fail() {
-        userService.add(standardUser);
-
-        userService.add(new User("smurf", "Manny Ribera", "davit.abovyan@gmail.com", "elvira"));
+        try {
+            userService.add(standardUser);
+            userService.add(new User("smurf", "Manny Ribera", "davit.abovyan@gmail.com", "elvira"));
+        } catch (ServiceException e) {
+            Assert.assertTrue(e instanceof ServiceException);
+        }
     }
 
     /**
      * @see UserServiceImpl#add(am.aca.orgflix.entity.User)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void addUser_BadEmailFormat_Fail() {
-        userService.add(standardUser);
+        try {
+            userService.add(standardUser);
+            userService.add(new User("scarface", "Tony Montana", "someFakeEmail", "elvira"));
+        } catch (ServiceException e) {
+            Assert.assertTrue(e instanceof ServiceException);
+        }
 
-        userService.add(new User("scarface", "Tony Montana", "someFakeEmail", "elvira"));
     }
 
     /**
      * @see UserServiceImpl#add(am.aca.orgflix.entity.User)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void addUser_ShortPassword_Fail() {
-        userService.add(standardUser);
+        try {
+            userService.add(standardUser);
+            userService.add(new User("scarface", "Tony Montana", "scarface@miami.com", "1"));
+        } catch (ServiceException e) {
+            Assert.assertTrue(e instanceof ServiceException);
+        }
 
-        userService.add(new User("scarface", "Tony Montana", "scarface@miami.com", "1"));
     }
 
     /**
      * @see UserServiceImpl#add(am.aca.orgflix.entity.User)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void addUser_SpaceInPassword_Fail() {
-        userService.add(standardUser);
+        try {
+            userService.add(standardUser);
+            userService.add(new User("scarface", "Tony Montana", "scarface@miami.com", "elvira <3"));
+        } catch (ServiceException e) {
+            Assert.assertTrue(e instanceof ServiceException);
+        }
 
-        userService.add(new User("scarface", "Tony Montana", "scarface@miami.com", "elvira <3"));
     }
 
     /**
@@ -218,7 +257,7 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
     public void getAll_OneUser_Success() {
         userService.add(standardUser);
         List<User> list = userService.getAll();
-        Assert.assertEquals("Davit",list.get(0).getNick());
+        Assert.assertEquals("Davit", list.get(0).getNick());
     }
 
     /**
@@ -317,86 +356,117 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
     /**
      * @see UserServiceImpl#edit(am.aca.orgflix.entity.User)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void editUser_EmailNonUnique_Fail() {
-        userService.add(standardUser);
         User otherUser = new User("manny", "Manny Ribera", "manny@miami.com", "elvira");
+        try {
+            userService.add(standardUser);
 
-        userService.add(otherUser);
-        otherUser.setEmail("davit.abovyan@gmail.com");
+            userService.add(otherUser);
+            otherUser.setEmail("davit.abovyan@gmail.com");
 
-        userService.edit(otherUser);
+            userService.edit(otherUser);
+        } catch (ServiceException e) {
+            Assert.assertTrue(e instanceof ServiceException);
+        }
+
     }
 
     /**
      * @see UserServiceImpl#edit(am.aca.orgflix.entity.User)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void editUser_EmailNULL_Fail() {
         user = new User("scarface", "Tony Montana", "scarface@miami.com", "elvira");
-        userService.add(user);
-        user.setEmail(null);
+        try {
+            userService.add(user);
+            user.setEmail(null);
+            userService.edit(user);
+        } catch (ServiceException e) {
+            Assert.assertTrue(e instanceof ServiceException);
+        }
 
-        userService.edit(user);
     }
 
     /**
      * @see UserServiceImpl#edit(am.aca.orgflix.entity.User)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void editUser_NickNULL_Fail() {
         user = new User("scarface", "Tony Montana", "scarface@miami.com", "elvira");
-        userService.add(user);
-        user.setNick(null);
+        try {
+            userService.add(user);
+            user.setNick(null);
+            userService.edit(user);
+        } catch (ServiceException e) {
+            Assert.assertTrue(e instanceof ServiceException);
+        }
 
-        userService.edit(user);
     }
 
     /**
      * @see UserServiceImpl#edit(am.aca.orgflix.entity.User)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void editUser_PassNULL_Fail() {
         user = new User("scarface", "Tony Montana", "scarface@miami.com", "elvira");
-        userService.add(user);
-        user.setPass(null);
+        try {
+            userService.add(user);
 
-        userService.edit(user);
+            user.setPass(null);
+
+            userService.edit(user);
+        } catch (ServiceException e) {
+            Assert.assertTrue(e instanceof ServiceException);
+        }
     }
 
     /**
      * @see UserServiceImpl#edit(am.aca.orgflix.entity.User)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void editUser_EmailEmpty_Fail() {
         user = new User("scarface", "Tony Montana", "scarface@miami.com", "elvira");
-        userService.add(user);
-        user.setEmail("");
+        try {
+            userService.add(user);
+            user.setEmail("");
 
-        userService.edit(user);
+            userService.edit(user);
+        } catch (ServiceException e) {
+            Assert.assertTrue(e instanceof ServiceException);
+        }
     }
 
     /**
      * @see UserServiceImpl#edit(am.aca.orgflix.entity.User)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void editUser_NickEmpty_Fail() {
         user = new User("scarface", "Tony Montana", "scarface@miami.com", "elvira");
-        userService.add(user);
-        user.setNick("");
+        try {
+            userService.add(user);
 
-        userService.edit(user);
+            user.setNick("");
+            userService.edit(user);
+        } catch (ServiceException e) {
+            Assert.assertTrue(e instanceof ServiceException);
+        }
+
     }
 
     /**
      * @see UserServiceImpl#edit(am.aca.orgflix.entity.User)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void editUser_PassEmpty_Fail() {
         user = new User("scarface", "Tony Montana", "scarface@miami.com", "elvira");
-        userService.add(user);
-        user.setPass("");
+        try {
+            userService.add(user);
+            user.setPass("");
+            userService.edit(user);
+        } catch (ServiceException e) {
+            Assert.assertTrue(e instanceof ServiceException);
+        }
 
-        userService.edit(user);
     }
 }

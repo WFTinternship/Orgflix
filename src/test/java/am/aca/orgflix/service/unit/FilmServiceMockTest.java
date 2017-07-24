@@ -6,9 +6,9 @@ import am.aca.orgflix.dao.FilmDAO;
 import am.aca.orgflix.entity.Cast;
 import am.aca.orgflix.entity.Film;
 import am.aca.orgflix.entity.Genre;
+import am.aca.orgflix.exception.ServiceException;
 import am.aca.orgflix.service.CastService;
 import am.aca.orgflix.service.FilmService;
-import am.aca.orgflix.exception.ServiceException;
 import am.aca.orgflix.service.impl.FilmServiceImpl;
 import org.junit.After;
 import org.junit.Assert;
@@ -158,28 +158,40 @@ public class FilmServiceMockTest extends BaseUnitTest {
     /**
      * @see FilmServiceImpl#add(am.aca.orgflix.entity.Film)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void addFilm_NameNull_Fail() {
         film = new Film(null, 2000);
-        filmService.add(film);
+        try {
+            filmService.add(film);
+        } catch (ServiceException e) {
+            Assert.assertTrue(e instanceof ServiceException);
+        }
     }
 
     /**
      * @see FilmServiceImpl#add(am.aca.orgflix.entity.Film)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void addFilm_NameEmpty_Fail() {
         film = new Film("", 2000);
-        filmService.add(film);
+        try {
+            filmService.add(film);
+        } catch (ServiceException e) {
+            Assert.assertTrue(e instanceof ServiceException);
+        }
     }
 
     /**
      * @see FilmServiceImpl#add(am.aca.orgflix.entity.Film)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void addFilm_InvalidYear_Fail() {
         film = new Film("Valid", 68456);
-        filmService.add(film);
+        try {
+            filmService.add(film);
+        } catch (ServiceException e) {
+            Assert.assertTrue(e instanceof ServiceException);
+        }
     }
 
     /**
@@ -292,28 +304,40 @@ public class FilmServiceMockTest extends BaseUnitTest {
     /**
      * @see FilmServiceImpl#edit(Film)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void editFilm_NameNull_Fail() {
         film = new Film(null, 2000);
-        filmService.edit(film);
+        try {
+            filmService.edit(film);
+        } catch (ServiceException e) {
+            Assert.assertTrue(e instanceof ServiceException);
+        }
     }
 
     /**
      * @see FilmServiceImpl#edit(Film)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void editFilm_NameEmpty_Fail() {
         film = new Film("", 2000);
-        filmService.edit(film);
+        try {
+            filmService.edit(film);
+        } catch (ServiceException e) {
+            Assert.assertTrue(e instanceof ServiceException);
+        }
     }
 
     /**
      * @see FilmServiceImpl#edit(Film)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void editFilm_InvalidYear_Fail() {
         film = new Film("Valid", 68456);
-        filmService.edit(film);
+        try {
+            filmService.edit(film);
+        } catch (ServiceException e) {
+            Assert.assertTrue(e instanceof ServiceException);
+        }
     }
 
     /**

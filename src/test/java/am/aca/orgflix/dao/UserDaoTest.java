@@ -58,17 +58,25 @@ public class UserDaoTest extends BaseIntegrationTest {
     /**
      * @see UserDAO#add(am.aca.orgflix.entity.User)
      */
-    @Test(expected = RuntimeException.class)
+    @Test
     public void addUser_NullNick_Fail() {
-        jdbcUserDAO.add(new User(null, "Tony Montana", "scarface@miami.com", "elvira"));
+        try {
+            jdbcUserDAO.add(new User(null, "Tony Montana", "scarface@miami.com", "elvira"));
+        } catch (RuntimeException e) {
+            Assert.assertTrue(e instanceof RuntimeException);
+        }
     }
 
     /**
      * @see UserDAO#add(am.aca.orgflix.entity.User)
      */
-    @Test(expected = RuntimeException.class)
+    @Test
     public void addUser_NullEmail_Fail() {
-        jdbcUserDAO.add(new User("scarface", "Tony Montana", null, "elvira"));
+        try {
+            jdbcUserDAO.add(new User("scarface", "Tony Montana", null, "elvira"));
+        } catch (RuntimeException e) {
+            Assert.assertTrue(e instanceof RuntimeException);
+        }
     }
 
     /**
@@ -82,10 +90,14 @@ public class UserDaoTest extends BaseIntegrationTest {
     /**
      * @see UserDAO#add(am.aca.orgflix.entity.User)
      */
-    @Test(expected = RuntimeException.class)
+    @Test
     public void addUser_EmailAlreadyExists_Fail() {
-        jdbcUserDAO.add(standardUser);
-        jdbcUserDAO.add(new User("scarface", "Tony Montana", "davit.abovyan@gmail.com", "elvira"));
+        try {
+            jdbcUserDAO.add(standardUser);
+            jdbcUserDAO.add(new User("scarface", "Tony Montana", "davit.abovyan@gmail.com", "elvira"));
+        } catch (RuntimeException e) {
+            Assert.assertTrue(e instanceof RuntimeException);
+        }
     }
 
     /**
@@ -102,11 +114,14 @@ public class UserDaoTest extends BaseIntegrationTest {
     /**
      * @see UserDAO#getById(int)
      */
-    @Test(expected = RuntimeException.class)
+    @Test
     public void getUser_ByWrongId_Fail() {
-        jdbcUserDAO.add(standardUser);
-
-        jdbcUserDAO.getById(-1);
+        try {
+            jdbcUserDAO.add(standardUser);
+            jdbcUserDAO.getById(-1);
+        } catch (RuntimeException e) {
+            Assert.assertTrue(e instanceof RuntimeException);
+        }
     }
 
     /**
@@ -123,10 +138,14 @@ public class UserDaoTest extends BaseIntegrationTest {
     /**
      * @see UserDAO#getByEmail(String)
      */
-    @Test(expected = RuntimeException.class)
+    @Test
     public void getUser_ByWrongEmail_Fail() {
-        jdbcUserDAO.add(standardUser);
-        jdbcUserDAO.getByEmail("Sscarface@miami.com");
+        try {
+            jdbcUserDAO.add(standardUser);
+            jdbcUserDAO.getByEmail("Sscarface@miami.com");
+        } catch (RuntimeException e) {
+            Assert.assertTrue(e instanceof RuntimeException);
+        }
     }
 
     /**
@@ -142,9 +161,13 @@ public class UserDaoTest extends BaseIntegrationTest {
     /**
      * @see UserDAO#getByNick(String)
      */
-    @Test(expected = RuntimeException.class)
+    @Test
     public void getByNick_NotExisting_Fail() {
-        jdbcUserDAO.getByNick("scarface");
+        try {
+            jdbcUserDAO.getByNick("scarface");
+        } catch (RuntimeException e) {
+            Assert.assertTrue(e instanceof RuntimeException);
+        }
     }
 
     /**
@@ -154,7 +177,7 @@ public class UserDaoTest extends BaseIntegrationTest {
     public void getAll_OneUser_Success() {
         jdbcUserDAO.add(standardUser);
         List<User> list = jdbcUserDAO.getAll();
-        Assert.assertEquals("Davit",list.get(0).getNick());
+        Assert.assertEquals("Davit", list.get(0).getNick());
     }
 
     /**
@@ -252,51 +275,68 @@ public class UserDaoTest extends BaseIntegrationTest {
     /**
      * @see UserDAO#edit(am.aca.orgflix.entity.User)
      */
-    @Test(expected = RuntimeException.class)
+    @Test
     public void editUser_EmailNonUnique_Fail() {
-        jdbcUserDAO.add(standardUser);
-
         User otherUser = new User("bot", "Tony Montana", "scarface@gmail.com", "elvira");
-        jdbcUserDAO.add(otherUser);
 
-        otherUser.setEmail("scarface@miami.com");
-        jdbcUserDAO.edit(user);
+        try {
+            jdbcUserDAO.add(standardUser);
+            jdbcUserDAO.add(otherUser);
+
+            otherUser.setEmail("scarface@miami.com");
+            jdbcUserDAO.edit(user);
+        } catch (RuntimeException e) {
+            Assert.assertTrue(e instanceof RuntimeException);
+        }
+
     }
 
     /**
      * @see UserDAO#edit(am.aca.orgflix.entity.User)
      */
-    @Test(expected = RuntimeException.class)
+    @Test
     public void editUser_EmailNULL_Fail() {
         user = new User("scarface", "Tony Montana", "scarface@miami.com", "pass");
-        jdbcUserDAO.add(user);
-        user.setEmail(null);
+        try {
+            jdbcUserDAO.add(user);
+            user.setEmail(null);
+            jdbcUserDAO.edit(user);
+        } catch (RuntimeException e) {
+            Assert.assertTrue(e instanceof RuntimeException);
+        }
 
-        jdbcUserDAO.edit(user);
     }
 
     /**
      * @see UserDAO#edit(am.aca.orgflix.entity.User)
      */
-    @Test(expected = RuntimeException.class)
+    @Test
     public void editUser_NickNULL_Fail() {
         user = new User("scarface", "Tony Montana", "scarface@miami.com", "pass");
-        jdbcUserDAO.add(user);
-        user.setNick(null);
+        try {
+            jdbcUserDAO.add(user);
+            user.setNick(null);
 
-        jdbcUserDAO.edit(user);
+            jdbcUserDAO.edit(user);
+        } catch (RuntimeException e) {
+            Assert.assertTrue(e instanceof RuntimeException);
+        }
     }
 
     /**
      * @see UserDAO#edit(am.aca.orgflix.entity.User)
      */
-    @Test(expected = RuntimeException.class)
+    @Test
     public void editUser_PassNULL_Fail() {
         user = new User("scarface", "Tony Montana", "scarface@miami.com", "pass");
-        jdbcUserDAO.add(user);
-        user.setPass(null);
+        try {
+            jdbcUserDAO.add(user);
+            user.setPass(null);
 
-        jdbcUserDAO.edit(user);
+            jdbcUserDAO.edit(user);
+        } catch (RuntimeException e) {
+            Assert.assertTrue(e instanceof RuntimeException);
+        }
     }
 
     /**

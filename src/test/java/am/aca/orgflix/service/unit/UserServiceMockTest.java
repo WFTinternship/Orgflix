@@ -66,28 +66,40 @@ public class UserServiceMockTest extends BaseUnitTest {
     /**
      * @see UserServiceImpl#add(am.aca.orgflix.entity.User)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void addUser_EmptyEmail_Fail() {
-        user.setEmail("");
-        userService.add(user);
+        try {
+            user.setEmail("");
+            userService.add(user);
+        } catch (ServiceException e) {
+            Assert.assertTrue(e instanceof ServiceException);
+        }
     }
 
     /**
      * @see UserServiceImpl#add(am.aca.orgflix.entity.User)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void addUser_NullEmail_Fail() {
-        user.setEmail(null);
-        userService.add(user);
+        try {
+            user.setEmail(null);
+            userService.add(user);
+        } catch (ServiceException e) {
+            Assert.assertTrue(e instanceof ServiceException);
+        }
     }
 
     /**
      * @see UserServiceImpl#add(am.aca.orgflix.entity.User)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void addUser_InvalidEmail_Fail() {
-        user.setEmail("invalid string");
-        userService.add(user);
+        try {
+            user.setEmail("invalid string");
+            userService.add(user);
+        } catch (ServiceException e) {
+            Assert.assertTrue(e instanceof ServiceException);
+        }
     }
 
     /**
@@ -104,43 +116,63 @@ public class UserServiceMockTest extends BaseUnitTest {
         }
     }
 
-    @Test(expected = ServiceException.class)
+    @Test
     public void addUser_EmptyPass_Fail() {
-        user.setPass("");
-        userService.add(user);
+        try {
+            user.setPass("");
+            userService.add(user);
+        } catch (ServiceException e) {
+            Assert.assertTrue(e instanceof ServiceException);
+        }
     }
 
     /**
      * @see UserServiceImpl#add(am.aca.orgflix.entity.User)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void addUser_NullPass_Fail() {
-        user.setPass(null);
-        userService.add(user);
+        try {
+            user.setPass(null);
+            userService.add(user);
+        } catch (ServiceException e) {
+            Assert.assertTrue(e instanceof ServiceException);
+        }
     }
 
     /**
      * @see UserServiceImpl#add(am.aca.orgflix.entity.User)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void addUser_InvalidPass_Fail() {
-        user.setPass("invalid string");
-        userService.add(user);
+        try {
+            user.setPass("invalid string");
+            userService.add(user);
+        } catch (ServiceException e) {
+            Assert.assertTrue(e instanceof ServiceException);
+        }
     }
 
-    @Test(expected = ServiceException.class)
+    @Test
     public void addUser_EmptyNick_Fail() {
-        user.setEmail("");
-        userService.add(user);
+        try {
+            user.setEmail("");
+            userService.add(user);
+        } catch (ServiceException e) {
+            Assert.assertTrue(e instanceof ServiceException);
+        }
     }
 
     /**
      * @see UserServiceImpl#add(am.aca.orgflix.entity.User)
      */
-    @Test(expected = ServiceException.class)
+    @Test
     public void addUser_NullNick_Fail() {
-        user.setEmail(null);
-        userService.add(user);
+        try {
+            user.setEmail(null);
+            userService.add(user);
+        } catch (ServiceException e) {
+            Assert.assertTrue(e instanceof ServiceException);
+        }
     }
 
     /**

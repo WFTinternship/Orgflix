@@ -32,6 +32,13 @@ public class FilmDataController{
         this.filmService = filmService;
     }
 
+    /**
+     * Adding film to watched list
+     * @param session current session
+     * @param filmId id of the film to be added
+     * @param isPublic flag whether the film should be visible in the list for others
+     * @return Http OK status if succeeded or Http bad request otherwise
+     */
     @RequestMapping("/watch/addToList")
     public ResponseEntity addFilmToWatchList(
             HttpSession session,
@@ -49,6 +56,13 @@ public class FilmDataController{
         }
     }
 
+    /**
+     * Adding film to wish list
+     * @param session current session
+     * @param filmId id of the film to be added
+     * @param isPublic flag whether the film should be visible in the list for others
+     * @return Http OK status if succeeded or Http bad request otherwise
+     */
     @RequestMapping("/wish/addToList")
     public ResponseEntity addFilmToWishList(
             HttpSession session,
@@ -66,6 +80,12 @@ public class FilmDataController{
         }
     }
 
+    /**
+     * Remove film from wish list
+     * @param session current session
+     * @param filmId id of the film to be added
+     * @return Http OK status if succeeded or Http bad request otherwise
+     */
     @RequestMapping("/wish/removeFromList")
     public ResponseEntity removeFromWishList(
             HttpSession session,
@@ -82,6 +102,12 @@ public class FilmDataController{
         }
     }
 
+    /**
+     * Remove film from watched list
+     * @param session current session
+     * @param filmId id of the film to be added
+     * @return Http OK status if succeeded or Http bad request otherwise
+     */
     @RequestMapping("/watch/removeFromList")
     public ResponseEntity removeFromWatchList(
             HttpSession session,
@@ -98,6 +124,12 @@ public class FilmDataController{
         }
     }
 
+    /**
+     * Rate the film by number of stars
+     * @param filmId the id of the film to be rated
+     * @param star number of stars assigned to its rate
+     * @return Http OK status if succeeded or Http bad request otherwise
+     */
     @RequestMapping("/star")
     public ResponseEntity starFilm(@RequestParam("film") int filmId,
                                    @RequestParam("star") int star) {
@@ -113,6 +145,13 @@ public class FilmDataController{
         }
     }
 
+    /**
+     * Updates the visibility of the film in list for other users
+     * @param session current session
+     * @param filmId the id of the films which visibility is changed
+     * @param isPublic flag whether the visibility should be set to true or false
+     * @return Http OK status if succeeded or Http bad request otherwise
+     */
     @PostMapping("/privacy")
     public ResponseEntity setFilmPrivacy(HttpSession session, @RequestParam("filmId") int filmId,
                                    @RequestParam("isPublic") boolean isPublic) {

@@ -35,6 +35,9 @@ public class UserController {
     }
 
 
+    /**
+     * View for sign-up page
+     */
     @RequestMapping("/signup")
     public ModelAndView signup() {
         ModelAndView modelAndView;
@@ -52,6 +55,14 @@ public class UserController {
         return modelAndView;
     }
 
+    /**
+     * Adding new user
+     * @param session current session
+     * @param nick new user's nick name
+     * @param userName new user's name
+     * @param email new user's email
+     * @param pass new user's password
+     */
     @RequestMapping("/signed")
     public ModelAndView signupResult(HttpSession session,
                                      @RequestParam("nick") String nick,
@@ -84,6 +95,9 @@ public class UserController {
     }
 
 
+    /**
+     * View for login page
+     */
     @RequestMapping("/login")
     public ModelAndView login() {
         ModelAndView modelAndView;
@@ -96,6 +110,10 @@ public class UserController {
         return modelAndView;
     }
 
+    /**
+     * Log-outing from current session
+     * @param session current session
+     */
     @RequestMapping("/logout")
     public ModelAndView logout(HttpSession session) {
         ModelAndView modelAndView;
@@ -110,6 +128,12 @@ public class UserController {
         return modelAndView;
     }
 
+    /**
+     * View after successful login
+     * @param session current session
+     * @param email user's email
+     * @param pass user's password
+     */
     @RequestMapping("/loggedIn")
     public ModelAndView paging(HttpSession session,
                                @RequestParam("email") String email,

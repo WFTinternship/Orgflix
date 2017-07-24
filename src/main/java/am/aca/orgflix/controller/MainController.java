@@ -41,6 +41,10 @@ public class MainController {
     }
 
 
+    /**
+     * Page that is shown when first user first time visited for the current session
+     * @param session current session
+     */
     @RequestMapping("/")
     public ModelAndView indexPageFirtVisit(HttpSession session) {
         if (!session.getAttributeNames().hasMoreElements())
@@ -54,6 +58,10 @@ public class MainController {
         return modelAndView;
     }
 
+    /**
+     * Main index page where the film lists are shown
+     * @param page page number for pagination
+     */
     @RequestMapping("/index")
     public ModelAndView indexPage(@RequestParam("currentPage") int page) {
         ModelAndView modelAndView;
@@ -71,6 +79,11 @@ public class MainController {
         return modelAndView;
     }
 
+    /**
+     * Watched list page
+     * @param session current session
+     * @param currentPage page number for pagination
+     */
     @RequestMapping("/watch_list")
     public ModelAndView watchList(HttpSession session,
                                   @RequestParam("currentPage") int currentPage) {
@@ -95,6 +108,11 @@ public class MainController {
         return modelAndView;
     }
 
+    /**
+     * Wish list page
+     * @param session current session
+     * @param currentPage page number for pagination
+     */
     @RequestMapping("/wish_list")
     public ModelAndView wishList(HttpSession session,
                                  @RequestParam("currentPage") int currentPage) {
@@ -119,6 +137,12 @@ public class MainController {
         return modelAndView;
     }
 
+    /**
+     * Other users watched list page
+     * @param session current session
+     * @param otherUser the id of other user
+     * @param currentPage page number for pagination
+     */
     @RequestMapping("/watchListUserOther")
     public ModelAndView getWatchedByOtherUser(HttpSession session, @RequestParam("otherUser") int otherUser,
                                               @RequestParam("currentPage") int currentPage) {
@@ -143,6 +167,12 @@ public class MainController {
         return modelAndView;
     }
 
+    /**
+     * Other user's wished list page
+     * @param session current session
+     * @param otherUser the id of other user
+     * @param currentPage page number for pagination
+     */
     @RequestMapping("/wishListUserOther")
     public ModelAndView getPlannedByOtherUser(HttpSession session, @RequestParam("otherUser") int otherUser,
                                               @RequestParam("currentPage") int currentPage) {

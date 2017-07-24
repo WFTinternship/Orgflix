@@ -82,7 +82,7 @@
                             <span>Mian actors</span>
                             <div class="container">
                                 <div class="elem longElem">
-                                    <input type="text" onclick="getActorsList(this,true,true)" onkeyup="getActorsList(this,false)" class="inputField" style="margin-bottom: 0px"/>
+                                    <input type="text" onclick="getActorsList(this,true,true)" onkeyup="getActorsList(this,false, true)" class="inputField" style="margin-bottom: 0px"/>
                                     <input type="hidden" name="actorId" class="actorId" value="-1">
                                     <div></div>
                                 </div>

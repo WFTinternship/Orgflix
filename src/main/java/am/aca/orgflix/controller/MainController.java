@@ -40,7 +40,7 @@ public class MainController {
         this.filmService = filmService;
     }
 
-
+    private final static int MAX_FILM_PER_PAGE = 12;
     /**
      * Page that is shown when first user first time visited for the current session
      * @param session current session
@@ -50,11 +50,11 @@ public class MainController {
         if (!session.getAttributeNames().hasMoreElements())
             session.setAttribute("userId", -1);
         ModelAndView modelAndView = new ModelAndView("home");
-        modelAndView.addObject("films", filmService.getAll(0, 12));
-        modelAndView.addObject("ratings", filmService.getAllRatings(0, 12));
+        modelAndView.addObject("films", filmService.getAll(0, MAX_FILM_PER_PAGE));
+        modelAndView.addObject("ratings", filmService.getAllRatings(0, MAX_FILM_PER_PAGE));
         modelAndView.addObject("currentPage", 0);
         modelAndView.addObject("page", "index");
-        modelAndView.addObject("numOfPages", filmService.getTotalNumber() / 12);
+        modelAndView.addObject("numOfPages", filmService.getTotalNumber() / MAX_FILM_PER_PAGE);
         return modelAndView;
     }
 
@@ -67,9 +67,9 @@ public class MainController {
         ModelAndView modelAndView;
         try {
             modelAndView = new ModelAndView("home");
-            modelAndView.addObject("films", filmService.getAll(page * 12, 12));
-            modelAndView.addObject("numOfPages", filmService.getTotalNumber() / 12);
-            modelAndView.addObject("ratings", filmService.getAllRatings(page, 12));
+            modelAndView.addObject("films", filmService.getAll(page * MAX_FILM_PER_PAGE, MAX_FILM_PER_PAGE));
+            modelAndView.addObject("numOfPages", filmService.getTotalNumber() / MAX_FILM_PER_PAGE);
+            modelAndView.addObject("ratings", filmService.getAllRatings(page, MAX_FILM_PER_PAGE));
             modelAndView.addObject("currentPage", page);
             modelAndView.addObject("page", "index");
         } catch (RuntimeException e) {
@@ -93,8 +93,8 @@ public class MainController {
             int userId = (int) session.getAttribute("userId");
             if (userId != -1) {
                 modelAndView = new ModelAndView("home");
-                modelAndView.addObject("films", listService.showOwnWatched(userId, currentPage * 12));
-                modelAndView.addObject("numOfPages", listService.filmPrivacyList(userId, true).length / 12);
+                modelAndView.addObject("films", listService.showOwnWatched(userId, currentPage * MAX_FILM_PER_PAGE));
+                modelAndView.addObject("numOfPages", listService.filmPrivacyList(userId, true).length / MAX_FILM_PER_PAGE);
                 modelAndView.addObject("privacyList", listService.filmPrivacyList(userId, false));
                 modelAndView.addObject("currentPage", currentPage);
                 modelAndView.addObject("page", "watch_list");
@@ -122,8 +122,8 @@ public class MainController {
         try {
             int userId = (int) session.getAttribute("userId");
             if (userId != -1) {
-                modelAndView.addObject("films", listService.showOwnPlanned(userId, currentPage * 12));
-                modelAndView.addObject("numOfPages", listService.filmPrivacyList(userId, false).length / 12);
+                modelAndView.addObject("films", listService.showOwnPlanned(userId, currentPage * MAX_FILM_PER_PAGE));
+                modelAndView.addObject("numOfPages", listService.filmPrivacyList(userId, false).length / MAX_FILM_PER_PAGE);
                 modelAndView.addObject("privacyList", listService.filmPrivacyList(userId, false));
                 modelAndView.addObject("currentPage", currentPage);
                 modelAndView.addObject("page", "wish_list");

@@ -25,7 +25,7 @@ public class List implements Serializable {
     @Column(name = "IS_WATCHED")
     private boolean isWatched;
 
-    @Column(name = "IS_PLANNED")
+    @Column(name = "IS_WISHED")
     private boolean isPlanned;
 
     public User getUser() {

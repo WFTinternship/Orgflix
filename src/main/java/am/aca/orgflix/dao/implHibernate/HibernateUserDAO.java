@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.persistence.Query;
-import javax.transaction.Transactional;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * JPA Hibernate implementation for User DAO
@@ -22,13 +22,16 @@ public class HibernateUserDAO implements UserDAO {
     /**
      * @see UserDAO#add(User)
      */
-    @Transactional
     @Override
     public int add(User user) {
         try {
+            em.getTransaction().begin();
             em.persist(user);
+            em.flush();
+            em.getTransaction().commit();
             return user.getId();
         } catch (RuntimeException e) {
+            em.getTransaction().rollback();
             return -1;
         }
     }
@@ -51,9 +54,12 @@ public class HibernateUserDAO implements UserDAO {
     @Override
     public User getByEmail(String email) {
         try {
-            Query query = em.createQuery("SELECT user FROM USERS user where user.EMAIL = :email");
-            query.setParameter("email", email);
-            return (User) query.getSingleResult();
+            List<User> users = em.createQuery("from User", User.class).getResultList();
+            for (User user : users) {
+                if (Objects.equals(user.getEmail(), email))
+                    return user;
+            }
+            return null;
         } catch (RuntimeException e) {
             return null;
         }
@@ -65,68 +71,34 @@ public class HibernateUserDAO implements UserDAO {
     @Override
     public User getByNick(String nick) {
         try {
-            Query query = em.createQuery("SELECT user FROM USERS user where user.NICK = :nick");
-            query.setParameter("nick", nick);
-            return (User) query.getSingleResult();
+            List<User> users = em.createQuery("from User", User.class).getResultList();
+            for (User user : users) {
+                if (Objects.equals(user.getNick(), nick))
+                    return user;
+            }
+            return null;
         } catch (RuntimeException e) {
             return null;
         }
     }
 
-//    @Override
-
-    //    @Transactional
-//    public boolean edit(int id, String nick, String name, String pass, String email) {
-////        checkRequiredFields(pass, nick, email);
-////        if (!validateEmail(email))
-////            throw new DaoException("Email Invalid");
-////        if (!validatePassword(pass))
-////            throw new DaoException("Password too weak, must be at least 6 characters long");
-//        ////////////////////////////UNIQUE CONSTRAINT FAILURE EXCEPTION NAME FOR ERROR MSG
-//        try {
-//            User actualUser = em.find(User.class, id);
-//            actualUser.setEmail(email);
-//            actualUser.setNick(nick);
-//            actualUser.setUserName(name);
-//            actualUser.setPass(pass);
-//
-//            em.merge(actualUser);
-//
-//            return true;
-//        } catch (RuntimeException e) {
-//            return false;
-//        }
-//    }
 
     /**
      * @see UserDAO#edit(User)
      */
     @Override
-    @Transactional
     public boolean edit(User user) {
         try {
+            em.getTransaction().begin();
             em.merge(user);
+            em.flush();
+            em.getTransaction().commit();
             return true;
         } catch (RuntimeException e) {
+            em.getTransaction().rollback();
             return false;
         }
     }
-
-//    @Override
-
-    //    public boolean edit(int id, String nick, String pass, String email) {
-//        try {
-//            User actualUser = em.find(User.class, id);
-//            actualUser.setEmail(email);
-//            actualUser.setNick(nick);
-//            actualUser.setPass(pass);
-//
-//            em.merge(actualUser);
-//            return true;
-//        } catch (RuntimeException e) {
-//            return false;
-//        }
-//    }
 
     /**
      * @see UserDAO#remove(int)
@@ -134,55 +106,17 @@ public class HibernateUserDAO implements UserDAO {
     @Override
     public boolean remove(int id) {
         try {
+            em.getTransaction().begin();
             User actualUser = em.find(User.class, id);
             em.remove(actualUser);
+            em.flush();
+            em.getTransaction().commit();
             return true;
         } catch (RuntimeException e) {
+            em.getTransaction().rollback();
             return false;
         }
     }
-
-//    @Override
-
-    //    public boolean remove(User user) {
-//        try {
-//            em.remove(user);
-//            return true;
-//        } catch (RuntimeException e) {
-//            return false;
-//        }
-//    }
-//    public boolean insertWatched(int userId, int filmId, boolean isPublic) {
-//        List list = new List();
-//        list.setFilmId(filmId);
-//        list.setUserId(userId);
-//        list.setPublic(isPublic);
-//        list.setWatched(true);
-//
-//        try {
-//            User user = em.find(User.class, userId);
-//            user.getLists().add(list);
-//            return true;
-//        } catch (RuntimeException e) {
-//            return false;
-//        }
-//    }
-//
-//    public boolean insertPlanned(int userId, int filmId, boolean isPublic) {
-//        List list = new List();
-//        list.setFilmId(filmId);
-//        list.setUserId(userId);
-//        list.setPublic(isPublic);
-//        list.setPlanned(true);
-//
-//        try {
-//            User user = em.find(User.class, userId);
-//            user.getLists().add(list);
-//            return true;
-//        } catch (RuntimeException e) {
-//            return false;
-//        }
-//    }
 
     /**
      * @see UserDAO#authenticate(String, String)
@@ -190,10 +124,12 @@ public class HibernateUserDAO implements UserDAO {
     @Override
     public User authenticate(String email, String pass) {
         try {
-            Query query = em.createQuery("SELECT user FROM USERS user where user.EMAIL = :email and user.USER_PASS = :pass");
-            query.setParameter("email", email);
-            query.setParameter("pass", pass);
-            return (User) query.getSingleResult();      ///////NoResultException
+            List<User> users = em.createQuery("from User", User.class).getResultList();
+            for (User user : users) {
+                if ((user.getEmail().equals(email)) && user.getPass().equals(pass))
+                    return user;
+            }
+            return null;
         } catch (RuntimeException e) {
             return null;
         }

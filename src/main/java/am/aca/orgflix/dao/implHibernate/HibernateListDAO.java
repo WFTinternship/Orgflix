@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,20 +26,21 @@ public class HibernateListDAO implements ListDao {
     @Override
     public boolean insertWatched(int filmId, int userId, boolean isPublic) {
         try {
+            em.getTransaction().begin();
             User user = em.find(User.class, userId);
             Film film = em.find(Film.class, filmId);
 
             am.aca.orgflix.entity.List list = new am.aca.orgflix.entity.List();
-            list.setWatched(true);
-            list.setPublic(isPublic);
             list.setFilm(film);
             list.setUser(user);
-
-            user.getLists().add(list);
-            em.merge(user);
+            list.setWatched(true);
+            list.setPublic(isPublic);
+            em.persist(list);
+            em.flush();
+            em.getTransaction().commit();
             return true;
         } catch (RuntimeException e) {
-            e.printStackTrace();
+            em.getTransaction().rollback();
             return false;
         }
     }
@@ -51,19 +51,20 @@ public class HibernateListDAO implements ListDao {
     @Override
     public boolean insertPlanned(int filmId, int userId, boolean isPublic) {
         try {
+            em.getTransaction().begin();
             User user = em.find(User.class, userId);
             Film film = em.find(Film.class, filmId);
-
             am.aca.orgflix.entity.List list = new am.aca.orgflix.entity.List();
+            list.setFilm(film);
+            list.setUser(user);
             list.setPlanned(true);
             list.setPublic(isPublic);
-            list.setFilm(film);
-            list.setUser(user);                                         ////////??????????????????????
-
-            user.getLists().add(list);
-            em.merge(user);
+            em.persist(list);
+            em.flush();
+            em.getTransaction().commit();
             return true;
         } catch (RuntimeException e) {
+            em.getTransaction().rollback();
             return false;
         }
     }
@@ -71,95 +72,84 @@ public class HibernateListDAO implements ListDao {
     @Override
     public List<Film> showOwnWatched(int userId, int page) {
 
-//        //VERSION 1, pagination support not added
-//        List<Film> resultList = new ArrayList<>();
-//        try {
-//            User user = em.find(User.class, userId);
-//            List<am.aca.orgflix.entity.List> lists = new ArrayList(user.getLists());
-//            for (am.aca.orgflix.entity.List list : lists) {
-//                resultList.add(list.getFilm());
-//            }
-//        } catch (RuntimeException ignored) {
-//        }
-//        return resultList;
-
-        //VERSION 2
+        //VERSION 1, pagination support not added
+        List<Film> resultList = new ArrayList<>();
         try {
-            Query query = em.createQuery("select film from FILMS film " +
-                    "join LISTS list " +
-                    "where list.id.user.id = :userId and list.watched = true");
-            query.setMaxResults(12);
-            query.setFirstResult(page);
-            query.setParameter("userId", userId);
-
-            return query.getResultList();
-        } catch (RuntimeException e) {
-            return new ArrayList<>();
+            List<am.aca.orgflix.entity.List> lists = em.createQuery("from List", am.aca.orgflix.entity.List.class).getResultList();
+            for (int i = page * 12; i < page * 12 + 12; i++) {
+                am.aca.orgflix.entity.List list = lists.get(i);
+                if (list.getUser().getId() == userId && list.isWatched())
+                    resultList.add(list.getFilm());
+            }
+        } catch (RuntimeException ignored) {
         }
+        return resultList;
     }
 
     @Override
     public List<Film> showOwnPlanned(int userId, int page) {
+        List<Film> resultList = new ArrayList<>();
         try {
-            Query query = em.createQuery("select film from FILMS film " +
-                    "join LISTS list " +
-                    "where list.id.user.id = :userId and list.planned = true");
-            query.setMaxResults(12);
-            query.setFirstResult(page);
-            query.setParameter("userId", userId);
-
-            return query.getResultList();
-        } catch (RuntimeException e) {
-            return new ArrayList<>();
+            List<am.aca.orgflix.entity.List> lists = em.createQuery("from List", am.aca.orgflix.entity.List.class).getResultList();
+            for (int i = page * 12; i < page * 12 + 12; i++) {
+                am.aca.orgflix.entity.List list = lists.get(i);
+                if (list.getUser().getId() == userId && list.isPlanned())
+                    resultList.add(list.getFilm());
+            }
+        } catch (RuntimeException ignored) {
         }
+        return resultList;
     }
 
     @Override
     public List<Film> showOthersWatched(int userId, int page) {
+        List<Film> resultList = new ArrayList<>();
         try {
-            Query query = em.createQuery("select film from FILMS film " +
-                    "join LISTS list " +
-                    "where list.id.user.id = :userId " +
-                    "and list.watched = true " +
-                    "and list.public = true");
-            query.setMaxResults(12);
-            query.setFirstResult(page);
-            query.setParameter("userId", userId);
-
-            return query.getResultList();
-        } catch (RuntimeException e) {
-            return new ArrayList<>();
+            List<am.aca.orgflix.entity.List> lists = em.createQuery("from List", am.aca.orgflix.entity.List.class).getResultList();
+            for (int i = page * 12; i < page * 12 + 12; i++) {
+                am.aca.orgflix.entity.List list = lists.get(i);
+                if (list.getUser().getId() == userId && list.isWatched() && list.isPublic())
+                    resultList.add(list.getFilm());
+            }
+        } catch (RuntimeException ignored) {
         }
+        return resultList;
     }
 
     @Override
     public List<Film> showOthersPlanned(int userId, int page) {
+        List<Film> resultList = new ArrayList<>();
         try {
-            Query query = em.createQuery("select film from FILMS film " +
-                    "join LISTS list " +
-                    "where list.id.user.id = :userId " +
-                    "and list.planned = true " +
-                    "and list.public = true");
-            query.setMaxResults(12);
-            query.setFirstResult(page);
-            query.setParameter("userId", userId);
-
-            return query.getResultList();
-        } catch (RuntimeException e) {
-            return new ArrayList<>();
+            List<am.aca.orgflix.entity.List> lists = em.createQuery("from List", am.aca.orgflix.entity.List.class).getResultList();
+            for (int i = page * 12; i < page * 12 + 12; i++) {
+                am.aca.orgflix.entity.List list = lists.get(i);
+                if (list.getUser().getId() == userId && list.isPlanned() && list.isPublic())
+                    resultList.add(list.getFilm());
+            }
+        } catch (RuntimeException ignored) {
         }
+        return resultList;
     }
 
     @Override
     public boolean updateWatched(int filmId, int userId) {
         try {
-            Query query = em.createQuery("update LISTS list " +
-                    "set list.watched = true " +
-                    "where list.id.user.id = :userId and list.id.film.id = :filmId");
-            query.setParameter("userId", userId);
-            query.setParameter("filmId", filmId);
-            return (query.executeUpdate() == 1);
+            em.getTransaction().begin();
+
+            List<am.aca.orgflix.entity.List> lists = em.createQuery("from List", am.aca.orgflix.entity.List.class).getResultList();
+            for (am.aca.orgflix.entity.List list : lists) {
+                if (list.getUser().getId() == userId && list.getFilm().getId() == filmId) {
+                    list.setWatched(true);
+                    em.merge(list);
+                    em.flush();
+                    em.getTransaction().commit();
+                    return true;
+                }
+            }
+            em.getTransaction().rollback();
+            return false;
         } catch (RuntimeException e) {
+            em.getTransaction().rollback();
             return false;
         }
     }
@@ -167,13 +157,22 @@ public class HibernateListDAO implements ListDao {
     @Override
     public boolean updatePlanned(int filmId, int userId) {
         try {
-            Query query = em.createQuery("update LISTS list " +
-                    "set list.planned = true " +
-                    "where list.id.user.id = :userId and list.id.film.id = :filmId");
-            query.setParameter("userId", userId);
-            query.setParameter("filmId", filmId);
-            return (query.executeUpdate() == 1);
+            em.getTransaction().begin();
+
+            List<am.aca.orgflix.entity.List> lists = em.createQuery("from List", am.aca.orgflix.entity.List.class).getResultList();
+            for (am.aca.orgflix.entity.List list : lists) {
+                if (list.getUser().getId() == userId && list.getFilm().getId() == filmId) {
+                    list.setPlanned(true);
+                    em.merge(list);
+                    em.flush();
+                    em.getTransaction().commit();
+                    return true;
+                }
+            }
+            em.getTransaction().rollback();
+            return false;
         } catch (RuntimeException e) {
+            em.getTransaction().rollback();
             return false;
         }
     }
@@ -181,15 +180,22 @@ public class HibernateListDAO implements ListDao {
     @Override
     public boolean changePrivacy(Film film, int userId, boolean isPublic) {
         try {
-            em.refresh(film);
-            Query query = em.createQuery("update LISTS list " +
-                    "set list.public = :public " +
-                    "where list.id.user.id = :userId and list.id.film.id = :filmId");
-            query.setParameter("public", isPublic);
-            query.setParameter("userId", userId);
-            query.setParameter("filmId", film.getId());
-            return (query.executeUpdate() == 1);
+            em.getTransaction().begin();
+
+            List<am.aca.orgflix.entity.List> lists = em.createQuery("from List", am.aca.orgflix.entity.List.class).getResultList();
+            for (am.aca.orgflix.entity.List list : lists) {
+                if (list.getUser().getId() == userId && list.getFilm().getId() == film.getId()) {
+                    list.setPublic(isPublic);
+                    em.merge(list);
+                    em.flush();
+                    em.getTransaction().commit();
+                    return true;
+                }
+            }
+            em.getTransaction().rollback();
+            return false;
         } catch (RuntimeException e) {
+            em.getTransaction().rollback();
             return false;
         }
     }
@@ -197,13 +203,22 @@ public class HibernateListDAO implements ListDao {
     @Override
     public boolean resetWatched(int filmId, int userId) {
         try {
-            Query query = em.createQuery("update LISTS list " +
-                    "set list.watched = false " +
-                    "where list.id.user.id = :userId and list.id.film.id = :filmId");
-            query.setParameter("userId", userId);
-            query.setParameter("filmId", filmId);
-            return (query.executeUpdate() == 1);
+            em.getTransaction().begin();
+
+            List<am.aca.orgflix.entity.List> lists = em.createQuery("from List", am.aca.orgflix.entity.List.class).getResultList();
+            for (am.aca.orgflix.entity.List list : lists) {
+                if (list.getUser().getId() == userId && list.getFilm().getId() == filmId) {
+                    list.setWatched(false);
+                    em.merge(list);
+                    em.flush();
+                    em.getTransaction().commit();
+                    return true;
+                }
+            }
+            em.getTransaction().rollback();
+            return false;
         } catch (RuntimeException e) {
+            em.getTransaction().rollback();
             return false;
         }
     }
@@ -211,13 +226,22 @@ public class HibernateListDAO implements ListDao {
     @Override
     public boolean resetPlanned(int filmId, int userId) {
         try {
-            Query query = em.createQuery("update LISTS list " +
-                    "set list.planned = false " +
-                    "where list.id.user.id = :userId and list.id.film.id = :filmId");
-            query.setParameter("userId", userId);
-            query.setParameter("filmId", filmId);
-            return (query.executeUpdate() == 1);
+            em.getTransaction().begin();
+
+            List<am.aca.orgflix.entity.List> lists = em.createQuery("from List", am.aca.orgflix.entity.List.class).getResultList();
+            for (am.aca.orgflix.entity.List list : lists) {
+                if (list.getUser().getId() == userId && list.getFilm().getId() == filmId) {
+                    list.setPlanned(false);
+                    em.merge(list);
+                    em.flush();
+                    em.getTransaction().commit();
+                    return true;
+                }
+            }
+            em.getTransaction().rollback();
+            return false;
         } catch (RuntimeException e) {
+            em.getTransaction().rollback();
             return false;
         }
     }
@@ -225,12 +249,21 @@ public class HibernateListDAO implements ListDao {
     @Override
     public boolean removeFilm(int filmId, int userId) {
         try {
-            Query query = em.createQuery("delete from LISTS list " +
-                    "where list.id.user.id = :userId and list.id.film.id = :filmId");
-            query.setParameter("userId", userId);
-            query.setParameter("filmId", filmId);
-            return (query.executeUpdate() == 1);
+            em.getTransaction().begin();
+
+            List<am.aca.orgflix.entity.List> lists = em.createQuery("from List", am.aca.orgflix.entity.List.class).getResultList();
+            for (am.aca.orgflix.entity.List list : lists) {
+                if (list.getUser().getId() == userId && list.getFilm().getId() == filmId) {
+                    em.remove(list);
+                    em.flush();
+                    em.getTransaction().commit();
+                    return true;
+                }
+            }
+            em.getTransaction().rollback();
+            return false;
         } catch (RuntimeException e) {
+            em.getTransaction().rollback();
             return false;
         }
     }
@@ -238,11 +271,13 @@ public class HibernateListDAO implements ListDao {
     @Override
     public boolean areRelated(int filmId, int userId) {
         try {
-            Query query = em.createQuery("select count(list) from LISTS list " +
-                    "where list.id.user.id = :userId and list.id.film.id = :filmId");
-            query.setParameter("userId", userId);
-            query.setParameter("filmId", filmId);
-            return ((int) query.getSingleResult() == 1);
+            List<am.aca.orgflix.entity.List> lists = em.createQuery("from List", am.aca.orgflix.entity.List.class).getResultList();
+            for (am.aca.orgflix.entity.List list : lists) {
+                if (list.getUser().getId() == userId && list.getFilm().getId() == filmId) {
+                    return true;
+                }
+            }
+            return false;
         } catch (RuntimeException e) {
             return false;
         }
@@ -251,12 +286,13 @@ public class HibernateListDAO implements ListDao {
     @Override
     public boolean isWatched(int filmId, int userId) {
         try {
-            Query query = em.createQuery("select count(list) from LISTS list " +
-                    "where list.id.user.id = :userId and list.id.film.id = :filmId " +
-                    "and list.watched = true ");
-            query.setParameter("userId", userId);
-            query.setParameter("filmId", filmId);
-            return ((int) query.getSingleResult() == 1);
+            List<am.aca.orgflix.entity.List> lists = em.createQuery("from List", am.aca.orgflix.entity.List.class).getResultList();
+            for (am.aca.orgflix.entity.List list : lists) {
+                if (list.getUser().getId() == userId && list.getFilm().getId() == filmId && list.isWatched()) {
+                    return true;
+                }
+            }
+            return false;
         } catch (RuntimeException e) {
             return false;
         }
@@ -265,12 +301,13 @@ public class HibernateListDAO implements ListDao {
     @Override
     public boolean isPlanned(int filmId, int userId) {
         try {
-            Query query = em.createQuery("select count(list) from LISTS list " +
-                    "where list.id.user.id = :userId and list.id.film.id = :filmId " +
-                    "and list.planned = true ");
-            query.setParameter("userId", userId);
-            query.setParameter("filmId", filmId);
-            return ((int) query.getSingleResult() == 1);
+            List<am.aca.orgflix.entity.List> lists = em.createQuery("from List", am.aca.orgflix.entity.List.class).getResultList();
+            for (am.aca.orgflix.entity.List list : lists) {
+                if (list.getUser().getId() == userId && list.getFilm().getId() == filmId && list.isPlanned()) {
+                    return true;
+                }
+            }
+            return false;
         } catch (RuntimeException e) {
             return false;
         }
@@ -278,57 +315,34 @@ public class HibernateListDAO implements ListDao {
 
     @Override
     public int totalNumberOfWatched(int userId) {
+        int count = 0;
         try {
-            Query query = em.createQuery("select count(film) from FILMS film " +
-                    "join LISTS list " +
-                    "where list.id.user.id = :userId and list.watched = true");
-            query.setParameter("userId", userId);
-
-            return (int) query.getSingleResult();
+            List<am.aca.orgflix.entity.List> lists = em.createQuery("from List", am.aca.orgflix.entity.List.class).getResultList();
+            for (am.aca.orgflix.entity.List list : lists) {
+                if (list.getUser().getId() == userId && list.isWatched()) {
+                    count++;
+                }
+            }
+            return count;
         } catch (RuntimeException e) {
-            return 0;
+            return count;
         }
     }
 
     @Override
     public int totalNumberOfPlanned(int userId) {
+        int count = 0;
         try {
-            Query query = em.createQuery("select count(film) from FILMS film " +
-                    "join LISTS list " +
-                    "where list.id.user.id = :userId and list.planned = true");
-            query.setParameter("userId", userId);
-
-            return (int) query.getSingleResult();
+            List<am.aca.orgflix.entity.List> lists = em.createQuery("from List", am.aca.orgflix.entity.List.class).getResultList();
+            for (am.aca.orgflix.entity.List list : lists) {
+                if (list.getUser().getId() == userId && list.isPlanned()) {
+                    count++;
+                }
+            }
+            return count;
         } catch (RuntimeException e) {
-            return 0;
+            return count;
         }
     }
 
-    public int totalNumberOfWatchedOthers(int userId) {
-        try {
-            Query query = em.createQuery("select count(film) from FILMS film " +
-                    "join LISTS list " +
-                    "where list.id.user.id = :userId and list.watched = true " +
-                    "and list.public = true ");
-            query.setParameter("userId", userId);
-
-            return (int) query.getSingleResult();
-        } catch (RuntimeException e) {
-            return 0;
-        }
-    }
-
-    public int totalNumberOfPlannedOthers(int userId) {
-        try {
-            Query query = em.createQuery("select count(film) from FILMS film " +
-                    "join LISTS list " +
-                    "where list.id.user.id = :userId and list.planned = true " +
-                    "and list.public = true ");
-            query.setParameter("userId", userId);
-
-            return (int) query.getSingleResult();
-        } catch (RuntimeException e) {
-            return 0;
-        }
-    }
 }

@@ -6,9 +6,7 @@ import am.aca.orgflix.service.CastService;
 import am.aca.orgflix.service.ServiceException;
 import am.aca.orgflix.service.impl.CastServiceImpl;
 import am.aca.orgflix.util.TestHelper;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -96,66 +94,6 @@ public class CastServiceIntegrationTest extends BaseIntegrationTest {
         castService.addCast(cast);
     }
 
-//    /**
-//     * @see CastServiceImpl#addCastToFilm(am.aca.orgflix.entity.Cast, int)
-//     */
-//    @Test
-//    public void addCastToFilm_Success() {
-//        cast = new Cast("Edward Norton");
-//        castService.addCast(cast);
-//        film = new Film("Fight Club", 1997);
-//        filmService.addFilm(film);
-//        boolean status = castService.addCastToFilm(cast, film.getId());
-//        Assert.assertTrue(status);
-//        int id = castService.listFilmsByCast(cast.getId()).get(0).getId();
-//        Assert.assertEquals(film.getId(), id);
-//    }
-//
-//    /**
-//     * @see CastServiceImpl#addCastToFilm(am.aca.orgflix.entity.Cast, int)
-//     */
-//    @Test
-//    public void addCastToFilm_Fail() {
-//        cast = new Cast("Edward Norton");
-//        castService.addCast(cast);
-//        film = new Film("Fight Club", 1997);
-//        filmService.addFilm(film);
-//        boolean status = castService.addCastToFilm(cast, film.getId());
-//        Assert.assertTrue(status);
-//        status = castService.addCastToFilm(cast, film.getId());
-//        Assert.assertFalse(status);
-//        int id = castService.listFilmsByCast(cast.getId()).get(0).getId();
-//        Assert.assertEquals(film.getId(), id);
-//    }
-//
-//    /**
-//     * @see CastServiceImpl#addCastToFilm(am.aca.orgflix.entity.Cast, int)
-//     */
-//    @Test
-//    public void addCastToFilm_ById_Success() {
-//        cast = new Cast("Edward Norton");
-//        castService.addCast(cast);
-//        film = new Film("Fight Club", 1997);
-//        filmService.addFilm(film);
-//        castService.addCastToFilm(cast, film.getId());
-//        int id = castService.listFilmsByCast(cast.getId()).get(0).getId();
-//        Assert.assertEquals(film.getId(), id);
-//    }
-//
-//    /**
-//     * @see CastServiceImpl#addCastToFilm(am.aca.orgflix.entity.Cast, int)
-//     */
-//    @Test
-//    public void addCastToFilm_ById_Fail() {
-//        cast = new Cast("Edward Norton");
-//        castService.addCast(cast);
-//        film = new Film("Fight Club", 1997);
-//        filmService.addFilm(film);
-//        castService.addCastToFilm(cast, film.getId());
-//        castService.addCastToFilm(cast, film.getId());
-//        int id = castService.listFilmsByCast(cast.getId()).get(0).getId();
-//        Assert.assertEquals(film.getId(), id);
-//    }
 
     /**
      * @see CastServiceImpl#editCast(am.aca.orgflix.entity.Cast)
@@ -188,11 +126,10 @@ public class CastServiceIntegrationTest extends BaseIntegrationTest {
     /**
      * @see CastServiceImpl#editCast(am.aca.orgflix.entity.Cast)
      */
-    @Test
+    @Test (expected = ServiceException.class)
     public void editCast_NotExisting_Fail() {
         cast = new Cast();
-        boolean status = castService.editCast(cast);
-        Assert.assertFalse(status);
+        castService.editCast(cast);
     }
 
     /**
@@ -218,88 +155,4 @@ public class CastServiceIntegrationTest extends BaseIntegrationTest {
         int size = castService.listCasts().size();
         Assert.assertEquals(0, size);
     }
-
-//    /**
-//     * @see CastServiceImpl#listFilmsByCast(int)
-//     */
-//    @Test
-//    public void listFilmsByCast_BySize_Success() {
-//        cast = new Cast("Edward Norton");
-//        castService.addCast(cast);
-//        film = new Film("Fight Club", 1997);
-//        filmService.addFilm(film);
-//        castService.addCastToFilm(cast, film.getId());
-//        int size = castService.listFilmsByCast(cast.getId()).size();
-//        Assert.assertEquals(1, size);
-//    }
-//
-//    /**
-//     * @see CastServiceImpl#listFilmsByCast(int)
-//     */
-//    @Test
-//    public void listFilmsByCast_ById_Success() {
-//        cast = new Cast("Edward Norton");
-//        castService.addCast(cast);
-//        film = new Film("Fight Club", 1997);
-//        filmService.addFilm(film);
-//        castService.addCastToFilm(cast, film.getId());
-//        film = new Film("Primal Fear", 1996);
-//        filmService.addFilm(film);
-//        castService.addCastToFilm(cast, film.getId());
-//        int id = castService.listFilmsByCast(cast.getId()).get(1).getId();
-//        Assert.assertEquals(film.getId(), id);
-//    }
-//
-//    /**
-//     * @see CastServiceImpl#listFilmsByCast(int)
-//     */
-//    @Test
-//    public void listFilmsByCast_Empty_Fail() {
-//        cast = new Cast();
-//        boolean status = castService.listFilmsByCast(cast.getId()).isEmpty();
-//        Assert.assertTrue(status);
-//    }
-//
-//    /**
-//     * @see CastServiceImpl#getCastsByFilm(int)
-//     */
-//    @Test
-//    public void getCastsByFilm_CheckByCast_Success() {
-//        cast = new Cast("Edward Norton");
-//        castService.addCast(cast);
-//        film = new Film("Fight Club", 1997);
-//        filmService.addFilm(film);
-//        castService.addCastToFilm(cast, film.getId());
-//
-//        List<Cast> casts = castService.getCastsByFilm(film.getId());
-//        Assert.assertEquals(cast, casts.get(0));
-//    }
-//
-//    /**
-//     * @see CastServiceImpl#getCastsByFilm(int)
-//     */
-//    @Test
-//    public void getCastsByFilm_MoreThanOne_Success() {
-//        cast = new Cast("Edward Norton");
-//        castService.addCast(cast);
-//        film = new Film("Fight Club", 1997);
-//        filmService.addFilm(film);
-//        castService.addCastToFilm(cast, film.getId());
-//        cast = new Cast("Brad Pitt");
-//        castService.addCast(cast);
-//        castService.addCastToFilm(cast, film.getId());
-//
-//        List<Cast> casts = castService.getCastsByFilm(film.getId());
-//        Assert.assertEquals(2, casts.size());
-//    }
-//
-//    /**
-//     * @see CastServiceImpl#getCastsByFilm(int)
-//     */
-//    @Test
-//    public void getCastsByFilm_Empty_Fail() {
-//        film = new Film("Fight Club", 1997);
-//        List<Cast> casts = castService.getCastsByFilm(film.getId());
-//        Assert.assertTrue(casts.isEmpty());
-//    }
 }

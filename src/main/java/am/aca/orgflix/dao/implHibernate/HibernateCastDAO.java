@@ -74,6 +74,7 @@ public class HibernateCastDAO implements CastDAO {
             em.getTransaction().begin();
             Cast actualCast = em.find(Cast.class, cast.getId());
             em.merge(actualCast);
+            em.flush();
             em.getTransaction().commit();
             return true;
         } catch (RuntimeException e) {
@@ -91,6 +92,7 @@ public class HibernateCastDAO implements CastDAO {
             em.getTransaction().begin();
             film.addCast(cast);
             em.merge(film);
+            em.flush();
             em.getTransaction().commit();
             return true;
         } catch (RuntimeException e) {
@@ -110,6 +112,7 @@ public class HibernateCastDAO implements CastDAO {
             em.getTransaction().begin();
             Cast actualCast = em.find(Cast.class, cast.getId());
             em.remove(actualCast);
+            em.flush();
             em.getTransaction().commit();
             return true;
         } catch (RuntimeException e) {

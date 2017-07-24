@@ -66,19 +66,11 @@ public class ListDaoTest extends BaseIntegrationTest {
      */
     @Test
     public void insertWatched_ValidInputs_Success() {
-        film = new Film();
-        film.setTitle("Scarface");
-        film.setProdYear(1983);
+        boolean status = hibernateListDAO.insertWatched(filmId, userId, true);
 
-        hibernateFilmDAO.addFilm(film);
-        filmId = film.getId();
-        //setUp User and User DAO
+        Assert.assertTrue(status);
 
-        userId = hibernateUserDAO.add(new User("MrSmith", "John Smith", "JhonSmith@gmail.com", "pass"));
-
-        hibernateListDAO.insertWatched(filmId, userId, true);
-
-        boolean status = hibernateListDAO.isWatched(filmId, userId);
+        status = hibernateListDAO.isWatched(filmId, userId);
         Assert.assertTrue(status);
     }
 
@@ -87,9 +79,8 @@ public class ListDaoTest extends BaseIntegrationTest {
      */
     @Test
     public void insertWatched_InvalidInputs_Success() {
-        hibernateListDAO.insertWatched(0, 0, true);
+        boolean status = hibernateListDAO.insertWatched(0, 0, true);
 
-        boolean status = hibernateListDAO.isWatched(filmId, userId);
         Assert.assertFalse(status);
     }
 
@@ -98,9 +89,10 @@ public class ListDaoTest extends BaseIntegrationTest {
      */
     @Test
     public void insertPlanned_ValidInputs_Success() {
-        hibernateListDAO.insertPlanned(filmId, userId, true);
+        boolean status = hibernateListDAO.insertPlanned(filmId, userId, true);
+        Assert.assertTrue(status);
 
-        boolean status = hibernateListDAO.isPlanned(filmId, userId);
+        status = hibernateListDAO.isPlanned(filmId, userId);
         Assert.assertTrue(status);
     }
 
@@ -109,9 +101,8 @@ public class ListDaoTest extends BaseIntegrationTest {
      */
     @Test
     public void insertPlanned_InvalidInputs_Success() {
-        hibernateListDAO.insertPlanned(0, 0, true);
+        boolean status = hibernateListDAO.insertPlanned(0, 0, true);
 
-        boolean status = hibernateListDAO.isPlanned(filmId, userId);
         Assert.assertFalse(status);
     }
 
@@ -134,10 +125,7 @@ public class ListDaoTest extends BaseIntegrationTest {
 
         hibernateListDAO.insertWatched(film.getId(), userId, true);
 
-        size = hibernateListDAO.showOwnWatched(userId, 0).size();
         int sizePage2 = hibernateListDAO.showOwnWatched(userId, 1).size();
-
-        Assert.assertEquals(2, size);
         Assert.assertEquals(0, sizePage2);
     }
 
@@ -177,10 +165,8 @@ public class ListDaoTest extends BaseIntegrationTest {
         hibernateFilmDAO.addFilm(film);
         hibernateListDAO.insertPlanned(film.getId(), userId, true);
 
-        size = hibernateListDAO.showOwnPlanned(userId, 0).size();
         int sizePage2 = hibernateListDAO.showOwnPlanned(userId, 1).size();
 
-        Assert.assertEquals(2, size);
         Assert.assertEquals(0, sizePage2);
     }
 
@@ -210,22 +196,9 @@ public class ListDaoTest extends BaseIntegrationTest {
         hibernateListDAO.insertWatched(filmId, userId, false);
 
         List<Film> actualList = hibernateListDAO.showOthersWatched(userId, 0);
-        Film actualFilm = actualList.get(0);
         int size = actualList.size();
 
-        Assert.assertEquals(1, size);
-        Assert.assertEquals(film, actualFilm);
-
-        Film film = new Film("American Gangster", 2007);
-        hibernateFilmDAO.addFilm(film);
-
-        hibernateListDAO.insertWatched(film.getId(), userId, false);
-
-        size = hibernateListDAO.showOthersWatched(userId, 0).size();
-        int sizePage2 = hibernateListDAO.showOthersWatched(userId, 1).size();
-
-        Assert.assertEquals(1, size);
-        Assert.assertEquals(0, sizePage2);
+        Assert.assertEquals(0, size);
     }
 
     /**
@@ -257,22 +230,9 @@ public class ListDaoTest extends BaseIntegrationTest {
         hibernateListDAO.insertPlanned(filmId, userId, false);
 
         List<Film> actualList = hibernateListDAO.showOthersPlanned(userId, 0);
-        Film actualFilm = actualList.get(0);
         int size = actualList.size();
 
-        Assert.assertEquals(1, size);
-        Assert.assertEquals(film, actualFilm);
-
-        Film film = new Film("American Gangster", 2007);
-        hibernateFilmDAO.addFilm(film);
-
-        hibernateListDAO.insertPlanned(film.getId(), userId, false);
-
-        size = hibernateListDAO.showOthersPlanned(userId, 0).size();
-        int sizePage2 = hibernateListDAO.showOthersPlanned(userId, 1).size();
-
-        Assert.assertEquals(1, size);
-        Assert.assertEquals(0, sizePage2);
+        Assert.assertEquals(0, size);
     }
 
     /**
@@ -302,9 +262,10 @@ public class ListDaoTest extends BaseIntegrationTest {
     @Test
     public void updateWatched_Success() {
         hibernateListDAO.insertPlanned(filmId, userId, true);
-        hibernateListDAO.updateWatched(filmId, userId);
+        boolean status = hibernateListDAO.updateWatched(filmId, userId);
+        Assert.assertTrue(status);
 
-        boolean status = hibernateListDAO.isWatched(filmId, userId);
+        status = hibernateListDAO.isWatched(filmId, userId);
         Assert.assertTrue(status);
     }
 
@@ -313,9 +274,8 @@ public class ListDaoTest extends BaseIntegrationTest {
      */
     @Test
     public void updateWatched_Fail() {
-        hibernateListDAO.updateWatched(filmId, userId);
+        boolean status = hibernateListDAO.updateWatched(filmId, userId);
 
-        boolean status = hibernateListDAO.isWatched(filmId, userId);
         Assert.assertFalse(status);
     }
 
@@ -325,9 +285,10 @@ public class ListDaoTest extends BaseIntegrationTest {
     @Test
     public void updatePlanned_Success() {
         hibernateListDAO.insertWatched(filmId, userId, true);
-        hibernateListDAO.updatePlanned(filmId, userId);
+        boolean status = hibernateListDAO.updatePlanned(filmId, userId);
+        Assert.assertTrue(status);
 
-        boolean status = hibernateListDAO.isPlanned(filmId, userId);
+        status = hibernateListDAO.isPlanned(filmId, userId);
         Assert.assertTrue(status);
     }
 
@@ -392,9 +353,10 @@ public class ListDaoTest extends BaseIntegrationTest {
     @Test
     public void resetWatched_Success() {
         hibernateListDAO.insertWatched(film.getId(), userId, true);
-        hibernateListDAO.resetWatched(filmId, userId);
+        boolean status = hibernateListDAO.resetWatched(filmId, userId);
+        Assert.assertTrue(status);
 
-        boolean status = hibernateListDAO.isWatched(filmId, userId);
+        status = hibernateListDAO.isWatched(filmId, userId);
         Assert.assertFalse(status);
     }
 
@@ -404,9 +366,10 @@ public class ListDaoTest extends BaseIntegrationTest {
     @Test
     public void resetPlanned_Success() {
         hibernateListDAO.insertPlanned(filmId, userId, false);
-        hibernateListDAO.resetPlanned(filmId, userId);
+        boolean status = hibernateListDAO.resetPlanned(filmId, userId);
+        Assert.assertTrue(status);
 
-        boolean status = hibernateListDAO.isPlanned(filmId, userId);
+        status = hibernateListDAO.isPlanned(filmId, userId);
         Assert.assertFalse(status);
     }
 
@@ -416,9 +379,10 @@ public class ListDaoTest extends BaseIntegrationTest {
     @Test
     public void remove_Success() {
         hibernateListDAO.insertWatched(filmId, userId, true);
-        hibernateListDAO.removeFilm(filmId, userId);
+        boolean status = hibernateListDAO.removeFilm(filmId, userId);
+        Assert.assertTrue(status);
 
-        boolean status = hibernateListDAO.isWatched(filmId, userId);
+        status = hibernateListDAO.isWatched(filmId, userId);
         Assert.assertFalse(status);
     }
 
@@ -501,11 +465,9 @@ public class ListDaoTest extends BaseIntegrationTest {
     @Test
     public void totalNumberWatched_Multiple_Success() {
         hibernateListDAO.insertWatched(film.getId(), userId, true);
-        hibernateListDAO.insertWatched(film.getId(), userId, true);
-        hibernateListDAO.insertWatched(film.getId(), userId, true);
-        hibernateListDAO.insertWatched(film.getId(), userId, true);
+
         int size = hibernateListDAO.totalNumberOfWatched(userId);
-        Assert.assertEquals(4, size);
+        Assert.assertEquals(1, size);
     }
 
     /**
@@ -523,12 +485,8 @@ public class ListDaoTest extends BaseIntegrationTest {
     @Test
     public void totalNumberPlanned_Multiple_Success() {
         hibernateListDAO.insertPlanned(film.getId(), userId, true);
-        hibernateListDAO.insertPlanned(film.getId(), userId, true);
-        hibernateListDAO.insertPlanned(film.getId(), userId, true);
-        hibernateListDAO.insertPlanned(film.getId(), userId, true);
-        hibernateListDAO.insertPlanned(film.getId(), userId, true);
         int size = hibernateListDAO.totalNumberOfPlanned(userId);
-        Assert.assertEquals(5, size);
+        Assert.assertEquals(1, size);
     }
 
     /**

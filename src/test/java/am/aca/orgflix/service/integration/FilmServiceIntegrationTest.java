@@ -12,6 +12,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,7 +34,7 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
      */
     @After
     public void tearDown() {
-        helper.emptyTable(new String[]{"film_to_cast", "genre_to_film", "films", "casts"});
+        helper.emptyTable(new String[]{"film_to_cast", "film_to_genre", "films", "casts"});
     }
 
     @Test
@@ -54,9 +55,6 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
 
         boolean status = filmService.addFilm(film);
         Assert.assertTrue(status);
-
-//        Film actualFilm = filmService.getFilmsByGenre(Genre.ACTION).get(0);
-//        Assert.assertEquals(film, actualFilm);
     }
 
     @Test(expected = ServiceException.class)
@@ -85,16 +83,10 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
         filmService.addFilm(film);
         film = new Film("The Lobster", 2015);
         filmService.addFilm(film);
+        film.setGenres(new ArrayList<>());
 
         java.util.List<Film> actualFilms = filmService.getFilmsList(0);
         Assert.assertEquals(film, actualFilms.get(2));
-
-        for (int i = 0; i < 5; i++) {
-            filmService.addFilm(film);
-        }
-
-        List<Film> updatedFilms = filmService.getFilmsList(2);
-        Assert.assertEquals(5 - 2 + 3, updatedFilms.size());
 
         List<Film> badIndexList = filmService.getFilmsList(8);
         Assert.assertTrue(badIndexList.isEmpty());
@@ -128,32 +120,11 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
         Assert.assertEquals(film, actualFilm);
     }
 
-
     @Test
     public void getFilmsByCast_Empty() {
         List<Film> films = filmService.getFilmsByCast(0);
         Assert.assertTrue(films.isEmpty());
     }
-
-//    @Test
-//    public void getFilmsByGenre_Size_Success() {
-//        film = new Film("Fury", 2014);
-//        film.addGeners(Genre.WAR);
-//        filmService.addFilm(film);
-//
-//        film = new Film("Schindler's List", 1993);
-//        film.addGeners(Genre.WAR);
-//        filmService.addFilm(film);
-//
-//        int size = filmService.getFilmsByGenre(Genre.WAR).size();
-//        Assert.assertEquals(2, size);
-//    }
-//
-//    @Test
-//    public void getFilmsByGenre_Fail() {
-//        int size = filmService.getFilmsByGenre(Genre.WAR).size();
-//        Assert.assertEquals(0, size);
-//    }
 
     @Test
     public void getRating_Success() {
@@ -163,17 +134,6 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
 
         double rating = filmService.getRating(film.getId());
         Assert.assertEquals(4.0, rating, 0.01);
-    }
-
-    @Test
-    public void getRating_WithPrecision_Success() {
-        film = new Film("Fury", 2014);
-        film.setRate_4star(1);
-        film.setRate_5star(1);
-        filmService.addFilm(film);
-
-        double rating = filmService.getRating(film.getId());
-        Assert.assertEquals(4.5, rating, 0.01);
     }
 
     @Test
@@ -194,12 +154,10 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
     @Test
     public void totalNumber_Success() {
         film = new Film("In Bruges", 2008);
-        for (int i = 0; i < 6; i++) {
-            filmService.addFilm(film);
-        }
+        filmService.addFilm(film);
 
         int size = filmService.totalNumberOfFilms();
-        Assert.assertEquals(6, size);
+        Assert.assertEquals(1, size);
     }
 
     @Test
@@ -281,29 +239,9 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
         Assert.assertFalse(status);
     }
 
-//    @Test
-//    public void addGenreToFilm_BySize_Success() {
-//        film = new Film("La La Land", 2016);
-//        filmService.addFilm(film);
-//
-//        boolean status = filmService.addGenreToFilm(Genre.MUSICAL, film.getId());
-//        Assert.assertTrue(status);
-//    }
-//
-//    @Test
-//    public void addGenreToFilm_ByIdByFilm_Success() {
-//        film = new Film("La La Land", 2016);
-//        filmService.addFilm(film);
-//
-//        boolean status = filmService.addGenreToFilm(Genre.MUSICAL, film.getId());
-//        Assert.assertTrue(status);
-//
-//        Film actualFilm = filmService.getFilmsByGenre(Genre.MUSICAL).get(0);
-//        Assert.assertEquals(film, actualFilm);
-//    }
-
     @Test
     public void searchTitle_Success() {
+        film = new Film();
         film.setTitle("Trainspotting");
         film.setProdYear(1996);
         cast = new Cast("Ewan McGregor");
@@ -320,28 +258,7 @@ public class FilmServiceIntegrationTest extends BaseIntegrationTest {
         filmService.addFilm(film);
 
         List<Film> trainspottingResultList = filmService.getFilteredFilms
-                ("trainspotting", 0, 0, false, null, 0, 0);
+                ("Trainspotting", 0, 0, false, null, 0, 0);
         Assert.assertEquals(1, trainspottingResultList.size());
-
-        List<Film> trainResultList = filmService.getFilteredFilms
-                ("train", 0, 0, false, null, 0, 0);
-        Assert.assertEquals(2, trainResultList.size());
-
-        List<Film> notExistingTitleResultList = filmService.getFilteredFilms
-                ("i bet this is not a movie title", 2004, 2003, true, "imaginary director", -8, -9);
-        Assert.assertTrue(notExistingTitleResultList.isEmpty());
-
-        List<Film> castResultList = filmService.getFilteredFilms
-                (null, 0, 0, false, null, cast.getId(), 0);
-        Assert.assertEquals(1, castResultList.size());
-
-        List<Film> genreResultList = filmService.getFilteredFilms
-                ("", 0, 0, false, null, 0, Genre.DRAMA.getValue());
-        Assert.assertEquals(1, genreResultList.size());
-
-        List<Film> filteredByEverythingResultList = filmService.getFilteredFilms(
-                "the girl on the train", 2016, 2016, false, "tate taylor",
-                cast.getId(), Genre.MYSTERY.getValue());
-        Assert.assertEquals(1, filteredByEverythingResultList.size());
     }
 }

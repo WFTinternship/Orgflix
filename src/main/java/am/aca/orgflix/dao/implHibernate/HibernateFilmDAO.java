@@ -42,7 +42,6 @@ public class HibernateFilmDAO implements FilmDAO {
     public boolean rateFilm(int filmId, int starType) {
         try {
             em.getTransaction().begin();
-            Query query;
             Film film = em.find(Film.class, filmId);
             switch (starType) {
                 case 1:
@@ -66,6 +65,7 @@ public class HibernateFilmDAO implements FilmDAO {
             }
 
             em.merge(film);
+            em.flush();
             em.getTransaction().commit();
             return true;
         } catch (RuntimeException e) {
@@ -85,10 +85,15 @@ public class HibernateFilmDAO implements FilmDAO {
 
     @Override
     public List<Cast> getCastsByFilm(int filmId) {
-        Film film = em.find(Film.class, filmId);
+        try {
+            Film film = em.find(Film.class, filmId);
         if (film == null)
             return null;
         return film.getCasts();
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
@@ -219,7 +224,7 @@ public class HibernateFilmDAO implements FilmDAO {
                 if (film.isHasOscar())
                     result.add(film);
             if (director != null)
-                if (film.getDirector().equals(director))
+                if (director.equals(film.getDirector()))
                     result.add(film);
             if (castId != 0) {
                 for (Film actualFilm : resultList) {
@@ -229,7 +234,7 @@ public class HibernateFilmDAO implements FilmDAO {
                     }
                 }
             }
-            if (genreId != 0) {
+            if (genreId != 0 && film.getGenres() != null) {
                 for (Film actualFilm : resultList) {
                     for (Genre genre : film.getGenres()) {
                         if (genre.getValue() == genreId)
@@ -297,6 +302,7 @@ public class HibernateFilmDAO implements FilmDAO {
         try {
             em.getTransaction().begin();
             em.merge(film);
+            em.flush();
             em.getTransaction().commit();
             return true;
         } catch (RuntimeException e) {
@@ -314,6 +320,7 @@ public class HibernateFilmDAO implements FilmDAO {
             em.getTransaction().begin();
             Film actualFilm = em.find(Film.class, filmId);
             em.remove(actualFilm);
+            em.flush();
             em.getTransaction().commit();
             return true;
         } catch (RuntimeException e) {

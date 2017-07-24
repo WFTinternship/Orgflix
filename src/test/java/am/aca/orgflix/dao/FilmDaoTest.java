@@ -24,9 +24,6 @@ public class FilmDaoTest extends BaseIntegrationTest {
     private FilmDAO hibernateFilmDAO;
 
     @Autowired
-    private CastDAO hibernateCastDAO;
-
-    @Autowired
     private TestHelper helper;
 
     private Film film = new Film();
@@ -122,6 +119,18 @@ public class FilmDaoTest extends BaseIntegrationTest {
 
     @Test
     public void getCasts_ValidFilm_Success() {
+        Film film = new Film("Forest Gump", 1990);
+        hibernateFilmDAO.addFilm(film);
+
+        List<Cast> casts = hibernateFilmDAO.getCastsByFilm(film.getId());
+        Assert.assertNull(casts);
+    }
+
+    /**
+     * @see am.aca.orgflix.dao.implHibernate.HibernateFilmDAO#getCastsByFilm(int)
+     */
+    @Test
+    public void getCasts_ValidFilmEmptyCast_Success() {
         cast = new Cast("Tom Hanks");
         Film film = new Film("Forrest Gump", 1990);
         ArrayList<Cast> list = new ArrayList<>();
@@ -135,18 +144,6 @@ public class FilmDaoTest extends BaseIntegrationTest {
 
         Assert.assertEquals(1, size);
         Assert.assertEquals(cast, actualActor);
-    }
-
-    /**
-     * @see am.aca.orgflix.dao.implHibernate.HibernateFilmDAO#getCastsByFilm(int)
-     */
-    @Test
-    public void getCasts_ValidFilmEmptyCast_Success() {
-        Film film = new Film("Forest Gump", 1990);
-        hibernateFilmDAO.addFilm(film);
-
-        List<Cast> casts = hibernateFilmDAO.getCastsByFilm(film.getId());
-        Assert.assertNull(casts);
     }
 
     /**

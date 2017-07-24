@@ -161,7 +161,7 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
     @Test
     public void getUser_ByWrongId_Fail() {
         userService.add(standardUser);
-        int id = userService.add(new User("scarface", "Tony Montana", "scarface@miami.com", "elvira"));
+        int id = userService.add(new User("scarface1", "Tony Montana", "scarface@gmail.com", "elvira"));
 
         User actualUser = userService.get(id);
         Assert.assertNotEquals(standardUser, actualUser);
@@ -246,60 +246,6 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
 
         String actualEmail = userService.get(newEmail).getEmail();
         Assert.assertEquals(newEmail, actualEmail);
-    }
-
-    /**
-     * @see UserServiceImpl#edit(am.aca.orgflix.entity.User)
-     */
-    @Test
-    public void editUser_Nick_Success() {
-        user = new User("scarface", "Tony Montana", "scarface@miami.com", "elvira");
-        int id = userService.add(user);
-        final String newNick = "scarface/";
-        user.setNick(newNick);
-
-        boolean status = userService.edit(user);
-        Assert.assertTrue(status);
-
-        String actualNick = userService.get(id).getNick();
-        Assert.assertEquals(newNick, actualNick);
-
-    }
-
-    /**
-     * @see UserServiceImpl#edit(am.aca.orgflix.entity.User)
-     */
-    @Test
-    public void editUser_UserName_Success() {
-        user = new User("scarface", "Tony Montana", "scarface@miami.com", "elvira");
-        int id = userService.add(user);
-
-        final String newUserName = "Tony Montana Jr";
-        user.setUserName(newUserName);
-
-        boolean status = userService.edit(user);
-        Assert.assertTrue(status);
-
-        String actualUserName = userService.get(id).getUserName();
-        Assert.assertEquals(newUserName, actualUserName);
-    }
-
-    /**
-     * @see UserServiceImpl#edit(am.aca.orgflix.entity.User)
-     */
-    @Test
-    public void editUser_Pass_Success() {
-        user = new User("scarface", "Tony Montana", "scarface@miami.com", "elvira");
-        int id = userService.add(user);
-
-        final String newPass = "elvira<3";
-        user.setPass(newPass);
-
-        boolean status = userService.edit(user);
-        Assert.assertTrue(status);
-
-        String actualPass = userService.get(id).getPass();
-        Assert.assertEquals(newPass, actualPass);
     }
 
     /**
